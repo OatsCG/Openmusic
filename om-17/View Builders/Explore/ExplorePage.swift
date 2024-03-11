@@ -98,6 +98,8 @@ struct ExplorePage: View {
                                     .padding(.bottom, 15)
                             }
                         }
+                            .transition(.blurReplace)
+                        
                         Button(action: {
                             Task.detached {
                                 playRandomSongs { (result) in

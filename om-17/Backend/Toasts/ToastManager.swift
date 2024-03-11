@@ -11,47 +11,49 @@ import SwiftUI
     static let shared = ToastManager()
     var toastHistory: [Toast] = []
     var currentToast: Toast? = nil
-    //var toastTimers: [Timer] = []
+    var toastTimers: [Timer] = []
     var on: Bool = false
     
     func propose(toast: Toast) {
         //UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        //UINotificationFeedbackGenerator().notificationOccurred(.success)
-        if self.on {
-            self.crunch()
-            let t = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
+        DispatchQueue.main.async {
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            if self.on {
+                self.crunch()
+                let t = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        self.toastHistory.append(toast)
+                        self.currentToast = toast
+                        self.on = true
+                    }
+                }
+                self.toastTimers.append(t)
+                let c = Timer.scheduledTimer(withTimeInterval: 2.08, repeats: false) { _ in
+                    self.crunch(toast)
+                }
+                self.toastTimers.append(c)
+            } else {
+                self.crunch()
                 withAnimation(.easeOut(duration: 0.2)) {
                     self.toastHistory.append(toast)
                     self.currentToast = toast
                     self.on = true
                 }
+                let c = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+                    self.crunch(toast)
+                }
+                self.toastTimers.append(c)
             }
-            //self.toastTimers.append(t)
-            
-            let c = Timer.scheduledTimer(withTimeInterval: 2.08, repeats: false) { _ in
-                self.crunch(toast)
-            }
-            //self.toastTimers.append(c)
-        } else {
-            self.crunch()
-            withAnimation(.easeOut(duration: 0.2)) {
-                self.toastHistory.append(toast)
-                self.currentToast = toast
-                self.on = true
-            }
-            let c = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
-                self.crunch(toast)
-            }
-            //self.toastTimers.append(c)
         }
-        
     }
     
     func crunch(_ toast: Toast? = nil) {
-        if toast == nil || toast == self.currentToast {
-            withAnimation(.easeOut(duration: 0.2)) {
-                self.currentToast = nil
-                self.on = false
+        DispatchQueue.main.async {
+            if toast == nil || toast == self.currentToast {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    self.currentToast = nil
+                    self.on = false
+                }
             }
         }
     }
