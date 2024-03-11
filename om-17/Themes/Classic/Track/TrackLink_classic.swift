@@ -1,0 +1,78 @@
+//
+//  LibrarySongLink_classic.swift
+//  om-17
+//
+//  Created by Charlie Giannis on 2023-08-06.
+//
+
+import SwiftUI
+import SwiftData
+
+struct TrackLink_classic: View {
+    var track: any Track
+    var body: some View {
+        HStack {
+            AlbumArtDisplay(ArtworkID: track.Album.Artwork, Resolution: .cookie, Blur: 50, BlurOpacity: 0.8, cornerRadius: 8)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 0) {
+                    Text(track.Title)
+                        .foregroundStyle(.primary)
+                        .customFont(.callout)
+                    if (track.Features.count != 0) {
+                        Text(" • " + stringArtists(artistlist: track.Features))
+                            .customFont(.subheadline)
+                    }
+                }
+                Text(stringArtists(artistlist: track.Album.Artists))
+                    .customFont(.footnote)
+            }
+            Spacer()
+            Text(secondsToText(seconds: track.Length))
+                .customFont(.subheadline)
+            
+            NavigationLink(value: SearchAlbumContentNPM(album: track.Album)) {
+                Image(systemName: "chevron.forward.circle.fill")
+                    .font(.title)
+                    .symbolRenderingMode(.hierarchical)
+            }
+//            NavigationLink(destination: SearchAlbumContent(album: track.Album)) {
+//                Image(systemName: "chevron.forward.circle.fill")
+//                    .font(.title)
+//                    .symbolRenderingMode(.hierarchical)
+//            }
+        }
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .padding([.vertical, .leading], 5)
+            .padding(.trailing, 10)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 11))
+            .contentShape(Rectangle())
+            .clipped()
+    }
+}
+
+#Preview {
+    TrackLink_component(currentTheme: "classic", track: FetchedTrack(default: true))
+}
+
+#Preview {
+    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @AppStorage("globalIPAddress") var globalIPAddress: String = ""
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
+
+    let playlist = StoredPlaylist(Title: "Test!")
+    container.mainContext.insert(playlist)
+    
+    return ContentView()
+        .modelContainer(container)
+        .environment(PlayerManager())
+        .environment(PlaylistImporter())
+        .environment(DownloadManager())
+        .environment(NetworkMonitor())
+        .task {
+            currentTheme = "classic"
+            globalIPAddress = "server.openmusic.app"
+        }
+}

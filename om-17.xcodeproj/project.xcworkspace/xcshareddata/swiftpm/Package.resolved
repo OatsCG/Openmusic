@@ -1,0 +1,78 @@
+{
+  "originHash" : "d5871e294c7946c3677813d11157585c6dc1c993ac764cac46a48491a89799ce",
+  "pins" : [
+    {
+      "identity" : "audiokit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AudioKit/AudioKit/",
+      "state" : {
+        "revision" : "c30a151fea40696ad0a45c60c2bba29112bb4279",
+        "version" : "5.6.1"
+      }
+    },
+    {
+      "identity" : "audiostreaming",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dimitris-c/AudioStreaming",
+      "state" : {
+        "revision" : "7e770197e6fca352e2d195d44ecf9285cd59fe7b",
+        "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "marqueetext",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/joekndy/MarqueeText",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e18d514455563ad00581e0d825146c6f15b1c6c4"
+      }
+    },
+    {
+      "identity" : "rxmusicplayer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yoheimuta/RxMusicPlayer",
+      "state" : {
+        "revision" : "27b3c6a6f6f2c0e65be5df40eeab5e462ed0190f",
+        "version" : "2.3.3"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift",
+      "state" : {
+        "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
+        "version" : "6.6.0"
+      }
+    },
+    {
+      "identity" : "swiftaudioplayer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tanhakabir/SwiftAudioPlayer",
+      "state" : {
+        "revision" : "2fdfc62ce9f5d8b818ee1b2a9ac061fce4f64af9",
+        "version" : "7.6.0"
+      }
+    },
+    {
+      "identity" : "swipeactions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/c-villain/SwipeActions",
+      "state" : {
+        "revision" : "39c6d7f686746881adb3d44638ec330acbeb4f37",
+        "version" : "0.3.3"
+      }
+    },
+    {
+      "identity" : "youtubeplayerkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SvenTiigi/YouTubePlayerKit",
+      "state" : {
+        "revision" : "94b5739d32f0108f1820091e6955d544a0363fad",
+        "version" : "1.5.4"
+      }
+    }
+  ],
+  "version" : 3
+}

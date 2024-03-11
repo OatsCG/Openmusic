@@ -1,0 +1,29 @@
+//
+//  FetchedArtistContentHeader_honeycrisp.swift
+//  om-17
+//
+//  Created by Charlie Giannis on 2023-10-04.
+//
+
+import SwiftUI
+
+struct FetchedArtistContentHeader_honeycrisp: View {
+    var artist: FetchedArtist
+    var body: some View {
+        ArtistPageImageDisplay(ArtworkID: artist.Profile_Photo, Resolution: .hd, Blur: 8, BlurOpacity: 0.6, cornerRadius: 0)
+        HStack {
+            Text(artist.Name)
+                .customFont(.largeTitle, bold: true)
+                .multilineTextAlignment(.leading)
+            Spacer()
+        }
+            .padding(.horizontal, 10)
+            .padding(.bottom, 16)
+    }
+}
+
+#Preview {
+    ScrollView {
+        FetchedArtistContentHeader_honeycrisp(artist: FetchedArtist(default: true))
+    }
+}
