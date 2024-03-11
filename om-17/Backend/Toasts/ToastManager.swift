@@ -17,7 +17,27 @@ import SwiftUI
     func propose(toast: Toast) {
         //UIImpactFeedbackGenerator(style: .light).impactOccurred()
         DispatchQueue.main.async {
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            var popTime: Double = 2
+            print("case: \(toast.type)")
+            switch toast.type {
+            case .download:
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                popTime = 3
+            case .queuedOne:
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            case .queuedMany:
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                popTime = 4
+            case .saved:
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+            case .systemSuccess:
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+            case .systemError:
+                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                popTime = 5
+            case .systemNeutral:
+                break
+            }
             if self.on {
                 self.crunch()
                 let t = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
@@ -28,18 +48,21 @@ import SwiftUI
                     }
                 }
                 self.toastTimers.append(t)
-                let c = Timer.scheduledTimer(withTimeInterval: 2.08, repeats: false) { _ in
+                let c = Timer.scheduledTimer(withTimeInterval: popTime + 0.08, repeats: false) { _ in
                     self.crunch(toast)
                 }
                 self.toastTimers.append(c)
             } else {
                 self.crunch()
-                withAnimation(.easeOut(duration: 0.2)) {
-                    self.toastHistory.append(toast)
-                    self.currentToast = toast
-                    self.on = true
+                let t = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        self.toastHistory.append(toast)
+                        self.currentToast = toast
+                        self.on = true
+                    }
                 }
-                let c = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+                self.toastTimers.append(t)
+                let c = Timer.scheduledTimer(withTimeInterval: popTime + 0.08, repeats: false) { _ in
                     self.crunch(toast)
                 }
                 self.toastTimers.append(c)
@@ -68,69 +91,79 @@ class Toast: Equatable {
     var artworkID: String
     var message: String
     var timeProposed: Date
-    init(artworkID: String?, message: String) {
+    var type: ToastType
+    var isSuggestion: Bool = false
+    
+    init(artworkID: String?, message: String, _ type: ToastType, wasSuggested: Bool = false) {
         self.artworkID = artworkID ?? ""
         self.message = message
         self.timeProposed = Date()
+        self.type = type
+        self.isSuggestion = wasSuggested
     }
     static func queuenext(_ artworkID: String?, count: Int = 1) -> Toast {
         if count == 1 {
-            return Toast(artworkID: artworkID, message: "Queued Next")
+            return Toast(artworkID: artworkID, message: "Queued Next", .queuedOne)
         } else {
-            return Toast(artworkID: artworkID, message: "\(count) Songs Queued Next")
+            return Toast(artworkID: artworkID, message: "\(count) Songs Queued Next", .queuedMany)
         }
     }
-    static func queuelater(_ artworkID: String?, count: Int = 1) -> Toast {
+    static func queuelater(_ artworkID: String?, count: Int = 1, wasSuggested: Bool = false) -> Toast {
         if count == 1 {
-            return Toast(artworkID: artworkID, message: "Song Added to Queue")
+            return Toast(artworkID: artworkID, message: "Song Added to Queue", .queuedOne, wasSuggested: wasSuggested)
         } else {
-            return Toast(artworkID: artworkID, message: "\(count) Songs Queued")
+            return Toast(artworkID: artworkID, message: "\(count) Songs Queued", .queuedMany, wasSuggested: wasSuggested)
         }
     }
     static func queuerandom(_ artworkID: String?, count: Int = 1) -> Toast {
         if count == 1 {
-            return Toast(artworkID: artworkID, message: "Queued Randomly")
+            return Toast(artworkID: artworkID, message: "Queued Randomly", .queuedOne)
         } else {
-            return Toast(artworkID: artworkID, message: "\(count) Songs Queued Randomly")
+            return Toast(artworkID: artworkID, message: "\(count) Songs Queued Randomly", .queuedMany)
         }
     }
     static func library(_ artworkID: String?, count: Int = 1) -> Toast {
         if count == 1 {
-            return Toast(artworkID: artworkID, message: "Added to Library")
+            return Toast(artworkID: artworkID, message: "Added to Library", .saved)
         } else {
-            return Toast(artworkID: artworkID, message: "\(count) Songs Added to Library")
+            return Toast(artworkID: artworkID, message: "\(count) Songs Added to Library", .saved)
         }
     }
     static func download(_ artworkID: String?, count: Int = 1) -> Toast {
         if count == 1 {
-            return Toast(artworkID: artworkID, message: "Downloading Song")
+            return Toast(artworkID: artworkID, message: "Downloading Song", .download)
         } else {
-            return Toast(artworkID: artworkID, message: "Downloading \(count) Songs")
+            return Toast(artworkID: artworkID, message: "Downloading \(count) Songs", .download)
         }
     }
     static func playlist(_ artworkID: String?, playlist: Playlist, count: Int = 1) -> Toast {
         if count == 1 {
-            return Toast(artworkID: artworkID, message: "Added to \"\(playlist.Title)\"")
+            return Toast(artworkID: artworkID, message: "Added to \"\(playlist.Title)\"", .saved)
         } else {
-            return Toast(artworkID: artworkID, message: "\(count) Songs Added to \"\(playlist.Title)\"")
+            return Toast(artworkID: artworkID, message: "\(count) Songs Added to \"\(playlist.Title)\"", .saved)
         }
     }
     static func copylink(_ artworkID: String?) -> Toast {
-        return Toast(artworkID: artworkID, message: "Link Copied to Clipboard")
+        return Toast(artworkID: artworkID, message: "Link Copied to Clipboard", .systemSuccess)
     }
     static func copylinkfailed() -> Toast {
-        return Toast(artworkID: "", message: "Failed to Copy Link")
+        return Toast(artworkID: "", message: "Failed to Copy Link", .systemError)
     }
     static func linkopened() -> Toast {
-        return Toast(artworkID: "", message: "Album Opened from Link")
+        return Toast(artworkID: "", message: "Album Opened from Link", .systemNeutral)
     }
     static func linkopenfailed() -> Toast {
-        return Toast(artworkID: "", message: "Failed to Open Link")
+        return Toast(artworkID: "", message: "Failed to Open Link", .systemError)
     }
     
     static func == (lhs: Toast, rhs: Toast) -> Bool {
         return lhs.id == rhs.id
     }
+}
+
+enum ToastType {
+    case queuedOne, queuedMany, saved, download, systemSuccess, systemError, systemNeutral
+    var id: Self { self }
 }
 
 

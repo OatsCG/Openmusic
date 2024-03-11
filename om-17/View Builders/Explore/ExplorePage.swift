@@ -98,7 +98,7 @@ struct ExplorePage: View {
                                     .padding(.bottom, 15)
                             }
                         }
-                            .transition(.blurReplace)
+                            //.transition(.blurReplace)
                         
                         Button(action: {
                             Task.detached {

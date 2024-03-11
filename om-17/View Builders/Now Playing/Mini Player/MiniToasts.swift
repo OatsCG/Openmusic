@@ -11,14 +11,23 @@ struct MiniToasts: View {
     @State var toastManager: ToastManager = ToastManager.shared
     var body: some View {
         HStack {
-            AlbumArtDisplay(ArtworkID: toastManager.on ? toastManager.currentToast!.artworkID : "", Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 6)
+            AlbumArtDisplay(ArtworkID: toastManager.on ? (toastManager.currentToast?.artworkID ?? "") : "", Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 6)
                 .frame(width: 30, height: 30)
-            Text(toastManager.on ? toastManager.currentToast!.message : "")
-                .customFont(.subheadline, bold: true)
+            if (ToastManager.shared.currentToast?.isSuggestion == true) {
+                Text(toastManager.on ? toastManager.currentToast!.message : "")
+                    .customFont(.subheadline, bold: true)
+                QSQueueRowSparkle()
+                    //.padding(5)
+                    //.background(.thinMaterial)
+                    //.clipShape(RoundedRectangle(cornerRadius: 5))
+            } else {
+                Text(toastManager.on ? (toastManager.currentToast?.message ?? "") : "")
+                    .customFont(.subheadline, bold: true)
+                    .padding([.trailing], 16)
+            }
         }
             .multilineTextAlignment(.center)
             .padding([.top, .leading], 7)
-            .padding([.trailing], 16)
             .padding([.bottom], toastManager.on ? 8 : -100)
             .opacity(toastManager.on ? 1 : 0)
             .background(.thinMaterial)

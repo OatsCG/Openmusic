@@ -32,8 +32,14 @@ struct NPArtwork: View {
                 .symbolVariant((shouldSkip || shouldPrevious) ? .fill : .none)
                 .font(.system(size: 60, weight: .light))
                 .foregroundStyle(.white)
-                .shadow(color: .black, radius: 10)
         }
+            .overlay {
+                VStack {
+                    Spacer()
+                    MiniToasts()
+                        .padding(.bottom, 20)
+                }
+            }
             .onTapGesture {
                 if (fullscreen) {
                     if playerManager.isPlaying {

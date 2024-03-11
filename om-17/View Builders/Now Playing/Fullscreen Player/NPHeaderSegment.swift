@@ -104,7 +104,7 @@ struct NPHeaderSegment: View {
                 }
             }
         }
-            .scaleEffect((playerManager.isPlaying || playerManager.currentQueueItem?.isVideo == true) ? 1 : 0.8)
+            .scaleEffect((playerManager.isPlaying || playerManager.currentQueueItem?.isVideo == true) ? 1 : 0.75)
             .disabled(playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false)
             .overlay {
                 if (playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false) {
