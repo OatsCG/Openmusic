@@ -1,7 +1,7 @@
 ![Openmusic Banner](GitHub-Stuff/ombanner.png)
 
 # Openmusic - Stream, Download, and Discover Music for Free
-## Official repository of the Openmusic app
+## Official repository for the Openmusic app
 
 #### Access Openmusic-Compatible servers in a beautiful UI. Stream, Download, and Discover music from databases created by the community!
 
