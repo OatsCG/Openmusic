@@ -11,14 +11,12 @@ import SwiftUI
     static let shared = ToastManager()
     var toastHistory: [Toast] = []
     var currentToast: Toast? = nil
-    var toastTimers: [Timer] = []
     var on: Bool = false
     
     func propose(toast: Toast) {
         //UIImpactFeedbackGenerator(style: .light).impactOccurred()
         DispatchQueue.main.async {
             var popTime: Double = 2
-            print("case: \(toast.type)")
             switch toast.type {
             case .download:
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
@@ -40,32 +38,28 @@ import SwiftUI
             }
             if self.on {
                 self.crunch()
-                let t = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
+                Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
                     withAnimation(.easeOut(duration: 0.2)) {
                         self.toastHistory.append(toast)
                         self.currentToast = toast
                         self.on = true
                     }
                 }
-                self.toastTimers.append(t)
-                let c = Timer.scheduledTimer(withTimeInterval: popTime + 0.08, repeats: false) { _ in
+                Timer.scheduledTimer(withTimeInterval: popTime + 0.08, repeats: false) { _ in
                     self.crunch(toast)
                 }
-                self.toastTimers.append(c)
             } else {
                 self.crunch()
-                let t = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
+                Timer.scheduledTimer(withTimeInterval: 0.08, repeats: false) { _ in
                     withAnimation(.easeOut(duration: 0.2)) {
                         self.toastHistory.append(toast)
                         self.currentToast = toast
                         self.on = true
                     }
                 }
-                self.toastTimers.append(t)
-                let c = Timer.scheduledTimer(withTimeInterval: popTime + 0.08, repeats: false) { _ in
+                Timer.scheduledTimer(withTimeInterval: popTime + 0.08, repeats: false) { _ in
                     self.crunch(toast)
                 }
-                self.toastTimers.append(c)
             }
         }
     }
@@ -74,8 +68,8 @@ import SwiftUI
         DispatchQueue.main.async {
             if toast == nil || toast == self.currentToast {
                 withAnimation(.easeOut(duration: 0.2)) {
-                    self.currentToast = nil
                     self.on = false
+                    self.currentToast = nil
                 }
             }
         }
