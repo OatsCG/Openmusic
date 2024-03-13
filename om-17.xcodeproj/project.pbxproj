@@ -305,6 +305,7 @@
 		E58E8FD72BA172AF009F7E43 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8FC72BA172AF009F7E43 /* String+Extensions.swift */; };
 		E58E8FD82BA172AF009F7E43 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8FC92BA172AF009F7E43 /* Logging.swift */; };
 		E58E8FD92BA172AF009F7E43 /* BAPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8FCB2BA172AF009F7E43 /* BAPError.swift */; };
+		E58E8FDB2BA17559009F7E43 /* DebugOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8FDA2BA17558009F7E43 /* DebugOptions.swift */; };
 		E58FB6392B2E14100002E5DB /* RodinNTLG.otf in Resources */ = {isa = PBXBuildFile; fileRef = E58FB6382B2E14100002E5DB /* RodinNTLG.otf */; };
 		E58FB63A2B2E14100002E5DB /* RodinNTLG.otf in Resources */ = {isa = PBXBuildFile; fileRef = E58FB6382B2E14100002E5DB /* RodinNTLG.otf */; };
 		E5930A0F2AB4BF8A0055DAB2 /* PMFadeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5930A0E2AB4BF8A0055DAB2 /* PMFadeControls.swift */; };
@@ -819,6 +820,7 @@
 		E58E8FC72BA172AF009F7E43 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		E58E8FC92BA172AF009F7E43 /* Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		E58E8FCB2BA172AF009F7E43 /* BAPError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BAPError.swift; sourceTree = "<group>"; };
+		E58E8FDA2BA17558009F7E43 /* DebugOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugOptions.swift; sourceTree = "<group>"; };
 		E58FB6382B2E14100002E5DB /* RodinNTLG.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RodinNTLG.otf; sourceTree = "<group>"; };
 		E5930A0E2AB4BF8A0055DAB2 /* PMFadeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMFadeControls.swift; sourceTree = "<group>"; };
 		E595DA552B8BF833007D4A59 /* PMSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMSuggestions.swift; sourceTree = "<group>"; };
@@ -2617,6 +2619,7 @@
 				E599E7052B69C71800E5E14F /* ControlsOptions.swift */,
 				E599E7072B69C7A100E5E14F /* NotificationOptions.swift */,
 				E5A4373E2B827F24007680AF /* NowPlayingOptions.swift */,
+				E58E8FDA2BA17558009F7E43 /* DebugOptions.swift */,
 				E59600912B3B76D5009E5858 /* CustomServerInput.swift */,
 				E5E785E22B6CB929004F4D51 /* Credits.swift */,
 				E5F43D4B2B0AE52F00864502 /* EQEditor.swift */,
@@ -3003,6 +3006,7 @@
 				E532D4E72B420D3B00D7CC25 /* PlaylistMenuPreview_classic.swift in Sources */,
 				E5A00A452B0160F1001C59DB /* ProximityManager.swift in Sources */,
 				E51376012B44C4360005F2D7 /* ScrubberBar_wii.swift in Sources */,
+				E58E8FDB2BA17559009F7E43 /* DebugOptions.swift in Sources */,
 				E58880142A785BBA00E92379 /* NPMenu.swift in Sources */,
 				E520B28E2A5B74390031C73D /* GatherArtists.swift in Sources */,
 				E58B67422ACFB2B0002FA7A2 /* FetchedArtistContentHeader_wii.swift in Sources */,

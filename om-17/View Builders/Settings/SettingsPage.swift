@@ -53,6 +53,10 @@ struct SettingsPage: View {
                     Text("Now Playing")
                 }
                 
+                NavigationLink(destination: DebugOptions()) {
+                    Text("Debug")
+                }
+                
                 Section {
                     
                 } footer: {
