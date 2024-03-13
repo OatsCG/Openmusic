@@ -81,7 +81,7 @@ struct LibraryArtistsList: View {
                         let g = groupArtists(tracks: tracks.sorted{$0.dateAdded > $1.dateAdded})
                         self.artistAlbums = g.0
                         self.artistFeatures = g.1
-                        var joined: [SearchedArtist] = Array(Set(Array(artistAlbums!.keys) + Array(artistFeatures!.keys)))
+                        let joined: [SearchedArtist] = Array(Set(Array(artistAlbums!.keys) + Array(artistFeatures!.keys)))
                         let sortedJoined: [SearchedArtist] = joined.sorted(by: { $0.Name < $1.Name })
                         DispatchQueue.main.async {
                             self.joinedArtists = sortedJoined

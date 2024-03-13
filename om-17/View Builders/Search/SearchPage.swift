@@ -113,7 +113,10 @@ struct SearchPage: View {
 
 extension View {
     func hideKeyboard() {
-        UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true)
+        //UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true)
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first(where: { $0 is UIWindowScene }) as? UIWindowScene
+        windowScene?.windows.first(where: { $0.isKeyWindow })?.endEditing(true)
     }
 }
 

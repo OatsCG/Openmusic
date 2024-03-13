@@ -15,7 +15,7 @@ func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<Imp
         let artist: String = song.artists.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
         songsAsStrings.append("\(title)OMSEPSONGCOMPONENT\(album)OMSEPSONGCOMPONENT\(artist)")
     }
-    var songsJoined: String = songsAsStrings.joined(separator: "OMSEPNEWSONG")
+    let songsJoined: String = songsAsStrings.joined(separator: "OMSEPNEWSONG")
     
     let url = "\(globalIPAddress())/suggest?songs=\(songsJoined)"
     guard let url = URL(string: url) else {

@@ -64,7 +64,8 @@ struct FileManagerView: View {
 
 func get_metadata(asset: AVAsset) async -> FetchedTrack {
     var track: FetchedTrack = FetchedTrack()
-    track.Length = Int(asset.duration.seconds)
+    let trackDuration: CMTime? = try? await asset.load(.duration)
+    track.Length = Int(trackDuration?.seconds ?? .nan)
     do {
         let metadata = try await asset.load(.metadata)
         
