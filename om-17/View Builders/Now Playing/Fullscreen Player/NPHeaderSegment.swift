@@ -11,6 +11,7 @@ import YouTubePlayerKit
 
 struct NPHeaderSegment: View {
     @Environment(PlayerManager.self) var playerManager
+    @AppStorage("playerDebugger") var playerDebugger: Bool = false
     @Binding var fullscreen: Bool
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
@@ -20,6 +21,27 @@ struct NPHeaderSegment: View {
                 YouTubePlayerView(playerManager.currentQueueItem!.video_AVPlayer!.player!)
             } else {
                 NPArtwork(fullscreen: $fullscreen)
+                    .overlay {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                VStack(alignment: .leading) {
+                                    Text("Player Status:")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    BufferProgressLabel()
+                                        .font(.caption2)
+                                }
+                                    .padding(10)
+                                    .background(.thickMaterial)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .shadow(radius: 5)
+                                    .padding(10)
+                            }
+                        }
+                            .opacity(playerDebugger ? 1 : 0)
+                    }
             }
             if (playerManager.currentQueueItem != nil && !fullscreen) {
                 HStack(alignment: .top) {

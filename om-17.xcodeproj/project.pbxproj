@@ -304,6 +304,7 @@
 		E58E8FB52BA16BB8009F7E43 /* Screenshot 2024-03-10 at 10.35.16 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = E58E8F892BA16BB8009F7E43 /* Screenshot 2024-03-10 at 10.35.16 PM.png */; };
 		E58E8FB62BA16BB8009F7E43 /* SearchTrackLink_faero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8F8B2BA16BB8009F7E43 /* SearchTrackLink_faero.swift */; };
 		E58E8FB72BA16BB8009F7E43 /* TrackLink_faero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8F8C2BA16BB8009F7E43 /* TrackLink_faero.swift */; };
+		E58E8FB92BA16F5D009F7E43 /* BufferProgressLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58E8FB82BA16F5D009F7E43 /* BufferProgressLabel.swift */; };
 		E58FB6392B2E14100002E5DB /* RodinNTLG.otf in Resources */ = {isa = PBXBuildFile; fileRef = E58FB6382B2E14100002E5DB /* RodinNTLG.otf */; };
 		E58FB63A2B2E14100002E5DB /* RodinNTLG.otf in Resources */ = {isa = PBXBuildFile; fileRef = E58FB6382B2E14100002E5DB /* RodinNTLG.otf */; };
 		E5930A0F2AB4BF8A0055DAB2 /* PMFadeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5930A0E2AB4BF8A0055DAB2 /* PMFadeControls.swift */; };
@@ -817,6 +818,7 @@
 		E58E8F892BA16BB8009F7E43 /* Screenshot 2024-03-10 at 10.35.16 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screenshot 2024-03-10 at 10.35.16 PM.png"; sourceTree = "<group>"; };
 		E58E8F8B2BA16BB8009F7E43 /* SearchTrackLink_faero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTrackLink_faero.swift; sourceTree = "<group>"; };
 		E58E8F8C2BA16BB8009F7E43 /* TrackLink_faero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackLink_faero.swift; sourceTree = "<group>"; };
+		E58E8FB82BA16F5D009F7E43 /* BufferProgressLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferProgressLabel.swift; sourceTree = "<group>"; };
 		E58FB6382B2E14100002E5DB /* RodinNTLG.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RodinNTLG.otf; sourceTree = "<group>"; };
 		E5930A0E2AB4BF8A0055DAB2 /* PMFadeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMFadeControls.swift; sourceTree = "<group>"; };
 		E595DA552B8BF833007D4A59 /* PMSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMSuggestions.swift; sourceTree = "<group>"; };
@@ -2130,6 +2132,7 @@
 			children = (
 				E59E30B62A415ECA007B7874 /* NowPlayingSheet.swift */,
 				E506D9E52B00B9E100D3AAAD /* NPHeaderSegment.swift */,
+				E58E8FB82BA16F5D009F7E43 /* BufferProgressLabel.swift */,
 				E5255C262AABAB44007F12CE /* NPArtwork.swift */,
 				E52123042B10568700F17029 /* NPInfoSegment.swift */,
 				E506D9E72B00BB9200D3AAAD /* NPTitles.swift */,
@@ -3071,6 +3074,7 @@
 				E53C61BD2B51F54F0054B98D /* AVAudioPlayerNode+Extensions.swift in Sources */,
 				E5574B1B2B660664003BCC4B /* PMNotifications.swift in Sources */,
 				E58B673A2ACFB2B0002FA7A2 /* AlbumMenuPreview_wii.swift in Sources */,
+				E58E8FB92BA16F5D009F7E43 /* BufferProgressLabel.swift in Sources */,
 				E5B7D1192AA81FD300EAB1A7 /* PlaylistContentHeading_component.swift in Sources */,
 				E5A928D22A310472000E52C5 /* SearchShelfTracks.swift in Sources */,
 				E5A535002B03128D00F48935 /* QuickFetchAPI.swift in Sources */,
