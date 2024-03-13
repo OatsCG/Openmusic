@@ -1,5 +1,5 @@
 //
-//  MiniPlayer_classic.swift
+//  MiniPlayer_faero.swift
 //  om-17
 //
 //  Created by Charlie Giannis on 2023-08-07.
@@ -8,8 +8,10 @@
 import SwiftUI
 import MarqueeText
 
-struct MiniPlayer_classic: View {
+struct MiniPlayer_faero: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
         HStack {
             AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 20, BlurOpacity: 1, cornerRadius: 11)
@@ -18,20 +20,20 @@ struct MiniPlayer_classic: View {
                 if (playerManager.currentQueueItem == nil) {
                     HStack {
                         Text("Not Playing")
-                            .font(.callout)
+                            .customFont(.callout)
                         Spacer()
                     }
                 } else {
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Title,
-                        font: UIFont.preferredFont(forTextStyle: .callout),
+                        font: FontManager.currentThemeUIFont(.callout),
                         leftFade: 16,
                         rightFade: 16,
                         startDelay: 3
                     )
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Album.Title + (playerManager.currentQueueItem!.Track.Album.Artists.count > 0 ? (" • " + stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists)) : (" • Various Artists")),
-                        font: UIFont.preferredFont(forTextStyle: .subheadline),
+                        font: FontManager.currentThemeUIFont(.subheadline),
                         leftFade: 8,
                         rightFade: 10,
                         startDelay: 3
@@ -42,13 +44,13 @@ struct MiniPlayer_classic: View {
             }
             Spacer()
             Button(action: {
-                if playerManager.is_playing() {
+                if playerManager.isPlaying {
                     playerManager.pause()
                 } else {
                     playerManager.play()
                 }
             }) {
-                Image(systemName: (playerManager.is_playing()) ? "pause.fill" : "play.fill")
+                Image(systemName: (playerManager.isPlaying) ? "pause.fill" : "play.fill")
                     .contentTransition(.symbolEffect(.replace.offUp))
                     .font(.system(size: 20))
             }
@@ -60,19 +62,19 @@ struct MiniPlayer_classic: View {
             .background(alignment: .top, content: {
                 ZStack {
                     Rectangle().foregroundStyle(.thinMaterial)
-                    AlbumBackground(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, blur: 30, light_opacity: 0.2, dark_opacity: 0.2, spin: false)
+                    AeroGlossBG(cornerRadius: 15)
+                        .opacity(0.4)
                 }
             })
-            .frame(height: 55)
+            .overlay {
+                AeroGlossOverlay(baseCornerRadius: 15, padding: 0)
+            }
+            .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
             .aspectRatio(contentMode: .fit)
             .contentShape(RoundedRectangle(cornerRadius: 15))
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 15))
             .padding([.horizontal, .bottom], 5)
-            .background(alignment: .top, content: {
-                Rectangle().fill(.thinMaterial)
-                    .mask(LinearGradient(gradient: Gradient(colors: [.clear, .clear, .black, .black]), startPoint: .top, endPoint: .bottom))
-            })
     }
 }
 
@@ -80,10 +82,11 @@ struct MiniPlayer_classic: View {
     let playerManager = PlayerManager()
     return VStack {
         Spacer()
-        MiniPlayer_classic()
+        MiniPlayer_faero()
+            
             .environment(playerManager)
             .task {
-                playerManager.currentQueueItem = QueueItem(globalPlayerManager: playerManager, from: FetchedTrack(default: true))
+                playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
             }
         Spacer()
     }
