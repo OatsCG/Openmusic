@@ -1099,8 +1099,7 @@
 				E52D5B822B51BDE700E1E8DC /* EQManager.swift */,
 				E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */,
 			);
-			name = Player;
-			path = ../../../../Downloads/Player;
+			path = Player;
 			sourceTree = "<group>";
 		};
 		E52C20622A93BDC200E2995C /* Music */ = {
