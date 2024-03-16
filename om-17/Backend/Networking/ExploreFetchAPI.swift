@@ -68,6 +68,14 @@ struct ExploreResults: Codable, Hashable {
     }
 }
 
+struct ExploreCabinet: Codable, Hashable {
+    var Shelves: [ExploreShelf]
+    
+    private enum CodingKeys: String, CodingKey {
+        case Shelves
+    }
+}
+
 struct ExploreShelf: Codable, Hashable {
     var Title: String
     var Albums: [SearchedAlbum]
