@@ -13,7 +13,7 @@ Features:
   - Honeycrisp
   - Spotty
   - Wii
-  - Frutier Aero
+  - Frutiger Aero
   - Frutiger Eco
   - Plus many more on the way!
 - Import Playlists from Apple Music or Spotify
