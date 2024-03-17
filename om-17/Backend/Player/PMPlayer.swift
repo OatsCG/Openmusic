@@ -25,16 +25,18 @@ extension PlayerManager {
                 self.update_timer(to: 0.01)
             }
             if (self.elapsedTime > 45 || self.elapsedNormal > 0.5) {
-                self.currentQueueItem?.userEnjoyedSong()
-                self.trySuggestingPlaylistCreation()
                 // add enjoyed song to recents
-                withAnimation {
-                    if let fetchedTrack = self.currentQueueItem?.Track as? FetchedTrack {
-                        RecentlyPlayedManager.prependRecentTrack(track: fetchedTrack)
-                    } else if let importedTrack = self.currentQueueItem?.Track as? ImportedTrack {
-                        RecentlyPlayedManager.prependRecentTrack(track: FetchedTrack(from: importedTrack))
+                if (self.currentQueueItem?.wasSongEnjoyed == false) {
+                    withAnimation {
+                        if let fetchedTrack = self.currentQueueItem?.Track as? FetchedTrack {
+                            RecentlyPlayedManager.prependRecentTrack(track: fetchedTrack)
+                        } else if let importedTrack = self.currentQueueItem?.Track as? ImportedTrack {
+                            RecentlyPlayedManager.prependRecentTrack(track: FetchedTrack(from: importedTrack))
+                        }
                     }
                 }
+                self.currentQueueItem?.userEnjoyedSong()
+                self.trySuggestingPlaylistCreation()
             }
         } else {
             self.durationSeconds = 0.9
@@ -86,6 +88,7 @@ extension PlayerManager {
         do {
             try self.audioSession.setCategory(.playback, mode: .default, policy: .longFormAudio, options: [])
             try self.audioSession.setActive(true)
+            print("LONGFORMAUDIO SET")
         } catch {
             print("Failed to set audio session route sharing policy: \(error)")
         }

@@ -18,16 +18,22 @@ class RecentlyPlayedManager {
     }
     
     static func prependRecentTrack(track: FetchedTrack?) {
+        print("IN RECENT TRACK")
         if (track == nil) {
+            print("TRACK WAS NIL")
             return
+        } else {
+            var tracks: [FetchedTrack] = RecentlyPlayedManager.getRecentTracks()
+            print("GOT EXISTING TRACKS")
+            //check if exists. if it does, remove all instances and then prepend
+            tracks = Array(tracks.filter{ $0.TrackID != track?.TrackID }.prefix(50))
+            tracks.insert(track!, at: 0)
+            print("INSERTED")
+            let encodedTracks: String = RecentlyPlayedManager.encodeRecentTracks(tracks: tracks)
+            print("WRITING")
+            UserDefaults.standard.set(encodedTracks, forKey: "recentlyPlayed")
+            print("WROTE")
         }
-        var tracks: [FetchedTrack] = RecentlyPlayedManager.getRecentTracks()
-        //check if exists. if it does, remove all instances and then prepend
-        tracks = tracks.filter{ $0.TrackID != track?.TrackID }
-        
-        tracks.insert(track!, at: 0)
-        let encodedTracks: String = RecentlyPlayedManager.encodeRecentTracks(tracks: tracks)
-        UserDefaults.standard.set(encodedTracks, forKey: "recentlyPlayed")
     }
     
     static func decodeRecentTracks(tracks: String) -> [FetchedTrack] {
