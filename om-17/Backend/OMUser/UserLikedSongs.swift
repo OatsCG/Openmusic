@@ -11,29 +11,36 @@ extension OMUser {
     
     func updatePrivateLikedSongs() {
         let likedSongs: [String] = decodeLikedSongs()
-        self.likedSongs = likedSongs
+        withAnimation {
+            self.likedSongs = likedSongs
+        }
     }
     
-    func addLikedSong(TrackID: String) {
-        var likedSongs: [String] = decodeLikedSongs()
-        if (likedSongs.contains(where: { $0 == TrackID }) == false) {
-            likedSongs.append(TrackID)
-            storeLikedSongs(trackIDs: likedSongs)
+    func addLikedSong(track: any Track) {
+        //var likedSongs: [String] = decodeLikedSongs()
+        if (self.likedSongs.contains(where: { $0 == track.TrackID }) == false) {
+            withAnimation {
+                self.likedSongs.append(track.TrackID)
+            }
+            storeLikedSongs(trackIDs: self.likedSongs)
+            ToastManager.shared.propose(toast: Toast.likedSong(track.Album.Artwork))
         }
         updatePrivateLikedSongs()
     }
     
-    func removeLikedSong(TrackID: String) {
-        var likedSongs: [String] = decodeLikedSongs()
-        if (likedSongs.contains(where: { $0 == TrackID })) {
-            likedSongs.removeAll(where: { $0 == TrackID })
-            storeLikedSongs(trackIDs: likedSongs)
+    func removeLikedSong(track: any Track) {
+        //var likedSongs: [String] = decodeLikedSongs()
+        if (self.likedSongs.contains(where: { $0 == track.TrackID })) {
+            withAnimation {
+                self.likedSongs.removeAll(where: { $0 == track.TrackID })
+            }
+            storeLikedSongs(trackIDs: self.likedSongs)
         }
         updatePrivateLikedSongs()
     }
     
-    func isSongLiked(TrackID: String) -> Bool {
-        if (self.likedSongs.contains(where: { $0 == TrackID })) {
+    func isSongLiked(track: any Track) -> Bool {
+        if (self.likedSongs.contains(where: { $0 == track.TrackID })) {
             return true
         } else {
             return false

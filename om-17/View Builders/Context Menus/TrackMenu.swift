@@ -11,6 +11,7 @@ import SwiftData
 struct TrackMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(OMUser.self) var omUser
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     var track: any Track
@@ -43,6 +44,19 @@ struct TrackMenu: View {
                     }
                 } label: {
                     Label("Add to Playlist", systemImage: "music.note.list")
+                }
+            }
+            if (omUser.isSongLiked(track: track)) {
+                Button(action: {
+                    omUser.removeLikedSong(track: track)
+                }) {
+                    Label("Unlove Song", systemImage: "heart.slash.fill")
+                }
+            } else {
+                Button(action: {
+                    omUser.addLikedSong(track: track)
+                }) {
+                    Label("Love Song", systemImage: "heart")
                 }
             }
         }

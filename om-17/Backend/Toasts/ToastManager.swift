@@ -149,6 +149,9 @@ class Toast: Equatable {
     static func linkopenfailed() -> Toast {
         return Toast(artworkID: "", message: "Failed to Open Link", .systemError)
     }
+    static func likedSong(_ artworkID: String?) -> Toast {
+        return Toast(artworkID: artworkID, message: "Added to Loved", .saved)
+    }
     
     static func == (lhs: Toast, rhs: Toast) -> Bool {
         return lhs.id == rhs.id
