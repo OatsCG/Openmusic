@@ -8,8 +8,26 @@
 import SwiftUI
 
 struct QueueOptions: View {
+    @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            Form {
+                Section(content: {
+                    Toggle("Disable Queuing Suggestions", isOn: $DisableQueuingSuggestions)
+                        .tint(.green)
+                }, header: {
+                    Text("SUGGESTIONS")
+                }, footer: {
+                    Text("Prevent Openmusic from auto-queuing suggested music.")
+                })
+            }
+                .scrollContentBackground(.hidden)
+                .navigationTitle("Notifications")
+                .navigationBarTitleDisplayMode(.inline)
+                .background {
+                    GlobalBackground_component()
+                }
+        }
     }
 }
 

@@ -20,7 +20,10 @@ extension PlayerManager {
         var step = 0
         if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.play_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { playTimer in
+                self.play_fade_timer.invalidate()
+                self.pause_fade_timer.invalidate()
+                self.play_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] playTimer in
+                    guard let self = self else { return }
                     DispatchQueue.main.async {
                         step += 1
                         let to = startingVol + (self.appVolume - startingVol) * (Float(step) / Float(steps))

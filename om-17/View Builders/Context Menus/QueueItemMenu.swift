@@ -12,6 +12,7 @@ struct QueueItemMenu: View {
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(OMUser.self) var omUser
     @Environment(\.modelContext) private var modelContext
     var queueItem: QueueItem
     @Binding var passedNSPath: NavigationPath
@@ -45,6 +46,19 @@ struct QueueItemMenu: View {
                     }
                 } label: {
                     Label("Add to Playlist", systemImage: "music.note.list")
+                }
+            }
+            if (omUser.isSongLiked(track: queueItem.Track)) {
+                Button(action: {
+                    omUser.removeLikedSong(track: queueItem.Track)
+                }) {
+                    Label("Unlove Song", systemImage: "heart.slash.fill")
+                }
+            } else {
+                Button(action: {
+                    omUser.addLikedSong(track: queueItem.Track)
+                }) {
+                    Label("Love Song", systemImage: "heart")
                 }
             }
         }
@@ -119,9 +133,7 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.move(fromOffsets: IndexSet(integer: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0), toOffset: 0)
                 }
-                Task {
-                    await playerManager.prime_next_song()
-                }
+                playerManager.prime_next_song()
             }) {
                 Label("Move to Top", systemImage: "text.insert")
             }
@@ -129,9 +141,7 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.move(fromOffsets: IndexSet(integer: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0), toOffset: Int.random(in: 1..<(playerManager.trackQueue.count)))
                 }
-                Task {
-                    await playerManager.prime_next_song()
-                }
+                playerManager.prime_next_song()
             }) {
                 Label("Move Randomly", systemImage: "arrow.up.and.down.text.horizontal")
             }
@@ -139,9 +149,7 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.insert(QueueItem(from: queueItem), at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
                 }
-                Task {
-                    await playerManager.prime_next_song()
-                }
+                playerManager.prime_next_song()
             }) {
                 Label("Duplicate in Queue", systemImage: "plus.square.on.square")
             }
@@ -149,9 +157,7 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.removeAll(where: {$0.queueID == queueItem.queueID})
                 }
-                Task {
-                    await playerManager.prime_next_song()
-                }
+                playerManager.prime_next_song()
             }) {
                 Label("Remove From Queue", systemImage: "minus.circle")
             }

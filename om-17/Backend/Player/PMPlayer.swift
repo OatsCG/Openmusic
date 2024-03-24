@@ -59,15 +59,13 @@ extension PlayerManager {
                 if (self.currentQueueItem!.queueItemPlayer != nil) {
                     //if current avplayer doesnt equal queueitem avplayer
                     if (queueItem.queueItemPlayer != nil && !self.player.isEqual(to: queueItem.queueItemPlayer)) {
-                        DispatchQueue.main.async {
-                            if queueItem.queueItemPlayer != nil {
-                                // NEW SONG SET
-                                self.player.pause()
-                                self.player = queueItem.queueItemPlayer!
-                                self.player.set_volume(to: self.appVolume)
-                                if (self.is_playing()) {
-                                    self.player.playImmediately()
-                                }
+                        if queueItem.queueItemPlayer != nil {
+                            // NEW SONG SET
+                            self.player.pause()
+                            self.player = queueItem.queueItemPlayer!
+                            self.player.set_volume(to: self.appVolume)
+                            if (self.is_playing()) {
+                                self.player.playImmediately()
                             }
                         }
                         setupNowPlaying()
@@ -88,7 +86,6 @@ extension PlayerManager {
         do {
             try self.audioSession.setCategory(.playback, mode: .default, policy: .longFormAudio, options: [])
             try self.audioSession.setActive(true)
-            print("LONGFORMAUDIO SET")
         } catch {
             print("Failed to set audio session route sharing policy: \(error)")
         }

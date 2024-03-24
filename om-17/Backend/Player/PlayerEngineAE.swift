@@ -153,6 +153,7 @@ protocol AEPlayer {
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void)
     func has_file() -> Bool
     func modifyEQ(index: Int, value: Double)
+    func resetEQ(playerManager: PlayerManager)
     func preroll(parent: PlayerEngine, completion: @escaping (_ success: Bool) -> Void)
     func setVolume(_ to: Float) -> Void
     func amplitudeChart() -> [Float]?
@@ -200,6 +201,13 @@ protocol AEPlayer {
     
     func modifyEQ(index: Int, value: Double) {
         self.eqManager.adjustEQBand(for: index, value: Float(value))
+    }
+    
+    func resetEQ(playerManager: PlayerManager) {
+        
+        //self.eqManager = EQManager()
+        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
+        //self.eqManager.resetEQ()
     }
     
     func play() {
@@ -287,6 +295,10 @@ protocol AEPlayer {
     }
     
     func modifyEQ(index: Int, value: Double) {
+        return
+    }
+    
+    func resetEQ(playerManager: PlayerManager) {
         return
     }
     

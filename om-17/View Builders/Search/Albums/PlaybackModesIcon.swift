@@ -29,11 +29,12 @@ struct PlaybackModesIcon: View {
             if (isLiked) {
                 Image(systemName: "heart.fill")
                     .symbolRenderingMode(.multicolor)
-                    .transition(.blurReplace)
+            } else {
+                PlaybackExplicityDownloadedIcon(track: track, explicit: selectedExplicit)
+                    .tint(.primary)
             }
-            PlaybackExplicityDownloadedIcon(track: track, explicit: selectedExplicit)
-                .tint(.primary)
         }
+            .transition(.blurReplace)
             .task {
                 if (track.Playback_Clean == nil) {
                     selectedExplicit = true

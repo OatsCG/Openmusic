@@ -11,6 +11,7 @@ import SwiftData
 struct NPMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(OMUser.self) var omUser
     @Environment(\.modelContext) private var modelContext
     var queueItem: QueueItem?
     @State var playlists: [StoredPlaylist]
@@ -49,6 +50,19 @@ struct NPMenu: View {
                         }
                     } label: {
                         Label("Add to Playlist", systemImage: "music.note.list")
+                    }
+                }
+                if (omUser.isSongLiked(track: queueItem!.Track)) {
+                    Button(action: {
+                        omUser.removeLikedSong(track: queueItem!.Track)
+                    }) {
+                        Label("Unlove Song", systemImage: "heart.slash.fill")
+                    }
+                } else {
+                    Button(action: {
+                        omUser.addLikedSong(track: queueItem!.Track)
+                    }) {
+                        Label("Love Song", systemImage: "heart")
                     }
                 }
             }

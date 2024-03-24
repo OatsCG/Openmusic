@@ -35,6 +35,7 @@ func store_tracks(_ tracks: [any Track], ctx: ModelContext) {
 }
 
 
+// THIS IS BAD BAD AND DONE ON THE MAIN THREAD
 func is_track_stored(TrackID: String, context: ModelContext) -> Bool {
     let predicate = #Predicate<StoredTrack> { ptrack in
         ptrack.TrackID == TrackID

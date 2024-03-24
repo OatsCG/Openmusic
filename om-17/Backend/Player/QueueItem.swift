@@ -96,16 +96,20 @@ import SwiftUI
     func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) async {
         if seek {
             if let timestamp = self.queueItemPlayer?.currentTime {
-                self.clearPlayback()
-                await self.prime_object(playerManager: playerManager, position: timestamp)
+                DispatchQueue.main.async {
+                    self.clearPlayback()
+                    self.prime_object(playerManager: playerManager, position: timestamp)
+                }
             }
         } else {
-            self.clearPlayback()
-            await self.prime_object(playerManager: playerManager)
+            DispatchQueue.main.async {
+                self.clearPlayback()
+                self.prime_object(playerManager: playerManager)
+            }
         }
     }
     
-    func prime_object(playerManager: PlayerManager, continueCurrent: Bool = false, position: Double? = nil) async {
+    func prime_object(playerManager: PlayerManager, continueCurrent: Bool = false, position: Double? = nil) {
         if (self.currentlyPriming) {
             return
         }
@@ -119,6 +123,7 @@ import SwiftUI
         self.currentlyPriming = true
         if self.queueItemPlayer == nil {
             Task.detached {
+
                 var url: URL? = nil
                 var isRemote: Bool = true
                 if (self.isVideo == false) {
@@ -132,26 +137,27 @@ import SwiftUI
                     }
                 }
                 if url != nil {
-                    self.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
                     DispatchQueue.main.async {
+                        self.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
                         self.video_AVPlayer = VideoPlayerEngine(ytid: self.fetchedPlayback?.YT_Video_ID)
-                    }
-                    if (self.isVideo) {
-                        //self.queueItemPlayer = self.video_AVPlayer
-                    } else {
-                        self.queueItemPlayer = self.audio_AVPlayer
-                    }
-                    DispatchQueue.main.async {
+                        if (self.isVideo) {
+                            //self.queueItemPlayer = self.video_AVPlayer
+                        } else {
+                            self.queueItemPlayer = self.audio_AVPlayer
+                        }
                         self.queueItemPlayer?.set_volume(to: playerManager.appVolume)
                         self.queueItemPlayer?.seek(to: 0)
                         playerManager.set_currentlyPlaying(queueItem: self)
-                    }
-                    self.queueItemPlayer?.preroll() { success in
-                        if success {
-                            DispatchQueue.main.async {
-                                playerManager.set_currentlyPlaying(queueItem: self)
-                                if position != nil {
-                                    self.queueItemPlayer!.seek(to: position!)
+                        Task.detached {
+                            self.queueItemPlayer?.preroll() { success in
+                                if success {
+                                    DispatchQueue.main.async {
+                                        playerManager.set_currentlyPlaying(queueItem: self)
+                                        if position != nil {
+                                            self.queueItemPlayer!.seek(to: position!)
+                                            self.queueItemPlayer?.play()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -161,25 +167,25 @@ import SwiftUI
                     self.audio_AVPlayer?.pause()
                 }
                 self.currentlyPriming = false
+                
+                
             }
         } else {
             if position != nil {
                 self.queueItemPlayer!.seek(to: position!)
                 playerManager.addSuggestions()
             }
-            Task.detached {
-                self.queueItemPlayer!.preroll() { success in
-                    if success {
-                        DispatchQueue.main.async {
-                            if position != nil {
-                                self.queueItemPlayer!.seek(to: position!)
-                            }
-                            playerManager.set_currentlyPlaying(queueItem: self)
+            self.queueItemPlayer!.preroll() { success in
+                if success {
+                    DispatchQueue.main.async {
+                        if position != nil {
+                            self.queueItemPlayer!.seek(to: position!)
                         }
+                        playerManager.set_currentlyPlaying(queueItem: self)
                     }
                 }
-                self.currentlyPriming = false
             }
+            self.currentlyPriming = false
         }
         return
     }

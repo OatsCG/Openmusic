@@ -12,6 +12,11 @@ extension PlayerManager {
         // if crossfadeAlbums == false and consecutive
         if self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.crossfadeZero : self.crossfadeSeconds) {
             if !self.isCrossfading {
+                if (self.elapsedTime == self.durationSeconds) {
+                    // elapsed time is reporting incorrectly
+                    self.play()
+                    return
+                }
                 if self.trackQueue.first != nil && self.is_next_item_ready() {
                     //if in range, not crossfading, song ready
                     self.isCrossfading = true

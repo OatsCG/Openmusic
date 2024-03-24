@@ -21,9 +21,7 @@ extension PlayerManager {
                 self.play_fade()
             }
         }
-        Task.detached {
-            await self.prime_current_song()
-        }
+        self.prime_current_song()
     }
     
     func pause() {
@@ -57,10 +55,8 @@ extension PlayerManager {
             }
         }
         self.scheduleNotification()
-        Task {
-            await self.prime_current_song(continueCurrent: continueCurrent)
-            await self.prime_next_song()
-        }
+        self.prime_current_song(continueCurrent: continueCurrent)
+        self.prime_next_song()
     }
     
     func player_backward() {
@@ -76,10 +72,8 @@ extension PlayerManager {
                     self.trackQueue.insert(self.currentQueueItem!, at: 0)
                     self.currentQueueItem = self.sessionHistory.removeLast()
                     self.scheduleNotification()
-                    Task {
-                        await self.prime_current_song()
-                        await self.prime_next_song()
-                    }
+                    self.prime_current_song()
+                    self.prime_next_song()
                 } else {
                     self.player.seek(to: 0)
                 }

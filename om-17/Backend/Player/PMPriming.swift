@@ -8,16 +8,16 @@
 import SwiftUI
 
 extension PlayerManager {
-    func prime_next_song() async {
+    func prime_next_song() {
         //PREQUEUE THE NEXT 5 SONGS
         for track in self.trackQueue.prefix(5) {
-            await track.prime_object(playerManager: self)
+            track.prime_object(playerManager: self)
         }
     }
     
-    func prime_current_song(continueCurrent: Bool = false) async {
+    func prime_current_song(continueCurrent: Bool = false) {
         if (self.currentQueueItem != nil) {
-            await self.currentQueueItem!.prime_object(playerManager: self, continueCurrent: continueCurrent)
+            self.currentQueueItem!.prime_object(playerManager: self, continueCurrent: continueCurrent)
         }
     }
     
@@ -40,5 +40,27 @@ extension PlayerManager {
             }
         }
         return false
+    }
+    
+    func resetEQs() {
+        let wasPlaying: Bool = self.isPlaying
+        print("reseting. wasPlaying: \(wasPlaying)")
+        self.currentQueueItem?.audio_AVPlayer?.player.resetEQ(playerManager: self)
+        for item in self.sessionHistory {
+            if item.audio_AVPlayer?.isRemote == false {
+                item.audio_AVPlayer?.player.resetEQ(playerManager: self)
+            }
+        }
+        for item in self.trackQueue {
+            if item.audio_AVPlayer?.isRemote == false {
+                item.audio_AVPlayer?.player.resetEQ(playerManager: self)
+            }
+        }
+        print("still? \(self.isPlaying)")
+        if wasPlaying {
+            self.currentQueueItem?.audio_AVPlayer?.player.play()
+            //self.pause()
+            //self.play()
+        }
     }
 }

@@ -22,7 +22,7 @@ struct NowPlayingOptions: View {
                 })
             }
                 .scrollContentBackground(.hidden)
-                .navigationTitle("Notifications")
+                .navigationTitle("Now Playing")
                 .navigationBarTitleDisplayMode(.inline)
                 .background {
                     GlobalBackground_component()

@@ -49,18 +49,14 @@ struct QSUpNext: View {
         var updatedQueue = playerManager.trackQueue
         updatedQueue.move(fromOffsets: source, toOffset: destination)
         playerManager.trackQueue = updatedQueue
-        Task {
-            await playerManager.prime_next_song()
-        }
+        playerManager.prime_next_song()
     }
     
     private func delete(at offsets: IndexSet) {
         var updatedQueue = playerManager.trackQueue
         updatedQueue.remove(atOffsets: offsets)
         playerManager.trackQueue = updatedQueue
-        Task {
-            await playerManager.prime_next_song()
-        }
+        playerManager.prime_next_song()
     }
 }
 

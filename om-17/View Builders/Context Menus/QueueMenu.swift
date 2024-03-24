@@ -28,9 +28,7 @@ struct QueueMenu: View {
                             item.setExplicity(to: false)
                         }
                     }
-                    Task {
-                        await playerManager.prime_next_song()
-                    }
+                    playerManager.prime_next_song()
                 }) {
                     Label("Try Converting to Clean", systemImage: "c.square")
                 }
@@ -40,9 +38,7 @@ struct QueueMenu: View {
                             item.setExplicity(to: true)
                         }
                     }
-                    Task {
-                        await playerManager.prime_next_song()
-                    }
+                    playerManager.prime_next_song()
                 }) {
                     Label("Try Converting to Explicit", systemImage: "e.square")
                 }
@@ -69,9 +65,7 @@ struct QueueMenu: View {
                             item.setExplicity(to: false)
                         }
                     }
-                    Task {
-                        await playerManager.prime_next_song()
-                    }
+                    playerManager.prime_next_song()
                 }) {
                     Label("Try Converting to Clean", systemImage: "c.square")
                 }
@@ -81,9 +75,7 @@ struct QueueMenu: View {
                             item.setExplicity(to: true)
                         }
                     }
-                    Task {
-                        await playerManager.prime_next_song()
-                    }
+                    playerManager.prime_next_song()
                 }) {
                     Label("Try Converting to Explicit", systemImage: "e.square")
                 }

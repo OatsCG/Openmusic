@@ -7,11 +7,17 @@
 
 import SwiftUI
 
+// @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
+
 extension PlayerManager {
     func addSuggestions() {
         guard self.trackQueue.count < 10 else {
             return
         }
+        guard UserDefaults.standard.bool(forKey: "DisableQueuingSuggestions") == false else {
+            return
+        }
+        
         if self.currentQueueItem != nil {
             var songs: [NaiveTrack] = []
             for song in getEnjoyedSongs(limit: 5) {
