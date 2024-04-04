@@ -12,6 +12,7 @@ struct PlaybackExplicityDownloadedIcon: View {
     @Environment(PlayerManager.self) var playerManager
     var track: any Track
     var explicit: Bool = false
+    var isDownloaded: Bool? = nil
     var body: some View {
         VStack {
             ZStack {
@@ -28,7 +29,12 @@ struct PlaybackExplicityDownloadedIcon: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.primary, .clear)
             }
-            if downloadManager.is_downloaded(track, explicit: explicit) {
+            if let isDownloaded = isDownloaded {
+                if (isDownloaded == true) {
+                    Image(systemName: "chevron.compact.down")
+                        .foregroundStyle(.tertiary)
+                }
+            } else if downloadManager.is_downloaded(track, explicit: explicit) {
                 Image(systemName: "chevron.compact.down")
                     .foregroundStyle(.tertiary)
             }

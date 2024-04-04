@@ -68,7 +68,9 @@ struct SearchPage: View {
                     .navigationDestination(for: SearchExtendedAlbumsNPM.self) { npm in
                         SearchExtendedAlbums(albums: npm.albums)
                     }
-                    
+                    .navigationDestination(for: SearchExtendedArtistsNPM.self) { npm in
+                        SearchExtendedArtists(artists: npm.artists)
+                    }
                     .navigationDestination(for: PlaylistContentNPM.self) { npm in
                         PlaylistContent(playlist: npm.playlist)
                     }

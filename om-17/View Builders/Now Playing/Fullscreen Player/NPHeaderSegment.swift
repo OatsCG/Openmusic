@@ -11,7 +11,6 @@ import YouTubePlayerKit
 
 struct NPHeaderSegment: View {
     @Environment(PlayerManager.self) var playerManager
-    @AppStorage("playerDebugger") var playerDebugger: Bool = false
     @Binding var fullscreen: Bool
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
@@ -22,25 +21,7 @@ struct NPHeaderSegment: View {
             } else {
                 NPArtwork(fullscreen: $fullscreen)
                     .overlay {
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                VStack(alignment: .leading) {
-                                    Text("Player Status:")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    BufferProgressLabel()
-                                        .font(.caption2)
-                                }
-                                    .padding(10)
-                                    .background(.thickMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .shadow(radius: 5)
-                                    .padding(10)
-                            }
-                        }
-                            .opacity(playerDebugger ? 1 : 0)
+                        PlayerDebugger()
                     }
             }
             if (playerManager.currentQueueItem != nil && !fullscreen) {
@@ -119,7 +100,7 @@ struct NPHeaderSegment: View {
                                     .symbolRenderingMode(.hierarchical)
                                     .foregroundStyle(.secondary)
                             }
-                            PlaybackExplicityDownloadedIcon(track: FetchedTrack(from: playerManager.currentQueueItem!), explicit: playerManager.currentQueueItem!.explicit)
+                            PlaybackExplicityDownloadedIcon(track: FetchedTrack(from: playerManager.currentQueueItem!), explicit: playerManager.currentQueueItem!.explicit, isDownloaded: playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false)
                                 .opacity(0.8)
                         }
                     }

@@ -219,6 +219,7 @@
 		E583D7CB2B96726C001335EC /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E583D7CA2B96726C001335EC /* UserView.swift */; };
 		E58880122A78365000E92379 /* LibraryAlbumMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58880112A78365000E92379 /* LibraryAlbumMenu.swift */; };
 		E58880142A785BBA00E92379 /* NPMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58880132A785BBA00E92379 /* NPMenu.swift */; };
+		E5889C2A2BBF4D5B00B57F4B /* PlayerDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5889C292BBF4D5B00B57F4B /* PlayerDebugger.swift */; };
 		E58B67022ACF9F69002FA7A2 /* DefaultArtwork_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58B67012ACF9F69002FA7A2 /* DefaultArtwork_classic.swift */; };
 		E58B67042ACFB099002FA7A2 /* DefaultArtwork_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58B67032ACFB099002FA7A2 /* DefaultArtwork_component.swift */; };
 		E58B67062ACFB0C1002FA7A2 /* DefaultArtwork_honeycrisp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58B67052ACFB0C1002FA7A2 /* DefaultArtwork_honeycrisp.swift */; };
@@ -737,6 +738,7 @@
 		E583D7CA2B96726C001335EC /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		E58880112A78365000E92379 /* LibraryAlbumMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumMenu.swift; sourceTree = "<group>"; };
 		E58880132A785BBA00E92379 /* NPMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPMenu.swift; sourceTree = "<group>"; };
+		E5889C292BBF4D5B00B57F4B /* PlayerDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDebugger.swift; sourceTree = "<group>"; };
 		E58B67012ACF9F69002FA7A2 /* DefaultArtwork_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultArtwork_classic.swift; sourceTree = "<group>"; };
 		E58B67032ACFB099002FA7A2 /* DefaultArtwork_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultArtwork_component.swift; sourceTree = "<group>"; };
 		E58B67052ACFB0C1002FA7A2 /* DefaultArtwork_honeycrisp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultArtwork_honeycrisp.swift; sourceTree = "<group>"; };
@@ -2131,6 +2133,7 @@
 			children = (
 				E59E30B62A415ECA007B7874 /* NowPlayingSheet.swift */,
 				E506D9E52B00B9E100D3AAAD /* NPHeaderSegment.swift */,
+				E5889C292BBF4D5B00B57F4B /* PlayerDebugger.swift */,
 				E58E8FB82BA16F5D009F7E43 /* BufferProgressLabel.swift */,
 				E5255C262AABAB44007F12CE /* NPArtwork.swift */,
 				E52123042B10568700F17029 /* NPInfoSegment.swift */,
@@ -3129,6 +3132,7 @@
 				E51375FB2B44C3CF0005F2D7 /* ScrubberBar_component.swift in Sources */,
 				E525B74E2A8AB62400421F7E /* QPSingleLink_honeycrisp.swift in Sources */,
 				E5E6A1E02A80665D00880E6B /* TabBarLibraryLabel_classic.swift in Sources */,
+				E5889C2A2BBF4D5B00B57F4B /* PlayerDebugger.swift in Sources */,
 				E51375F72B44B7680005F2D7 /* NPBackground_wii.swift in Sources */,
 				E51375F92B44B7780005F2D7 /* NPBackground_honeycrisp.swift in Sources */,
 				E579DE4C2B3E7A0F009324C1 /* SearchTrackLink_spotty.swift in Sources */,
@@ -3447,7 +3451,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "openmusic-inc.om-17";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -3494,7 +3498,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "openmusic-inc.om-17";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

@@ -21,7 +21,11 @@ struct DebugOptions: View {
                     Text("Enables a label in the Now Playing view that shows the current playback status of the player.")
                 }
             }
-            .navigationTitle("Debug")
+                .scrollContentBackground(.hidden)
+                .navigationTitle("Debug")
+                .background {
+                    GlobalBackground_component()
+                }
         }
     }
 }

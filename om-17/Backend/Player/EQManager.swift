@@ -69,7 +69,7 @@ class EQManager {
         let EQBandsCurrent: String? = UserDefaults.standard.string(forKey: "EQBandsCurrent")
         let bands: [EQBand] = EQManager.decodeBands(bands: EQBandsCurrent)
         if bands.count <= 2 {
-            let defaultBands: [EQBand] = defaultBands(count: bands.count)
+            let defaultBands: [EQBand] = defaultBands(count: 6)
             EQManager.encodeBandsToCurrent(bands: defaultBands)
             return defaultBands
         } else {
