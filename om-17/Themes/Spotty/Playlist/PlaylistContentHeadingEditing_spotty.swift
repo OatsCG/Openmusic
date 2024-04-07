@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlaylistContentHeadingEditing_spotty: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: StoredPlaylist
     @State private var title: String = "pre1"
     @State private var bio: String = "these are my favourite songs!"
@@ -19,7 +20,7 @@ struct PlaylistContentHeadingEditing_spotty: View {
                 TextField(text: $title, prompt: Text("Playlist Title"), label: {
                     Label("label text", systemImage: "circle")
                 })
-                .customFont(.title, bold: true)
+                .customFont(fontManager, .title, bold: true)
                 .foregroundBlur(playlist: playlist)
                 .border(.secondary)
                 .autocorrectionDisabled()
@@ -30,7 +31,7 @@ struct PlaylistContentHeadingEditing_spotty: View {
                 TextField(text: $bio, prompt: Text("Description"), label: {
                     Label("label text", systemImage: "circle")
                 })
-                .customFont(.headline)
+                .customFont(fontManager, .headline)
                 .foregroundBlur(playlist: playlist, fade: 0.5)
                 .border(.secondary)
                 .autocorrectionDisabled()

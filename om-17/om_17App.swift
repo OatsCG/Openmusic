@@ -14,6 +14,7 @@ struct om_17App: App {
     @State var playlistImporter = PlaylistImporter()
     @State var downloadManager = DownloadManager.shared
     @State var networkMonitor = NetworkMonitor()
+    @State var fontManager = FontManager.shared
     @State var omUser = OMUser()
     var body: some Scene {
         WindowGroup {
@@ -22,6 +23,7 @@ struct om_17App: App {
                 .environment(playlistImporter)
                 .environment(downloadManager)
                 .environment(networkMonitor)
+                .environment(fontManager)
                 .environment(omUser)
             
         }

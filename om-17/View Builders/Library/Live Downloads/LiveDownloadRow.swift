@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LiveDownloadRow: View {
+    @Environment(FontManager.self) private var fontManager
     var download: DownloadData
     var body: some View {
         HStack {
@@ -15,11 +16,11 @@ struct LiveDownloadRow: View {
             VStack(alignment: .leading) {
                 HStack {
                     Text(download.parent.Title)
-                        .customFont(.callout)
+                        .customFont(fontManager, .callout)
                 }
                 HStack {
                     Text(stringArtists(artistlist: download.parent.Album.Artists))
-                        .customFont(.subheadline)
+                        .customFont(fontManager, .subheadline)
                         .foregroundStyle(.secondary)
                 }
             }

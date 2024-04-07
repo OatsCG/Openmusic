@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LiveImportingRow: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: ImportedPlaylist
     var body: some View {
         HStack {
@@ -16,11 +17,11 @@ struct LiveImportingRow: View {
             VStack(alignment: .leading) {
                 HStack {
                     Text(playlist.Title)
-                        .customFont(.callout)
+                        .customFont(fontManager, .callout)
                 }
                 HStack {
                     Text("From: \(playlist.importURL ?? "unknown")")
-                        .customFont(.subheadline)
+                        .customFont(fontManager, .subheadline)
                         .foregroundStyle(.secondary)
                 }
             }

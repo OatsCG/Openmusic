@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LibraryAlbumLink_faero: View {
+    @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]
     var body: some View {
         VStack(alignment: .leading) {
@@ -17,10 +18,10 @@ struct LibraryAlbumLink_faero: View {
                 }
             Text(tracks[0].Album.Title)
                 .foregroundColor(.primary)
-                .customFont(.callout)
+                .customFont(fontManager, .callout)
             Text(stringArtists(artistlist: tracks[0].Album.Artists))
                 .foregroundColor(.secondary)
-                .customFont(.caption)
+                .customFont(fontManager, .caption)
         }
             .multilineTextAlignment(.leading)
             .lineLimit(1)

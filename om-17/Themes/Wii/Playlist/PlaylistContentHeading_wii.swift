@@ -9,22 +9,23 @@ import SwiftUI
 import SwiftData
 
 struct PlaylistContentHeading_wii: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: Playlist
     var body: some View {
         VStack {
             PlaylistArtDisplay(playlist: playlist, Blur: 30, BlurOpacity: 0.6, cornerRadius: 8.0)
                 .padding([.bottom], 8)
             Text(playlist.Title)
-                .customFont(.title, bold: true)
+                .customFont(fontManager, .title, bold: true)
                 .foregroundBlur(playlist: playlist)
             if playlist.Bio != "" {
                 Text(playlist.Bio)
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .foregroundBlur(playlist: playlist, fade: 0.5)
                 Spacer()
             }
             Text("\(playlist.items.count) songs")
-                .customFont(.headline)
+                .customFont(fontManager, .headline)
                 .foregroundBlur(playlist: playlist, fade: 0.8)
         }
             .multilineTextAlignment(.center)

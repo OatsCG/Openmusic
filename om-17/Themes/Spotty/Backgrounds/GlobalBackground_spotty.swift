@@ -13,7 +13,7 @@ struct GlobalBackground_spotty: View {
             Rectangle().fill(Color(white: 0.07))
         }
             .ignoresSafeArea()
-            .preferredColorScheme(.dark)
+            //.preferredColorScheme(.dark)
     }
 }
 

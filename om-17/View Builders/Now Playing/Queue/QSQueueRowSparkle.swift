@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct QSQueueRowSparkle: View {
+    @Environment(FontManager.self) private var fontManager
     @State var gradientRotate: CGFloat = 0
     var body: some View {
         VStack(spacing: 0) {
             Image(systemName: "sparkles")
-                .customFont(.title3)
+                .customFont(fontManager, .title3)
                 .overlay {
                     LinearGradient(
                         colors: [
@@ -25,7 +26,7 @@ struct QSQueueRowSparkle: View {
                     .rotationEffect(.degrees(gradientRotate))
                         .mask {
                             Image(systemName: "sparkles")
-                                .customFont(.title3)
+                                .customFont(fontManager, .title3)
                         }
                 }
                 .padding(.trailing, 10)

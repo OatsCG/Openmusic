@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QPSingleLink_faero: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     var body: some View {
         HStack {
@@ -61,10 +62,10 @@ struct QPSingleLink_faero: View {
             VStack(alignment: .leading) {
                 Text(track.Title)
                     .foregroundStyle(.primary)
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                 Text(stringArtists(artistlist: track.Album.Artists))
                     .foregroundStyle(.secondary)
-                    .customFont(.caption)
+                    .customFont(fontManager, .caption)
             }
                 .multilineTextAlignment(.leading)
                 .lineLimit(1)

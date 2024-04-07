@@ -9,13 +9,14 @@ import SwiftUI
 import MarqueeText
 
 struct PlaylistReviewTracks: View {
+    @Environment(FontManager.self) private var fontManager
     @State var playlist: StoredPlaylist
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
                 Text("The following imports couldn't be matched automatically.\nChoose the closest fit for each song, or choose \"Disregard\" to remove the import from the playlist.")
                     .padding(.bottom, 10)
-                    .customFont(.body, bold: true)
+                    .customFont(fontManager, .body, bold: true)
                 
                 Divider()
                 ForEach(playlist.items, id: \.self) {playlistItem in
@@ -38,6 +39,7 @@ struct PlaylistReviewTracks: View {
 //}
 
 struct ImportToReview: View {
+    @Environment(FontManager.self) private var fontManager
     @Binding var playlist: StoredPlaylist
     @State var playlistItem: PlaylistItem
     var body: some View {
@@ -45,25 +47,25 @@ struct ImportToReview: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Imported as:")
-                        .customFont(.caption, bold: true)
+                        .customFont(fontManager, .caption, bold: true)
                         .foregroundStyle(.secondary)
                     MarqueeText(
                         text: playlistItem.importData.from.title ?? "",
-                        font: FontManager.currentThemeUIFont(.body, bold: true),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .body, bold: true),
                         leftFade: 8,
                         rightFade: 8,
                         startDelay: 0
                     )
                     MarqueeText(
                         text: playlistItem.importData.from.album ?? "",
-                        font: FontManager.currentThemeUIFont(.callout),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
                         leftFade: 8,
                         rightFade: 8,
                         startDelay: 0
                     )
                     MarqueeText(
                         text: playlistItem.importData.from.artist ?? "",
-                        font: FontManager.currentThemeUIFont(.callout),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
                         leftFade: 8,
                         rightFade: 8,
                         startDelay: 0
@@ -84,7 +86,7 @@ struct ImportToReview: View {
             Divider()
             HStack {
                 Text("Options:")
-                    .customFont(.caption, bold: true)
+                    .customFont(fontManager, .caption, bold: true)
                     .foregroundStyle(.secondary)
                 Spacer()
             }
@@ -105,10 +107,11 @@ struct ImportToReview: View {
 
 
 struct TrackToReview: View {
+    @Environment(PlaylistImporter.self) var playlistImporter
+    @Environment(FontManager.self) private var fontManager
     @Binding var playlist: StoredPlaylist
     @Binding var playlistItem: PlaylistItem
     @State var importedTrack: ImportedTrack
-    @Environment(PlaylistImporter.self) var playlistImporter
     var body: some View {
         Button(action: {
             var newPlaylistItem = playlistItem
@@ -128,21 +131,21 @@ struct TrackToReview: View {
                 }
                 MarqueeText(
                     text: importedTrack.Title,
-                    font: FontManager.currentThemeUIFont(.caption2, bold: true),
+                    font: FontManager.shared.currentThemeUIFont(fontManager, .caption2, bold: true),
                     leftFade: 8,
                     rightFade: 8,
                     startDelay: 0
                 )
                 MarqueeText(
                     text: importedTrack.Album.Title,
-                    font: FontManager.currentThemeUIFont(.caption2),
+                    font: FontManager.shared.currentThemeUIFont(fontManager, .caption2),
                     leftFade: 8,
                     rightFade: 8,
                     startDelay: 0
                 )
                 MarqueeText(
                     text: stringArtists(artistlist: importedTrack.Album.Artists),
-                    font: FontManager.currentThemeUIFont(.caption2),
+                    font: FontManager.shared.currentThemeUIFont(fontManager, .caption2),
                     leftFade: 8,
                     rightFade: 8,
                     startDelay: 0

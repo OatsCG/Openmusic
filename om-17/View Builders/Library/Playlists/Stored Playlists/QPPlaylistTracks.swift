@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QPPlaylistTracks: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var items: [PlaylistItem]
     var body: some View {
         if items.isEmpty {
@@ -29,7 +30,7 @@ struct QPPlaylistTracks: View {
                     }) {
                         HStack {
                             Text(item.track.Title)
-                                .customFont(.subheadline)
+                                .customFont(fontManager, .subheadline)
                                 //.font(Font.custom("Poppins-Regular", size: 15))
                                 .foregroundColor(.primary)
                                 .multilineTextAlignment(.leading)

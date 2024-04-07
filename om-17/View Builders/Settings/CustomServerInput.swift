@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CustomServerInput: View {
+    @Environment(FontManager.self) private var fontManager
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @State var viewModel: StatusViewModel = StatusViewModel()
     var body: some View {
@@ -31,27 +32,27 @@ struct CustomServerInput: View {
                     HStack {
                         if (viewModel.serverStatus == nil) {
                             Image(systemName: "circle.fill")
-                                .customFont(.caption2)
+                                .customFont(fontManager, .caption2)
                                 .foregroundStyle(.gray)
                             Text("Fetching")
                         } else {
                             if (viewModel.serverStatus!.online) {
                                 if (viewModel.serverStatus!.om_verify == "topsecretpassword") {
                                     Image(systemName: "circle.fill")
-                                        .customFont(.caption2)
+                                        .customFont(fontManager, .caption2)
                                         .foregroundStyle(.cyan)
                                     VStack {
                                         Text("Verified")
                                     }
                                 } else {
                                     Image(systemName: "circle.fill")
-                                        .customFont(.caption2)
+                                        .customFont(fontManager, .caption2)
                                         .foregroundStyle(.green)
                                     Text("Online")
                                 }
                             } else {
                                 Image(systemName: "circle.fill")
-                                    .customFont(.caption2)
+                                    .customFont(fontManager, .caption2)
                                     .foregroundStyle(.red)
                                 Text("Offline")
                             }
@@ -78,7 +79,7 @@ struct CustomServerInput: View {
 //                        if ((viewModel.serverStatus?.title ?? "") != "") {
 //                            HStack {
 //                                Text(viewModel.serverStatus?.title ?? "")
-//                                    .customFont(.subheadline, bold: true)
+//                                    .customFont(fontManager, .subheadline, bold: true)
 //                                    .foregroundStyle(.secondary)
 //                                Spacer()
 //                            }
@@ -86,7 +87,7 @@ struct CustomServerInput: View {
 //                        if ((viewModel.serverStatus?.body ?? "") != "") {
 //                            HStack {
 //                                Text(viewModel.serverStatus?.body ?? "")
-//                                    .customFont(.caption)
+//                                    .customFont(fontManager, .caption)
 //                                    .foregroundStyle(.secondary)
 //                                Spacer()
 //                            }
@@ -94,7 +95,7 @@ struct CustomServerInput: View {
 //                        if ((viewModel.serverStatus?.footer ?? "") != "") {
 //                            HStack {
 //                                Text(viewModel.serverStatus?.footer ?? "")
-//                                    .customFont(.footnote)
+//                                    .customFont(fontManager, .footnote)
 //                                    .foregroundStyle(.tertiary)
 //                                Spacer()
 //                            }

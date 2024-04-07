@@ -10,6 +10,7 @@ import SwiftUI
 struct AlbumWideButton_wii: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(NetworkMonitor.self) var networkMonitor
+    @Environment(FontManager.self) var fontManager
     var text: String
     var subtitle: String?
     var ArtworkID: String
@@ -20,14 +21,14 @@ struct AlbumWideButton_wii: View {
                 Text(text)
                 if (!networkMonitor.isConnected && subtitle != nil) {
                     Text(subtitle!)
-                        .customFont(.caption2)
+                        .customFont(fontManager, .caption2)
                         .foregroundStyle(.secondary)
                 }
             }
                 .foregroundStyle(.primary)
             Spacer()
         }
-            .customFont(.body)
+            .customFont(fontManager, .body)
             .padding(10)
             .background {
                 ZStack {

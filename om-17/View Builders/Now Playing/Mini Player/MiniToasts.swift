@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MiniToasts: View {
+    @Environment(FontManager.self) private var fontManager
     @State var toastManager: ToastManager = ToastManager.shared
     var body: some View {
         HStack {
@@ -15,14 +16,14 @@ struct MiniToasts: View {
                 .frame(width: 30, height: 30)
             if (ToastManager.shared.currentToast?.isSuggestion == true) {
                 Text(toastManager.on ? toastManager.currentToast!.message : "")
-                    .customFont(.subheadline, bold: true)
+                    .customFont(fontManager, .subheadline, bold: true)
                 QSQueueRowSparkle()
                     //.padding(5)
                     //.background(.thinMaterial)
                     //.clipShape(RoundedRectangle(cornerRadius: 5))
             } else {
                 Text(toastManager.on ? (toastManager.currentToast?.message ?? "") : "")
-                    .customFont(.subheadline, bold: true)
+                    .customFont(fontManager, .subheadline, bold: true)
                     .padding([.trailing], 16)
             }
         }

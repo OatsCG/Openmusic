@@ -11,6 +11,7 @@ import SwiftData
 struct QPPlaylistLink_wii: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var playlist: StoredPlaylist
     var body: some View {
         HStack {
@@ -107,7 +108,7 @@ struct QPPlaylistLink_wii: View {
                 }
                 Text(playlist.Title)
                     .foregroundStyle(.primary)
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
             }
                 .multilineTextAlignment(.leading)
                 .lineLimit(1)

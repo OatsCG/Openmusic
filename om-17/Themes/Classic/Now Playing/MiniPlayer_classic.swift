@@ -10,6 +10,7 @@ import MarqueeText
 
 struct MiniPlayer_classic: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
@@ -20,20 +21,20 @@ struct MiniPlayer_classic: View {
                 if (playerManager.currentQueueItem == nil) {
                     HStack {
                         Text("Not Playing")
-                            .customFont(.callout)
+                            .customFont(fontManager, .callout)
                         Spacer()
                     }
                 } else {
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Title,
-                        font: FontManager.currentThemeUIFont(.callout),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
                         leftFade: 16,
                         rightFade: 16,
                         startDelay: 3
                     )
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Album.Title + (playerManager.currentQueueItem!.Track.Album.Artists.count > 0 ? (" • " + stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists)) : (" • Various Artists")),
-                        font: FontManager.currentThemeUIFont(.subheadline),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),
                         leftFade: 8,
                         rightFade: 10,
                         startDelay: 3

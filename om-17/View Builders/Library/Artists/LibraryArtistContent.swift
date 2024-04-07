@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LibraryArtistContent: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: SearchedArtist
     var albums: [FetchedAlbum]
     var features: [any Track]
@@ -17,7 +18,7 @@ struct LibraryArtistContent: View {
                 ArtistPageImageDisplay(ArtworkID: artist.Profile_Photo, Resolution: .hd, Blur: 8, BlurOpacity: 0.6, cornerRadius: 0)
                 HStack {
                     Text(artist.Name)
-                        .customFont(.largeTitle, bold: true)
+                        .customFont(fontManager, .largeTitle, bold: true)
                         .multilineTextAlignment(.leading)
                     Spacer()
                 }

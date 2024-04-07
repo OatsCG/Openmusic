@@ -10,6 +10,7 @@ import MarqueeText
 
 struct MiniPlayer_wii: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
@@ -32,13 +33,13 @@ struct MiniPlayer_wii: View {
             VStack(alignment: .leading) {
                 if (playerManager.currentQueueItem == nil) {
                     Text("Not Playing")
-                        .customFont(.callout, bold: true)
+                        .customFont(fontManager, .callout, bold: true)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
                 } else {
                     Text(playerManager.currentQueueItem!.Track.Title)
-                        .customFont(.callout, bold: true)
+                        .customFont(fontManager, .callout, bold: true)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)

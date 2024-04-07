@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlaylistMenuPreview_faero: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: Playlist
     @State var realURL: String = ""
     var body: some View {
@@ -18,11 +19,11 @@ struct PlaylistMenuPreview_faero: View {
                 .frame(width: 200, height: 200)
             VStack(alignment: .leading) {
                 Text(playlist.Title)
-                    .customFont(.title3, bold: true)
+                    .customFont(fontManager, .title3, bold: true)
                     .foregroundStyle(.primary)
                     .lineLimit(8)
                 Text("\(playlist.items.count) Songs")
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                     .foregroundStyle(.secondary)
                     .lineLimit(4)
             }

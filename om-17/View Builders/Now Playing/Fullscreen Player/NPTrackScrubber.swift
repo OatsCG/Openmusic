@@ -12,6 +12,7 @@ import SwiftData
 
 struct NPTrackScrubber: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @State var isDragging: Bool = false
     @State var localElapsedTime: Double = 0
     @Binding var fullscreen: Bool
@@ -26,7 +27,7 @@ struct NPTrackScrubber: View {
                     Spacer()
                     Text(secondsToText(seconds: playerManager.durationSeconds))
                 }
-                    .customFont(.caption)
+                    .customFont(fontManager, .caption)
                     .opacity(self.isDragging ? (self.showingAmplitudes ? 0 : 0.7) : 0.45)
             }
         }

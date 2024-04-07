@@ -9,6 +9,7 @@ import SwiftUI
 import AVFoundation
 
 struct AudioFileRow: View {
+    @Environment(FontManager.self) private var fontManager
     @State var tempPlayer: AVAudioPlayer? = nil
     var track: FetchedTrack
     var body: some View {
@@ -17,7 +18,7 @@ struct AudioFileRow: View {
                 Text(track.Title)
                 Text(track.TrackID)
                     .foregroundStyle(.secondary)
-                    .customFont(.footnote)
+                    .customFont(fontManager, .footnote)
             }
             Spacer()
             Button(action: {

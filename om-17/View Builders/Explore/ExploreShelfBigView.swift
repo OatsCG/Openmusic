@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct ExploreShelfBigView: View {
+    @Environment(FontManager.self) private var fontManager
     var exploreShelf: ExploreShelf
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedAlbumsNPM(albums: exploreShelf.Albums)) {
                 HStack {
                     Text(exploreShelf.Title)
-                        .customFont(.title2, bold: true)
+                        .customFont(fontManager, .title2, bold: true)
                         .padding(.leading, 15)
                     Image(systemName: "chevron.right")
                         .symbolRenderingMode(.hierarchical)
-                        .customFont(.callout, bold: true)
+                        .customFont(fontManager, .callout, bold: true)
                 }
             }
                 .buttonStyle(.plain)

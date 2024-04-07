@@ -10,6 +10,7 @@ import SwiftData
 
 struct AlbumContentHeadingBig_classic: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var tracks: [any Track]?
     var body: some View {
@@ -19,16 +20,16 @@ struct AlbumContentHeadingBig_classic: View {
             VStack(alignment: .leading, spacing: 10) {
                 VStack(alignment: .leading) {
                     Text(separate_brackets(album.Title).main)
-                        .customFont(.largeTitle, bold: true)
+                        .customFont(fontManager, .largeTitle, bold: true)
                         .foregroundBlur(ArtworkID: album.Artwork)
                     if (separate_brackets(album.Title).sub != "") {
                         Text(separate_brackets(album.Title).sub)
-                            .customFont(.title2, bold: true)
+                            .customFont(fontManager, .title2, bold: true)
                             .foregroundBlur(ArtworkID: album.Artwork, fade: 0.6)
                     }
                 }
                 Text(album.AlbumType + " • " + String(album.Year))
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .foregroundBlur(ArtworkID: album.Artwork, fade: 0.7)
                 ScrollView(.horizontal) {
                     HStack(spacing: 15) {

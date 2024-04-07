@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ArtistCookie: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: SearchedArtist
     var body: some View {
         HStack(spacing: 3) {
@@ -18,7 +19,7 @@ struct ArtistCookie: View {
                 //.frame(width: 40, height: 40)
             Text(artist.Name)
                 .foregroundColor(.primary)
-                .customFont(.subheadline, bold: true)
+                .customFont(fontManager, .subheadline, bold: true)
                 .multilineTextAlignment(.leading)
                 .lineLimit(2)
         }

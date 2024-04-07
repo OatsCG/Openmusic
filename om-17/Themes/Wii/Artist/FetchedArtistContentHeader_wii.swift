@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FetchedArtistContentHeader_wii: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: FetchedArtist
     //@State private var animate = false
     @State private var currID: Double = 0
@@ -15,7 +16,7 @@ struct FetchedArtistContentHeader_wii: View {
         ArtistPageImageDisplay(ArtworkID: artist.Profile_Photo, Resolution: .hd, Blur: 8, BlurOpacity: 0.6, cornerRadius: 0)
         HStack {
             Text(artist.Name)
-                .customFont(.largeTitle, bold: true)
+                .customFont(fontManager, .largeTitle, bold: true)
                 .multilineTextAlignment(.leading)
 //                .foregroundAddition {
 //                    ZStack {

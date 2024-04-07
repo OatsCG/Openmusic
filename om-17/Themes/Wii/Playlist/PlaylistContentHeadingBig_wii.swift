@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PlaylistContentHeadingBig_wii: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: Playlist
     var body: some View {
         HStack(spacing: 30) {
@@ -17,15 +18,15 @@ struct PlaylistContentHeadingBig_wii: View {
                 .containerRelativeFrame(.horizontal, count: 3, span: 1, spacing: 10.0)
             VStack(alignment: .leading) {
                 Text(playlist.Title)
-                    .customFont(.largeTitle, bold: true)
+                    .customFont(fontManager, .largeTitle, bold: true)
                     .foregroundBlur(playlist: playlist)
                 if playlist.Bio != "" {
                     Text(playlist.Bio)
-                        .customFont(.headline)
+                        .customFont(fontManager, .headline)
                         .foregroundBlur(playlist: playlist, fade: 0.5)
                 }
                 Text("\(playlist.items.count) songs")
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .foregroundBlur(playlist: playlist, fade: 0.8)
             }
             Spacer()

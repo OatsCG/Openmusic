@@ -10,6 +10,7 @@ import SwiftData
 
 struct PlaylistItemLink: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var item: PlaylistItem
@@ -32,12 +33,12 @@ struct PlaylistItemLink: View {
                     VStack(alignment: .leading) {
                         Text(item.importData.from.title ?? "")
                             .foregroundColor(.primary)
-                            .customFont(.callout)
+                            .customFont(fontManager, .callout)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)
                         HStack {
                             Text("Review track in Playlist Settings")
-                                .customFont(.caption)
+                                .customFont(fontManager, .caption)
                                 .foregroundStyle(.red)
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(1)
@@ -53,12 +54,12 @@ struct PlaylistItemLink: View {
                     VStack(alignment: .leading) {
                         Text(item.track.Title)
                             .foregroundColor(.primary)
-                            .customFont(.callout)
+                            .customFont(fontManager, .callout)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)
                         Text(secondsToText(seconds: item.track.Length) + ((item.track.Features.count > 0) ? (" • " + stringArtists(artistlist: item.track.Features)) : ""))
                             .foregroundColor(.secondary)
-                            .customFont(.caption)
+                            .customFont(fontManager, .caption)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)
                     }

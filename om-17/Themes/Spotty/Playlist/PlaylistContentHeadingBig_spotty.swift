@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PlaylistContentHeadingBig_spotty: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: Playlist
     var body: some View {
         HStack(spacing: 30) {
@@ -19,15 +20,15 @@ struct PlaylistContentHeadingBig_spotty: View {
                 .containerRelativeFrame(.horizontal, count: 3, span: 1, spacing: 10.0)
             VStack(alignment: .leading) {
                 Text(playlist.Title)
-                    .customFont(.largeTitle, bold: true)
+                    .customFont(fontManager, .largeTitle, bold: true)
                     .foregroundStyle(.primary)
                 if playlist.Bio != "" {
                     Text(playlist.Bio)
-                        .customFont(.headline)
+                        .customFont(fontManager, .headline)
                         .foregroundStyle(.primary)
                 }
                 Text("\(playlist.items.count) songs")
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .foregroundStyle(.secondary)
             }
             Spacer()

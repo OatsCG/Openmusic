@@ -26,6 +26,7 @@ func isPlayingTrackID(playerManager: PlayerManager, trackID: String) -> Bool {
 
 struct SearchAlbumSongLink: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     var continuation: [any Track]?
     var min: Int?
@@ -47,12 +48,12 @@ struct SearchAlbumSongLink: View {
                 VStack(alignment: .leading) {
                     Text(track.Title)
                         .foregroundColor(.primary)
-                        .customFont(.callout)
+                        .customFont(fontManager, .callout)
                         .multilineTextAlignment(.leading)
                         .lineLimit(1)
                     Text(secondsToText(seconds: track.Length) + ((track.Features.count > 0) ? (" • " + stringArtists(artistlist: track.Features)) : ""))
                         .foregroundColor(.secondary)
-                        .customFont(.caption)
+                        .customFont(fontManager, .caption)
                         .multilineTextAlignment(.leading)
                         .lineLimit(1)
                 }

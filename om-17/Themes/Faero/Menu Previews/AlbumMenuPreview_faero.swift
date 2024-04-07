@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AlbumMenuPreview_faero: View {
+    @Environment(FontManager.self) private var fontManager
     var album: Album
     @State var realURL: String = ""
     var body: some View {
@@ -23,15 +24,15 @@ struct AlbumMenuPreview_faero: View {
                 }
             VStack(alignment: .leading) {
                 Text(album.Title)
-                    .customFont(.title3, bold: true)
+                    .customFont(fontManager, .title3, bold: true)
                     .foregroundStyle(.primary)
                     .lineLimit(8)
                 Text(stringArtists(artistlist: album.Artists))
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                     .foregroundStyle(.secondary)
                     .lineLimit(4)
                 Text("\(album.AlbumType) • \(album.Year.codingKey.stringValue)")
-                    .customFont(.subheadline)
+                    .customFont(fontManager, .subheadline)
                     .foregroundStyle(.tertiary)
             }
         }

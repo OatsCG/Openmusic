@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TrackMenuPreview_classic: View {
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     @State var realURL: String = ""
     var body: some View {
@@ -24,11 +25,11 @@ struct TrackMenuPreview_classic: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {
                     Text(track.Album.Title)
-                        .customFont(.caption)
+                        .customFont(fontManager, .caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(3)
                     Text(stringArtists(artistlist: track.Album.Artists))
-                        .customFont(.caption2)
+                        .customFont(fontManager, .caption2)
                         .foregroundStyle(.tertiary)
                         .lineLimit(3)
                 }
@@ -48,17 +49,17 @@ struct TrackMenuPreview_classic: View {
             }
             .padding(.bottom, 3)
             Text(track.Title)
-                .customFont(.headline, bold: true)
+                .customFont(fontManager, .headline, bold: true)
                 .foregroundStyle(.primary)
                 .lineLimit(4)
             if (track.Features.count != 0) {
                 Text(stringArtists(artistlist: track.Features))
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                     .foregroundStyle(.secondary)
                     .lineLimit(4)
             }
             Text(secondsToText(seconds: track.Length))
-                .customFont(.subheadline)
+                .customFont(fontManager, .subheadline)
                 .foregroundStyle(.tertiary)
                 .lineLimit(1)
         }

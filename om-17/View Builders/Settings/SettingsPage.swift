@@ -12,6 +12,7 @@ struct SettingsPage: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) private var fontManager
     @AppStorage("currentTheme") var currentTheme: String = "classic"
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("downloadsCount") var downloadsCount: Int = 8
@@ -69,7 +70,7 @@ struct SettingsPage: View {
                             VStack(alignment: .leading) {
                                 Text("openmusic inc.")
                                 Text("2024 Charlie Giannis")
-                                    .customFont(.caption2)
+                                    .customFont(fontManager, .caption2)
                             }
 //                            NavigationLink(destination: Credits()) {
 //                                HStack(spacing: 5) {

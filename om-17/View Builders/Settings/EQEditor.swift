@@ -10,6 +10,7 @@ import SwiftData
 
 struct EQEditor: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @AppStorage("EQBandsCurrent") var EQBandsCurrent: String = ""
     @AppStorage("EQBandsPresets") var EQBandsPresets: String = ""
     @State var currentBands: [EQBand] = []
@@ -54,7 +55,7 @@ struct EQEditor: View {
                             Spacer()
                             Text("-12 dB")
                         }
-                            .customFont(.caption2)
+                            .customFont(fontManager, .caption2)
                             .foregroundStyle(.secondary)
                             .padding(.bottom, 20)
                             .padding(.trailing, 3)
@@ -76,7 +77,7 @@ struct EQEditor: View {
                                                     updateStoredBands()
                                                     playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: -1, value: Double(currentBands.first?.value ?? 0.5))
                                                 }
-                                                .customFont(.caption)
+                                                .customFont(fontManager, .caption)
                                                 .lineLimit(1)
                                         }
                                     }
@@ -105,7 +106,7 @@ struct EQEditor: View {
                                 }
                                 Spacer()
                             }
-                            .customFont(.caption2)
+                            .customFont(fontManager, .caption2)
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                         }
@@ -115,7 +116,7 @@ struct EQEditor: View {
                         HStack {
                             if currentPresets.count > 0 {
                                 Text("Presets")
-                                    .customFont(.title, bold: true)
+                                    .customFont(fontManager, .title, bold: true)
                                     .padding(.top)
                                 Spacer()
                             }

@@ -12,6 +12,7 @@ import SwiftData
 struct NPTitles: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) private var fontManager
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @Binding var showingNPSheet: Bool
     @Binding var fullscreen: Bool
@@ -22,7 +23,7 @@ struct NPTitles: View {
                 VStack(alignment: .leading, spacing: 30) {
                     MarqueeText(
                         text: "Not Playing",
-                        font: FontManager.currentThemeUIFont(.title, bold: true),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .title, bold: true),
                         leftFade: 10,
                         rightFade: 10,
                         startDelay: 3,
@@ -36,7 +37,7 @@ struct NPTitles: View {
                         VStack(spacing: 0) {
                             MarqueeText(
                                 text: playerManager.currentQueueItem!.Track.Title,
-                                font: FontManager.currentThemeUIFont(.title, bold: true),
+                                font: FontManager.shared.currentThemeUIFont(fontManager, .title, bold: true),
                                 leftFade: 10,
                                 rightFade: 10,
                                 startDelay: 3,
@@ -52,7 +53,7 @@ struct NPTitles: View {
                                 } label: {
                                     MarqueeText(
                                         text: "feat. \(stringArtists(artistlist: playerManager.currentQueueItem!.Track.Features))",
-                                        font: FontManager.currentThemeUIFont(.headline),
+                                        font: FontManager.shared.currentThemeUIFont(fontManager, .headline),
                                         leftFade: 10,
                                         rightFade: 10,
                                         startDelay: 3,
@@ -70,7 +71,7 @@ struct NPTitles: View {
                             } label: {
                                 Image(systemName: "ellipsis.circle.fill")
                                     .symbolRenderingMode(.hierarchical)
-                                    .customFont(.title)
+                                    .customFont(fontManager, .title)
                                     .foregroundStyle(.secondary)
                             }
                         }

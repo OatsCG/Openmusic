@@ -10,6 +10,7 @@ import SwiftData
 
 struct AlbumContentHeadingBig_spotty: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var tracks: [any Track]?
     var body: some View {
@@ -21,11 +22,11 @@ struct AlbumContentHeadingBig_spotty: View {
                     .containerRelativeFrame(.horizontal, count: 3, span: 1, spacing: 10.0)
                 VStack(alignment: .leading) {
                     Text(separate_brackets(album.Title).main)
-                        .customFont(.largeTitle, bold: true)
+                        .customFont(fontManager, .largeTitle, bold: true)
                         .foregroundStyle(.primary)
                     if (separate_brackets(album.Title).sub != "") {
                         Text(separate_brackets(album.Title).sub)
-                            .customFont(.title2, bold: true)
+                            .customFont(fontManager, .title2, bold: true)
                             .foregroundStyle(.primary)
                             .opacity(0.8)
                     }
@@ -42,7 +43,7 @@ struct AlbumContentHeadingBig_spotty: View {
                     .scrollIndicators(.hidden)
                     .scrollTargetBehavior(.viewAligned)
                     Text(album.AlbumType + " • " + String(album.Year))
-                        .customFont(.headline)
+                        .customFont(fontManager, .headline)
                         .foregroundStyle(.secondary)
                     Spacer()
                     HStack(spacing: 10) {

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AlbumContentHeading_classic: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var tracks: [any Track]?
     @State var artistScrollSize: CGFloat = 100
@@ -18,15 +19,15 @@ struct AlbumContentHeading_classic: View {
                     .padding([.bottom], 8)
             VStack {
                 Text(separate_brackets(album.Title).main)
-                    .customFont(.title, bold: true)
+                    .customFont(fontManager, .title, bold: true)
                     .foregroundBlur(ArtworkID: album.Artwork)
                 if (separate_brackets(album.Title).sub != "") {
                     Text(separate_brackets(album.Title).sub)
-                        .customFont(.title2, bold: true)
+                        .customFont(fontManager, .title2, bold: true)
                         .foregroundBlur(ArtworkID: album.Artwork, fade: 0.6)
                 }
                 Text(album.AlbumType + " • " + String(album.Year))
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .foregroundBlur(ArtworkID: album.Artwork, fade: 0.7)
                 ScrollView(.horizontal) {
                     HStack(spacing: 15) {

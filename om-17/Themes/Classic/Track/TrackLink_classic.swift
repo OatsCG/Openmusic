@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct TrackLink_classic: View {
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     var body: some View {
         HStack {
@@ -17,18 +18,18 @@ struct TrackLink_classic: View {
                 HStack(spacing: 0) {
                     Text(track.Title)
                         .foregroundStyle(.primary)
-                        .customFont(.callout)
+                        .customFont(fontManager, .callout)
                     if (track.Features.count != 0) {
                         Text(" • " + stringArtists(artistlist: track.Features))
-                            .customFont(.subheadline)
+                            .customFont(fontManager, .subheadline)
                     }
                 }
                 Text(stringArtists(artistlist: track.Album.Artists))
-                    .customFont(.footnote)
+                    .customFont(fontManager, .footnote)
             }
             Spacer()
             Text(secondsToText(seconds: track.Length))
-                .customFont(.subheadline)
+                .customFont(fontManager, .subheadline)
             
             NavigationLink(value: SearchAlbumContentNPM(album: track.Album)) {
                 Image(systemName: "chevron.forward.circle.fill")

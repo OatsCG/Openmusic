@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct GlobalBackground_classic: View {
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         VStack {
-            Color(.systemFill).opacity(0.3)
+            if (colorScheme == .dark) {
+                Color(red: 0.05, green: 0.05, blue: 0.05)
+            } else {
+                Color(.white)
+            }
         }
             .ignoresSafeArea()
     }

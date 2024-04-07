@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QPMultipleLink_classic: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]
     var body: some View {
         HStack {
@@ -83,10 +84,10 @@ struct QPMultipleLink_classic: View {
                 }
                 Text(tracks[0].Album.Title)
                     .foregroundStyle(.primary)
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                 Text(stringArtists(artistlist: tracks[0].Album.Artists))
                     .foregroundStyle(.secondary)
-                    .customFont(.caption)
+                    .customFont(fontManager, .caption)
                     
             }
                 .multilineTextAlignment(.leading)

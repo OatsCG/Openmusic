@@ -8,10 +8,15 @@
 import SwiftUI
 
 struct ArtistBackground_classic: View {
+    @Environment(\.colorScheme) private var colorScheme
     var artwork: String
     var body: some View {
         ZStack {
-            Color(.systemFill).opacity(0.3)
+            if (colorScheme == .dark) {
+                Color(red: 0.05, green: 0.05, blue: 0.05)
+            } else {
+                Color(.white)
+            }
             ArtistPageBGDisplay(ArtworkID: artwork, Resolution: .background)
                 .blur(radius: 100, opaque: true)
                 .opacity(0.2)

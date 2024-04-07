@@ -11,6 +11,7 @@ import MarqueeText
 struct QSQueueRow: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State var queueItem: QueueItem
@@ -37,14 +38,14 @@ struct QSQueueRow: View {
                 VStack(spacing: 0) {
                     MarqueeText(
                         text: queueItem.Track.Title,
-                        font: FontManager.currentThemeUIFont(.headline, bold: true),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .headline, bold: true),
                         leftFade: 10,
                         rightFade: 10,
                         startDelay: 3
                     )
                     MarqueeText(
                         text: stringArtists(artistlist: queueItem.Track.Album.Artists),
-                        font: FontManager.currentThemeUIFont(.subheadline),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),
                         leftFade: 10,
                         rightFade: 10,
                         startDelay: 3
@@ -56,7 +57,7 @@ struct QSQueueRow: View {
                     QSQueueRowSparkle()
                 } else {
                     Image(systemName: "line.3.horizontal")
-                        .customFont(.title3)
+                        .customFont(fontManager, .title3)
                         .foregroundStyle(.secondary)
                         .padding(.trailing, 10)
                 }

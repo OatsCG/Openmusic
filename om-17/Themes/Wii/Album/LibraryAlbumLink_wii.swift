@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct LibraryAlbumLink_wii: View {
+    @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             AlbumArtDisplay(ArtworkID: tracks[0].Album.Artwork, Resolution: .tile, Blur: 0, BlurOpacity: 0.0, cornerRadius: 9.0)
             Text(tracks[0].Album.Title)
                 .foregroundColor(.primary)
-                .customFont(.callout)
+                .customFont(fontManager, .callout)
             Text(stringArtists(artistlist: tracks[0].Album.Artists))
                 .foregroundColor(.secondary)
-                .customFont(.caption)
+                .customFont(fontManager, .caption)
         }
             .multilineTextAlignment(.leading)
             .lineLimit(1)

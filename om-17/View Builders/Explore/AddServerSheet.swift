@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddServerSheet: View {
+    @Environment(FontManager.self) private var fontManager
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @Binding var showingServerSheet: Bool
     @State var viewModel: StatusViewModel = StatusViewModel()
@@ -16,19 +17,19 @@ struct AddServerSheet: View {
             
             VStack(spacing: 10) {
                 Text("Input your Server URL Here.")
-                    .customFont(.title2, bold: true)
+                    .customFont(fontManager, .title2, bold: true)
                     .padding(.top, 50)
                 Text("For help with servers check out\n**[openmusic.app](https://openmusic.app)**,")
-                    .customFont(.subheadline)
+                    .customFont(fontManager, .subheadline)
                     .padding(.bottom, 5)
                 VStack(spacing: 3) {
                     Text("or add the demo server")
-                        .customFont(.subheadline)
+                        .customFont(fontManager, .subheadline)
                     Button(action: {
                         globalIPAddress = "https://server.openmusic.app"
                     }) {
                         Text(verbatim: "https://server.openmusic.app")
-                            .customFont(.subheadline, bold: true)
+                            .customFont(fontManager, .subheadline, bold: true)
                             //.foregroundStyle(.secondary)
                             .padding(.vertical, 5)
                             .padding(.horizontal, 10)
@@ -58,27 +59,27 @@ struct AddServerSheet: View {
                             HStack {
                                 if (viewModel.serverStatus == nil) {
                                     Image(systemName: "circle.fill")
-                                        .customFont(.caption2)
+                                        .customFont(fontManager, .caption2)
                                         .foregroundStyle(.gray)
                                     Text("Fetching")
                                 } else {
                                     if (viewModel.serverStatus!.online) {
                                         if (viewModel.serverStatus!.om_verify == "topsecretpassword") {
                                             Image(systemName: "circle.fill")
-                                                .customFont(.caption2)
+                                                .customFont(fontManager, .caption2)
                                                 .foregroundStyle(.cyan)
                                             VStack {
                                                 Text("Verified")
                                             }
                                         } else {
                                             Image(systemName: "circle.fill")
-                                                .customFont(.caption2)
+                                                .customFont(fontManager, .caption2)
                                                 .foregroundStyle(.green)
                                             Text("Online")
                                         }
                                     } else {
                                         Image(systemName: "circle.fill")
-                                            .customFont(.caption2)
+                                            .customFont(fontManager, .caption2)
                                             .foregroundStyle(.red)
                                         Text("Offline")
                                     }
@@ -102,7 +103,7 @@ struct AddServerSheet: View {
                                 Divider()
                                 HStack {
                                     Text("From: \(globalIPAddress)/status")
-                                        .customFont(.caption)
+                                        .customFont(fontManager, .caption)
                                         .foregroundStyle(.quaternary)
                                     Spacer()
                                 }
@@ -112,7 +113,7 @@ struct AddServerSheet: View {
                                 if ((viewModel.serverStatus?.title ?? "") != "") {
                                     HStack {
                                         Text(viewModel.serverStatus?.title ?? "")
-                                            .customFont(.subheadline, bold: true)
+                                            .customFont(fontManager, .subheadline, bold: true)
                                             .foregroundStyle(.secondary)
                                         Spacer()
                                     }
@@ -120,7 +121,7 @@ struct AddServerSheet: View {
                                 if ((viewModel.serverStatus?.body ?? "") != "") {
                                     HStack {
                                         Text(viewModel.serverStatus?.body ?? "")
-                                            .customFont(.caption)
+                                            .customFont(fontManager, .caption)
                                             .foregroundStyle(.secondary)
                                         Spacer()
                                     }
@@ -128,7 +129,7 @@ struct AddServerSheet: View {
                                 if ((viewModel.serverStatus?.footer ?? "") != "") {
                                     HStack {
                                         Text(viewModel.serverStatus?.footer ?? "")
-                                            .customFont(.footnote)
+                                            .customFont(fontManager, .footnote)
                                             .foregroundStyle(.tertiary)
                                         Spacer()
                                     }
@@ -151,7 +152,7 @@ struct AddServerSheet: View {
                         Image(systemName: "network")
                     }
                     .foregroundStyle((viewModel.serverStatus?.online ?? false) ? ((viewModel.serverStatus!.om_verify == "topsecretpassword") ? .cyan : .green) : .gray)
-                        .customFont(.title3)
+                        .customFont(fontManager, .title3)
                         .padding(EdgeInsets(top: 6, leading: 26, bottom: 6, trailing: 26))
                         .background(.quinary)
                         .clipShape(RoundedRectangle(cornerRadius: 6))

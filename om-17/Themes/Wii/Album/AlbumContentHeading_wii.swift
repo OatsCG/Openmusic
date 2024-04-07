@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct AlbumContentHeading_wii: View {
+    @Environment(FontManager.self) private var fontManager
     @Environment(PlayerManager.self) var playerManager
     var album: SearchedAlbum
     var tracks: [any Track]?
@@ -18,15 +19,15 @@ struct AlbumContentHeading_wii: View {
             AlbumArtDisplay(AlbumID: album.AlbumID, ArtworkID: album.Artwork, Resolution: .hd, Blur: 30, BlurOpacity: 0.6, cornerRadius: 8.0)
                 .padding([.bottom], 8)
             Text(separate_brackets(album.Title).main)
-                .customFont(.title, bold: true)
+                .customFont(fontManager, .title, bold: true)
                 .foregroundBlur(ArtworkID: album.Artwork)
             if (separate_brackets(album.Title).sub != "") {
                 Text(separate_brackets(album.Title).sub)
-                    .customFont(.title2, bold: true)
+                    .customFont(fontManager, .title2, bold: true)
                     .foregroundBlur(ArtworkID: album.Artwork, fade: 0.6)
             }
             Text(album.AlbumType + " • " + String(album.Year))
-                .customFont(.headline)
+                .customFont(fontManager, .headline)
                 .foregroundBlur(ArtworkID: album.Artwork, fade: 0.7)
             Spacer()
             ScrollView(.horizontal) {

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchArtistShelfAlbums: View {
+    @Environment(FontManager.self) private var fontManager
     var albums: [SearchedAlbum]
     var artistName: String
     var body: some View {
@@ -15,11 +16,11 @@ struct SearchArtistShelfAlbums: View {
             NavigationLink(value: SearchArtistExtendedAlbumsNPM(albums: albums, artistName: artistName)) {
                 HStack {
                     Text("Albums")
-                        .customFont(.title2, bold: true)
+                        .customFont(fontManager, .title2, bold: true)
                         .padding(.leading, 15)
                     Image(systemName: "chevron.right")
                         .symbolRenderingMode(.hierarchical)
-                        .customFont(.callout, bold: true)
+                        .customFont(fontManager, .callout, bold: true)
                 }
             }
                 .buttonStyle(.plain)

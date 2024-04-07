@@ -12,6 +12,7 @@ struct NPBottomToolBar: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
+    @Environment(FontManager.self) private var fontManager
     @Environment(OMUser.self) var omUser
     @Binding var fullscreen: Bool
     @State private var showingQueueSheet = false
@@ -72,7 +73,7 @@ struct NPBottomToolBar: View {
                 Spacer()
             }
         }
-            .customFont(.title2)
+            .customFont(fontManager, .title2)
             .foregroundStyle(.secondary)
             .sheet(isPresented: $showingQueueSheet) {
                 QueueSheet(passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)

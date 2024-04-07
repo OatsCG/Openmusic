@@ -14,6 +14,7 @@ struct NowPlayingSheet: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) private var fontManager
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @Binding var showingNPSheet: Bool
     @State var fullscreen: Bool = false
@@ -25,7 +26,7 @@ struct NowPlayingSheet: View {
                 showingNPSheet = false
             }) {
                 Image(systemName: "chevron.compact.down")
-                    .customFont(.title)
+                    .customFont(fontManager, .title)
                     .foregroundStyle(.tertiary)
                     .opacity(0.7)
             }

@@ -8,19 +8,20 @@
 import SwiftUI
 
 struct ImportPlaylistSheet: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(PlaylistImporter.self) var playlistImporter
+    @Environment(FontManager.self) private var fontManager
     @Binding var isShowingSheet: Bool
     @State var infoViewModel: PlaylistInfoViewModel = PlaylistInfoViewModel()
     @State var tracksNaiveViewModel: PlaylistTracksNaiveViewModel = PlaylistTracksNaiveViewModel()
     @State var playlistURL: String = ""
     @State var isFetchingTracks: Bool = false
-    @Environment(PlaylistImporter.self) var playlistImporter
-    @Environment(\.modelContext) private var modelContext
     var body: some View {
         ScrollView {
             Text("Paste your playlist URL here")
-                .customFont(.title2, bold: true)
+                .customFont(fontManager, .title2, bold: true)
             Text("Supports: Apple Music, Spotify")
-                .customFont(.headline)
+                .customFont(fontManager, .headline)
             TextField("Playlist URL...", text: $playlistURL)
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
@@ -47,10 +48,10 @@ struct ImportPlaylistSheet: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                     .padding(.horizontal, 50)
                 Text(infoViewModel.fetchedPlaylistInfo!.name)
-                    .customFont(.title, bold: true)
+                    .customFont(fontManager, .title, bold: true)
                 if infoViewModel.fetchedPlaylistInfo!.description != "" {
                     Text(infoViewModel.fetchedPlaylistInfo!.description)
-                        .customFont(.headline)
+                        .customFont(fontManager, .headline)
                     Spacer()
                 }
             }
@@ -66,7 +67,7 @@ struct ImportPlaylistSheet: View {
                         Text("Import")
                         Image(systemName: "arrow.down.to.line")
                     }
-                        .customFont(.title3)
+                        .customFont(fontManager, .title3)
                         .padding(EdgeInsets(top: 6, leading: 26, bottom: 6, trailing: 26))
                         .foregroundStyle(.secondary)
                         .background(.tertiary)
@@ -76,7 +77,7 @@ struct ImportPlaylistSheet: View {
                         Text("Searching")
                         ProgressView()
                     }
-                        .customFont(.title3)
+                        .customFont(fontManager, .title3)
                         .padding(EdgeInsets(top: 6, leading: 26, bottom: 6, trailing: 26))
                         .background(.tertiary)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -85,7 +86,7 @@ struct ImportPlaylistSheet: View {
                         Text("Import")
                         Image(systemName: "arrow.down.to.line")
                     }
-                        .customFont(.title3)
+                        .customFont(fontManager, .title3)
                         .padding(EdgeInsets(top: 6, leading: 26, bottom: 6, trailing: 26))
                         .background(self.platformColor(platform: recognizePlaylist(url: playlistURL).platform))
                         .clipShape(RoundedRectangle(cornerRadius: 6))

@@ -9,12 +9,13 @@ import SwiftUI
 
 struct RecentlyPlayedList: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @AppStorage("recentlyPlayed") var recentlyPlayed: String = ""
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text("Recently Played")
-                    .customFont(.title2, bold: true)
+                    .customFont(fontManager, .title2, bold: true)
                 Spacer()
                 Button(action: {
                     withAnimation {

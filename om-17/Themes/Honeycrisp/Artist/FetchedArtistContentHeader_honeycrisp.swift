@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct FetchedArtistContentHeader_honeycrisp: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: FetchedArtist
     var body: some View {
         ArtistPageImageDisplay(ArtworkID: artist.Profile_Photo, Resolution: .hd, Blur: 8, BlurOpacity: 0.6, cornerRadius: 0)
         HStack {
             Text(artist.Name)
-                .customFont(.largeTitle, bold: true)
+                .customFont(fontManager, .largeTitle, bold: true)
                 .multilineTextAlignment(.leading)
             Spacer()
         }

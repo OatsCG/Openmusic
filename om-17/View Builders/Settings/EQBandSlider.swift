@@ -53,7 +53,7 @@ struct EQBandSlider: View {
                 )
             }
             //Text(title)
-                //.customFont(.caption)
+                //.customFont(fontManager, .caption)
         }
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PlaylistContentHeading_faero: View {
+    @Environment(FontManager.self) private var fontManager
     var playlist: Playlist
     var body: some View {
         VStack {
@@ -18,16 +19,16 @@ struct PlaylistContentHeading_faero: View {
                     AeroGlossOverlay(baseCornerRadius: 8, padding: 0)
                 }
             Text(playlist.Title)
-                .customFont(.title, bold: true)
+                .customFont(fontManager, .title, bold: true)
                 .foregroundBlur(playlist: playlist)
             if playlist.Bio != "" {
                 Text(playlist.Bio)
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .foregroundBlur(playlist: playlist, fade: 0.5)
                 Spacer()
             }
             Text("\(playlist.items.count) songs")
-                .customFont(.headline)
+                .customFont(fontManager, .headline)
                 .foregroundBlur(playlist: playlist, fade: 0.8)
         }
             .multilineTextAlignment(.center)

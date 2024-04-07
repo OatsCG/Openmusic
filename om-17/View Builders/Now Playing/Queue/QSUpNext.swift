@@ -10,6 +10,7 @@ import SwiftData
 
 struct QSUpNext: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     var body: some View {
@@ -17,7 +18,7 @@ struct QSUpNext: View {
             VStack {
                 Spacer()
                 Text("Nothing Up Next")
-                    .customFont(.title2)
+                    .customFont(fontManager, .title2)
                     .foregroundStyle(.secondary)
                 Spacer()
             }

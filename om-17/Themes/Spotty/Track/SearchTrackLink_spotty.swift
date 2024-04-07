@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchTrackLink_spotty: View {
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     var body: some View {
         VStack {
@@ -15,10 +16,10 @@ struct SearchTrackLink_spotty: View {
                 AlbumArtDisplay(ArtworkID: track.Album.Artwork, Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 0)
                 VStack(alignment: .leading) {
                     Text(track.Title)
-                        .customFont(.callout)
+                        .customFont(fontManager, .callout)
                         .foregroundColor(.primary)
                     Text(stringArtists(artistlist: track.Album.Artists))
-                        .customFont(.caption)
+                        .customFont(fontManager, .caption)
                         .foregroundColor(.secondary)
                 }
                     .multilineTextAlignment(.leading)

@@ -7,29 +7,67 @@
 
 import SwiftUI
 
-class FontManager {
+@Observable class FontManager {
     static let shared: FontManager = FontManager()
+    var currentlyChosenTheme: Theme
     
-    static func currentThemeFontName(bold: Bool = false) -> String {
-        switch UserDefaults.standard.string(forKey: "currentTheme") {
-        case "classic":
-            return ""
-        case "honeycrisp":
-            return ""
-        case "wii":
-            return bold ? "RodinPro-B" : "RodinNTLGPro-DB"
-        case "spotty":
-            return bold ? "CircularStd-Bold" : "CircularStd-Book"
-        case "faero":
-            return bold ? "Calibri-Bold" : "Calibri"
-        case "feco":
-            return bold ? "Calibri-Bold" : "Calibri"
-        default:
-            return ""
+    init(currentlyChosenTheme: Theme? = nil) {
+        if let currentlyChosenTheme = currentlyChosenTheme {
+            print("CHOSE FONT SPOT 1 \(currentlyChosenTheme)")
+            self.currentlyChosenTheme = currentlyChosenTheme
+        } else {
+            let storedFont: String? = UserDefaults.standard.string(forKey: "currentTheme")
+            if let storedFont = storedFont {
+                let gotFont: Theme? = Theme.init(rawValue: storedFont)
+                if let gotFont = gotFont {
+                    print("CHOSE FONT 2 \(gotFont)")
+                    self.currentlyChosenTheme = gotFont
+                } else {
+                    print("CHOSE FONT SPOT")
+                    self.currentlyChosenTheme = .classic
+                }
+            } else {
+                print("CHOSE FONT SPOT")
+                self.currentlyChosenTheme = .classic
+            }
         }
     }
     
-    static func currentThemeFont(font: Font, style: Font.TextStyle, bold: Bool) -> Font {
+    func currentThemeFontName(bold: Bool = false) -> String {
+        switch currentlyChosenTheme {
+        case .classic:
+            return ""
+        case .honeycrisp:
+            return ""
+        case .wii:
+            return bold ? "RodinPro-B" : "RodinNTLGPro-DB"
+        case .spotty:
+            return bold ? "CircularStd-Bold" : "CircularStd-Book"
+        case .faero:
+            return bold ? "Calibri-Bold" : "Calibri"
+        case .feco:
+            return bold ? "Calibri-Bold" : "Calibri"
+        }
+    }
+    
+    static func customThemeFontName(theme: Theme, bold: Bool = false) -> String {
+        switch theme {
+        case .classic:
+            return ""
+        case .honeycrisp:
+            return ""
+        case .wii:
+            return bold ? "RodinPro-B" : "RodinNTLGPro-DB"
+        case .spotty:
+            return bold ? "CircularStd-Bold" : "CircularStd-Book"
+        case .faero:
+            return bold ? "Calibri-Bold" : "Calibri"
+        case .feco:
+            return bold ? "Calibri-Bold" : "Calibri"
+        }
+    }
+    
+    func currentThemeFont(font: Font, style: Font.TextStyle, bold: Bool) -> Font {
         if (UserDefaults.standard.bool(forKey: "customFonts") == false) {
             return Font.system(style, weight: bold ? .bold : .regular)
         }
@@ -42,33 +80,32 @@ class FontManager {
     }
     
     static func forceCurrentThemeFont(font: Font, style: Font.TextStyle, bold: Bool, theme: Theme) -> Font {
-        let fontName = theme.rawValue
+        let fontName = customThemeFontName(theme: theme, bold: bold)
         if (fontName == "") {
             return Font.system(style, weight: bold ? .bold : .regular)
         } else {
+            
             return Font.custom(fontName, size: FontManager.customFontSize(font), relativeTo: style)
         }
     }
     
-    static func currentThemeUIFont(_ font: Font, bold: Bool = false) -> UIFont {
+    func currentThemeUIFont(_ fontManager: FontManager, _ font: Font, bold: Bool = false) -> UIFont {
         if (UserDefaults.standard.bool(forKey: "customFonts") == false) {
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: customFontSize(font), weight: bold ? .bold : .regular))
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: FontManager.customFontSize(font), weight: bold ? .bold : .regular))
         }
-        switch UserDefaults.standard.string(forKey: "currentTheme") {
-        case "classic":
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: customFontSize(font), weight: bold ? .bold : .regular))
-        case "honeycrisp":
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: customFontSize(font), weight: bold ? .bold : .regular))
-        case "wii":
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "RodinPro-B" : "RodinNTLGPro-DB", size: customFontSize(font))!)
-        case "spotty":
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "CircularStd-Bold" : "CircularStd-Book", size: customFontSize(font))!)
-        case "faero":
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "Calibri-Bold" : "Calibri", size: customFontSize(font))!)
-        case "feco":
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "Calibri-Bold" : "Calibri", size: customFontSize(font))!)
-        default:
-            return UIFontMetrics(forTextStyle: fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: customFontSize(font), weight: bold ? .bold : .regular))
+        switch fontManager.currentlyChosenTheme {
+        case .classic:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: FontManager.customFontSize(font), weight: bold ? .bold : .regular))
+        case .honeycrisp:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: FontManager.customFontSize(font), weight: bold ? .bold : .regular))
+        case .wii:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "RodinPro-B" : "RodinNTLGPro-DB", size: FontManager.customFontSize(font))!)
+        case .spotty:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "CircularStd-Bold" : "CircularStd-Book", size: FontManager.customFontSize(font))!)
+        case .faero:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "Calibri-Bold" : "Calibri", size: FontManager.customFontSize(font))!)
+        case .feco:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "Calibri-Bold" : "Calibri", size: FontManager.customFontSize(font))!)
         }
     }
     
@@ -178,42 +215,42 @@ extension View {
         }
     }
     
-    func customFont(_ font: Font, bold: Bool = false) -> some View {
+    func customFont(_ fontManager: FontManager, _ font: Font, bold: Bool = false) -> some View {
         let shadowDepth: CGFloat = 0
         let shadowColor = Color.secondary.opacity(0)
         switch font {
         case .largeTitle:
-            return self.font(FontManager.currentThemeFont(font: .largeTitle, style: .largeTitle, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .largeTitle, style: .largeTitle, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .title:
-            return self.font(FontManager.currentThemeFont(font: .title, style: .title, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .title, style: .title, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .title2:
-            return self.font(FontManager.currentThemeFont(font: .title2, style: .title2, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .title2, style: .title2, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .title3:
-            return self.font(FontManager.currentThemeFont(font: .title3, style: .title3, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .title3, style: .title3, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .headline:
-            return self.font(FontManager.currentThemeFont(font: .headline, style: .headline, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .headline, style: .headline, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .body:
-            return self.font(FontManager.currentThemeFont(font: .body, style: .body, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .body, style: .body, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .callout:
-            return self.font(FontManager.currentThemeFont(font: .callout, style: .callout, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .callout, style: .callout, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .subheadline:
-            return self.font(FontManager.currentThemeFont(font: .subheadline, style: .subheadline, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .subheadline, style: .subheadline, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .footnote:
-            return self.font(FontManager.currentThemeFont(font: .footnote, style: .footnote, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .footnote, style: .footnote, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .caption:
-            return self.font(FontManager.currentThemeFont(font: .caption, style: .caption, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .caption, style: .caption, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         case .caption2:
-            return self.font(FontManager.currentThemeFont(font: .caption2, style: .caption2, bold: bold))
+            return self.font(fontManager.currentThemeFont(font: .caption2, style: .caption2, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         default:
             //return self.font(Font.custom(FontManager.currentThemeFont(bold: bold), size: 14, relativeTo: .body))
@@ -226,6 +263,7 @@ extension View {
 
 
 #Preview {
+    @Environment(FontManager.self) var fontManager
     @AppStorage("currentTheme") var currentTheme: String = "faero"
     return ScrollView {
         HStack(spacing: 40) {
@@ -258,33 +296,34 @@ extension View {
             .border(.red)
             VStack {
                 Text("largeTitle")
-                    .customFont(.largeTitle)
+                    .customFont(fontManager, .largeTitle)
+                    //.forceCustomFont(.largeTitle)
                 Text("title")
-                    .customFont(.title)
+                    .customFont(fontManager, .title)
                 Text("title2")
-                    .customFont(.title2)
+                    .customFont(fontManager, .title2)
                 Text("title3")
-                    .customFont(.title3)
+                    .customFont(fontManager, .title3)
                 Text("title3.bold()")
-                    .customFont(.title3, bold: true)
+                    .customFont(fontManager, .title3, bold: true)
                 Text("headline")
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                 Text("body")
-                    .customFont(.body)
+                    .customFont(fontManager, .body)
                 Text("callout")
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                 Text("subheadline")
-                    .customFont(.subheadline)
+                    .customFont(fontManager, .subheadline)
                 Text("footnote")
-                    .customFont(.footnote)
+                    .customFont(fontManager, .footnote)
                 Text("caption")
-                    .customFont(.caption)
+                    .customFont(fontManager, .caption)
                 Text("caption2")
-                    .customFont(.caption2)
+                    .customFont(fontManager, .caption2)
             }
             .border(.red)
             .onAppear {
-                currentTheme = "faero"
+                currentTheme = "spotty"
                 for family in UIFont.familyNames.sorted() {
                     print("Family: \(family)")
                     let names = UIFont.fontNames(forFamilyName: family)
@@ -295,4 +334,5 @@ extension View {
             }
         }
     }
+    .environment(FontManager.shared)
 }

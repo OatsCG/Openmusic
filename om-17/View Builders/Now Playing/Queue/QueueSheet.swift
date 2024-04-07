@@ -14,6 +14,7 @@ enum QueuePicks: String, CaseIterable, Identifiable {
 
 struct QueueSheet: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @State var selectedPick: QueuePicks = .queue
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
@@ -31,7 +32,7 @@ struct QueueSheet: View {
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .customFont(.title)
+                        .customFont(fontManager, .title)
                 }
             }
             if selectedPick == .played {

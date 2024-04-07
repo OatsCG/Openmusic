@@ -15,6 +15,7 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(FontManager.self) private var fontManager
     @AppStorage("currentTheme") var currentTheme: String = "classic"
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("preferredAppearance") var preferredAppearance: String = "auto"
@@ -140,7 +141,7 @@ struct ContentView: View {
                     .tag(3)
                 
             }
-            .customFont(.subheadline)
+            .customFont(fontManager, .subheadline)
             .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
             
             .preferredColorScheme(activeAppearance(theme: currentTheme, appearance: Appearance(rawValue: preferredAppearance)))

@@ -9,17 +9,18 @@ import SwiftUI
 import SwiftData
 
 struct SearchShelfTracks: View {
+    @Environment(FontManager.self) private var fontManager
     var tracks: [FetchedTrack]?
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedTracksNPM(tracks: tracks, shouldQueueAll: false)) {
                 HStack {
                     Text("Tracks")
-                        .customFont(.title2, bold: true)
+                        .customFont(fontManager, .title2, bold: true)
                         .padding(.leading, 15)
                     Image(systemName: "chevron.right")
                         .symbolRenderingMode(.hierarchical)
-                        .customFont(.callout, bold: true)
+                        .customFont(fontManager, .callout, bold: true)
                 }
             }
                 .buttonStyle(.plain)

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PopularityIcon: View {
+    @Environment(FontManager.self) private var fontManager
     var views: Int
     var min: Int?
     var max: Int?
@@ -28,7 +29,7 @@ struct PopularityIcon: View {
         if (min != nil && max != nil) {
             HStack(alignment: .bottom, spacing: 0) {
                 Image(systemName: "person.fill")
-                    .customFont(.caption2)
+                    .customFont(fontManager, .caption2)
                     .opacity(0.7)
                 ForEach(1...Int(chartCount), id: \.self) { i in
                     RoundedRectangle(cornerRadius: 1)

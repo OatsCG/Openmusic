@@ -10,6 +10,7 @@ import MarqueeText
 
 struct QSNPRow: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
@@ -19,7 +20,7 @@ struct QSNPRow: View {
                 if (playerManager.currentQueueItem == nil) {
                     MarqueeText(
                         text: "Nothing Playing",
-                        font: FontManager.currentThemeUIFont(.headline, bold: true),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .headline, bold: true),
                         leftFade: 10,
                         rightFade: 10,
                         startDelay: 3
@@ -28,14 +29,14 @@ struct QSNPRow: View {
                 } else {
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Title,
-                        font: FontManager.currentThemeUIFont(.headline, bold: true),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .headline, bold: true),
                         leftFade: 10,
                         rightFade: 10,
                         startDelay: 3
                     )
                     MarqueeText(
                         text: stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists),
-                        font: FontManager.currentThemeUIFont(.subheadline),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),
                         leftFade: 10,
                         rightFade: 10,
                         startDelay: 3

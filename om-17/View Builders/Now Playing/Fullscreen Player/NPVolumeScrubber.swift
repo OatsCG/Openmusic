@@ -13,6 +13,7 @@ import MediaPlayer
 
 struct NPVolumeScrubber: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @State var isDragging: Bool = false
     @State var inAppVolume: Bool = false
     @State var sysVolume: Float = VolumeObserver.shared.getVolume()
@@ -40,7 +41,7 @@ struct NPVolumeScrubber: View {
                 }
             }) {
                 Image(systemName: inAppVolume ? "music.note" : "iphone")
-                    .customFont(.title3)
+                    .customFont(fontManager, .title3)
                     //.dynamicTypeSize(.xxxLarge)
                     .padding(5)
                     .background(inAppVolume ? .white.opacity(0.15) : .clear)
@@ -48,7 +49,7 @@ struct NPVolumeScrubber: View {
             }
             
         }
-            .customFont(.caption)
+            .customFont(fontManager, .caption)
             .onChange(of: AVAudioSession.sharedInstance().outputVolume) {
                 print(AVAudioSession.sharedInstance().outputVolume)
             }

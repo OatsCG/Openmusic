@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchAlbumLink_faero: View {
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var body: some View {
         VStack(alignment: .leading) {
@@ -17,10 +18,10 @@ struct SearchAlbumLink_faero: View {
                 }
             Text(album.Title)
                 .foregroundColor(.primary)
-                .customFont(.callout)
+                .customFont(fontManager, .callout)
             Text(stringArtists(artistlist: album.Artists))
                 .foregroundColor(.secondary)
-                .customFont(.caption)
+                .customFont(fontManager, .caption)
             Spacer()
         }
             .multilineTextAlignment(.leading)

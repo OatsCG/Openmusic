@@ -11,6 +11,7 @@ import YouTubePlayerKit
 
 struct NPHeaderSegment: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Binding var fullscreen: Bool
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
@@ -50,7 +51,7 @@ struct NPHeaderSegment: View {
                         VStack(spacing: 0) {
                             MarqueeText(
                                 text: playerManager.currentQueueItem!.Track.Album.Title,
-                                font: FontManager.currentThemeUIFont(.callout),
+                                font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
                                 leftFade: 10,
                                 rightFade: 10,
                                 startDelay: 3,
@@ -59,7 +60,7 @@ struct NPHeaderSegment: View {
                             .foregroundStyle(.secondary)
                             MarqueeText(
                                 text: stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists),
-                                font: FontManager.currentThemeUIFont(.caption),
+                                font: FontManager.shared.currentThemeUIFont(fontManager, .caption),
                                 leftFade: 10,
                                 rightFade: 10,
                                 startDelay: 3,

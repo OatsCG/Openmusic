@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchTrackLink_classic: View {
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     var body: some View {
         HStack {
@@ -15,10 +16,10 @@ struct SearchTrackLink_classic: View {
                 .padding([.top, .bottom, .leading], 5)
             VStack(alignment: .leading) {
                 Text(track.Title)
-                    .customFont(.callout)
+                    .customFont(fontManager, .callout)
                     .foregroundColor(.primary)
                 Text(stringArtists(artistlist: track.Album.Artists))
-                    .customFont(.caption)
+                    .customFont(fontManager, .caption)
                     .foregroundColor(.secondary)
                     
             }

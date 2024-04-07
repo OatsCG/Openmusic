@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ArtistCookieImageDisplay: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(FontManager.self) private var fontManager
     var imgURL: URL?
     var Blur: CGFloat
     var BlurOpacity:Double
@@ -44,7 +45,8 @@ struct ArtistCookieImageDisplay: View {
 }
 
 #Preview {
-    ScrollView(.horizontal) {
+    @Environment(FontManager.self) var fontManager
+    return ScrollView(.horizontal) {
         HStack {
             Button(action: {}) {
                 HStack {
@@ -52,7 +54,7 @@ struct ArtistCookieImageDisplay: View {
                     //.containerRelativeFrame(.horizontal, count: 20, span: 1, spacing: 0)
                     Text(SearchedArtist(default: true).Name)
                         .foregroundColor(.primary)
-                        .customFont(.headline)
+                        .customFont(fontManager, .headline)
                 }
                 .frame(height: 70)
             }

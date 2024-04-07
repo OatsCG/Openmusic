@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ManageImages: View {
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) private var fontManager
     var body: some View {
         List {
             ForEach(downloadManager.gather_downloaded_images(), id: \.hashValue) { track in
@@ -20,7 +21,7 @@ struct ManageImages: View {
                         Text(track.Title)
                         Text(track.TrackID)
                             .foregroundStyle(.secondary)
-                            .customFont(.footnote)
+                            .customFont(fontManager, .footnote)
                     }
                         .multilineTextAlignment(.leading)
                 }

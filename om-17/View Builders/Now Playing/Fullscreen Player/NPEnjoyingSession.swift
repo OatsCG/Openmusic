@@ -11,11 +11,12 @@ import SwiftData
 struct NPEnjoyingSession: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(PlaylistImporter.self) var playlistImporter
+    @Environment(FontManager.self) private var fontManager
     @Environment(\.modelContext) private var modelContext
     var body: some View {
         VStack {
             Text("Enjoying this session?")
-                .customFont(.title3, bold: true)
+                .customFont(fontManager, .title3, bold: true)
             Text("Add a playlist of your favourites.")
             Button(action: {
                 Task.detached {

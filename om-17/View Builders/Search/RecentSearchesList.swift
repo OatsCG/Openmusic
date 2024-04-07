@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecentSearchesList: View {
     @SceneStorage("recentSearches") var recentSearches: String = "search #1<!SPLITRECENTS!>search #2<!SPLITRECENTS!>search #3"
+    @Environment(FontManager.self) private var fontManager
     @Binding var viewModel: SearchViewModel
     @Binding var searchField: String
     var body: some View {
@@ -22,7 +23,7 @@ struct RecentSearchesList: View {
             VStack(alignment: .leading) {
                 HStack {
                     Text("Recently Searched")
-                        .customFont(.title2, bold: true)
+                        .customFont(fontManager, .title2, bold: true)
                     Spacer()
                     Button(action: {
                         withAnimation {
@@ -48,7 +49,7 @@ struct RecentSearchesList: View {
                     }) {
                         HStack {
                             Label(search, systemImage: "arrow.up.right.square")
-                                .customFont(.headline)
+                                .customFont(fontManager, .headline)
                             Spacer()
                         }
                     }

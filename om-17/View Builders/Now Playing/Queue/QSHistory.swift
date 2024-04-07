@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QSHistory: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     var body: some View {
@@ -16,7 +17,7 @@ struct QSHistory: View {
             VStack {
                 Spacer()
                 Text("Nothing in History")
-                    .customFont(.title2)
+                    .customFont(fontManager, .title2)
                     .foregroundStyle(.secondary)
                 Spacer()
             }

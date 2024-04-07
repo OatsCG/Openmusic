@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FetchedArtistContentHeader_spotty: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: FetchedArtist
     var body: some View {
         ZStack {
@@ -16,7 +17,7 @@ struct FetchedArtistContentHeader_spotty: View {
                 Spacer()
                 HStack {
                     Text(artist.Name)
-                        .customFont(.largeTitle, bold: true)
+                        .customFont(fontManager, .largeTitle, bold: true)
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                     Spacer()

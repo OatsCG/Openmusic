@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct UserView: View {
+    @Environment(FontManager.self) private var fontManager
     @Environment(OMUser.self) var omUser
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 Text("User ID:")
-                    .customFont(.title3, bold: true)
+                    .customFont(fontManager, .title3, bold: true)
                 Text("\(omUser.userID)")
-                    .customFont(.headline)
+                    .customFont(fontManager, .headline)
                     .multilineTextAlignment(.leading)
             }
             

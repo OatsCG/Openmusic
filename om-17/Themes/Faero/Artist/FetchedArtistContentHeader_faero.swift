@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FetchedArtistContentHeader_faero: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: FetchedArtist
     //@State private var animate = false
     @State private var currID: Double = 0
@@ -18,7 +19,7 @@ struct FetchedArtistContentHeader_faero: View {
             }
         HStack {
             Text(artist.Name)
-                .customFont(.largeTitle, bold: true)
+                .customFont(fontManager, .largeTitle, bold: true)
                 .multilineTextAlignment(.leading)
 //                .foregroundAddition {
 //                    ZStack {

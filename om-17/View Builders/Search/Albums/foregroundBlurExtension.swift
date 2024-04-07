@@ -57,9 +57,10 @@ extension View {
 
 
 #Preview {
-    VStack {
+    @Environment(FontManager.self) var fontManager
+    return VStack {
         Text("This Is Acting (Deluxe Version)")
-            .customFont(.title, bold: true)
+            .customFont(fontManager, .title, bold: true)
             //.border(.white)
             .foregroundBlur(ArtworkID: "FVx7pMdJR9PEYdz9QRDkZM94tZ8B0tr_U2ONcgsUf2We8sIkmOBys_X63U1d7DU6NgJ9ljAmWAxJPnUE")
             //.border(.blue)
@@ -73,9 +74,10 @@ extension View {
 }
 
 #Preview {
-    VStack {
+    @Environment(FontManager.self) var fontManager
+    return VStack {
         Text("This Is Acting (Deluxe Version)")
-            .customFont(.title, bold: true)
+            .customFont(fontManager, .title, bold: true)
             .foregroundAddition {
                 Color.red
             }

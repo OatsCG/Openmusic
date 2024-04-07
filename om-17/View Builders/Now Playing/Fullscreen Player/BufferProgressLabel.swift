@@ -95,12 +95,34 @@ struct BufferProgressLabel: View {
                                 }
                             } else {
                                 if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .readyToPlay) {
-                                    Image(systemName: "exclamationmark.triangle.fill")
-                                    Text("Initializing Buffer...")
-                                    Text("url: \(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")")
-                                        .task {
-                                            visibleState = .hidden
+                                    // PLAYER GETS STUCK HERE
+                                    if let p = playerManager.currentQueueItem?.audio_AVPlayer?.player as? AEPlayerOnline  {
+                                        if p.player.currentItem == nil {
+                                            // no item loaded
+                                            Text("player.currentItem not loaded")
+                                        } else {
+                                            if p.player.status == .failed {
+                                                Text("Failed 3")
+                                            } else if p.player.status == .readyToPlay {
+                                                if playerManager.currentQueueItem?.currentlyPriming == true {
+                                                    Text("Currently Priming...")
+                                                } else {
+                                                    Text("ReadyToPlay 3, Not Priming")
+                                                }
+                                            } else {
+                                                Text("Unknown 3")
+                                            }
                                         }
+                                    } else {
+                                        Text("Player Offline")
+                                    }
+                                    
+//                                    Image(systemName: "exclamationmark.triangle.fill")
+//                                    Text("Initializing Buffer...")
+//                                    Text("url: \(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")")
+//                                        .task {
+//                                            visibleState = .hidden
+//                                        }
                                 } else if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .failed) {
                                     Image(systemName: "x.circle.fill")
                                     Text("Failed 2")

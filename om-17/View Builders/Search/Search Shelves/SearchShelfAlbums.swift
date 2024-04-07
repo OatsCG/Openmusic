@@ -9,17 +9,18 @@ import SwiftUI
 import SwiftData
 
 struct SearchShelfAlbums: View {
+    @Environment(FontManager.self) private var fontManager
     var viewModel: SearchViewModel
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedAlbumsNPM(albums: viewModel.searchResults?.Albums)) {
                 HStack {
                     Text("Albums")
-                        .customFont(.title2, bold: true)
+                        .customFont(fontManager, .title2, bold: true)
                         .padding(.leading, 15)
                     Image(systemName: "chevron.right")
                         .symbolRenderingMode(.hierarchical)
-                        .customFont(.callout, bold: true)
+                        .customFont(fontManager, .callout, bold: true)
                 }
             }
                 .buttonStyle(.plain)

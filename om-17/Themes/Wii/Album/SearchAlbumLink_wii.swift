@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct SearchAlbumLink_wii: View {
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             AlbumArtDisplay(ArtworkID: album.Artwork, Resolution: .tile, Blur: 80, BlurOpacity: 0.0, cornerRadius: 6.0)
             Text(album.Title)
                 .foregroundColor(.primary)
-                .customFont(.callout)
+                .customFont(fontManager, .callout)
             Text(stringArtists(artistlist: album.Artists))
                 .foregroundColor(.secondary)
-                .customFont(.caption)
+                .customFont(fontManager, .caption)
             Spacer()
         }
             .multilineTextAlignment(.leading)
