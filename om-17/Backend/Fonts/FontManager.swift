@@ -13,21 +13,17 @@ import SwiftUI
     
     init(currentlyChosenTheme: Theme? = nil) {
         if let currentlyChosenTheme = currentlyChosenTheme {
-            print("CHOSE FONT SPOT 1 \(currentlyChosenTheme)")
             self.currentlyChosenTheme = currentlyChosenTheme
         } else {
             let storedFont: String? = UserDefaults.standard.string(forKey: "currentTheme")
             if let storedFont = storedFont {
                 let gotFont: Theme? = Theme.init(rawValue: storedFont)
                 if let gotFont = gotFont {
-                    print("CHOSE FONT 2 \(gotFont)")
                     self.currentlyChosenTheme = gotFont
                 } else {
-                    print("CHOSE FONT SPOT")
                     self.currentlyChosenTheme = .classic
                 }
             } else {
-                print("CHOSE FONT SPOT")
                 self.currentlyChosenTheme = .classic
             }
         }

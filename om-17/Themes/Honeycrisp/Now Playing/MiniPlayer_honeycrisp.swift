@@ -70,6 +70,7 @@ struct MiniPlayer_honeycrisp: View {
             .aspectRatio(contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding([.horizontal, .bottom], 5)
+            .shadow(radius: 5)
             .background(alignment: .top, content: {
                 ZStack {
                     Rectangle().fill(.ultraThinMaterial)

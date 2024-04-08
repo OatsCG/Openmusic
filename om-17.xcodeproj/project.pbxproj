@@ -124,7 +124,7 @@
 		E53B3C012A93040600C5063B /* LibraryArtistExtendedAlbums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53B3C002A93040600C5063B /* LibraryArtistExtendedAlbums.swift */; };
 		E53ED7DA2BAA497D00ECC3CE /* EQBandSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53ED7D92BAA497D00ECC3CE /* EQBandSlider.swift */; };
 		E53ED7DC2BAA856900ECC3CE /* EQPresetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53ED7DB2BAA856900ECC3CE /* EQPresetRow.swift */; };
-		E54525A42B8ADAB200C2961D /* ThemePreview_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54525A32B8ADAB200C2961D /* ThemePreview_classic.swift */; };
+		E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */; };
 		E547F6EF2B74158E00AB5617 /* NavPathModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6EE2B74158E00AB5617 /* NavPathModels.swift */; };
 		E547F6F32B7435ED00AB5617 /* ObjectEncoders.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */; };
 		E54A04DF2A5059D400B1FEDF /* LibraryAlbumContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */; };
@@ -178,6 +178,12 @@
 		E5705DDD2A82AD2F0087A43F /* PlaybackExplicityDownloadedIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5705DDC2A82AD2F0087A43F /* PlaybackExplicityDownloadedIcon.swift */; };
 		E57281612B2F806200A447FC /* RodinNTLG.otf in Resources */ = {isa = PBXBuildFile; fileRef = E58FB6382B2E14100002E5DB /* RodinNTLG.otf */; };
 		E574D1062A923A77007DD9CA /* LibraryAlbumDownloadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E574D1052A923A77007DD9CA /* LibraryAlbumDownloadButton.swift */; };
+		E575D6BC2BC24FDF005554A3 /* ThemePreview_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E575D6BB2BC24FDF005554A3 /* ThemePreview_classic.swift */; };
+		E575D6BE2BC24FFC005554A3 /* ThemePreview_spotty.swift in Sources */ = {isa = PBXBuildFile; fileRef = E575D6BD2BC24FFC005554A3 /* ThemePreview_spotty.swift */; };
+		E575D6C02BC250C0005554A3 /* ThemePreview_wii.swift in Sources */ = {isa = PBXBuildFile; fileRef = E575D6BF2BC250C0005554A3 /* ThemePreview_wii.swift */; };
+		E575D6C22BC250C8005554A3 /* ThemePreview_faero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E575D6C12BC250C8005554A3 /* ThemePreview_faero.swift */; };
+		E575D6C42BC250D1005554A3 /* ThemePreview_feco.swift in Sources */ = {isa = PBXBuildFile; fileRef = E575D6C32BC250D1005554A3 /* ThemePreview_feco.swift */; };
+		E575D6C62BC250DD005554A3 /* ThemePreview_honeycrisp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E575D6C52BC250DD005554A3 /* ThemePreview_honeycrisp.swift */; };
 		E57829E62B81BBDA00F1C8E6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E57829E52B81BBDA00F1C8E6 /* Launch Screen.storyboard */; };
 		E579DE432B3E7A0F009324C1 /* MiniPlayer_spotty.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579DE1B2B3E7A0F009324C1 /* MiniPlayer_spotty.swift */; };
 		E579DE442B3E7A0F009324C1 /* DefaultArtwork_spotty.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579DE1C2B3E7A0F009324C1 /* DefaultArtwork_spotty.swift */; };
@@ -644,7 +650,7 @@
 		E53B3C002A93040600C5063B /* LibraryArtistExtendedAlbums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryArtistExtendedAlbums.swift; sourceTree = "<group>"; };
 		E53ED7D92BAA497D00ECC3CE /* EQBandSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQBandSlider.swift; sourceTree = "<group>"; };
 		E53ED7DB2BAA856900ECC3CE /* EQPresetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQPresetRow.swift; sourceTree = "<group>"; };
-		E54525A32B8ADAB200C2961D /* ThemePreview_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_classic.swift; sourceTree = "<group>"; };
+		E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewer.swift; sourceTree = "<group>"; };
 		E547F6EE2B74158E00AB5617 /* NavPathModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavPathModels.swift; sourceTree = "<group>"; };
 		E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectEncoders.swift; sourceTree = "<group>"; };
 		E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumContent.swift; sourceTree = "<group>"; };
@@ -697,6 +703,12 @@
 		E5705DD42A8178310087A43F /* AlbumWideButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumWideButton_component.swift; sourceTree = "<group>"; };
 		E5705DDC2A82AD2F0087A43F /* PlaybackExplicityDownloadedIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackExplicityDownloadedIcon.swift; sourceTree = "<group>"; };
 		E574D1052A923A77007DD9CA /* LibraryAlbumDownloadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumDownloadButton.swift; sourceTree = "<group>"; };
+		E575D6BB2BC24FDF005554A3 /* ThemePreview_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_classic.swift; sourceTree = "<group>"; };
+		E575D6BD2BC24FFC005554A3 /* ThemePreview_spotty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_spotty.swift; sourceTree = "<group>"; };
+		E575D6BF2BC250C0005554A3 /* ThemePreview_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_wii.swift; sourceTree = "<group>"; };
+		E575D6C12BC250C8005554A3 /* ThemePreview_faero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_faero.swift; sourceTree = "<group>"; };
+		E575D6C32BC250D1005554A3 /* ThemePreview_feco.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_feco.swift; sourceTree = "<group>"; };
+		E575D6C52BC250DD005554A3 /* ThemePreview_honeycrisp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview_honeycrisp.swift; sourceTree = "<group>"; };
 		E57829E52B81BBDA00F1C8E6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E579DE1B2B3E7A0F009324C1 /* MiniPlayer_spotty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayer_spotty.swift; sourceTree = "<group>"; };
 		E579DE1C2B3E7A0F009324C1 /* DefaultArtwork_spotty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultArtwork_spotty.swift; sourceTree = "<group>"; };
@@ -1191,7 +1203,13 @@
 		E54525A22B8ADA3A00C2961D /* Previews */ = {
 			isa = PBXGroup;
 			children = (
-				E54525A32B8ADAB200C2961D /* ThemePreview_classic.swift */,
+				E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */,
+				E575D6BB2BC24FDF005554A3 /* ThemePreview_classic.swift */,
+				E575D6C52BC250DD005554A3 /* ThemePreview_honeycrisp.swift */,
+				E575D6BF2BC250C0005554A3 /* ThemePreview_wii.swift */,
+				E575D6BD2BC24FFC005554A3 /* ThemePreview_spotty.swift */,
+				E575D6C12BC250C8005554A3 /* ThemePreview_faero.swift */,
+				E575D6C32BC250D1005554A3 /* ThemePreview_feco.swift */,
 			);
 			path = Previews;
 			sourceTree = "<group>";
@@ -2866,6 +2884,7 @@
 				E5592EB62A649AE60011156C /* LiveDownloadRow.swift in Sources */,
 				E5705DC92A81652E0087A43F /* MiniPlayer_honeycrisp.swift in Sources */,
 				E54A04DF2A5059D400B1FEDF /* LibraryAlbumContent.swift in Sources */,
+				E575D6C62BC250DD005554A3 /* ThemePreview_honeycrisp.swift in Sources */,
 				E595DA562B8BF833007D4A59 /* PMSuggestions.swift in Sources */,
 				E506D9E82B00BB9200D3AAAD /* NPTitles.swift in Sources */,
 				E5DD996A2AB6848700CFE16C /* PlaylistContentHeadingEditing_classic.swift in Sources */,
@@ -2938,7 +2957,7 @@
 				E58880122A78365000E92379 /* LibraryAlbumMenu.swift in Sources */,
 				E5A3652B2A358CED00243176 /* StringArtists.swift in Sources */,
 				E5FFBD5C2B0A919A00170496 /* LoadingExplore_honeycrisp.swift in Sources */,
-				E54525A42B8ADAB200C2961D /* ThemePreview_classic.swift in Sources */,
+				E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */,
 				E579DE492B3E7A0F009324C1 /* PlaylistContentHeading_spotty.swift in Sources */,
 				E5A365222A35839300243176 /* ArtistFetchAPI.swift in Sources */,
 				E58E8FB32BA16BB8009F7E43 /* AeroGlossOverlay.swift in Sources */,
@@ -3070,6 +3089,7 @@
 				E5705DCF2A81771C0087A43F /* AlbumWideButton_classic.swift in Sources */,
 				E55E17F62A435C6000EA5D36 /* QSNPRowControls.swift in Sources */,
 				E5E6A1CE2A7DC46E00880E6B /* SearchArtistLink_component.swift in Sources */,
+				E575D6C42BC250D1005554A3 /* ThemePreview_feco.swift in Sources */,
 				E58E8FAF2BA16BB8009F7E43 /* TabBarLibraryLabel_faero.swift in Sources */,
 				E5A4310C2B058F1500507DB2 /* LiveImportingRow.swift in Sources */,
 				E579DE4A2B3E7A0F009324C1 /* QPPlaylistLink_spotty.swift in Sources */,
@@ -3120,6 +3140,7 @@
 				E5A4373F2B827F24007680AF /* NowPlayingOptions.swift in Sources */,
 				E5705DBB2A80935E0087A43F /* TabBarSearchLabel_honeycrisp.swift in Sources */,
 				E58B672C2ACFB2B0002FA7A2 /* QPSingleLink_wii.swift in Sources */,
+				E575D6BC2BC24FDF005554A3 /* ThemePreview_classic.swift in Sources */,
 				E58E8FAB2BA16BB8009F7E43 /* PlaylistContentHeadingEditing_faero.swift in Sources */,
 				E55CB2CB2A6302EC007078A5 /* User.swift in Sources */,
 				E58B67322ACFB2B0002FA7A2 /* SearchTrackLink_wii.swift in Sources */,
@@ -3146,6 +3167,7 @@
 				E5E785E32B6CB929004F4D51 /* Credits.swift in Sources */,
 				E58B673B2ACFB2B0002FA7A2 /* AlbumContentHeading_wii.swift in Sources */,
 				E56DDA002B2BE005006222A8 /* TVStaticBackground.swift in Sources */,
+				E575D6C22BC250C8005554A3 /* ThemePreview_faero.swift in Sources */,
 				E5E6A1D02A7DC77400880E6B /* LibraryAlbumLink_classic.swift in Sources */,
 				E532D4E52B42074500D7CC25 /* PlaylistMenuPreview_component.swift in Sources */,
 				E5E6A1CC2A7DC45E00880E6B /* SearchArtistLink_classic.swift in Sources */,
@@ -3194,6 +3216,7 @@
 				E5DCFE142B4510A80044D9B5 /* NPSkipButton_classic.swift in Sources */,
 				E58E8FA12BA16BB8009F7E43 /* PlaylistMenuPreview_faero.swift in Sources */,
 				E51464352ACE63D600FDBAF5 /* SearchArtistContentHeader_honeycrisp.swift in Sources */,
+				E575D6C02BC250C0005554A3 /* ThemePreview_wii.swift in Sources */,
 				E5CB98E22AB8CE9300043ED4 /* TrackMenuPreview_honeycrisp.swift in Sources */,
 				E58B67392ACFB2B0002FA7A2 /* TrackMenuPreview_wii.swift in Sources */,
 				E5A431082B058E7D00507DB2 /* LiveImportingList.swift in Sources */,
@@ -3231,6 +3254,7 @@
 				E58E8F942BA16BB8009F7E43 /* FetchedArtistContentHeader_faero.swift in Sources */,
 				E52300732AAEE8F30023EF94 /* QPPlaylistLink_classic.swift in Sources */,
 				E5DCFE102B45105B0044D9B5 /* NPBackButton_wii.swift in Sources */,
+				E575D6BE2BC24FFC005554A3 /* ThemePreview_spotty.swift in Sources */,
 				E58CA2412B9CE88000BCBD7B /* ManageImages.swift in Sources */,
 				E525B7502A8AB65700421F7E /* QPSingleLink_classic.swift in Sources */,
 				E51CE7782A5C982800377848 /* DownloadManager.swift in Sources */,

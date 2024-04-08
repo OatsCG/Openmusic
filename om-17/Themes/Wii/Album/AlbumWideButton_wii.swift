@@ -25,7 +25,7 @@ struct AlbumWideButton_wii: View {
                         .foregroundStyle(.secondary)
                 }
             }
-                .foregroundStyle(.primary)
+                //.foregroundStyle(.primary)
             Spacer()
         }
             .customFont(fontManager, .body)

@@ -1,5 +1,5 @@
 //
-//  ThemePreview_classic.swift
+//  ThemePreview_wii.swift
 //  om-17
 //
 //  Created by Charlie Giannis on 2024-04-06.
@@ -7,13 +7,12 @@
 
 import SwiftUI
 
-struct ThemePreview_classic: View {
+struct ThemePreview_wii: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(FontManager.self) var fontManager
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @AppStorage("currentTheme") var currentTheme: String = "wii"
     @State var parallax: CGFloat = 0
     // input tracks
     @Binding var track1: FetchedTrack
@@ -64,13 +63,13 @@ struct ThemePreview_classic: View {
     var miniplayerOpacity: CGFloat = 0.7
     var body: some View {
         GeometryReader { geo in
-            GlobalBackground_classic()
+            GlobalBackground_wii()
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .contentShape(Rectangle())
                 .overlay {
                     RoundedRectangle(cornerRadius: 20).fill(.clear)
                         .stroke(
-                            colorScheme == .dark ? Color(hue: 0.7, saturation: 0.45, brightness: 1) : Color(hue: 0.7, saturation: 0.55, brightness: 1),
+                            .cyan,
                             style: StrokeStyle(lineWidth: 2)
                         )
                 }
@@ -80,7 +79,7 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * 0.42)
                 )
             
-            SearchTrackLink_classic(track: track1)
+            SearchTrackLink_wii(track: track1)
                 .disabled(true)
                 .frame(width: SearchTrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).width, height: SearchTrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
                 .compositingGroup()
@@ -90,7 +89,7 @@ struct ThemePreview_classic: View {
                     x: (geo.size.width * songLinkPos.x) + (songLinkParallax * parallax),
                     y: (geo.size.height * songLinkPos.y)
                 )
-            NPPlayButton_classic()
+            NPPlayButton_wii()
                 .disabled(true)
                 .scaleEffect(playButtonSize)
                 .opacity(playButtonOpacity)
@@ -98,7 +97,7 @@ struct ThemePreview_classic: View {
                     x: (geo.size.width * playButtonPos.x) + (playButtonParallax * parallax),
                     y: (geo.size.height * playButtonPos.y)
                 )
-            TrackLink_classic(track: track2)
+            TrackLink_wii(track: track2)
                 .disabled(true)
                 .aspectRatio(CGFloat(TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).count / TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).span), contentMode: .fit)
                 .compositingGroup()
@@ -108,7 +107,7 @@ struct ThemePreview_classic: View {
                     x: (geo.size.width * trackLinkPos.x) + (trackLinkParallax * parallax),
                     y: (geo.size.height * trackLinkPos.y)
                 )
-            NPBackButton_classic()
+            NPBackButton_wii()
                 .disabled(true)
                 .scaleEffect(backButtonSize)
                 .opacity(backButtonOpacity)
@@ -117,8 +116,8 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * backButtonPos.y)
                 )
             
-            Text("Classic")
-                .foregroundStyle(colorScheme == .dark ? Color(hue: 0.7, saturation: 0.45, brightness: 1) : Color(hue: 0.7, saturation: 0.55, brightness: 1))
+            Text("Wii")
+                .foregroundStyle(.cyan)
                 .customFont(fontManager, .largeTitle, bold: true)
                 .scaleEffect(titleSize)
                 .opacity(titleOpacity)
@@ -127,7 +126,7 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * titlePos.y)
                 )
             
-            QPMultipleLink_classic(tracks: [track3, track4, track5])
+            QPMultipleLink_wii(tracks: [track3, track4, track5])
                 .disabled(true)
                 .scaleEffect(recentAlbumSize)
                 .opacity(recentAlbumOpacity)
@@ -136,9 +135,8 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * recentAlbumPos.y)
                 )
             
-            
             HStackWrapped(rows: 1) {
-                SearchAlbumLink_classic(album: track6.Album)
+                SearchAlbumLink_wii(album: track6.Album)
                     .frame(width: SearchAlbumLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).width, height: 210)
             }
                 .disabled(true)
@@ -149,7 +147,7 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * albumLinkPos.y)
                 )
             
-            MiniPlayer_classic()
+            MiniPlayer_wii()
                 .disabled(true)
                 .scaleEffect(miniplayerSize)
                 .opacity(miniplayerOpacity)
@@ -160,14 +158,14 @@ struct ThemePreview_classic: View {
             
             Button(action: {
                 withAnimation {
-                    currentTheme = "classic"
-                    FontManager.shared.currentlyChosenTheme = .classic
+                    currentTheme = "wii"
+                    FontManager.shared.currentlyChosenTheme = .wii
                 }
             }) {
-                AlbumWideButton_classic(text: currentTheme == "classic" ? "Selected" : "Select", ArtworkID: "")
+                AlbumWideButton_wii(text: currentTheme == "wii" ? "Selected" : "Select", ArtworkID: "")
                     .frame(width: 200)
             }
-                .foregroundStyle(currentTheme == "classic" ? .secondary : .primary)
+                .foregroundStyle(currentTheme == "wii" ? .secondary : .primary)
                 .buttonStyle(.plain)
                 .position(
                     x: (geo.size.width * selectButtonPos.x) + (selectButtonParallax * parallax),
