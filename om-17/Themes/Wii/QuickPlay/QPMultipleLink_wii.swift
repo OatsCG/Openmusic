@@ -22,8 +22,10 @@ struct QPMultipleLink_wii: View {
                     }
                         .contextMenu {
                             LibraryAlbumMenu(album: StoredAlbum(from: tracks))
+                                .environment(fontManager)
                         } preview: {
                             AlbumMenuPreview_component(album: StoredAlbum(from: tracks))
+                                .environment(fontManager)
                         }
                     VStack(spacing: 10) {
                         Button(action: {

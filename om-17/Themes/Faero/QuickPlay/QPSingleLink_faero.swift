@@ -19,8 +19,10 @@ struct QPSingleLink_faero: View {
                 .padding([.top, .bottom, .leading], 10.0)
                 .contextMenu {
                     LibraryAlbumMenu(album: StoredAlbum(from: [track]))
+                        .environment(fontManager)
                 } preview: {
                     AlbumMenuPreview_component(album: StoredAlbum(from: [track]))
+                        .environment(fontManager)
                 }
             Button(action: {
                 playerManager.fresh_play(track: track)
@@ -71,8 +73,10 @@ struct QPSingleLink_faero: View {
                 .lineLimit(1)
                 .contextMenu {
                     TrackMenu(track: track)
+                        .environment(fontManager)
                 } preview: {
                     TrackMenuPreview_component(track: track)
+                        .environment(fontManager)
                 }
             Spacer()
         }

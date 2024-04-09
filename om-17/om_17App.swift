@@ -25,7 +25,6 @@ struct om_17App: App {
                 .environment(networkMonitor)
                 .environment(fontManager)
                 .environment(omUser)
-            
         }
         .modelContainer(for: [StoredTrack.self, StoredPlaylist.self])
     }

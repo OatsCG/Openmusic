@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LibraryArtistLink: View {
+    @Environment(FontManager.self) private var fontManager
     var artist: SearchedArtist
     var albums: [FetchedAlbum]? = []
     var features: [StoredTrack]? = []
@@ -17,6 +18,7 @@ struct LibraryArtistLink: View {
         }
             .contextMenu {
                 ArtistMenu(artist: artist)
+                    .environment(fontManager)
             }
     }
 }

@@ -68,8 +68,10 @@ struct QSQueueRow: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .contextMenu {
                     QueueItemMenu(queueItem: queueItem, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
+                        .environment(fontManager)
                 } preview: {
                     TrackMenuPreview_component(track: FetchedTrack(from: queueItem))
+                        .environment(fontManager)
                 }
         }
     }

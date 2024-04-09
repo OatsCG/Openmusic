@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LibrarySongLink: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var track: StoredTrack
     var songList: [StoredTrack]
     var index: Int
@@ -23,8 +24,10 @@ struct LibrarySongLink: View {
                 .buttonStyle(.plain)
                 .contextMenu {
                     TrackMenu(track: track)
+                        .environment(fontManager)
                 } preview: {
                     TrackMenuPreview_component(track: track)
+                        .environment(fontManager)
                 }
         }
     }

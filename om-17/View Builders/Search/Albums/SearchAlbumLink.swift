@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchAlbumLink: View {
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var fill: Bool = false
     var body: some View {
@@ -17,13 +18,16 @@ struct SearchAlbumLink: View {
             .buttonStyle(.plain)
             .contextMenu {
                 SearchAlbumMenu(searchedAlbum: album)
+                    .environment(fontManager)
             } preview: {
                 AlbumMenuPreview_component(album: album)
+                    .environment(fontManager)
             }
     }
 }
 
 struct SearchAlbumLinkBig: View {
+    @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var body: some View {
         NavigationLink(value: SearchAlbumContentNPM(album: album)) {
@@ -32,8 +36,10 @@ struct SearchAlbumLinkBig: View {
             .buttonStyle(.plain)
             .contextMenu {
                 SearchAlbumMenu(searchedAlbum: album)
+                    .environment(fontManager)
             } preview: {
                 AlbumMenuPreview_component(album: album)
+                    .environment(fontManager)
             }
     }
 }

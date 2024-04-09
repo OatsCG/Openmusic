@@ -32,8 +32,10 @@ struct QPAlbumTracks: View {
                 }
                     .contextMenu {
                         TrackMenu(track: track)
+                            .environment(fontManager)
                     } preview: {
                         TrackMenuPreview_component(track: track)
+                            .environment(fontManager)
                     }
                 if (index < tracks.count) {
                     Divider()

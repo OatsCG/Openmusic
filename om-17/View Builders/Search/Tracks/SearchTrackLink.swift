@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchTrackLink: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var track: any Track
     var body: some View {
         Button(action: {
@@ -19,8 +20,10 @@ struct SearchTrackLink: View {
             .buttonStyle(.plain)
             .contextMenu {
                 TrackMenu(track: track)
+                    .environment(fontManager)
             } preview: {
                 TrackMenuPreview_component(track: track)
+                    .environment(fontManager)
             }
     }
 }

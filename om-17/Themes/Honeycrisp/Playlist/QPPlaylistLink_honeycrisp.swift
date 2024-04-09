@@ -32,8 +32,10 @@ struct QPPlaylistLink_honeycrisp: View {
                     }
                         .contextMenu {
                             PlaylistMenu(playlist: playlist)
+                                .environment(fontManager)
                         } preview: {
                             PlaylistMenuPreview_component(playlist: playlist)
+                                .environment(fontManager)
                         }
                     VStack(spacing: 10) {
                         Button(action: {

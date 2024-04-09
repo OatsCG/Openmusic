@@ -81,6 +81,7 @@ struct NPBottomToolBar: View {
                     .environment(playlistImporter)
                     .environment(downloadManager)
                     .environment(networkMonitor)
+                    .environment(fontManager)
                     .environment(omUser)
                     .presentationBackground(.thinMaterial)
                     .presentationDragIndicator(.visible)

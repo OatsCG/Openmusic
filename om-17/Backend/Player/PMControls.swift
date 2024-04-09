@@ -11,10 +11,19 @@ import AVFoundation
 extension PlayerManager {
     func play() {
         if (self.currentQueueItem == nil) {
-            Task.detached {
-                self.setAudioSession()
-                self.player_forward()
-                self.play_fade()
+            if (self.trackQueue.isEmpty) {
+                if let recentTrack = RecentlyPlayedManager.getRecentTracks().first {
+                    self.fresh_play(track: recentTrack)
+                    Task.detached {
+                        self.play_fade()
+                    }
+                }
+            } else {
+                Task.detached {
+                    self.setAudioSession()
+                    self.player_forward()
+                    self.play_fade()
+                }
             }
         } else {
             Task.detached {

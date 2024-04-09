@@ -26,6 +26,7 @@ struct ArtistCookie: View {
             .frame(maxWidth: 200, maxHeight: 40)
             .contextMenu {
                 ArtistMenu(artist: artist)
+                    .environment(fontManager)
             }
             //.border(.red)
     }

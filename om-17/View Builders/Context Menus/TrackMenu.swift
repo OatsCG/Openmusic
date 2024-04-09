@@ -11,6 +11,7 @@ import SwiftData
 struct TrackMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) var fontManager
     @Environment(OMUser.self) var omUser
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]

@@ -40,8 +40,10 @@ struct QPPlaylistTracks: View {
                     }
                     .contextMenu {
                         TrackMenu(track: item.track)
+                            .environment(fontManager)
                     } preview: {
                         TrackMenuPreview_component(track: item.track)
+                            .environment(fontManager)
                     }
                     if (index < items.filter({ $0.importData.status == .success }).count) {
                         Divider()

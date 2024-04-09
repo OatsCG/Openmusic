@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchArtistExtendedTracks: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]?
     var artistName: String
     var body: some View {
@@ -27,8 +28,10 @@ struct SearchArtistExtendedTracks: View {
                         .buttonStyle(.plain)
                         .contextMenu {
                             TrackMenu(track: track)
+                                .environment(fontManager)
                         } preview: {
                             TrackMenuPreview_component(track: track)
+                                .environment(fontManager)
                         }
                     }
                 }

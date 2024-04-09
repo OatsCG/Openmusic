@@ -70,8 +70,10 @@ struct SearchAlbumSongLink: View {
             .buttonStyle(.plain)
             .contextMenu {
                 TrackMenu(track: track)
+                    .environment(fontManager)
             } preview: {
                 TrackMenuPreview_component(track: track)
+                    .environment(fontManager)
             }
             .padding(0)
     }

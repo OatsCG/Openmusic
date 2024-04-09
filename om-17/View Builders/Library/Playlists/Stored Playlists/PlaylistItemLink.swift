@@ -73,8 +73,10 @@ struct PlaylistItemLink: View {
             .buttonStyle(.plain)
             .contextMenu {
                 TrackMenu(track: item.track)
+                    .environment(fontManager)
             } preview: {
                 TrackMenuPreview_component(track: item.track)
+                    .environment(fontManager)
             }
             .padding(0)
             .aspectRatio(CGFloat(TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).count / TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).span), contentMode: .fit)

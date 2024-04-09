@@ -16,6 +16,7 @@ struct MiniPlayer: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
+    @Environment(FontManager.self) private var fontManager
     @Environment(OMUser.self) var omUser
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @State private var showingNPSheet = false
@@ -31,6 +32,7 @@ struct MiniPlayer: View {
                 MiniPlayer_component()
                     .contextMenu {
                         NPMenu(queueItem: playerManager.currentQueueItem, playlists: playlists, passedNSPath: $passedNSPath, showingNPSheet: .constant(true))
+                            .environment(fontManager)
                     }
                     .onTapGesture {
                         if (NowPlayingUsesCover) {

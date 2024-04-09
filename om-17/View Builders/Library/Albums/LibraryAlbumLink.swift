@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LibraryAlbumLink: View {
+    @Environment(FontManager.self) private var fontManager
     var tracks: [StoredTrack]
     var fill: Bool = true
     var body: some View {
@@ -17,8 +18,10 @@ struct LibraryAlbumLink: View {
             .buttonStyle(.plain)
             .contextMenu {
                 LibraryAlbumMenu(album: StoredAlbum(from: tracks))
+                    .environment(fontManager)
             } preview: {
                 AlbumMenuPreview_component(album: StoredAlbum(from: tracks))
+                    .environment(fontManager)
             }
     }
 }
