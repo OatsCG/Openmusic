@@ -23,7 +23,7 @@ struct LibraryAlbumLink_honeycrisp: View {
             .multilineTextAlignment(.leading)
             .lineLimit(1)
             .padding(.all, 2)
-            .cornerRadius(8)
+            .cornerRadius(10)
     }
 }
 

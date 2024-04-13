@@ -96,7 +96,6 @@ struct LibraryPage: View {
                         ManageImages()
                     }
             }
-            MiniPlayer(passedNSPath: $libraryNSPath)
         }
     }
 }

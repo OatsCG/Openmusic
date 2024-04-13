@@ -87,7 +87,6 @@ struct SearchPage: View {
                         LibraryArtistExtendedAlbums(albums: npm.albums, artistName: npm.artistName)
                     }
             }
-            MiniPlayer(passedNSPath: $searchNSPath)
         }
     }
     private func resetTimers() {

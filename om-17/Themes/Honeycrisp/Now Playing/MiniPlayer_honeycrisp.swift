@@ -71,15 +71,6 @@ struct MiniPlayer_honeycrisp: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding([.horizontal, .bottom], 5)
             .shadow(radius: 5)
-            .background(alignment: .top, content: {
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black, .black]), startPoint: .top, endPoint: .bottom))
-                    Rectangle().fill(.background)
-                        .opacity(0.9)
-                        .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black]), startPoint: .top, endPoint: .bottom))
-                }
-            })
     }
 }
 

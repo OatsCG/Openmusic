@@ -71,6 +71,13 @@ struct NPHeaderSegment: View {
                     }
                     Spacer()
                     Menu {
+                        Button(action: {
+                            Task {
+                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
+                            }
+                        }) {
+                            Label("Refresh Playback", systemImage: "arrow.clockwise")
+                        }
                         if (playerManager.currentQueueItem?.fetchedPlayback?.YT_Video_ID != nil) {
                             Button(action: {
                                 if ((playerManager.currentQueueItem?.isVideo ?? false) == true) {

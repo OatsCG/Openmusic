@@ -190,36 +190,38 @@ public class AudioPlayerNode {
     // MARK: - Controlling Playback
     
     public func play(at when: AVAudioTime? = nil) {
-        guard file != nil else {
-            log.error("Failed to play. No audio file is loaded.")
-            return
+        DispatchQueue.main.async {
+            guard self.file != nil else {
+                log.error("Failed to play. No audio file is loaded.")
+                return
+            }
+            
+            guard let e = self.node.engine else {
+                log.error("Failed to play: the node must be attached to an engine.")
+                return
+            }
+            
+            guard e.isRunning else {
+                log.error("Failed to play: audio engine is stopped.")
+                return
+            }
+            
+            guard self.status != .playing else {
+                log.debug("The player is already playing.")
+                return
+            }
+            
+            if self.needsScheduling { self.schedule(at: when) }
+            
+            self.node.play()
+            
+            // Collect the offset of the sample time if it is nil.
+            if self.sampleTimeOffset == nil, let pt = self.node.playerTime {
+                self.sampleTimeOffset = pt.sampleTime
+            }
+            
+            self.status = .playing
         }
-        
-        guard let e = node.engine else {
-            log.error("Failed to play: the node must be attached to an engine.")
-            return
-        }
-        
-        guard e.isRunning else {
-            log.error("Failed to play: audio engine is stopped.")
-            return
-        }
-        
-        guard status != .playing else {
-            log.debug("The player is already playing.")
-            return
-        }
-        
-        if needsScheduling { schedule(at: when) }
-        
-        node.play()
-        
-        // Collect the offset of the sample time if it is nil.
-        if sampleTimeOffset == nil, let pt = node.playerTime {
-            sampleTimeOffset = pt.sampleTime
-        }
-        
-        status = .playing
     }
     
     public func pause() {
@@ -231,17 +233,19 @@ public class AudioPlayerNode {
     
     /// Stops playback and removes any scheduled events.
     public func stop() {
-        guard status != .noSource else { return }
-        
-        if status == .ready && needsScheduling {
-            log.debug("Couldn't stop the node: it is already stopped and there are no scheduled events.")
-            return
+        DispatchQueue.main.async {
+            guard self.status != .noSource else { return }
+            
+            if self.status == .ready && self.needsScheduling {
+                log.debug("Couldn't stop the node: it is already stopped and there are no scheduled events.")
+                return
+            }
+            
+            self.blocksNextCompletionHandler = true
+            self.node.stop()
+            self.status = .ready
+            self.needsScheduling = true
         }
-        
-        blocksNextCompletionHandler = true
-        node.stop()
-        status = .ready
-        needsScheduling = true
     }
     
     /// Sets the current playback time.

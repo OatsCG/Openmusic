@@ -59,7 +59,22 @@ struct BufferProgressLabel: View {
                         if (playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
                             Image(systemName: "x.circle.fill")
                             VStack(alignment: .leading) {
-                                Text("Playback Empty")
+                                /* 
+                                 Happens when
+                                 
+                                 PREREQS
+                                 networkMonitor.isConnected == true
+                                 playerManager.currentQueueItem?.currentlyPriming == false
+                                 playerManager.currentQueueItem?.fetchedPlayback != nil
+                                 playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == ""
+                                 
+                                 - connected to wifi
+                                 - not currently priming
+                                 - playback exists
+                                 - playback URL == ""
+                                 
+                                 */
+                                Text("Not Available For Streaming")
                                 Text("**YouTube ID**: \(playerManager.currentQueueItem?.fetchedPlayback?.YT_Audio_ID ?? "nil")")
                                 Text("**Fetched URL**: \(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")")
                             }
@@ -107,7 +122,8 @@ struct BufferProgressLabel: View {
                                                 if playerManager.currentQueueItem?.currentlyPriming == true {
                                                     Text("Currently Priming...")
                                                 } else {
-                                                    Text("ReadyToPlay 3, Not Priming")
+                                                    Text("ReadyToPlay 3, Not Priming. Buffering...")
+                                                    
                                                 }
                                             } else {
                                                 Text("Unknown 3")

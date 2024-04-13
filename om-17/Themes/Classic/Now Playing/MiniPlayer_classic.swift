@@ -73,10 +73,6 @@ struct MiniPlayer_classic: View {
             .clipShape(RoundedRectangle(cornerRadius: 15))
             .padding([.horizontal, .bottom], 5)
             .shadow(radius: 5)
-            .background(alignment: .top, content: {
-                Rectangle().fill(.thinMaterial)
-                    .mask(LinearGradient(gradient: Gradient(colors: [.clear, .clear, .black, .black]), startPoint: .top, endPoint: .bottom))
-            })
     }
 }
 

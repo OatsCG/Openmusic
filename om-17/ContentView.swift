@@ -111,29 +111,24 @@ struct ContentView: View {
             }
         } else {
             TabView(selection: selectionBinding) {
-                ExplorePage(exploreNSPath: $exploreNSPath)
+                ExploreTab(exploreNSPath: $exploreNSPath)
                     .tabItem {
                         Image(systemName: "globe")
                         Text("Home")
                     }
                     .tag(0)
-                    .toolbarBackground(.visible, for: .tabBar)
-                    .toolbarBackground(.thinMaterial, for: .tabBar)
-                SearchPage(searchNSPath: $searchNSPath)
+                    
+                SearchTab(searchNSPath: $searchNSPath)
                     .tabItem {
                         TabBarSearchLabel_component()
                     }
                     .tag(1)
-                    .toolbarBackground(.visible, for: .tabBar)
-                    .toolbarBackground(.thinMaterial, for: .tabBar)
-                LibraryPage(libraryNSPath: $libraryNSPath)
+                LibraryTab(libraryNSPath: $libraryNSPath)
                     .tabItem {
                         TabBarLibraryLabel_component()
                     }
                     .tag(2)
-                    .toolbarBackground(.visible, for: .tabBar)
-                    .toolbarBackground(.thinMaterial, for: .tabBar)
-                SettingsPage()
+                SettingsTab()
                     .tabItem {
                         Image(systemName: "gear")
                         Text("Options")

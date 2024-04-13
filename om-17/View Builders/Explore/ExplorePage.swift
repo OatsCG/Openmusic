@@ -181,7 +181,6 @@ struct ExplorePage: View {
 //                    }
                 }
             }
-            MiniPlayer( passedNSPath: $exploreNSPath)
         }
     }
 }

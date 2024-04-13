@@ -154,6 +154,17 @@
 		E56DDA002B2BE005006222A8 /* TVStaticBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56DD9FF2B2BE005006222A8 /* TVStaticBackground.swift */; };
 		E56DDA022B2BE97C006222A8 /* TVStaticFuzz.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56DDA012B2BE97C006222A8 /* TVStaticFuzz.swift */; };
 		E56DDA042B2BEDD4006222A8 /* TVStaticLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56DDA032B2BEDD4006222A8 /* TVStaticLines.swift */; };
+		E56E1D442BC9BCE600C4DB42 /* ExploreTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D432BC9BCE600C4DB42 /* ExploreTab.swift */; };
+		E56E1D472BC9BCF700C4DB42 /* SearchTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D462BC9BCF700C4DB42 /* SearchTab.swift */; };
+		E56E1D492BC9BD0000C4DB42 /* LibraryTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D482BC9BD0000C4DB42 /* LibraryTab.swift */; };
+		E56E1D4B2BC9BD0A00C4DB42 /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D4A2BC9BD0A00C4DB42 /* SettingsTab.swift */; };
+		E56E1D4E2BC9C4EE00C4DB42 /* VariableBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D4D2BC9C4EE00C4DB42 /* VariableBlur.swift */; };
+		E56E1D502BC9CD4800C4DB42 /* TabbarBackground_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D4F2BC9CD4800C4DB42 /* TabbarBackground_component.swift */; };
+		E56E1D522BC9CD7000C4DB42 /* TabbarBackground_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D512BC9CD7000C4DB42 /* TabbarBackground_classic.swift */; };
+		E56E1D542BC9CECE00C4DB42 /* TabbarBackground_honeycrisp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D532BC9CECE00C4DB42 /* TabbarBackground_honeycrisp.swift */; };
+		E56E1D562BC9CEE100C4DB42 /* TabbarBackground_wii.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D552BC9CEE100C4DB42 /* TabbarBackground_wii.swift */; };
+		E56E1D582BC9CEE700C4DB42 /* TabbarBackground_spotty.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D572BC9CEE700C4DB42 /* TabbarBackground_spotty.swift */; };
+		E56E1D5A2BC9CEF000C4DB42 /* TabbarBackground_faero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E1D592BC9CEF000C4DB42 /* TabbarBackground_faero.swift */; };
 		E56E3C6A2B6813BD0088FA50 /* RecentlyPlayedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E3C692B6813BD0088FA50 /* RecentlyPlayedManager.swift */; };
 		E56E3C6C2B6814580088FA50 /* RecentlyPlayedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E3C6B2B6814580088FA50 /* RecentlyPlayedList.swift */; };
 		E56E3C6E2B685E390088FA50 /* TrackSpeakerIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E3C6D2B685E390088FA50 /* TrackSpeakerIcon.swift */; };
@@ -680,6 +691,17 @@
 		E56DD9FF2B2BE005006222A8 /* TVStaticBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVStaticBackground.swift; sourceTree = "<group>"; };
 		E56DDA012B2BE97C006222A8 /* TVStaticFuzz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVStaticFuzz.swift; sourceTree = "<group>"; };
 		E56DDA032B2BEDD4006222A8 /* TVStaticLines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVStaticLines.swift; sourceTree = "<group>"; };
+		E56E1D432BC9BCE600C4DB42 /* ExploreTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTab.swift; sourceTree = "<group>"; };
+		E56E1D462BC9BCF700C4DB42 /* SearchTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTab.swift; sourceTree = "<group>"; };
+		E56E1D482BC9BD0000C4DB42 /* LibraryTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTab.swift; sourceTree = "<group>"; };
+		E56E1D4A2BC9BD0A00C4DB42 /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
+		E56E1D4D2BC9C4EE00C4DB42 /* VariableBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariableBlur.swift; sourceTree = "<group>"; };
+		E56E1D4F2BC9CD4800C4DB42 /* TabbarBackground_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarBackground_component.swift; sourceTree = "<group>"; };
+		E56E1D512BC9CD7000C4DB42 /* TabbarBackground_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarBackground_classic.swift; sourceTree = "<group>"; };
+		E56E1D532BC9CECE00C4DB42 /* TabbarBackground_honeycrisp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarBackground_honeycrisp.swift; sourceTree = "<group>"; };
+		E56E1D552BC9CEE100C4DB42 /* TabbarBackground_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarBackground_wii.swift; sourceTree = "<group>"; };
+		E56E1D572BC9CEE700C4DB42 /* TabbarBackground_spotty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarBackground_spotty.swift; sourceTree = "<group>"; };
+		E56E1D592BC9CEF000C4DB42 /* TabbarBackground_faero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarBackground_faero.swift; sourceTree = "<group>"; };
 		E56E3C692B6813BD0088FA50 /* RecentlyPlayedManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyPlayedManager.swift; sourceTree = "<group>"; };
 		E56E3C6B2B6814580088FA50 /* RecentlyPlayedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyPlayedList.swift; sourceTree = "<group>"; };
 		E56E3C6D2B685E390088FA50 /* TrackSpeakerIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackSpeakerIcon.swift; sourceTree = "<group>"; };
@@ -1525,6 +1547,23 @@
 			path = NotificationManager;
 			sourceTree = "<group>";
 		};
+		E56E1D452BC9BCEA00C4DB42 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				E56E1D432BC9BCE600C4DB42 /* ExploreTab.swift */,
+				E56E1D462BC9BCF700C4DB42 /* SearchTab.swift */,
+				E56E1D482BC9BD0000C4DB42 /* LibraryTab.swift */,
+				E56E1D4A2BC9BD0A00C4DB42 /* SettingsTab.swift */,
+				E56E1D4F2BC9CD4800C4DB42 /* TabbarBackground_component.swift */,
+				E56E1D512BC9CD7000C4DB42 /* TabbarBackground_classic.swift */,
+				E56E1D532BC9CECE00C4DB42 /* TabbarBackground_honeycrisp.swift */,
+				E56E1D552BC9CEE100C4DB42 /* TabbarBackground_wii.swift */,
+				E56E1D572BC9CEE700C4DB42 /* TabbarBackground_spotty.swift */,
+				E56E1D592BC9CEF000C4DB42 /* TabbarBackground_faero.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
 		E5705DB22A80935E0087A43F /* Honeycrisp */ = {
 			isa = PBXGroup;
 			children = (
@@ -2093,6 +2132,7 @@
 				E52D2ECE2A4BBE8D004BFAA4 /* VStackWrapped.swift */,
 				E52D2ED02A4BBF6D004BFAA4 /* HStackWrapped.swift */,
 				E5A4310F2B0686FF00507DB2 /* CacheAsyncImage.swift */,
+				E56E1D4D2BC9C4EE00C4DB42 /* VariableBlur.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";
@@ -2447,9 +2487,9 @@
 				E57CC5742B5996C700537031 /* calibrib.ttf */,
 				E5C9E94E2A2E98FC0056E45F /* om_17App.swift */,
 				E5C9E9522A2E98FC0056E45F /* ContentView.swift */,
+				E56E1D452BC9BCEA00C4DB42 /* Tabs */,
 				E5974D702A6C90B5009286E2 /* Themes */,
 				E5974D6B2A6C8F6F009286E2 /* View Builders */,
-				E5974D6F2A6C9026009286E2 /* Helper Views */,
 				E5974D6C2A6C8F90009286E2 /* Backend */,
 				E5C9E9542A2E98FD0056E45F /* Assets.xcassets */,
 				E5C9E9562A2E98FD0056E45F /* om_17.entitlements */,
@@ -2630,6 +2670,7 @@
 		E5ECC7F32A378923009ABD7F /* Now Playing */ = {
 			isa = PBXGroup;
 			children = (
+				E5974D6F2A6C9026009286E2 /* Helper Views */,
 				E59E30B42A415E92007B7874 /* Mini Player */,
 				E59E30B52A415EA1007B7874 /* Fullscreen Player */,
 				E5AA720D2A424FB800A265E5 /* Queue */,
@@ -2764,6 +2805,7 @@
 				E5F43D912B0B2D4B00864502 /* XCRemoteSwiftPackageReference "RxMusicPlayer" */,
 				E52CFF732B46385600DF5EBF /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 				E52BA2D22B7DF8F200A11C30 /* XCRemoteSwiftPackageReference "SwipeActions" */,
+				E5DD1D1E2BC65FBA007A1858 /* XCRemoteSwiftPackageReference "Glur" */,
 			);
 			productRefGroup = E5C9E94C2A2E98FC0056E45F /* Products */;
 			projectDirPath = "";
@@ -2949,6 +2991,7 @@
 				E58B67302ACFB2B0002FA7A2 /* PlaylistContentHeadingEditing_wii.swift in Sources */,
 				E5C9696F2B1BEB6D004F1D9C /* NetworkMonitor.swift in Sources */,
 				E59E30BD2A423900007B7874 /* NPVolumeScrubber.swift in Sources */,
+				E56E1D502BC9CD4800C4DB42 /* TabbarBackground_component.swift in Sources */,
 				E52D2ECF2A4BBE8D004BFAA4 /* VStackWrapped.swift in Sources */,
 				E51375F52B44B75C0005F2D7 /* NPBackground_spotty.swift in Sources */,
 				E5C2DD612A30341E00E6BB97 /* SearchResults.swift in Sources */,
@@ -3019,6 +3062,7 @@
 				E5A534FE2B02EF5900F48935 /* RecentSearchesList.swift in Sources */,
 				E5B9138D2ABCE26600E0C53C /* ToastManager.swift in Sources */,
 				E54A40082ACCB316007B1444 /* ArtistBackground_classic.swift in Sources */,
+				E56E1D562BC9CEE100C4DB42 /* TabbarBackground_wii.swift in Sources */,
 				E51464392ACE63FF00FDBAF5 /* SearchArtistContentHeader_component.swift in Sources */,
 				E579DE5F2B3E7A0F009324C1 /* SearchArtistLink_spotty.swift in Sources */,
 				E52300792AAEEFEE0023EF94 /* PlaylistBackground.swift in Sources */,
@@ -3036,6 +3080,7 @@
 				E579DE592B3E7A0F009324C1 /* LibraryAlbumLink_spotty.swift in Sources */,
 				E51375F32B44B71D0005F2D7 /* NPBackground_component.swift in Sources */,
 				E532D4E72B420D3B00D7CC25 /* PlaylistMenuPreview_classic.swift in Sources */,
+				E56E1D4E2BC9C4EE00C4DB42 /* VariableBlur.swift in Sources */,
 				E5A00A452B0160F1001C59DB /* ProximityManager.swift in Sources */,
 				E51376012B44C4360005F2D7 /* ScrubberBar_wii.swift in Sources */,
 				E58E8FDB2BA17559009F7E43 /* DebugOptions.swift in Sources */,
@@ -3044,6 +3089,7 @@
 				E58B67422ACFB2B0002FA7A2 /* FetchedArtistContentHeader_wii.swift in Sources */,
 				E5DE81C32B55C8720066527C /* glosstest.swift in Sources */,
 				E5CC53992B59AFEA004D50A3 /* GlobalBackground_feco.swift in Sources */,
+				E56E1D442BC9BCE600C4DB42 /* ExploreTab.swift in Sources */,
 				E5A972132B5B24D000B4BB8D /* PlayRandomAPI.swift in Sources */,
 				E58E8FA52BA16BB8009F7E43 /* NPBackButton_faero.swift in Sources */,
 				E5C7D4802AF9D1E8003A7BAB /* PlaylistImporter.swift in Sources */,
@@ -3075,6 +3121,7 @@
 				E5E6A1C32A7DBBA500880E6B /* SearchAlbumLink_component.swift in Sources */,
 				E5C2DD562A2FE4AE00E6BB97 /* LibraryPage.swift in Sources */,
 				E5DCFE042B450F5C0044D9B5 /* NPPlayButton_classic.swift in Sources */,
+				E56E1D4B2BC9BD0A00C4DB42 /* SettingsTab.swift in Sources */,
 				E58E8F902BA16BB8009F7E43 /* AlbumContentHeadingBig_faero.swift in Sources */,
 				E520B2892A5A58960031C73D /* TrackMenu.swift in Sources */,
 				E58E8F9D2BA16BB8009F7E43 /* LoadingExplore_faero.swift in Sources */,
@@ -3142,6 +3189,7 @@
 				E58B672C2ACFB2B0002FA7A2 /* QPSingleLink_wii.swift in Sources */,
 				E575D6BC2BC24FDF005554A3 /* ThemePreview_classic.swift in Sources */,
 				E58E8FAB2BA16BB8009F7E43 /* PlaylistContentHeadingEditing_faero.swift in Sources */,
+				E56E1D472BC9BCF700C4DB42 /* SearchTab.swift in Sources */,
 				E55CB2CB2A6302EC007078A5 /* User.swift in Sources */,
 				E58B67322ACFB2B0002FA7A2 /* SearchTrackLink_wii.swift in Sources */,
 				E58E8FB22BA16BB8009F7E43 /* AeroGlossBG.swift in Sources */,
@@ -3160,8 +3208,10 @@
 				E583D7CB2B96726C001335EC /* UserView.swift in Sources */,
 				E58E8FA32BA16BB8009F7E43 /* DefaultArtwork_faero.swift in Sources */,
 				E526F8FA2AB943380024F134 /* AlbumMenuPreview_component.swift in Sources */,
+				E56E1D5A2BC9CEF000C4DB42 /* TabbarBackground_faero.swift in Sources */,
 				E58B67362ACFB2B0002FA7A2 /* GlobalBackground_wii.swift in Sources */,
 				E579DE5D2B3E7A0F009324C1 /* SearchAlbumLink_spotty.swift in Sources */,
+				E56E1D492BC9BD0000C4DB42 /* LibraryTab.swift in Sources */,
 				E52C20662A93C76F00E2995C /* PlaylistCreationButtons.swift in Sources */,
 				E5B913892ABCD33A00E0C53C /* MathHelpers.swift in Sources */,
 				E5E785E32B6CB929004F4D51 /* Credits.swift in Sources */,
@@ -3220,6 +3270,7 @@
 				E5CB98E22AB8CE9300043ED4 /* TrackMenuPreview_honeycrisp.swift in Sources */,
 				E58B67392ACFB2B0002FA7A2 /* TrackMenuPreview_wii.swift in Sources */,
 				E5A431082B058E7D00507DB2 /* LiveImportingList.swift in Sources */,
+				E56E1D542BC9CECE00C4DB42 /* TabbarBackground_honeycrisp.swift in Sources */,
 				E5705DC12A80935E0087A43F /* TrackLink_honeycrisp.swift in Sources */,
 				E5018BD62A917CB400143967 /* SearchArtistExtendedSingles.swift in Sources */,
 				E532D4ED2B420D5900D7CC25 /* PlaylistMenuPreview_spotty.swift in Sources */,
@@ -3271,8 +3322,10 @@
 				E58B67412ACFB2B0002FA7A2 /* SearchArtistLink_wii.swift in Sources */,
 				E52D2EDA2A4CC985004BFAA4 /* LibraryAlbumsList.swift in Sources */,
 				E5705DD32A8177DB0087A43F /* AlbumWideButton_honeycrisp.swift in Sources */,
+				E56E1D522BC9CD7000C4DB42 /* TabbarBackground_classic.swift in Sources */,
 				E579DE5A2B3E7A0F009324C1 /* AlbumWideButton_spotty.swift in Sources */,
 				E5CB43702A4F7B20001772AD /* QuickplayItem.swift in Sources */,
+				E56E1D582BC9CEE700C4DB42 /* TabbarBackground_spotty.swift in Sources */,
 				E5DCFE162B4510AE0044D9B5 /* NPSkipButton_honeycrisp.swift in Sources */,
 				E514643F2ACE68F000FDBAF5 /* FetchedArtistContentHeader_classic.swift in Sources */,
 				E52070182B0F401B0074252D /* AlbumContentHeadingBig_wii.swift in Sources */,
@@ -3716,6 +3769,14 @@
 			requirement = {
 				branch = master;
 				kind = branch;
+			};
+		};
+		E5DD1D1E2BC65FBA007A1858 /* XCRemoteSwiftPackageReference "Glur" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joogps/Glur";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
 			};
 		};
 		E5F43D4F2B0AFB8600864502 /* XCRemoteSwiftPackageReference "SwiftAudioPlayer" */ = {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "d5871e294c7946c3677813d11157585c6dc1c993ac764cac46a48491a89799ce",
+  "originHash" : "1cb62664ade07a569b8590a6aa25cb6dedf8d3fa1d1b4bfb742078a040a66ed6",
   "pins" : [
     {
       "identity" : "audiokit",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "7e770197e6fca352e2d195d44ecf9285cd59fe7b",
         "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "glur",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/joogps/Glur",
+      "state" : {
+        "revision" : "9e00ff79da318f2c78b749b1027e54a9d4de2e33",
+        "version" : "1.0.4"
       }
     },
     {

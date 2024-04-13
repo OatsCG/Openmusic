@@ -76,15 +76,6 @@ struct MiniPlayer_spotty: View {
             .aspectRatio(contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .padding([.horizontal, .bottom], 5)
-            .background(alignment: .top, content: {
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black, .black]), startPoint: .top, endPoint: .bottom))
-                    Rectangle().fill(Color(white: 0.07))
-                        .opacity(0.9)
-                        .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black]), startPoint: .top, endPoint: .bottom))
-                }
-            })
             .environment(\.colorScheme, .dark)
     }
 }
