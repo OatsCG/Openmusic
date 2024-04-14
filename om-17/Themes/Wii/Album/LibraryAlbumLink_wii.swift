@@ -12,7 +12,7 @@ struct LibraryAlbumLink_wii: View {
     var tracks: [any Track]
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            AlbumArtDisplay(ArtworkID: tracks[0].Album.Artwork, Resolution: .tile, Blur: 0, BlurOpacity: 0.0, cornerRadius: 9.0)
+            AlbumArtDisplay(ArtworkID: tracks[0].Album.Artwork, Resolution: .tile, Blur: 0, BlurOpacity: 0.0, cornerRadius: 8.0)
             Text(tracks[0].Album.Title)
                 .foregroundColor(.primary)
                 .customFont(fontManager, .callout)

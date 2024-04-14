@@ -12,7 +12,7 @@ struct SearchAlbumLink_wii: View {
     var album: SearchedAlbum
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            AlbumArtDisplay(ArtworkID: album.Artwork, Resolution: .tile, Blur: 80, BlurOpacity: 0.0, cornerRadius: 6.0)
+            AlbumArtDisplay(ArtworkID: album.Artwork, Resolution: .tile, Blur: 80, BlurOpacity: 0.0, cornerRadius: 8.0)
             Text(album.Title)
                 .foregroundColor(.primary)
                 .customFont(fontManager, .callout)

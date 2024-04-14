@@ -30,7 +30,7 @@ struct SearchAlbumLink_faero: View {
             .background {
                 AeroGlossBG(cornerRadius: 0)
             }
-            .cornerRadius(8)
+            .cornerRadius(10)
     }
 }
 
