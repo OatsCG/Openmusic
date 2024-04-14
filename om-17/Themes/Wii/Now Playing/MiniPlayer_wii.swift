@@ -89,6 +89,7 @@ import CoreGraphics
 
 
 struct wiiMPBackground: View {
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         GeometryReader { geo in
             Path { path in
@@ -193,7 +194,7 @@ struct wiiMPBackground: View {
                 )
             }
             .stroke(.wiiborder, lineWidth: 2)
-            .fill(.ultraThickMaterial)
+            .fill(Color(white: colorScheme == .dark ? 0.15 : 0.97))
         }
     }
 }

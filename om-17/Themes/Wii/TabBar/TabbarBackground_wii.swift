@@ -14,19 +14,23 @@ struct TabbarBackground_wii: View {
     @Binding var tabbarHeight: CGFloat
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                Rectangle().fill(.background).opacity(colorScheme == .dark ? 0.8 : 0.7)
-                    .ignoresSafeArea()
-                    .frame(height: max(Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height, 0))
-                    .mask(LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom))
-                Rectangle().fill(.background).opacity(colorScheme == .dark ? 0.8 : 0.7)
-                    .ignoresSafeArea()
+//            VStack(spacing: 0) {
+//                Spacer()
+//                Rectangle().fill(.background).opacity(colorScheme == .dark ? 1 : 1)
+//                    .ignoresSafeArea()
+//                    .frame(height: max(Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height, 0) - 15)
+//                    //.mask(LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom))
+//                Rectangle().fill(.background).opacity(colorScheme == .dark ? 1 : 1)
+//                    .ignoresSafeArea()
+//                    .frame(height: max(tabbarHeight, 0))
+//                    
+//            }
+            VStack {
+                Spacer()
+                Rectangle().fill(Color(white: colorScheme == .dark ? 0.15 : 0.97))
                     .frame(height: max(tabbarHeight, 0))
-                    
+                    .ignoresSafeArea()
             }
-            VariableBlurView()
-                .ignoresSafeArea()
-                .frame(height: max(tabbarHeight + Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height, 0))
         }
     }
 }
