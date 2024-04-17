@@ -28,6 +28,7 @@ struct TabIcons: View {
                             .customFont(fontManager, .caption2)
                     }
                 }
+                .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 0 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
                 //.blendMode(selectionBinding == 0 ? .overlay : .normal)
@@ -43,6 +44,7 @@ struct TabIcons: View {
                             .customFont(fontManager, .caption2)
                     }
                 }
+                .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 1 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
                 //.blendMode(selectionBinding == 0 ? .overlay : .normal)
@@ -58,6 +60,7 @@ struct TabIcons: View {
                             .customFont(fontManager, .caption2)
                     }
                 }
+                .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 2 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
                 //.blendMode(selectionBinding == 0 ? .colorDodge : .normal)
@@ -72,6 +75,7 @@ struct TabIcons: View {
                             .customFont(fontManager, .caption2)
                     }
                 }
+                .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 3 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
                 //.blendMode(selectionBinding == 0 ? .softLight : .normal)
