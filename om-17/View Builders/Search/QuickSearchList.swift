@@ -68,7 +68,7 @@ struct QuickSearchList: View {
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     
-    return SearchPage(searchNSPath: .constant(NavigationPath()), selectionBinding: .constant(1))
+    return SearchPage(searchNSPath: .constant(NavigationPath()))
         .modelContainer(container)
         .environment(PlayerManager())
         .environment(PlaylistImporter())
