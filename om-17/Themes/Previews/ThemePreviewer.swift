@@ -52,7 +52,7 @@ struct ThemePreviews: View {
     @State var track5: FetchedTrack = FetchedTrack(default: true)
     @State var track6: FetchedTrack = FetchedTrack(default: true)
     @State var track7: FetchedTrack = FetchedTrack(default: true)
-    @State var pm: PlayerManager = PlayerManager()
+    @State var pm: PlayerManager = PlayerManager(dormant: true)
     @State var dot1: CGFloat = 0.3
     @State var dot2: CGFloat = 0.3
     @State var dot3: CGFloat = 0.3

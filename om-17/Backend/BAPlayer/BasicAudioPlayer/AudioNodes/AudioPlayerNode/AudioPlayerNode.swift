@@ -242,9 +242,11 @@ public class AudioPlayerNode {
             }
             
             self?.blocksNextCompletionHandler = true
-            self?.node.stop()
-            self?.status = .ready
-            self?.needsScheduling = true
+            DispatchQueue.main.async { [weak self] in
+                self?.node.stop()
+                self?.status = .ready
+                self?.needsScheduling = true
+            }
         }
     }
     

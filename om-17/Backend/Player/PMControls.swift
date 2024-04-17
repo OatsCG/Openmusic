@@ -71,20 +71,22 @@ extension PlayerManager {
     func player_backward() {
         self.isCrossfading = false
         self.didAddFromRepeat = false
-        withAnimation(.easeInOut(duration: 0.4)) {
-            if (self.currentQueueItem != nil) {
-                if ((self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil) {
-                    //self.setIsPlaying(to: false)
-                    self.player.pause()
-                    self.player.seek_to_zero()
-                    self.player = PlayerEngine()
-                    self.trackQueue.insert(self.currentQueueItem!, at: 0)
-                    self.currentQueueItem = self.sessionHistory.removeLast()
-                    self.scheduleNotification()
-                    self.prime_current_song()
-                    self.prime_next_song()
-                } else {
-                    self.player.seek(to: 0)
+        DispatchQueue.main.async {
+            withAnimation(.easeInOut(duration: 0.4)) {
+                if (self.currentQueueItem != nil) {
+                    if ((self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil) {
+                        //self.setIsPlaying(to: false)
+                        self.player.pause()
+                        self.player.seek_to_zero()
+                        self.player = PlayerEngine()
+                        self.trackQueue.insert(self.currentQueueItem!, at: 0)
+                        self.currentQueueItem = self.sessionHistory.removeLast()
+                        self.scheduleNotification()
+                        self.prime_current_song()
+                        self.prime_next_song()
+                    } else {
+                        self.player.seek(to: 0)
+                    }
                 }
             }
         }

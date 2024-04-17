@@ -66,6 +66,35 @@ import MediaPlayer
     var timerMidFire: Bool = false
 
     
+    init(dormant: Bool) {
+        self.commandCenterAlreadyLoaded = false
+        self.currentlyTryingInfoCenterAlbumArtUpdate = false
+        self.player = PlayerEngine()
+        self.isPlaying = false
+        self.currentQueueItem = nil
+        self.trackQueue = []
+        self.sessionHistory = []
+        self.elapsedTime = 0
+        self.durationSeconds = 0.9
+        self.elapsedNormal = 0
+        self.appVolume = 1
+        self.crossfadeZero = 0.15
+        self.crossfadeSeconds = 0
+        self.isCrossfading = false
+        self.didAddFromRepeat = false
+        self.crossfadeTimer = Timer()
+        self.crossfadeAlbums = false
+        self.volumeSkipEnabled = false
+        self.volumeSkipSpeed = 0
+        self.volumeSkipMargin = 0
+        if self.volumeSkipSpeed == 0 {
+            self.volumeSkipSpeed = 0.5
+        }
+        if self.volumeSkipMargin == 0 {
+            self.volumeSkipMargin = 0.7
+        }
+    }
+    
     init() {
         self.commandCenterAlreadyLoaded = false
         self.currentlyTryingInfoCenterAlbumArtUpdate = false
@@ -123,7 +152,7 @@ import MediaPlayer
     func timer_fired() {
         if self.timerMidFire == false {
             self.timerMidFire = true
-            Task { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 self?.syncPlayingTimeControls()
                 self?.update_elapsed_time()
                 self?.repeat_check()

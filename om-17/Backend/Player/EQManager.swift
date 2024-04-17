@@ -178,7 +178,7 @@ class EQManager {
         }
         if (self.isReady == false) {
             // Insert EQ in the existing audio chain
-            Task.detached { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 if let playerNode = self?.playerNode {
                     if let audioEngine = self?.audioEngine {
                         if let eqNode = self?.eqNode {

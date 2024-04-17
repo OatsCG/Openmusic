@@ -253,7 +253,9 @@ protocol AEPlayer {
     }
     func setVolume(_ to: Float) {
         if (self.eqManager.isReady) {
-            self.player.playerNode.volume = min(max(to, 0), 1)
+            Task {
+                self.player.playerNode.volume = min(max(to, 0), 1)
+            }
         }
     }
 }

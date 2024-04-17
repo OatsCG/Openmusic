@@ -2499,6 +2499,7 @@
 				E56E1D452BC9BCEA00C4DB42 /* Navigation Tabs */,
 				E5974D702A6C90B5009286E2 /* Themes */,
 				E5974D6B2A6C8F6F009286E2 /* View Builders */,
+				E5974D6F2A6C9026009286E2 /* Helper Views */,
 				E5974D6C2A6C8F90009286E2 /* Backend */,
 				E5C9E9542A2E98FD0056E45F /* Assets.xcassets */,
 				E5C9E9562A2E98FD0056E45F /* om_17.entitlements */,
@@ -2679,7 +2680,6 @@
 		E5ECC7F32A378923009ABD7F /* Now Playing */ = {
 			isa = PBXGroup;
 			children = (
-				E5974D6F2A6C9026009286E2 /* Helper Views */,
 				E59E30B42A415E92007B7874 /* Mini Player */,
 				E59E30B52A415EA1007B7874 /* Fullscreen Player */,
 				E5AA720D2A424FB800A265E5 /* Queue */,
