@@ -21,13 +21,14 @@ struct SearchPage: View {
         ZStack {
             NavigationStack(path: $searchNSPath) {
                 SearchResultsView(viewModel: $viewModel, quickViewModel: $quickViewModel, searchField: $searchField)
-                    .safeAreaPadding(.top, 30)
+                    .searchable(text: $searchField, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
                     .refreshable {
                         viewModel.runLastSearch()
                     }
+                    .safeAreaPadding(.top, 30)
+                    
                     .navigationBarTitle("Search")
                     .scrollDismissesKeyboard(.immediately)
-                    .searchable(text: $searchField, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
                     .autocorrectionDisabled()
                     
                     .onChange(of: searchField, {
@@ -143,7 +144,3 @@ func remove_from_recents(recents: inout [String], toRemove: String) {
     recents.removeAll(where: {$0 == toRemove})
 }
 
-
-#Preview {
-    SearchPage(searchNSPath: .constant(NavigationPath()))
-}
