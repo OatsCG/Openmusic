@@ -11,7 +11,7 @@ struct SearchTab: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Binding var searchNSPath: NavigationPath
-    @State private var tabbarHeight: CGFloat = 0
+    @Binding var tabbarHeight: CGFloat
     var body: some View {
         ZStack {
             SearchPage(searchNSPath: $searchNSPath)
@@ -35,6 +35,7 @@ struct SearchTab: View {
                 }
                 .frame(height: 1)
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             MiniPlayer(passedNSPath: $searchNSPath)
         }
             .toolbarBackground(.hidden, for: .tabBar)

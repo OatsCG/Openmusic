@@ -51,9 +51,9 @@ func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<Imp
         fetchSuggestionsData(songs: songs) { (result) in
             switch result {
             case .success(let data):
-                withAnimation {
-                    playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
-                }
+                //withAnimation { // UNDO LATER?
+                playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
+                //}
                 self.isFetching = false
             case .failure(let error):
                 print("Error: \(error)")

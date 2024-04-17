@@ -3,7 +3,7 @@ import SwiftUI
 /// A variable blur view.
 public class VariableBlurUIView: UIVisualEffectView {
     public init(
-        gradientMask: CGImage,
+        gradientMask: CGImage?,
         maxBlurRadius: CGFloat = 20,
         filterType: String = "variableBlur"
     ) {
@@ -56,7 +56,7 @@ public class VariableBlurUIView: UIVisualEffectView {
         }
 
 
-        let gradientImageRef = gradientMask
+        let gradientImageRef: CGImage? = gradientMask
         variableBlur.setValue(maxBlurRadius, forKey: "inputRadius")
         variableBlur.setValue(gradientImageRef, forKey: "inputMaskImage")
         variableBlur.setValue(true, forKey: "inputNormalizeEdges")
@@ -86,7 +86,7 @@ public class VariableBlurUIView: UIVisualEffectView {
 
 /// A variable blur view.
 public struct VariableBlurView: UIViewRepresentable {
-    public var gradientMask: CGImage
+    public var gradientMask: CGImage?
     public var maxBlurRadius: CGFloat
     public var filterType: String
 
@@ -95,7 +95,7 @@ public struct VariableBlurView: UIViewRepresentable {
         maxBlurRadius: CGFloat = 20,
         filterType: String = "variableBlur"
     ) {
-        self.gradientMask = createVerticalGradientImage(size: .init(width: 100, height: 100))!
+        self.gradientMask = variableBlurGradientConstructor.shared.globalBlur
         self.maxBlurRadius = maxBlurRadius
         self.filterType = filterType
     }
@@ -112,6 +112,14 @@ public struct VariableBlurView: UIViewRepresentable {
     public func updateUIView(_ uiView: VariableBlurUIView, context: Context) {}
 }
 
+
+class variableBlurGradientConstructor {
+    static var shared: variableBlurGradientConstructor = variableBlurGradientConstructor()
+    var globalBlur: CGImage
+    init() {
+        self.globalBlur = createVerticalGradientImage(size: .init(width: 100, height: 100))!
+    }
+}
 
 func createVerticalGradientImage(size: CGSize) -> CGImage? {
     let startColor = CIColor(color: .clear)

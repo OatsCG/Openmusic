@@ -190,13 +190,13 @@ public class AudioPlayerNode {
     // MARK: - Controlling Playback
     
     public func play(at when: AVAudioTime? = nil) {
-        DispatchQueue.main.async {
-            guard self.file != nil else {
+        DispatchQueue.main.async { [weak self] in
+            guard self?.file != nil else {
                 log.error("Failed to play. No audio file is loaded.")
                 return
             }
             
-            guard let e = self.node.engine else {
+            guard let e = self?.node.engine else {
                 log.error("Failed to play: the node must be attached to an engine.")
                 return
             }
@@ -206,21 +206,21 @@ public class AudioPlayerNode {
                 return
             }
             
-            guard self.status != .playing else {
+            guard self?.status != .playing else {
                 log.debug("The player is already playing.")
                 return
             }
             
-            if self.needsScheduling { self.schedule(at: when) }
+            if self?.needsScheduling == true { self?.schedule(at: when) }
             
-            self.node.play()
+            self?.node.play()
             
             // Collect the offset of the sample time if it is nil.
-            if self.sampleTimeOffset == nil, let pt = self.node.playerTime {
-                self.sampleTimeOffset = pt.sampleTime
+            if self?.sampleTimeOffset == nil, let pt = self?.node.playerTime {
+                self?.sampleTimeOffset = pt.sampleTime
             }
             
-            self.status = .playing
+            self?.status = .playing
         }
     }
     
@@ -233,18 +233,18 @@ public class AudioPlayerNode {
     
     /// Stops playback and removes any scheduled events.
     public func stop() {
-        DispatchQueue.main.async {
-            guard self.status != .noSource else { return }
+        Task { [weak self] in
+            guard self?.status != .noSource else { return }
             
-            if self.status == .ready && self.needsScheduling {
+            if self?.status == .ready && self?.needsScheduling == true {
                 log.debug("Couldn't stop the node: it is already stopped and there are no scheduled events.")
                 return
             }
             
-            self.blocksNextCompletionHandler = true
-            self.node.stop()
-            self.status = .ready
-            self.needsScheduling = true
+            self?.blocksNextCompletionHandler = true
+            self?.node.stop()
+            self?.status = .ready
+            self?.needsScheduling = true
         }
     }
     
@@ -284,8 +284,7 @@ public class AudioPlayerNode {
             blocksNextCompletionHandler = false
             return
         }
-        
-        node.stop()
+        self.node.stop()
         status = .ready
         needsScheduling = true
         delegate?.playerNodePlaybackDidComplete(self)

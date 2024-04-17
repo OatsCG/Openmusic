@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TabBarLibraryLabel_component: View {
     @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Binding var selectionBinding: Int
     var body: some View {
         switch currentTheme {
         case "classic":
@@ -29,6 +30,3 @@ struct TabBarLibraryLabel_component: View {
     }
 }
 
-#Preview {
-    TabBarLibraryLabel_component()
-}

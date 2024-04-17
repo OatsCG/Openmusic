@@ -20,6 +20,7 @@ struct NowPlayingSheet: View {
     @State var fullscreen: Bool = false
     @State var carModeEnabled: Bool = false
     @Binding var passedNSPath: NavigationPath
+    @State var currentAlbum: SearchedAlbum? = nil
     var body: some View {
         VStack {
             Button(action: {
@@ -62,7 +63,23 @@ struct NowPlayingSheet: View {
             .safeAreaPadding(20)
             .tint(.primary)
             .background {
-                NPBackground_component(album: playerManager.currentQueueItem?.Track.Album, fullscreen: $fullscreen)
+                NPBackground_component(album: currentAlbum, fullscreen: $fullscreen)
+            }
+            .onAppear {
+                Task { [self] in
+                    let album: SearchedAlbum? = self.playerManager.currentQueueItem?.Track.Album
+                    DispatchQueue.main.async { [self, album] in
+                        self.currentAlbum = album
+                    }
+                }
+            }
+            .onChange(of: playerManager.currentQueueItem) {
+                Task { [self] in
+                    let album: SearchedAlbum? = self.playerManager.currentQueueItem?.Track.Album
+                    DispatchQueue.main.async { [self, album] in
+                        self.currentAlbum = album
+                    }
+                }
             }
     }
 }

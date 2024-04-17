@@ -15,7 +15,7 @@ struct MiniPlayer_classic: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
         HStack {
-            AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 20, BlurOpacity: 1, cornerRadius: 11)
+            AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 20, BlurOpacity: 1, cornerRadius: 10)
             Spacer()
             VStack(alignment: .leading, spacing: 0) {
                 if (playerManager.currentQueueItem == nil) {

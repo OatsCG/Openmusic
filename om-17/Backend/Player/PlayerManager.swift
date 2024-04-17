@@ -63,6 +63,7 @@ import MediaPlayer
     // synced timer
     var syncedTimerInterval: Double = 1
     var syncedTimer: Timer? = nil
+    var timerMidFire: Bool = false
 
     
     init() {
@@ -102,28 +103,34 @@ import MediaPlayer
             self.volume_control_check(oldValue: VolumeObserver.shared.oldValue, newValue: VolumeObserver.shared.newValue)
         }
         //update timer
-        self.update_timer(to: 0.01)
+        self.update_timer(to: 0.1)
     }
     
     func update_timer(to: Double) {
         if (self.syncedTimerInterval == to) {
             return
         }
-        self.syncedTimerInterval = to
-        self.syncedTimer?.invalidate()
-        self.syncedTimer = Timer.scheduledTimer(withTimeInterval: to, repeats: true) { _ in
-            self.timer_fired()
+        DispatchQueue.main.async {
+            self.syncedTimerInterval = to
+            self.syncedTimer?.invalidate()
+            self.syncedTimer = Timer.scheduledTimer(withTimeInterval: to, repeats: true) { _ in
+                self.timer_fired()
+            }
+            self.syncedTimer?.fire()
         }
-        self.syncedTimer?.fire()
     }
     
     func timer_fired() {
-        DispatchQueue.main.async {
-            self.syncPlayingTimeControls()
-            self.update_elapsed_time()
-            self.repeat_check()
-            self.crossfade_check()
-            //print(ToastManager.shared.currentToast?.message)
+        if self.timerMidFire == false {
+            self.timerMidFire = true
+            Task { [weak self] in
+                self?.syncPlayingTimeControls()
+                self?.update_elapsed_time()
+                self?.repeat_check()
+                self?.crossfade_check()
+                self?.timerMidFire = false
+                //print(ToastManager.shared.currentToast?.message)
+            }
         }
     }
     

@@ -1,95 +1,85 @@
 //
-//  PlayerDebugger.swift
+//  PlayerDebugg.swift
 //  om-17
 //
-//  Created by Charlie Giannis on 2024-04-04.
+//  Created by Charlie Giannis on 2024-04-14.
 //
 
 import SwiftUI
 
 struct PlayerDebugger: View {
-    @Environment(PlayerManager.self) var playerManager
+    @Environment(\.colorScheme) private var colorScheme
     @AppStorage("playerDebugger") var playerDebugger: Bool = false
     @State var visibleState: DebuggerState = .hidden
     var body: some View {
-        VStack(spacing: 5) {
-            Spacer()
-            HStack {
-                Spacer()
-                VStack(alignment: .leading) {
-                    Text("Player Status:")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    BufferProgressLabel(visibleState: $visibleState)
-                        .font(.caption2)
-                }
-                    .padding(10)
-                    .background(.thickMaterial)
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10, bottomTrailingRadius: 3, topTrailingRadius: 10))
-                    .shadow(radius: 5)
-            }
-            HStack {
-                Spacer()
-                Button(action: {
-                    if let audioID = playerManager.currentQueueItem?.fetchedPlayback?.YT_Audio_ID {
-                        UIPasteboard.general.string = "youtube.com/watch?v=\(audioID)"
-                        ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Copied YT Link", .systemSuccess))
-                    }
-                }) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Copy YouTube URL")
-                            if let audioID = playerManager.currentQueueItem?.fetchedPlayback?.YT_Audio_ID {
-                                Text("youtube.com/watch?v=\(audioID)")
-                                    .font(.caption2)
-                                    .lineLimit(1)
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                Text("nil")
-                                    .font(.caption2)
-                                    .lineLimit(1)
-                                    .foregroundStyle(.secondary)
+        if (playerDebugger == true) {
+            PlayerDebuggerComplex(visibleState: $visibleState)
+        } else {
+            ZStack {
+                PlayerDebuggerComplex(visibleState: $visibleState)
+                    .opacity(0)
+                switch visibleState {
+                case .hidden:
+                    EmptyView()
+                case .noconnection:
+                    PlayerDebuggerSimple(visible: true, text: "No Connection", symbol: "network.slash")
+                case .fetcherror:
+                    PlayerDebuggerSimple(visible: true, text: "Error Fetching Playback", symbol: "exclamationmark.triangle.fill")
+                case .emptyplayback:
+                    PlayerDebuggerSimple(visible: true, text: "Not Available For Streaming", symbol: "x.circle.fill")
+                case .playererror:
+                    PlayerDebuggerSimple(visible: true, text: "Player Failed", symbol: "x.circle.fill")
+                case .fetching:
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            VStack(alignment: .center, spacing: 5) {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                HStack(spacing: 5) {
+                                    Circle().fill(colorScheme == .dark ? .white : .primary)
+                                        .frame(width: 6, height: 6)
+                                    Circle().fill(.tertiary)
+                                        .frame(width: 6, height: 6)
+                                }
                             }
+                                .padding(10)
+                                .background(.ultraThinMaterial)
+                                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10, bottomTrailingRadius: 3, topTrailingRadius: 10))
+                                .shadow(radius: 5)
                         }
-                        Image(systemName: "doc.on.doc.fill")
                     }
-                }
-                    .foregroundStyle(playerManager.currentQueueItem?.fetchedPlayback == nil ? .secondary : .primary)
-                    .disabled(playerManager.currentQueueItem?.fetchedPlayback == nil)
-                    .buttonStyle(.plain)
-                    .padding(10)
-                    .background(.thickMaterial)
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10, bottomTrailingRadius: 3, topTrailingRadius: 10))
-                    .shadow(radius: 5)
-            }
-            HStack {
-                Spacer()
-                Button(action: {
-                    UIPasteboard.general.string = playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL
-                    ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Copied Playback Link", .systemSuccess))
-                }) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Copy Playback URL")
-                            Text(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")
-                                .font(.caption2)
-                                .lineLimit(1)
-                                .foregroundStyle(.secondary)
+                        .font(.caption2)
+                        .lineLimit(1)
+                        .padding(10)
+                case .buffering:
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            VStack(alignment: .center, spacing: 5) {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                HStack(spacing: 5) {
+                                    Circle().fill(colorScheme == .dark ? .white : .primary)
+                                        .frame(width: 6, height: 6)
+                                    Circle().fill(colorScheme == .dark ? .white : .primary)
+                                        .frame(width: 6, height: 6)
+                                }
+                            }
+                                .padding(10)
+                                .background(.ultraThinMaterial)
+                                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10, bottomTrailingRadius: 3, topTrailingRadius: 10))
+                                .shadow(radius: 5)
                         }
-                        Image(systemName: "doc.on.doc.fill")
                     }
+                        .font(.caption2)
+                        .lineLimit(1)
+                        .padding(10)
                 }
-                    .foregroundStyle(playerManager.currentQueueItem?.fetchedPlayback == nil ? .secondary : .primary)
-                    .disabled(playerManager.currentQueueItem?.fetchedPlayback == nil)
-                    .buttonStyle(.plain)
-                    .padding(10)
-                    .background(.thickMaterial)
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10, bottomTrailingRadius: 3, topTrailingRadius: 10))
-                    .shadow(radius: 5)
             }
         }
-            .padding(10)
-            .opacity(playerDebugger ? 1 : 0)
     }
 }
 

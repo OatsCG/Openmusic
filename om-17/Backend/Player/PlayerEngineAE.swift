@@ -219,7 +219,9 @@ protocol AEPlayer {
     func pause() {
         if (self.eqManager.isReady) {
             //self.player.playerNode.pause()
-            self.player.pause()
+            //if (self.player.status != .playing) {
+                self.player.pause()
+            //}
         }
     }
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {

@@ -11,7 +11,7 @@ struct LibraryTab: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Binding var libraryNSPath: NavigationPath
-    @State private var tabbarHeight: CGFloat = 0
+    @Binding var tabbarHeight: CGFloat
     var body: some View {
         ZStack {
             LibraryPage(libraryNSPath: $libraryNSPath)
@@ -35,6 +35,7 @@ struct LibraryTab: View {
                 }
                 .frame(height: 1)
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             MiniPlayer(passedNSPath: $libraryNSPath)
         }
             .toolbarBackground(.hidden, for: .tabBar)

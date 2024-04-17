@@ -11,7 +11,7 @@ struct ExploreTab: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Binding var exploreNSPath: NavigationPath
-    @State private var tabbarHeight: CGFloat = 0
+    @Binding var tabbarHeight: CGFloat
     var body: some View {
         ZStack {
             ExplorePage(exploreNSPath: $exploreNSPath)
@@ -35,6 +35,7 @@ struct ExploreTab: View {
                 }
                 .frame(height: 1)
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             MiniPlayer(passedNSPath: $exploreNSPath)
         }
             .toolbarBackground(.hidden, for: .tabBar)

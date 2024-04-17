@@ -15,7 +15,7 @@ struct MiniPlayer_honeycrisp: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var body: some View {
         HStack {
-            AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 6)
+            AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 7)
                 .padding(2)
             Spacer()
             VStack(alignment: .leading, spacing: 0) {
@@ -68,9 +68,10 @@ struct MiniPlayer_honeycrisp: View {
             })
             .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
             .aspectRatio(contentMode: .fit)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding([.horizontal, .bottom], 5)
-            .shadow(radius: 5)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .padding(.bottom, 5)
+            .padding(.horizontal, 10)
+            .shadow(color: .black.opacity(0.2), radius: 8)
     }
 }
 

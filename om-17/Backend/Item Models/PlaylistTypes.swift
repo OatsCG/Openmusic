@@ -362,6 +362,26 @@ struct PlaylistItem: Codable, Hashable {
         self.timesPlayed = 0
     }
     
+    required init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try values.decode(UUID.self, forKey: .id)
+        self.playlistID = try values.decode(UUID.self, forKey: .playlistID)
+        self.track = try values.decode(FetchedTrack.self, forKey: .track)
+        self.explicit = try values.decode(Bool.self, forKey: .explicit)
+        self.timesPlayed = try values.decode(Int.self, forKey: .timesPlayed)
+        self.importData = try values.decode(ImportData.self, forKey: .importData)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(playlistID, forKey: .playlistID)
+        try container.encode(track, forKey: .track)
+        try container.encode(explicit, forKey: .explicit)
+        try container.encode(timesPlayed, forKey: .timesPlayed)
+        try container.encode(importData, forKey: .importData)
+    }
+    
     func set_status(status: ImportStatus) {
         self.importData.status = status
     }
@@ -381,6 +401,10 @@ struct PlaylistItem: Codable, Hashable {
     }
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, playlistID, track, explicit, timesPlayed, importData
     }
 }
 

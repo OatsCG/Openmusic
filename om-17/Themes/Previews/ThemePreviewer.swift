@@ -197,6 +197,7 @@ struct ThemePreviews: View {
                 } else if index == 7 {
                     track7 = findRandomTrack()
                     pm.currentQueueItem = QueueItem(from: track7, explicit: nil)
+                    pm.update_timer(to: 5)
                 }
             }
             updateTrack(index: index)

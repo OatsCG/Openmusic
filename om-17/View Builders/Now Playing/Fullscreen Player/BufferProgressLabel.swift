@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum DebuggerState {
-    case hidden, noconnection, fetcherror, emptyplayback, playererror
+    case hidden, noconnection, fetcherror, emptyplayback, playererror, fetching, buffering
 }
 
 struct BufferProgressLabel: View {
@@ -21,7 +21,9 @@ struct BufferProgressLabel: View {
                 Image(systemName: "network.slash")
                 Text("No Connection")
                     .task {
-                        visibleState = .noconnection
+                        withAnimation {
+                            visibleState = .noconnection
+                        }
                     }
             } else { // if network connected
                 if playerManager.currentQueueItem?.currentlyPriming == true {
@@ -29,14 +31,18 @@ struct BufferProgressLabel: View {
                         Image(systemName: "circle.dashed")
                         Text("Fetching Playback...")
                             .task {
-                                visibleState = .hidden
+                                withAnimation {
+                                    visibleState = .fetching
+                                }
                             }
                     } else {
                         // priming is true, playback exists
                         Image(systemName: "circle.dashed")
                         Text("Buffering...")
                             .task {
-                                visibleState = .hidden
+                                withAnimation {
+                                    visibleState = .buffering
+                                }
                             }
                     }
                 } else {
@@ -45,14 +51,28 @@ struct BufferProgressLabel: View {
                             Image(systemName: "checkmark")
                             Text("Playback Downloaded")
                                 .task {
-                                    visibleState = .hidden
+                                    withAnimation {
+                                        visibleState = .hidden
+                                    }
                                 }
                         } else {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                            Text("Error Fetching Playback")
-                                .task {
-                                    visibleState = .fetcherror
-                                }
+                            if playerManager.currentQueueItem == nil {
+                                Image(systemName: "x.circle.fill")
+                                Text("Not Playing")
+                                    .task {
+                                        withAnimation {
+                                            visibleState = .hidden
+                                        }
+                                    }
+                            } else {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                Text("Error Fetching Playback")
+                                    .task {
+                                        withAnimation {
+                                            visibleState = .fetcherror
+                                        }
+                                    }
+                            }
                         }
                     } else {
                         // priming is done, playback exists
@@ -79,33 +99,55 @@ struct BufferProgressLabel: View {
                                 Text("**Fetched URL**: \(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")")
                             }
                             .task {
-                                visibleState = .emptyplayback
+                                withAnimation {
+                                    visibleState = .emptyplayback
+                                }
                             }
                         } else {
                             if playerManager.currentQueueItem?.audio_AVPlayer?.isReady == true {
                                 if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .readyToPlay) {
-                                    Image(systemName: "checkmark")
-                                    Text("Ready")
-                                        .task {
-                                            visibleState = .hidden
-                                        }
+                                    if (playerManager.currentQueueItem?.audio_AVPlayer?.player.duration ?? 0 > 0) {
+                                        Image(systemName: "checkmark")
+                                        Text("Ready")
+                                            .task {
+                                                withAnimation {
+                                                    visibleState = .hidden
+                                                }
+                                            }
+                                    } else {
+                                        ProgressView()
+                                            .progressViewStyle(.circular)
+                                        Text("Buffering")
+                                            .task {
+                                                withAnimation {
+                                                    visibleState = .buffering
+                                                }
+                                            }
+                                    }
+                                    
                                 } else if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .failed) {
                                     Image(systemName: "x.circle.fill")
                                     Text("Failed")
                                         .task {
-                                            visibleState = .playererror
+                                            withAnimation {
+                                                visibleState = .playererror
+                                            }
                                         }
                                 } else if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .unknown) {
                                     Image(systemName: "circle.dashed")
                                     Text("Waiting")
                                         .task {
-                                            visibleState = .hidden
+                                            withAnimation {
+                                                visibleState = .buffering
+                                            }
                                         }
                                 } else {
                                     Image(systemName: "exclamationmark.triangle.fill")
                                     Text("Unknown")
                                         .task {
-                                            visibleState = .hidden
+                                            withAnimation {
+                                                visibleState = .buffering
+                                            }
                                         }
                                 }
                             } else {
@@ -115,41 +157,67 @@ struct BufferProgressLabel: View {
                                         if p.player.currentItem == nil {
                                             // no item loaded
                                             Text("player.currentItem not loaded")
+                                                .task {
+                                                    withAnimation {
+                                                        visibleState = .playererror
+                                                    }
+                                                }
                                         } else {
                                             if p.player.status == .failed {
                                                 Text("Failed 3")
+                                                    .task {
+                                                        withAnimation {
+                                                            visibleState = .playererror
+                                                        }
+                                                    }
                                             } else if p.player.status == .readyToPlay {
                                                 if playerManager.currentQueueItem?.currentlyPriming == true {
                                                     Text("Currently Priming...")
+                                                        .task {
+                                                            withAnimation {
+                                                                visibleState = .buffering
+                                                            }
+                                                        }
                                                 } else {
                                                     Text("ReadyToPlay 3, Not Priming. Buffering...")
-                                                    
+                                                        .task {
+                                                            withAnimation {
+                                                                visibleState = .buffering
+                                                            }
+                                                        }
                                                 }
                                             } else {
                                                 Text("Unknown 3")
+                                                    .task {
+                                                        withAnimation {
+                                                            visibleState = .playererror
+                                                        }
+                                                    }
                                             }
                                         }
                                     } else {
                                         Text("Player Offline")
+                                            .task {
+                                                withAnimation {
+                                                    visibleState = .hidden
+                                                }
+                                            }
                                     }
-                                    
-//                                    Image(systemName: "exclamationmark.triangle.fill")
-//                                    Text("Initializing Buffer...")
-//                                    Text("url: \(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")")
-//                                        .task {
-//                                            visibleState = .hidden
-//                                        }
                                 } else if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .failed) {
                                     Image(systemName: "x.circle.fill")
                                     Text("Failed 2")
                                         .task {
-                                            visibleState = .hidden
+                                            withAnimation {
+                                                visibleState = .playererror
+                                            }
                                         }
                                 } else if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .unknown) {
                                     Image(systemName: "circle.dashed")
                                     Text("Waiting 2")
                                         .task {
-                                            visibleState = .hidden
+                                            withAnimation {
+                                                visibleState = .buffering
+                                            }
                                         }
                                 } else {
                                     if (playerManager.currentQueueItem?.audio_AVPlayer == nil) {
@@ -159,13 +227,17 @@ struct BufferProgressLabel: View {
                                             Text("url: \(playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL ?? "nil")")
                                         }
                                         .task {
-                                            visibleState = .hidden
+                                            withAnimation {
+                                                visibleState = .playererror
+                                            }
                                         }
                                     } else {
                                         Image(systemName: "exclamationmark.triangle.fill")
                                         Text("Unknown 2")
                                             .task {
-                                                visibleState = .hidden
+                                                withAnimation {
+                                                    visibleState = .playererror
+                                                }
                                             }
                                     }
                                 }

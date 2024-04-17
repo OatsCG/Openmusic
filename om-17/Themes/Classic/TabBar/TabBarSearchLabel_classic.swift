@@ -9,7 +9,10 @@ import SwiftUI
 
 struct TabBarSearchLabel_classic: View {
     var body: some View {
-        Label("Search", systemImage: "magnifyingglass")
+        VStack(alignment: .center) {
+            Image(systemName: "magnifyingglass")
+            Text("Search")
+        }
     }
 }
 

@@ -128,13 +128,14 @@ public class BAPlayer {
     ///
     /// This method does nothing when no audio file is loaded.
     public func stop() {
-        guard status != .noSource else {
-            log.info("Couldn't stop the player: the player is already stopped.")
-            return
+        Task { [weak self] in
+            if self?.status == .noSource {
+                log.info("Couldn't stop the player: the player is already stopped.")
+            } else {
+                self?.playerNode.stop()
+                self?.engine.stop()
+            }
         }
-        
-        playerNode.stop()
-        engine.stop()
     }
     
     // MARK: - Managing Audio Units
@@ -226,7 +227,10 @@ public class BAPlayer {
 
     /// Adds an action to perform when the player status changes.
     public func onStatusChange(perform action: ((Status) -> Void)? = nil) {
-        onStatusChangeHandler = action
+        onStatusChangeHandler = { [weak self] status in
+            guard self != nil else { return }
+            action?(status)
+        }
     }
 
 }

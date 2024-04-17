@@ -23,6 +23,7 @@ struct ContentView: View {
     @State private var exploreNSPath = NavigationPath()
     @State private var searchNSPath = NavigationPath()
     @State private var libraryNSPath = NavigationPath()
+    @State var tabbarHeight: CGFloat = 100
     var selectionBinding: Binding<Int> { Binding(
         get: {
             self.selections.1
@@ -43,10 +44,18 @@ struct ContentView: View {
     )}
     @State private var selectedCategoryId: MenuItem.ID?
     private var dataModel = splitviewModel()
+    
+    
+    init() {
+        //UITabBar.appearance().unselectedItemTintColor = UIColor.red
+        UITabBar.appearance().standardAppearance.stackedLayoutAppearance.normal.iconColor = .red
+    }
+    
     var body: some View {
-        //if (horizontalSizeClass == .regular && verticalSizeClass == .regular) {
-        if (1 == 2) {
+        if (horizontalSizeClass == .regular && verticalSizeClass == .regular) {
+        //if (1 == 2) {
             NavigationSplitView(columnVisibility: .constant(.automatic)) {
+                
                 List(dataModel.mainMenuItems, selection: $selectedCategoryId) { item in
                     HStack {
                         Image(systemName: item.image)
@@ -54,91 +63,89 @@ struct ContentView: View {
                         Text(item.name)
                     }
                 }
-                    .navigationTitle("Coffee")
+                    .navigationTitle("Openmusic")
             } detail: {
-                switch selectedCategoryId {
-                case dataModel.mainMenuItems[0].id:
-                    ExplorePage(exploreNSPath: $exploreNSPath)
-                        .tabItem {
-                            Image(systemName: "globe")
-                            Text("Explore")
-                        }
+                TabView(selection: selectionBinding) {
+                    NavigationStack {
+                        ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
+                    }
                         .tag(0)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackground(.thinMaterial, for: .tabBar)
-                case dataModel.mainMenuItems[1].id:
-                    SearchPage(searchNSPath: $searchNSPath)
-                        .tabItem {
-                            TabBarSearchLabel_component()
-                        }
+                        .toolbar(.hidden, for: .tabBar)
+                    NavigationStack {
+                        SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
+                    }
                         .tag(1)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackground(.thinMaterial, for: .tabBar)
-                case dataModel.mainMenuItems[2].id:
-                    LibraryPage(libraryNSPath: $libraryNSPath)
-                        .tabItem {
-                            TabBarLibraryLabel_component()
-                        }
+                        .toolbar(.hidden, for: .tabBar)
+                    NavigationStack {
+                        LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)
+                    }
                         .tag(2)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackground(.thinMaterial, for: .tabBar)
-                case dataModel.mainMenuItems[3].id:
-                    SettingsPage()
-                        .tabItem {
-                            Image(systemName: "gear")
-                            Text("Options")
-                        }
+                        .toolbar(.hidden, for: .tabBar)
+                    NavigationStack {
+                        SettingsTab()
+                    }
                         .tag(3)
-                case .none:
-                    ExplorePage(exploreNSPath: $exploreNSPath)
-                        .tabItem {
-                            Image(systemName: "globe")
-                            Text("Explore")
-                        }
-                        .tag(0)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackground(.thinMaterial, for: .tabBar)
-                case .some(_):
-                    ExplorePage(exploreNSPath: $exploreNSPath)
-                        .tabItem {
-                            Image(systemName: "globe")
-                            Text("Explore")
-                        }
-                        .tag(0)
-                        .toolbarBackground(.visible, for: .tabBar)
-                        .toolbarBackground(.thinMaterial, for: .tabBar)
+                        .toolbar(.hidden, for: .tabBar)
                 }
-            }
-        } else {
-            TabView(selection: selectionBinding) {
-                ExploreTab(exploreNSPath: $exploreNSPath)
-                    .tabItem {
-                        Image(systemName: "globe")
-                        Text("Home")
+                .onChange(of: selectedCategoryId) {
+                    switch selectedCategoryId {
+                    case dataModel.mainMenuItems[0].id:
+                        selectionBinding.wrappedValue = 0
+                    case dataModel.mainMenuItems[1].id:
+                        selectionBinding.wrappedValue = 1
+                    case dataModel.mainMenuItems[2].id:
+                        selectionBinding.wrappedValue = 2
+                    case dataModel.mainMenuItems[3].id:
+                        selectionBinding.wrappedValue = 3
+                    case .none:
+                        selectionBinding.wrappedValue = 0
+                    case .some(_):
+                        selectionBinding.wrappedValue = 0
                     }
-                    .tag(0)
-                    
-                SearchTab(searchNSPath: $searchNSPath)
-                    .tabItem {
-                        TabBarSearchLabel_component()
-                    }
-                    .tag(1)
-                LibraryTab(libraryNSPath: $libraryNSPath)
-                    .tabItem {
-                        TabBarLibraryLabel_component()
-                    }
-                    .tag(2)
-                SettingsTab()
-                    .tabItem {
-                        Image(systemName: "gear")
-                        Text("Options")
-                    }
-                    .tag(3)
-                
+                }
             }
             .customFont(fontManager, .subheadline)
             .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
-            
+            .preferredColorScheme(activeAppearance(theme: currentTheme, appearance: Appearance(rawValue: preferredAppearance)))
+            .onOpenURL { url in
+                print("URL FOUND")
+                let components: [String] = url.pathComponents
+                //   openmusicapp://open/album/\(encodedAlbum!)
+                //   components = ["/", "album", "encodedAlbum"]
+                let type = components[1]
+                if type == "album" {
+                    let encodedAlbum = components[2]
+                    let album: SearchedAlbum? = decodeURLSafeStringToAlbum(encodedString: encodedAlbum)
+                    if album != nil {
+                        if self.selectionBinding.wrappedValue != 0 {
+                            self.selectionBinding.wrappedValue = 0
+                        }
+                        exploreNSPath.append(SearchAlbumContentNPM(album: album!))
+                        ToastManager.shared.propose(toast: Toast.linkopened())
+                    } else {
+                        ToastManager.shared.propose(toast: Toast.linkopenfailed())
+                    }
+                }
+            }
+        } else {
+            ZStack {
+                TabView(selection: selectionBinding) {
+                    ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
+                        .tag(0)
+                    SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
+                        .tag(1)
+                    LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)
+                        .tag(2)
+                    SettingsTab()
+                        .tag(3)
+                    
+                }
+                    //.safeAreaPadding(.bottom, 130)
+                TabIcons(selectionBinding: selectionBinding, tabbarHeight: $tabbarHeight)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+            }
+            .customFont(fontManager, .subheadline)
+            .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
             .preferredColorScheme(activeAppearance(theme: currentTheme, appearance: Appearance(rawValue: preferredAppearance)))
             .onOpenURL { url in
                 print("URL FOUND")

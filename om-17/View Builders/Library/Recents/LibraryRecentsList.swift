@@ -13,6 +13,7 @@ struct LibraryRecentsList: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
     @Query(sort: \StoredTrack.dateAdded) private var tracks: [StoredTrack]
+    @State var albumsTracks: Array<[StoredTrack]> = []
     var body: some View {
         if tracks.count == 0 {
             ContentUnavailableView {
@@ -62,12 +63,34 @@ struct LibraryRecentsList: View {
                             }
                         }
                 }
-                ForEach(Array(Dictionary(grouping: tracks, by: { $0.Album.AlbumID }).values).sorted{
-                    //largest date in $0
-                    $0.sorted{$0.dateAdded > $1.dateAdded}[0].dateAdded > $1.sorted{$0.dateAdded > $1.dateAdded}[0].dateAdded
-                }, id: \.self) { albumTracks in
+                ForEach(albumsTracks, id: \.self) { albumTracks in
                     QuickplayItem(tracks: albumTracks)
                 }
+            }
+            .onAppear {
+                updateAlbumTracks(tracks: tracks)
+            }
+            .onChange(of: tracks) {
+                updateAlbumTracks(tracks: tracks)
+            }
+        }
+    }
+    private func updateAlbumTracks(tracks: [StoredTrack]) {
+        Task { [tracks] in
+            let albums: Dictionary<String, [StoredTrack]> = Dictionary(grouping: tracks, by: { $0.Album.AlbumID })
+            let albumTracks: Dictionary<String, [StoredTrack]>.Values = albums.values
+            let albumTracksArr: Array<[StoredTrack]> = Array(albumTracks)
+            
+            var albumTracksSorted: Array<[StoredTrack]> = []
+            
+            for album in albumTracksArr {
+                albumTracksSorted.append(album.sorted{$0.dateAdded > $1.dateAdded})
+            }
+            
+            let albumsSorted: Array<[StoredTrack]> = albumTracksSorted.sorted{ $0[0].dateAdded > $1[0].dateAdded }
+            
+            DispatchQueue.main.async { [self, albumsSorted] in
+                self.albumsTracks = albumsSorted
             }
         }
     }

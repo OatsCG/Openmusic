@@ -15,11 +15,11 @@ struct TabbarBackground_classic: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Rectangle().fill(.background).opacity(colorScheme == .dark ? 0.8 : 0.7)
+                Rectangle().fill(colorScheme == .dark ? Color(red: 0.05, green: 0.05, blue: 0.05) : Color(.white)).opacity(colorScheme == .dark ? 0.8 : 0.7)
                     .ignoresSafeArea()
                     .frame(height: max(Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height, 0))
                     .mask(LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom))
-                Rectangle().fill(.background).opacity(colorScheme == .dark ? 0.8 : 0.7)
+                Rectangle().fill(colorScheme == .dark ? Color(red: 0.05, green: 0.05, blue: 0.05) : Color(.white)).opacity(colorScheme == .dark ? 0.8 : 0.7)
                     .ignoresSafeArea()
                     .frame(height: max(tabbarHeight, 0))
                     

@@ -40,24 +40,24 @@ extension PlayerManager {
         // push track data to Media Center
         if (self.currentlyTryingInfoCenterAlbumArtUpdate == false && self.currentQueueItem != nil) {
             self.currentlyTryingInfoCenterAlbumArtUpdate = true
-            Task.detached {
+            Task.detached { [weak self] in
                 do {
-                    self.nowPlayingInfo?[MPMediaItemPropertyTitle] = self.currentQueueItem?.Track.Title
-                    self.nowPlayingInfo?[MPMediaItemPropertyArtist] = stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
-                    let url: URL? = BuildArtworkURL(imgID: self.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
+                    self?.nowPlayingInfo?[MPMediaItemPropertyTitle] = self?.currentQueueItem?.Track.Title
+                    self?.nowPlayingInfo?[MPMediaItemPropertyArtist] = stringArtists(artistlist: self?.currentQueueItem?.Track.Album.Artists ?? [])
+                    let url: URL? = BuildArtworkURL(imgID: self?.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
                     if url == nil {return}
                     let (data, _) = try await URLSession.shared.data(from: url!)
                     if let image = UIImage(data: data) {
-                        self.nowPlayingInfo?[MPMediaItemPropertyArtwork] =
+                        self?.nowPlayingInfo?[MPMediaItemPropertyArtwork] =
                         MPMediaItemArtwork(boundsSize: image.size) { size in
                             return image
                         }
                     }
-                    MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = self?.nowPlayingInfo
                     //print("wrote to MPNowPlayingInfoCenter: \(MPNowPlayingInfoCenter.default().nowPlayingInfo!)")
                     //await syncPlayingTimeControls()
-                    DispatchQueue.main.async {
-                        self.currentlyTryingInfoCenterAlbumArtUpdate = false
+                    DispatchQueue.main.async { [weak self] in
+                        self?.currentlyTryingInfoCenterAlbumArtUpdate = false
                     }
                 } catch {
                     print("error pushing to Media Center")

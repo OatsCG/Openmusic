@@ -9,7 +9,10 @@ import SwiftUI
 
 struct TabBarLibraryLabel_classic: View {
     var body: some View {
-        Label("Library", systemImage: "book")
+        VStack(alignment: .center) {
+            Image(systemName: "book")
+            Text("Library")
+        }
     }
 }
 

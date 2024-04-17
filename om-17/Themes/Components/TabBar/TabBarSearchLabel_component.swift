@@ -9,12 +9,13 @@ import SwiftUI
 
 struct TabBarSearchLabel_component: View {
     @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Binding var selectionBinding: Int
     var body: some View {
         switch currentTheme {
         case "classic":
             TabBarSearchLabel_classic()
         case "honeycrisp":
-            TabBarSearchLabel_honeycrisp()
+            TabBarSearchLabel_honeycrisp(selectionBinding: $selectionBinding)
         case "wii":
             TabBarSearchLabel_wii()
         case "spotty":
@@ -33,8 +34,4 @@ struct test__thing: View {
     var body: some View {
         Text("asd")
     }
-}
-
-#Preview {
-    TabBarSearchLabel_component()
 }

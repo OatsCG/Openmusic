@@ -178,11 +178,19 @@ class EQManager {
         }
         if (self.isReady == false) {
             // Insert EQ in the existing audio chain
-            let format = playerNode?.outputFormat(forBus: 0)
-            audioEngine?.disconnectNodeOutput(playerNode!)
-            audioEngine?.attach(eqNode)
-            audioEngine?.connect(playerNode!, to: eqNode, format: format)
-            audioEngine?.connect(eqNode, to: audioEngine!.mainMixerNode, format: format)
+            Task.detached { [weak self] in
+                if let playerNode = self?.playerNode {
+                    if let audioEngine = self?.audioEngine {
+                        if let eqNode = self?.eqNode {
+                            let format = playerNode.outputFormat(forBus: 0)
+                            audioEngine.disconnectNodeOutput(playerNode)
+                            audioEngine.attach(eqNode)
+                            audioEngine.connect(playerNode, to: eqNode, format: format)
+                            audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: format)
+                        }
+                    }
+                }
+            }
             self.isReady = true
         }
     }

@@ -116,15 +116,6 @@ struct ThemePreview_faero: View {
                     y: (geo.size.height * backButtonPos.y)
                 )
             
-            Text("Frutiger Aero")
-                .customFont(fontManager, .largeTitle, bold: true)
-                .scaleEffect(titleSize)
-                .opacity(titleOpacity)
-                .position(
-                    x: (geo.size.width * titlePos.x) + (titleParallax * parallax),
-                    y: (geo.size.height * titlePos.y)
-                )
-            
             QPMultipleLink_faero(tracks: [track3, track4, track5])
                 .disabled(true)
                 .scaleEffect(recentAlbumSize)
@@ -155,6 +146,15 @@ struct ThemePreview_faero: View {
                     y: (geo.size.height * miniplayerPos.y)
                 )
             
+            Text("Frutiger Aero")
+                .customFont(fontManager, .largeTitle, bold: true)
+                .scaleEffect(titleSize)
+                .opacity(titleOpacity)
+                .position(
+                    x: (geo.size.width * titlePos.x) + (titleParallax * parallax),
+                    y: (geo.size.height * titlePos.y)
+                )
+            
             Button(action: {
                 withAnimation {
                     currentTheme = "faero"
@@ -180,6 +180,10 @@ struct ThemePreview_faero: View {
                     y: (geo.size.height * selectButtonPos.y)
                 )
                 .onChange(of: geo.frame(in: .scrollView).minX) { oldValue, newValue in
+                    parallax = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
+                    dot = 0.3 + 0.6 * min(max(1 - abs(parallax), 0), 1)
+                }
+                .onAppear {
                     parallax = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
                     dot = 0.3 + 0.6 * min(max(1 - abs(parallax), 0), 1)
                 }

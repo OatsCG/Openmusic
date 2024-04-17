@@ -19,10 +19,10 @@ extension PlayerManager {
         if (self.player.has_file() && self.player.duration().isNaN == false) {
             let playerDuration: Double = self.player.duration()
             self.durationSeconds = playerDuration
-            if (playerDuration - self.elapsedTime - self.crossfadeSeconds <= 1) { // if close to crossfading
+            if (playerDuration > 0 && playerDuration - self.elapsedTime - self.crossfadeSeconds <= 1) { // if close to crossfading
                 self.update_timer(to: 0.01)
             } else {
-                self.update_timer(to: 0.01)
+                self.update_timer(to: 0.05)
             }
             if (self.elapsedTime > 45 || self.elapsedNormal > 0.5) {
                 // add enjoyed song to recents
@@ -41,7 +41,7 @@ extension PlayerManager {
         } else {
             self.durationSeconds = 0.9
         }
-        DispatchQueue.main.async {
+        Task {
             withAnimation {
                 self.elapsedNormal = self.elapsedTime / self.durationSeconds
             }

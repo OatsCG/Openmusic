@@ -22,8 +22,8 @@ protocol Track: Codable, Hashable {
 struct FetchedTrack: Codable, Hashable, Track {
     var TrackID: String
     var Title: String
-    var Playback_Clean: String? = nil
-    var Playback_Explicit: String? = nil
+    var Playback_Clean: String?
+    var Playback_Explicit: String?
     var Length: Int
     var Index: Int
     var Views: Int
@@ -188,8 +188,8 @@ struct ImportedTracks: Codable, Hashable {
 struct ImportedTrack: Codable, Hashable, Track {
     var TrackID: String
     var Title: String
-    var Playback_Clean: String? = nil
-    var Playback_Explicit: String? = nil
+    var Playback_Clean: String?
+    var Playback_Explicit: String?
     var Length: Int
     var Index: Int
     var Views: Int
