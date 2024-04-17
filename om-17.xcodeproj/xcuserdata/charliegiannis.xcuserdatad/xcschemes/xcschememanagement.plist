@@ -9,14 +9,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>2</integer>
 		</dict>
 		<key>AudioKit (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>3</integer>
 		</dict>
 		<key>AudioKit (Playground) 3.xcscheme</key>
 		<dict>
@@ -65,7 +65,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>0</integer>
 		</dict>
 		<key>Now PlayingExtension.xcscheme_^#shared#^_</key>
 		<dict>
@@ -77,14 +77,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Rx (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>6</integer>
 		</dict>
 		<key>Rx (Playground) 3.xcscheme</key>
 		<dict>
@@ -133,12 +133,30 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>4</integer>
 		</dict>
 		<key>om-17.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>E5C9E94A2A2E98FC0056E45F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E5C9E95D2A2E98FE0056E45F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E5C9E9672A2E98FE0056E45F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

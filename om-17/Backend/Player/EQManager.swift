@@ -215,24 +215,26 @@ class EQManager {
     }
     
     func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) {
-        if (self.isReady == false) {
-            return
-        }
-        if (enabled == false) {
-            for i in 0..<eqNode.bands.count {
-                eqNode.bands[i].gain = 0
+        Task {
+            if (self.isReady == false) {
+                return
             }
-        } else {
-            if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
-                if let playerManager = playerManager {
-                    //playerManager.pause()
-                    Task {
-                        await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
-                    }
+            if (enabled == false) {
+                for i in 0..<eqNode.bands.count {
+                    eqNode.bands[i].gain = 0
                 }
             } else {
-                for band in EQManager.decodeCurrentBands() {
-                    reallyAdjustBand(for: band.index, value: Float(band.value))
+                if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
+                    if let playerManager = playerManager {
+                        //playerManager.pause()
+                        Task {
+                            await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                        }
+                    }
+                } else {
+                    for band in EQManager.decodeCurrentBands() {
+                        reallyAdjustBand(for: band.index, value: Float(band.value))
+                    }
                 }
             }
         }
