@@ -15,10 +15,8 @@ extension PlayerManager {
         if (self.isUpdatingInfoCenter) {
             return
         }
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
             self.isUpdatingInfoCenter = true
-        }
-        Task.detached {
             if (self.currentQueueItem?.isReady() ?? false && self.durationSeconds > 1) {
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.elapsedTime
                 self.nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = self.durationSeconds
@@ -30,10 +28,11 @@ extension PlayerManager {
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
             }
-            DispatchQueue.main.async {
-                self.isUpdatingInfoCenter = false
-            }
+            self.isUpdatingInfoCenter = false
         }
+//        Task.detached {
+//            
+//        }
     }
     
     func setupNowPlaying() {

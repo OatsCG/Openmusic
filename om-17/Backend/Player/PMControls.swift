@@ -63,6 +63,10 @@ extension PlayerManager {
                 self.player_forward()
             }
         }
+        if (self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
+            self.player_forward()
+            return
+        }
         self.scheduleNotification()
         self.prime_current_song(continueCurrent: continueCurrent)
         self.prime_next_song()
@@ -86,6 +90,10 @@ extension PlayerManager {
                         self.prime_next_song()
                     } else {
                         self.player.seek(to: 0)
+                        if (self.trackQueue.first != nil) {
+                            self.trackQueue.first?.audio_AVPlayer?.pause()
+                            self.trackQueue.first?.audio_AVPlayer?.seek_to_zero()
+                        }
                     }
                 }
             }
@@ -94,6 +102,7 @@ extension PlayerManager {
     
     func setIsPlaying(to: Bool) {
         if self.isPlaying != to {
+            try? self.audioSession.setActive(true)
             withAnimation(.bouncy) {
                 self.isPlaying = to
             }
