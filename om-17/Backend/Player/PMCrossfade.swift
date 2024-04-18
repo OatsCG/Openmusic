@@ -26,21 +26,25 @@ extension PlayerManager {
                     // if crossfadeAlbums == false and consecutive
                     if self.crossfadeAlbums == false && self.is_consecutive() {
                         self.crossfade(duration: self.crossfadeZero) {
-                            self.update_elapsed_time()
-                            if (self.isCrossfading) {
-                                print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
-                                self.player_forward(continueCurrent: false)
+                            DispatchQueue.main.async {
                                 self.update_elapsed_time()
-                                print("done crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                if (self.isCrossfading) {
+                                    print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                    self.player_forward(continueCurrent: false)
+                                    self.update_elapsed_time()
+                                    print("done crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                }
                             }
                         }
                     } else {
                         self.crossfade(duration: self.crossfadeSeconds) {
-                            if (self.isCrossfading) {
-                                print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
-                                self.player_forward(continueCurrent: false)
-                                self.update_elapsed_time()
-                                print("done crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                            DispatchQueue.main.async {
+                                if (self.isCrossfading) {
+                                    print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                    self.player_forward(continueCurrent: false)
+                                    self.update_elapsed_time()
+                                    print("done crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                }
                             }
                         }
                     }

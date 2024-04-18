@@ -122,43 +122,48 @@ import SwiftUI
         }
         self.currentlyPriming = true
         if self.queueItemPlayer == nil {
-            Task.detached { [weak self] in
-                var url: URL? = nil
-                var isRemote: Bool = true
-                if (self?.isVideo == false) {
-                    //getting audio url
-                    if let qitem = self {
-                        if DownloadManager.shared.is_downloaded(qitem, explicit: self?.explicit) {
-                            url = DownloadManager.shared.get_stored_location(PlaybackID: qitem.explicit ? qitem.Track.Playback_Explicit! : qitem.Track.Playback_Clean!)
-                            isRemote = false
-                        } else {
-                            self?.fetchedPlayback = try? await fetchPlaybackData(PlaybackID: qitem.explicit ? qitem.Track.Playback_Explicit! : qitem.Track.Playback_Clean!)
-                            url = URL(string: self?.fetchedPlayback?.Playback_Audio_URL ?? "")
+            DispatchQueue.main.async { [unowned self] in
+                let isExplicit: Bool = self.explicit
+                let playback_explicit: String? = self.Track.Playback_Explicit
+                let playback_clean: String? = self.Track.Playback_Clean
+                Task.detached { [weak self] in
+                    var url: URL? = nil
+                    var isRemote: Bool = true
+                    if (self?.isVideo == false) {
+                        //getting audio url
+                        if let qitem = self {
+                            if DownloadManager.shared.is_downloaded(qitem, explicit: isExplicit) {
+                                url = DownloadManager.shared.get_stored_location(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
+                                isRemote = false
+                            } else {
+                                self?.fetchedPlayback = try? await fetchPlaybackData(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
+                                url = URL(string: self?.fetchedPlayback?.Playback_Audio_URL ?? "")
+                            }
                         }
                     }
-                }
-                if url != nil {
-                    DispatchQueue.main.async { [weak self, url, isRemote] in
-                        self?.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
-                        self?.video_AVPlayer = VideoPlayerEngine(ytid: self?.fetchedPlayback?.YT_Video_ID)
-                        if (self?.isVideo == true) {
-                            //self.queueItemPlayer = self.video_AVPlayer
-                        } else {
-                            self?.queueItemPlayer = self?.audio_AVPlayer
-                        }
-                        self?.queueItemPlayer?.set_volume(to: playerManager.appVolume)
-                        self?.queueItemPlayer?.seek(to: 0)
-                        if let qitem = self {
-                            playerManager.set_currentlyPlaying(queueItem: qitem)
-                            Task.detached { [weak self, weak qitem] in
-                                self?.queueItemPlayer?.preroll() { success in
-                                    if success {
-                                        DispatchQueue.main.async { [weak self, weak qitem] in
-                                            if let qitem = qitem {
-                                                playerManager.set_currentlyPlaying(queueItem: qitem)
-                                                if position != nil {
-                                                    self?.queueItemPlayer!.seek(to: position!)
-                                                    self?.queueItemPlayer?.play()
+                    if url != nil {
+                        DispatchQueue.main.async { [weak self, url, isRemote] in
+                            self?.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
+                            self?.video_AVPlayer = VideoPlayerEngine(ytid: self?.fetchedPlayback?.YT_Video_ID)
+                            if (self?.isVideo == true) {
+                                //self.queueItemPlayer = self.video_AVPlayer
+                            } else {
+                                self?.queueItemPlayer = self?.audio_AVPlayer
+                            }
+                            self?.queueItemPlayer?.set_volume(to: playerManager.appVolume)
+                            self?.queueItemPlayer?.seek(to: 0)
+                            if let qitem = self {
+                                playerManager.set_currentlyPlaying(queueItem: qitem)
+                                Task.detached { [weak self, weak qitem] in
+                                    self?.queueItemPlayer?.preroll() { success in
+                                        if success {
+                                            DispatchQueue.main.async { [weak self, weak qitem] in
+                                                if let qitem = qitem {
+                                                    playerManager.set_currentlyPlaying(queueItem: qitem)
+                                                    if position != nil {
+                                                        self?.queueItemPlayer!.seek(to: position!)
+                                                        self?.queueItemPlayer?.play()
+                                                    }
                                                 }
                                             }
                                         }
@@ -167,13 +172,13 @@ import SwiftUI
                             }
                         }
                     }
+                    if (playerManager.currentQueueItem?.queueID != self?.queueID) {
+                        self?.audio_AVPlayer?.pause()
+                    }
+                    self?.currentlyPriming = false
+                    
+                    
                 }
-                if (playerManager.currentQueueItem?.queueID != self?.queueID) {
-                    self?.audio_AVPlayer?.pause()
-                }
-                self?.currentlyPriming = false
-                
-                
             }
         } else {
             if position != nil {

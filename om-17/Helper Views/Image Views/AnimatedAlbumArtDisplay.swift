@@ -64,6 +64,8 @@ class PlayerUIView: UIView {
         self.playerLooper = AVPlayerLooper(player: queuePlayer!, templateItem: playerItem)
         //queuePlayer.play()
         self.queuePlayer?.playImmediately(atRate: 1.0)
+        self.queuePlayer?.isMuted = true
+        
         self.playerLayer.player = self.queuePlayer
         self.layer.addSublayer(self.playerLayer)
     }

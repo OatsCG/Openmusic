@@ -11,7 +11,9 @@ import AVFoundation
 extension PlayerManager {
     func update_elapsed_time() {
         if (self.player.currentTime.isNaN) {
-            self.elapsedTime = 0
+            DispatchQueue.main.async {
+                self.elapsedTime = 0
+            }
         } else if (self.player.isSeeking == false) {
             let playerTime: Double = self.player.currentTime
             self.elapsedTime = playerTime
