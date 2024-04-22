@@ -125,14 +125,14 @@ import MediaPlayer
         
         //initialize media center
         setupRemoteTransportControls()
-        setAudioSession()
+        //setAudioSession()
 
         //initialize volume observer
         VolumeObserver.shared.VolumeSkipObserver = { newValue in
             self.volume_control_check(oldValue: VolumeObserver.shared.oldValue, newValue: VolumeObserver.shared.newValue)
         }
         //update timer
-        self.update_timer(to: 0.3)
+        self.update_timer(to: 0.1)
     }
     
     func update_timer(to: Double) {

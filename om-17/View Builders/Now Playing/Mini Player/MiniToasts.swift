@@ -18,9 +18,6 @@ struct MiniToasts: View {
                 Text(toastManager.on ? toastManager.currentToast!.message : "")
                     .customFont(fontManager, .subheadline, bold: true)
                 QSQueueRowSparkle()
-                    //.padding(5)
-                    //.background(.thinMaterial)
-                    //.clipShape(RoundedRectangle(cornerRadius: 5))
             } else {
                 Text(toastManager.on ? (toastManager.currentToast?.message ?? "") : "")
                     .customFont(fontManager, .subheadline, bold: true)

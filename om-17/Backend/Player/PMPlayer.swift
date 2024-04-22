@@ -24,7 +24,7 @@ extension PlayerManager {
             if (playerDuration > 0 && playerDuration - self.elapsedTime - self.crossfadeSeconds <= 1) { // if close to crossfading
                 self.update_timer(to: 0.01)
             } else {
-                self.update_timer(to: 0.05)
+                self.update_timer(to: 0.1)
             }
             if (self.elapsedTime > 45 || self.elapsedNormal > 0.5) {
                 // add enjoyed song to recents

@@ -10,6 +10,7 @@ import AVFoundation
 
 extension PlayerManager {
     func play() {
+        self.setAudioSession()
         if (self.currentQueueItem == nil) {
             if (self.trackQueue.isEmpty) {
                 if let recentTrack = RecentlyPlayedManager.getRecentTracks().first {
@@ -20,7 +21,6 @@ extension PlayerManager {
                 }
             } else {
                 Task.detached {
-                    self.setAudioSession()
                     self.player_forward()
                     self.play_fade()
                 }
@@ -47,29 +47,37 @@ extension PlayerManager {
             self.player.seek_to_zero()
         }
         self.player = PlayerEngine()
-        if (self.currentQueueItem != nil) {
-            withAnimation(.easeInOut(duration: 0.4)) {
-                self.sessionHistory.append(self.currentQueueItem!)
+        DispatchQueue.main.async {
+            if (self.currentQueueItem != nil) {
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    self.sessionHistory.append(self.currentQueueItem!)
+                }
+            }
+            if (self.trackQueue.first != nil) {
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    DispatchQueue.main.async {
+                        self.currentQueueItem = self.trackQueue.removeFirst()
+                    }
+                }
+            } else if (self.sessionHistory.first != nil) {
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    self.pause()
+                    self.queue_start_over()
+                    self.player_forward()
+                }
+            }
+            if (self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
+                Task {
+                    self.player_forward()
+                }
+                return
+            }
+            Task {
+                self.scheduleNotification()
+                self.prime_current_song(continueCurrent: continueCurrent)
+                self.prime_next_song()
             }
         }
-        if (self.trackQueue.first != nil) {
-            withAnimation(.easeInOut(duration: 0.4)) {
-                self.currentQueueItem = self.trackQueue.removeFirst()
-            }
-        } else if (self.sessionHistory.first != nil) {
-            withAnimation(.easeInOut(duration: 0.4)) {
-                self.pause()
-                self.queue_start_over()
-                self.player_forward()
-            }
-        }
-        if (self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
-            self.player_forward()
-            return
-        }
-        self.scheduleNotification()
-        self.prime_current_song(continueCurrent: continueCurrent)
-        self.prime_next_song()
     }
     
     func player_backward() {
