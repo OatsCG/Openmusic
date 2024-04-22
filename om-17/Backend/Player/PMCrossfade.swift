@@ -10,7 +10,7 @@ import SwiftUI
 extension PlayerManager {
     func crossfade_check() {
         // if crossfadeAlbums == false and consecutive
-        if self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.crossfadeZero : self.crossfadeSeconds) {
+        if self.can_crossfade() {
             if !self.isCrossfading {
                 if (self.elapsedTime == self.durationSeconds) {
                     // elapsed time is reporting incorrectly
@@ -62,6 +62,10 @@ extension PlayerManager {
     
     func in_crossfade_range(duration: Double, elapsed: Double, range: Double) -> Bool {
         return duration > range && duration - elapsed < range
+    }
+    
+    func can_crossfade() -> Bool {
+        return self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.crossfadeZero : self.crossfadeSeconds)
     }
     
     typealias TransitionCompletionHandler = () -> Void

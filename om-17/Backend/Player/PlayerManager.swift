@@ -132,7 +132,7 @@ import MediaPlayer
             self.volume_control_check(oldValue: VolumeObserver.shared.oldValue, newValue: VolumeObserver.shared.newValue)
         }
         //update timer
-        self.update_timer(to: 0.1)
+        self.update_timer(to: 0.3)
     }
     
     func update_timer(to: Double) {
