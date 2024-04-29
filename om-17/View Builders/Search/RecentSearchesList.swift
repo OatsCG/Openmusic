@@ -22,7 +22,7 @@ struct RecentSearchesList: View {
         } else {
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Recently Searched")
+                    Text("Searches")
                         .customFont(fontManager, .title2, bold: true)
                     Spacer()
                     Button(action: {

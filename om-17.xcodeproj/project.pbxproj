@@ -142,6 +142,7 @@
 		E54A400C2ACCB34E007B1444 /* ArtistBackground_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A400B2ACCB34E007B1444 /* ArtistBackground_component.swift */; };
 		E54BA4022B8A76C300FAF0F4 /* OMUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54BA4012B8A76C300FAF0F4 /* OMUser.swift */; };
 		E54BA4042B8A79B800FAF0F4 /* UserLikedSongs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54BA4032B8A79B800FAF0F4 /* UserLikedSongs.swift */; };
+		E555A0772BE031C0007DEB9B /* OnboardSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E555A0762BE031C0007DEB9B /* OnboardSheet.swift */; };
 		E5574B1B2B660664003BCC4B /* PMNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5574B1A2B660664003BCC4B /* PMNotifications.swift */; };
 		E5574B1E2B660951003BCC4B /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5574B1D2B660951003BCC4B /* NotificationManager.swift */; };
 		E5592EB62A649AE60011156C /* LiveDownloadRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5592EB52A649AE60011156C /* LiveDownloadRow.swift */; };
@@ -684,6 +685,7 @@
 		E54A400B2ACCB34E007B1444 /* ArtistBackground_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistBackground_component.swift; sourceTree = "<group>"; };
 		E54BA4012B8A76C300FAF0F4 /* OMUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMUser.swift; sourceTree = "<group>"; };
 		E54BA4032B8A79B800FAF0F4 /* UserLikedSongs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLikedSongs.swift; sourceTree = "<group>"; };
+		E555A0762BE031C0007DEB9B /* OnboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardSheet.swift; sourceTree = "<group>"; };
 		E5574B1A2B660664003BCC4B /* PMNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMNotifications.swift; sourceTree = "<group>"; };
 		E5574B1D2B660951003BCC4B /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		E5592EB52A649AE60011156C /* LiveDownloadRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDownloadRow.swift; sourceTree = "<group>"; };
@@ -2508,6 +2510,7 @@
 				E57CC5742B5996C700537031 /* calibrib.ttf */,
 				E5C9E94E2A2E98FC0056E45F /* om_17App.swift */,
 				E5C9E9522A2E98FC0056E45F /* ContentView.swift */,
+				E555A0762BE031C0007DEB9B /* OnboardSheet.swift */,
 				E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */,
 				E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */,
 				E56E1D452BC9BCEA00C4DB42 /* Navigation Tabs */,
@@ -3255,6 +3258,7 @@
 				E5E6A1BE2A7DAFEE00880E6B /* typeDefaults.swift in Sources */,
 				E5A534E22B02A1DB00F48935 /* LoadingSearchResults_honeycrisp.swift in Sources */,
 				E58E8FCD2BA172AF009F7E43 /* AudioPlayerNode.swift in Sources */,
+				E555A0772BE031C0007DEB9B /* OnboardSheet.swift in Sources */,
 				E52300772AAEE9DE0023EF94 /* QPPlaylistLink_component.swift in Sources */,
 				E5DD99662AB643BF00CFE16C /* PlaybackTypes.swift in Sources */,
 				E5CB98DC2AB8C9F100043ED4 /* NPControls.swift in Sources */,

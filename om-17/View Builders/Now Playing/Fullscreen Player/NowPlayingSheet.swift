@@ -48,6 +48,7 @@ struct NowPlayingSheet: View {
                             NPBottomToolBar(fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
                         }
                     }
+                    .persistentSystemOverlays(.hidden)
                 } else {
                     // portrait
                     VStack {

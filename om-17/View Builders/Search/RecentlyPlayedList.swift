@@ -14,7 +14,7 @@ struct RecentlyPlayedList: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Recently Played")
+                Text("Recently Discovered")
                     .customFont(fontManager, .title2, bold: true)
                 Spacer()
                 Button(action: {

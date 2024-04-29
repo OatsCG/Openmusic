@@ -19,6 +19,7 @@ struct ContentView: View {
     @AppStorage("currentTheme") var currentTheme: String = "classic"
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("preferredAppearance") var preferredAppearance: String = "auto"
+    @AppStorage("onboard_1.2.2") var onboard: Bool = true
     @State var selections: (Int, Int) = (-1, 0) // (previous, current)
     @State var exploreNSPath = NavigationPath()
     @State var searchNSPath = NavigationPath()
@@ -45,6 +46,13 @@ struct ContentView: View {
     
     var body: some View {
         MainNavigationTabbed(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
+            .sheet(isPresented: $onboard) {
+                onboard = false
+            } content: {
+                OnboardSheet(onboard: $onboard)
+                    .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
+            }
+
 //        if (horizontalSizeClass == .regular && verticalSizeClass == .regular) {
 //            MainNavigationSidebar(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
 //        } else {

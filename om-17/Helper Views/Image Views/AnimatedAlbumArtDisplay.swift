@@ -15,27 +15,7 @@ struct AnimatedAlbumArtDisplay: View {
     var albumURL: URL
     @State var isShowing: Bool = true
     var body: some View {
-        ZStack {
-            PlayerView(url: albumURL)
-            VStack {
-                Spacer()
-                HStack {
-                    Button(action: {
-                        withAnimation {
-                            isShowing = false
-                        }
-                    }) {
-                        Image(systemName: "video.slash.circle.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .font(.title)
-                            .padding(8)
-                    }
-                    .buttonStyle(.plain)
-                    .hidden()
-                    Spacer()
-                }
-            }
-        }
+        PlayerView(url: albumURL)
             .aspectRatio(1, contentMode: .fill)
             .opacity(isShowing ? 1 : 0)
     }
