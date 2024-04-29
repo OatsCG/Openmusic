@@ -30,10 +30,10 @@ extension PlayerManager {
                 if newValue! == self.lastVolume!.0 && self.lastVolume!.3 == true {
                     let difference = oldValue! - newValue!
                     if estEqual(difference, 0.0625) {
-                        self.player_backward()
+                        self.player_backward(userInitiated: true)
                     }
                     if estEqual(difference, -0.0625) {
-                        self.player_forward()
+                        self.player_forward(userInitiated: true)
                     }
                     self.lastVolume = (oldValue!, newValue!, changeDate, false)
                 }

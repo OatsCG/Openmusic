@@ -59,6 +59,7 @@ struct ThemePreviews: View {
     @State var dot4: CGFloat = 0.3
     @State var dot5: CGFloat = 0.3
     @State var dot6: CGFloat = 0.3
+    @State var timer: Timer? = nil
     var body: some View {
         GeometryReader { geo in
             ScrollViewReader { proxy in
@@ -176,12 +177,25 @@ struct ThemePreviews: View {
                     pm.currentQueueItem = QueueItem(from: track7, explicit: nil)
                     pm.update_timer(to: 5)
                 }
-                updateTrack(index: index)
             }
+            updateTrackTimer()
         }
     }
+    func updateTrackTimer() {
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
+            runUpdateTracks()
+            
+        }
+    }
+    func runUpdateTracks() {
+        for index in 1...7 {
+            updateTrack(index: index)
+        }
+    }
+    
     func updateTrack(index: Int) {
-        Timer.scheduledTimer(withTimeInterval: Double.random(in: 3.0...5.0), repeats: false) { _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: Double.random(in: 0.0...2.0), repeats: false) { _ in
             withAnimation {
                 if index == 1 {
                     track1 = findRandomTrack()
@@ -201,9 +215,9 @@ struct ThemePreviews: View {
                     pm.update_timer(to: 5)
                 }
             }
-            updateTrack(index: index)
         }
     }
+    
     func findRandomTrack() -> FetchedTrack {
         let chosenTrack: FetchedTrack? = RecentlyPlayedManager.getRecentTracks().randomElement()
         if let chosenTrack = chosenTrack {

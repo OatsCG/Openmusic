@@ -102,11 +102,11 @@ extension PlayerManager {
         self.commandCenter.changePlaybackPositionCommand.isEnabled = true;
         
         self.commandCenter.nextTrackCommand.addTarget { [unowned self] event in
-            self.player_forward()
+            self.player_forward(userInitiated: true)
             return .success
         }
         self.commandCenter.previousTrackCommand.addTarget { [unowned self] event in
-            self.player_backward()
+            self.player_backward(userInitiated: true)
             return .success
         }
         self.commandCenter.playCommand.addTarget { [unowned self] event in

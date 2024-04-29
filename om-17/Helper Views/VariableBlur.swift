@@ -93,9 +93,14 @@ public struct VariableBlurView: UIViewRepresentable {
     /// A variable blur view.
     public init(
         maxBlurRadius: CGFloat = 20,
-        filterType: String = "variableBlur"
+        filterType: String = "variableBlur",
+        flat: Bool = false
     ) {
-        self.gradientMask = variableBlurGradientConstructor.shared.globalBlur
+        if (flat == false) {
+            self.gradientMask = variableBlurGradientConstructor.shared.globalBlur
+        } else {
+            self.gradientMask = variableBlurGradientConstructor.shared.flatBlur
+        }
         self.maxBlurRadius = maxBlurRadius
         self.filterType = filterType
     }
@@ -116,8 +121,10 @@ public struct VariableBlurView: UIViewRepresentable {
 class variableBlurGradientConstructor {
     static var shared: variableBlurGradientConstructor = variableBlurGradientConstructor()
     var globalBlur: CGImage
+    var flatBlur: CGImage
     init() {
         self.globalBlur = createVerticalGradientImage(size: .init(width: 100, height: 100))!
+        self.flatBlur = createflatImage(size: .init(width: 100, height: 100))!
     }
 }
 
@@ -140,3 +147,15 @@ func createVerticalGradientImage(size: CGSize) -> CGImage? {
     return nil
 }
 
+func createflatImage(size: CGSize) -> CGImage? {
+    let width = Int(size.width)
+    let height = Int(size.height)
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
+    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: colorSpace, bitmapInfo: bitmapInfo) else {
+        return nil
+    }
+    context.setFillColor(UIColor.black.cgColor)
+    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    return context.makeImage()
+}

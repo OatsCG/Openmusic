@@ -21,7 +21,7 @@ extension PlayerManager {
                 }
             } else {
                 Task.detached {
-                    self.player_forward()
+                    self.player_forward(userInitiated: true)
                     self.play_fade()
                 }
             }
@@ -38,7 +38,7 @@ extension PlayerManager {
         self.pause_fade()
     }
     
-    func player_forward(continueCurrent: Bool = false) {
+    func player_forward(continueCurrent: Bool = false, userInitiated: Bool = false) {
         self.isCrossfading = false
         self.didAddFromRepeat = false
         if (continueCurrent == false) {
@@ -49,26 +49,24 @@ extension PlayerManager {
         self.player = PlayerEngine()
         DispatchQueue.main.async {
             if (self.currentQueueItem != nil) {
-                withAnimation(.easeInOut(duration: 0.4)) {
+                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
                     self.sessionHistory.append(self.currentQueueItem!)
                 }
             }
             if (self.trackQueue.first != nil) {
-                withAnimation(.easeInOut(duration: 0.4)) {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
                         self.currentQueueItem = self.trackQueue.removeFirst()
                     }
                 }
             } else if (self.sessionHistory.first != nil) {
-                withAnimation(.easeInOut(duration: 0.4)) {
-                    self.pause()
-                    self.queue_start_over()
-                    self.player_forward()
-                }
+                self.pause()
+                self.queue_start_over()
+                self.player_forward(userInitiated: userInitiated)
             }
             if (self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
                 Task {
-                    self.player_forward()
+                    self.player_forward(userInitiated: userInitiated)
                 }
                 return
             }
@@ -80,11 +78,11 @@ extension PlayerManager {
         }
     }
     
-    func player_backward() {
+    func player_backward(userInitiated: Bool = false) {
         self.isCrossfading = false
         self.didAddFromRepeat = false
         DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: 0.4)) {
+            withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
                 if (self.currentQueueItem != nil) {
                     if ((self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil) {
                         //self.setIsPlaying(to: false)

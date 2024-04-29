@@ -32,8 +32,8 @@ struct AeroGlossBGDark: View {
                             .white.opacity(0.16),
                             .white.opacity(0.12),
                             .white.opacity(0.12),
-                            .white.opacity(0.12),
-                            .white.opacity(0.2)
+                            .white.opacity(0.13),
+                            .white.opacity(0.16)
                         ], startPoint: UnitPoint(x: 0, y: 0), endPoint: UnitPoint(x: 0, y: 1)))
                         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                 }
@@ -50,14 +50,16 @@ struct AeroGlossBGLight: View {
                 ZStack {
                     Rectangle().fill(LinearGradient(
                         colors: [
-                            .black.opacity(0.1),
-                            .black.opacity(0.08),
-                            .black.opacity(0.08),
-                            .black.opacity(0.1),
-                            .black.opacity(0.1),
-                            .black.opacity(0.1),
-                            .black.opacity(0.08)
+                            .white.opacity(0.4),
+                            .white.opacity(0.35),
+                            .white.opacity(0.35),
+                            .white.opacity(0.4),
+                            .white.opacity(0.4),
+                            .white.opacity(0.4),
+                            .white.opacity(0.3),
+                            .white.opacity(0.5)
                         ], startPoint: UnitPoint(x: 0, y: 0), endPoint: UnitPoint(x: 0, y: 1)))
+                        //.background(.ultraThinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                 }
             }
@@ -67,4 +69,7 @@ struct AeroGlossBGLight: View {
 
 #Preview {
     glosstest()
+        .background {
+            AeroBG()
+        }
 }

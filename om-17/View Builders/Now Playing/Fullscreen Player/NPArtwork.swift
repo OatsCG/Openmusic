@@ -93,11 +93,11 @@ struct NPArtwork: View {
                     
                     if shouldSkip {
                         print("forward gesture")
-                        playerManager.player_forward()
+                        playerManager.player_forward(userInitiated: true)
                     }
                     if shouldPrevious {
                         print("backward gesture")
-                        playerManager.player_backward()
+                        playerManager.player_backward(userInitiated: true)
                         
                     }
                     if shouldSkip || shouldPrevious {

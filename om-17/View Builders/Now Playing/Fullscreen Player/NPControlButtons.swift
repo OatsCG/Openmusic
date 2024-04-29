@@ -13,7 +13,7 @@ struct NPControlButtons: View {
         HStack {
             Spacer()
             Button(action: {
-                playerManager.player_backward()
+                playerManager.player_backward(userInitiated: true)
             }) {
                 NPBackButton_component()
             }
@@ -29,7 +29,7 @@ struct NPControlButtons: View {
             }
             Spacer()
             Button(action: {
-                playerManager.player_forward()
+                playerManager.player_forward(userInitiated: true)
             }) {
                 NPSkipButton_component()
             }

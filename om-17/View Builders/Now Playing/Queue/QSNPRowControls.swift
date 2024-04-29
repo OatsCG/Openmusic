@@ -14,7 +14,7 @@ struct QSNPRowControls: View {
             Spacer()
             Button(action: {
                 withAnimation {
-                    playerManager.player_backward()
+                    playerManager.player_backward(userInitiated: true)
                 }
             }) {
                 Image(systemName: "backward.fill")
@@ -37,7 +37,7 @@ struct QSNPRowControls: View {
             Spacer()
             Button(action: {
                 withAnimation {
-                    playerManager.player_forward()
+                    playerManager.player_forward(userInitiated: true)
                 }
             }) {
                 Image(systemName: "forward.fill")

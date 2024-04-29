@@ -40,7 +40,7 @@ extension PlayerManager {
             if lastDepth == true {
                 if changeDate - lastTime < waveMax && isValid {
                     self.lastWaveDepth = (false, changeDate, false)
-                    self.player_forward()
+                    self.player_forward(userInitiated: true)
                 } else {
                     self.lastWaveDepth = (false, changeDate, false)
                 }

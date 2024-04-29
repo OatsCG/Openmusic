@@ -125,4 +125,5 @@ struct QPMultipleLink_faero: View {
 #Preview {
     QPMultipleLink_faero(tracks: [FetchedTrack(default: true), FetchedTrack(default: true)])
         .environment(PlayerManager())
+        .environment(FontManager())
 }
