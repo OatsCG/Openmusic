@@ -11,9 +11,10 @@ struct DefaultArtwork_faero: View {
     @Environment(\.colorScheme) var colorScheme
     var animated: Bool
     var body: some View {
-        Image(colorScheme == .dark ? .defaultDarkClassic : .defaultLightClassic)
-            .resizable()
-            .scaledToFill()
+        Rectangle().fill(.ultraThinMaterial).scaledToFill()
+//        Image(colorScheme == .dark ? .defaultDarkClassic : .defaultLightClassic)
+//            .resizable()
+//            .scaledToFill()
     }
 }
 

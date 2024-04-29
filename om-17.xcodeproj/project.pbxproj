@@ -1552,6 +1552,17 @@
 			path = OMUser;
 			sourceTree = "<group>";
 		};
+		E555A0732BE00B85007DEB9B /* Debugging */ = {
+			isa = PBXGroup;
+			children = (
+				E599E8402BCC8CE400F778CA /* PlayerDebugger.swift */,
+				E599E8422BCC8DCA00F778CA /* PlayerDebuggerSimple.swift */,
+				E5889C292BBF4D5B00B57F4B /* PlayerDebuggerComplex.swift */,
+				E58E8FB82BA16F5D009F7E43 /* BufferProgressLabel.swift */,
+			);
+			path = Debugging;
+			sourceTree = "<group>";
+		};
 		E5574B1C2B66093C003BCC4B /* NotificationManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -2202,10 +2213,7 @@
 			children = (
 				E59E30B62A415ECA007B7874 /* NowPlayingSheet.swift */,
 				E506D9E52B00B9E100D3AAAD /* NPHeaderSegment.swift */,
-				E599E8402BCC8CE400F778CA /* PlayerDebugger.swift */,
-				E599E8422BCC8DCA00F778CA /* PlayerDebuggerSimple.swift */,
-				E5889C292BBF4D5B00B57F4B /* PlayerDebuggerComplex.swift */,
-				E58E8FB82BA16F5D009F7E43 /* BufferProgressLabel.swift */,
+				E555A0732BE00B85007DEB9B /* Debugging */,
 				E5255C262AABAB44007F12CE /* NPArtwork.swift */,
 				E52123042B10568700F17029 /* NPInfoSegment.swift */,
 				E506D9E72B00BB9200D3AAAD /* NPTitles.swift */,

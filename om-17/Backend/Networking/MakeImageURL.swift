@@ -18,5 +18,5 @@ enum Resolution: Int {
     case blur = 220
     case cookie = 240
     case tile = 480
-    case hd = 1920
+    case hd = 1440
 }

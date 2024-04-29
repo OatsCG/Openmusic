@@ -11,7 +11,7 @@ struct BetterAsyncImage: View {
     var url: URL?
     var animated: Bool = false
     var body: some View {
-        CacheAsyncImage(url: url, transaction: Transaction(animation: .smooth(duration: 0.3))) { phase in
+        CacheAsyncImage(url: url, transaction: Transaction(animation: .easeInOut(duration: 0.3))) { phase in
             //AsyncImage(url: url, transaction: Transaction(animation: .spring())){ phase in
             switch phase {
             case .empty:

@@ -37,12 +37,12 @@ struct PlayerDebugger: View {
                             VStack(alignment: .center, spacing: 5) {
                                 ProgressView()
                                     .progressViewStyle(.circular)
-                                HStack(spacing: 5) {
-                                    Circle().fill(colorScheme == .dark ? .white : .primary)
-                                        .frame(width: 6, height: 6)
-                                    Circle().fill(.tertiary)
-                                        .frame(width: 6, height: 6)
-                                }
+//                                HStack(spacing: 5) {
+//                                    Circle().fill(colorScheme == .dark ? .white : .primary)
+//                                        .frame(width: 6, height: 6)
+//                                    Circle().fill(.tertiary)
+//                                        .frame(width: 6, height: 6)
+//                                }
                             }
                                 .padding(10)
                                 .background(.ultraThinMaterial)
@@ -61,12 +61,12 @@ struct PlayerDebugger: View {
                             VStack(alignment: .center, spacing: 5) {
                                 ProgressView()
                                     .progressViewStyle(.circular)
-                                HStack(spacing: 5) {
-                                    Circle().fill(colorScheme == .dark ? .white : .primary)
-                                        .frame(width: 6, height: 6)
-                                    Circle().fill(colorScheme == .dark ? .white : .primary)
-                                        .frame(width: 6, height: 6)
-                                }
+//                                HStack(spacing: 5) {
+//                                    Circle().fill(colorScheme == .dark ? .white : .primary)
+//                                        .frame(width: 6, height: 6)
+//                                    Circle().fill(colorScheme == .dark ? .white : .primary)
+//                                        .frame(width: 6, height: 6)
+//                                }
                             }
                                 .padding(10)
                                 .background(.ultraThinMaterial)
