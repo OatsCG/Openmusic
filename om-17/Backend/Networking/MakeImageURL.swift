@@ -14,9 +14,9 @@ func BuildArtistCookieImageURL(imgID: String, resolution: Resolution) -> URL? {
 }
 
 enum Resolution: Int {
-    case background = 120
-    case blur = 220
-    case cookie = 240
+    case background = 60
+    case blur = 80
+    case cookie = 120
     case tile = 480
-    case hd = 1440
+    case hd = 1920
 }
