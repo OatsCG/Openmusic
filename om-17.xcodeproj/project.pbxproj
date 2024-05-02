@@ -67,7 +67,7 @@
 		E5255BF32AAAB68F007F12CE /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = E5255BF22AAAB68F007F12CE /* AudioKit */; };
 		E5255BFA2AAB6FA4007F12CE /* AudioStreaming in Frameworks */ = {isa = PBXBuildFile; productRef = E5255BF92AAB6FA4007F12CE /* AudioStreaming */; };
 		E5255C1C2AAB9DB7007F12CE /* PMTransportControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5255C122AAB9DB7007F12CE /* PMTransportControls.swift */; };
-		E5255C1D2AAB9DB7007F12CE /* PlayerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5255C132AAB9DB7007F12CE /* PlayerEngine.swift */; };
+		E5255C1D2AAB9DB7007F12CE /* PlayerEngineProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5255C132AAB9DB7007F12CE /* PlayerEngineProtocol.swift */; };
 		E5255C1E2AAB9DB7007F12CE /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5255C142AAB9DB7007F12CE /* PlayerManager.swift */; };
 		E5255C1F2AAB9DB7007F12CE /* PMCrossfade.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5255C152AAB9DB7007F12CE /* PMCrossfade.swift */; };
 		E5255C202AAB9DB7007F12CE /* PMPriming.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5255C162AAB9DB7007F12CE /* PMPriming.swift */; };
@@ -457,6 +457,9 @@
 		E5D4933E2A3062590091ED01 /* SearchTrackLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D4933D2A3062590091ED01 /* SearchTrackLink.swift */; };
 		E5D493422A30626E0091ED01 /* SearchArtistLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D493412A30626E0091ED01 /* SearchArtistLink.swift */; };
 		E5D493442A3063460091ED01 /* MakeImageURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D493432A3063460091ED01 /* MakeImageURL.swift */; };
+		E5DAAA572BE42EC700721C99 /* AEPlayerOnline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA562BE42EC700721C99 /* AEPlayerOnline.swift */; };
+		E5DAAA592BE42F0C00721C99 /* AEPlayerOffline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA582BE42F0C00721C99 /* AEPlayerOffline.swift */; };
+		E5DAAA5B2BE42F5A00721C99 /* PlayerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA5A2BE42F5A00721C99 /* PlayerEngine.swift */; };
 		E5DCFDFE2B450E490044D9B5 /* NPPlayButton_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCFDFD2B450E490044D9B5 /* NPPlayButton_component.swift */; };
 		E5DCFE002B450ED00044D9B5 /* NPBackButton_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCFDFF2B450ED00044D9B5 /* NPBackButton_component.swift */; };
 		E5DCFE022B450EEA0044D9B5 /* NPSkipButton_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCFE012B450EEA0044D9B5 /* NPSkipButton_component.swift */; };
@@ -511,7 +514,7 @@
 		E5F43D482B0AC89000864502 /* LoadingBigTracks_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D472B0AC89000864502 /* LoadingBigTracks_classic.swift */; };
 		E5F43D4A2B0ACBC300864502 /* LoadingBigTracks_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D492B0ACBC300864502 /* LoadingBigTracks_component.swift */; };
 		E5F43D4C2B0AE52F00864502 /* EQEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D4B2B0AE52F00864502 /* EQEditor.swift */; };
-		E5F43D4E2B0AF2E500864502 /* PlayerEngineAE.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D4D2B0AF2E500864502 /* PlayerEngineAE.swift */; };
+		E5F43D4E2B0AF2E500864502 /* AEPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D4D2B0AF2E500864502 /* AEPlayer.swift */; };
 		E5F43D512B0AFB8600864502 /* SwiftAudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = E5F43D502B0AFB8600864502 /* SwiftAudioPlayer */; };
 		E5F43D932B0B2D4B00864502 /* RxMusicPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = E5F43D922B0B2D4B00864502 /* RxMusicPlayer */; };
 		E5FFBD562B0A8AD000170496 /* ExploreFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */; };
@@ -612,7 +615,7 @@
 		E52300762AAEE9DE0023EF94 /* QPPlaylistLink_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPPlaylistLink_component.swift; sourceTree = "<group>"; };
 		E52300782AAEEFEE0023EF94 /* PlaylistBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistBackground.swift; sourceTree = "<group>"; };
 		E5255C122AAB9DB7007F12CE /* PMTransportControls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMTransportControls.swift; sourceTree = "<group>"; };
-		E5255C132AAB9DB7007F12CE /* PlayerEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEngine.swift; sourceTree = "<group>"; };
+		E5255C132AAB9DB7007F12CE /* PlayerEngineProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerEngineProtocol.swift; sourceTree = "<group>"; };
 		E5255C142AAB9DB7007F12CE /* PlayerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		E5255C152AAB9DB7007F12CE /* PMCrossfade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMCrossfade.swift; sourceTree = "<group>"; };
 		E5255C162AAB9DB7007F12CE /* PMPriming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMPriming.swift; sourceTree = "<group>"; };
@@ -1001,6 +1004,9 @@
 		E5D4933D2A3062590091ED01 /* SearchTrackLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTrackLink.swift; sourceTree = "<group>"; };
 		E5D493412A30626E0091ED01 /* SearchArtistLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistLink.swift; sourceTree = "<group>"; };
 		E5D493432A3063460091ED01 /* MakeImageURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeImageURL.swift; sourceTree = "<group>"; };
+		E5DAAA562BE42EC700721C99 /* AEPlayerOnline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPlayerOnline.swift; sourceTree = "<group>"; };
+		E5DAAA582BE42F0C00721C99 /* AEPlayerOffline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPlayerOffline.swift; sourceTree = "<group>"; };
+		E5DAAA5A2BE42F5A00721C99 /* PlayerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEngine.swift; sourceTree = "<group>"; };
 		E5DCFDFD2B450E490044D9B5 /* NPPlayButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPPlayButton_component.swift; sourceTree = "<group>"; };
 		E5DCFDFF2B450ED00044D9B5 /* NPBackButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPBackButton_component.swift; sourceTree = "<group>"; };
 		E5DCFE012B450EEA0044D9B5 /* NPSkipButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPSkipButton_component.swift; sourceTree = "<group>"; };
@@ -1056,7 +1062,7 @@
 		E5F43D472B0AC89000864502 /* LoadingBigTracks_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBigTracks_classic.swift; sourceTree = "<group>"; };
 		E5F43D492B0ACBC300864502 /* LoadingBigTracks_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBigTracks_component.swift; sourceTree = "<group>"; };
 		E5F43D4B2B0AE52F00864502 /* EQEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQEditor.swift; sourceTree = "<group>"; };
-		E5F43D4D2B0AF2E500864502 /* PlayerEngineAE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEngineAE.swift; sourceTree = "<group>"; };
+		E5F43D4D2B0AF2E500864502 /* AEPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPlayer.swift; sourceTree = "<group>"; };
 		E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreFetchAPI.swift; sourceTree = "<group>"; };
 		E5FFBD572B0A8F3000170496 /* LoadingExplore_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingExplore_component.swift; sourceTree = "<group>"; };
 		E5FFBD592B0A917500170496 /* LoadingExplore_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingExplore_wii.swift; sourceTree = "<group>"; };
@@ -1149,11 +1155,7 @@
 				E5255C122AAB9DB7007F12CE /* PMTransportControls.swift */,
 				E5574B1A2B660664003BCC4B /* PMNotifications.swift */,
 				E595DA552B8BF833007D4A59 /* PMSuggestions.swift */,
-				E5255C132AAB9DB7007F12CE /* PlayerEngine.swift */,
-				E52CFF762B464FF500DF5EBF /* VideoPlayerEngine.swift */,
-				E5F43D4D2B0AF2E500864502 /* PlayerEngineAE.swift */,
-				E52D5B822B51BDE700E1E8DC /* EQManager.swift */,
-				E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */,
+				E5DAAA552BE42E8500721C99 /* Player Engine */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -2623,6 +2625,21 @@
 			path = "Image Files";
 			sourceTree = "<group>";
 		};
+		E5DAAA552BE42E8500721C99 /* Player Engine */ = {
+			isa = PBXGroup;
+			children = (
+				E5255C132AAB9DB7007F12CE /* PlayerEngineProtocol.swift */,
+				E5DAAA5A2BE42F5A00721C99 /* PlayerEngine.swift */,
+				E52CFF762B464FF500DF5EBF /* VideoPlayerEngine.swift */,
+				E5F43D4D2B0AF2E500864502 /* AEPlayer.swift */,
+				E5DAAA562BE42EC700721C99 /* AEPlayerOnline.swift */,
+				E5DAAA582BE42F0C00721C99 /* AEPlayerOffline.swift */,
+				E52D5B822B51BDE700E1E8DC /* EQManager.swift */,
+				E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */,
+			);
+			path = "Player Engine";
+			sourceTree = "<group>";
+		};
 		E5DE81C12B55C83C0066527C /* Just for Testing */ = {
 			isa = PBXGroup;
 			children = (
@@ -3045,7 +3062,7 @@
 				E506D9E62B00B9E100D3AAAD /* NPHeaderSegment.swift in Sources */,
 				E58E8FD02BA172AF009F7E43 /* BAPlayer.swift in Sources */,
 				E52C206A2A93C9F100E2995C /* PlaylistItemList.swift in Sources */,
-				E5F43D4E2B0AF2E500864502 /* PlayerEngineAE.swift in Sources */,
+				E5F43D4E2B0AF2E500864502 /* AEPlayer.swift in Sources */,
 				E58E8FB12BA16BB8009F7E43 /* AeroBG.swift in Sources */,
 				E579DE562B3E7A0F009324C1 /* AlbumBackground_spotty.swift in Sources */,
 				E5A534F02B02C15F00F48935 /* LoadingTracklist_wii.swift in Sources */,
@@ -3122,7 +3139,7 @@
 				E58E8FA52BA16BB8009F7E43 /* NPBackButton_faero.swift in Sources */,
 				E5C7D4802AF9D1E8003A7BAB /* PlaylistImporter.swift in Sources */,
 				E58CA2432B9D310400BCBD7B /* AudioFileRow.swift in Sources */,
-				E5255C1D2AAB9DB7007F12CE /* PlayerEngine.swift in Sources */,
+				E5255C1D2AAB9DB7007F12CE /* PlayerEngineProtocol.swift in Sources */,
 				E58B67352ACFB2B0002FA7A2 /* PlaylistBackground_wii.swift in Sources */,
 				E58B673C2ACFB2B0002FA7A2 /* AlbumWideButton_wii.swift in Sources */,
 				E54245C02BD057DC00418B64 /* MainNavigationTabbed.swift in Sources */,
@@ -3156,6 +3173,7 @@
 				E58E8F9D2BA16BB8009F7E43 /* LoadingExplore_faero.swift in Sources */,
 				E5A534D42B02986600F48935 /* SearchExtendedTracks.swift in Sources */,
 				E53ED7DC2BAA856900ECC3CE /* EQPresetRow.swift in Sources */,
+				E5DAAA5B2BE42F5A00721C99 /* PlayerEngine.swift in Sources */,
 				E5018BD42A917CA900143967 /* SearchArtistExtendedAlbums.swift in Sources */,
 				E5255C1E2AAB9DB7007F12CE /* PlayerManager.swift in Sources */,
 				E5977C382AF3624600C55003 /* PlaylistTrackFetchAPI.swift in Sources */,
@@ -3227,6 +3245,7 @@
 				E5A00A422B015993001C59DB /* NPProximityWarning.swift in Sources */,
 				E58B67062ACFB0C1002FA7A2 /* DefaultArtwork_honeycrisp.swift in Sources */,
 				E58B67312ACFB2B0002FA7A2 /* TrackLink_wii.swift in Sources */,
+				E5DAAA592BE42F0C00721C99 /* AEPlayerOffline.swift in Sources */,
 				E51375FB2B44C3CF0005F2D7 /* ScrubberBar_component.swift in Sources */,
 				E525B74E2A8AB62400421F7E /* QPSingleLink_honeycrisp.swift in Sources */,
 				E5E6A1E02A80665D00880E6B /* TabBarLibraryLabel_classic.swift in Sources */,
@@ -3311,6 +3330,7 @@
 				E56DDA022B2BE97C006222A8 /* TVStaticFuzz.swift in Sources */,
 				E51E6E752B09F7BF00F87490 /* Downloader+Protocol.swift in Sources */,
 				E582E1BB2A772A8400B2C8B7 /* PlaylistTypes.swift in Sources */,
+				E5DAAA572BE42EC700721C99 /* AEPlayerOnline.swift in Sources */,
 				E532D4E92B420D4600D7CC25 /* PlaylistMenuPreview_honeycrisp.swift in Sources */,
 				E56273EA2B5393140062CB7A /* AmplitudeFetcher.swift in Sources */,
 				E51375E72B4378030005F2D7 /* FontManager.swift in Sources */,
