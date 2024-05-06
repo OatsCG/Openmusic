@@ -56,6 +56,7 @@ struct VideoLooperView: UIViewControllerRepresentable {
             playerViewController.player = queuePlayer
             playerViewController.updatesNowPlayingInfoCenter = false
             playerViewController.showsPlaybackControls = false
+            queuePlayer.audiovisualBackgroundPlaybackPolicy = .pauses
             
             queuePlayer.play() // Start playing automatically
         }

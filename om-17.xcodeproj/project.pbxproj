@@ -460,6 +460,8 @@
 		E5DAAA572BE42EC700721C99 /* AEPlayerOnline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA562BE42EC700721C99 /* AEPlayerOnline.swift */; };
 		E5DAAA592BE42F0C00721C99 /* AEPlayerOffline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA582BE42F0C00721C99 /* AEPlayerOffline.swift */; };
 		E5DAAA5B2BE42F5A00721C99 /* PlayerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA5A2BE42F5A00721C99 /* PlayerEngine.swift */; };
+		E5DAAA602BE4315400721C99 /* StreamRanger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA5F2BE4315400721C99 /* StreamRanger.swift */; };
+		E5DAAA622BE4345300721C99 /* StreamAssetGatherer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DAAA612BE4345300721C99 /* StreamAssetGatherer.swift */; };
 		E5DCFDFE2B450E490044D9B5 /* NPPlayButton_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCFDFD2B450E490044D9B5 /* NPPlayButton_component.swift */; };
 		E5DCFE002B450ED00044D9B5 /* NPBackButton_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCFDFF2B450ED00044D9B5 /* NPBackButton_component.swift */; };
 		E5DCFE022B450EEA0044D9B5 /* NPSkipButton_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DCFE012B450EEA0044D9B5 /* NPSkipButton_component.swift */; };
@@ -1007,6 +1009,8 @@
 		E5DAAA562BE42EC700721C99 /* AEPlayerOnline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPlayerOnline.swift; sourceTree = "<group>"; };
 		E5DAAA582BE42F0C00721C99 /* AEPlayerOffline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPlayerOffline.swift; sourceTree = "<group>"; };
 		E5DAAA5A2BE42F5A00721C99 /* PlayerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEngine.swift; sourceTree = "<group>"; };
+		E5DAAA5F2BE4315400721C99 /* StreamRanger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamRanger.swift; sourceTree = "<group>"; };
+		E5DAAA612BE4345300721C99 /* StreamAssetGatherer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamAssetGatherer.swift; sourceTree = "<group>"; };
 		E5DCFDFD2B450E490044D9B5 /* NPPlayButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPPlayButton_component.swift; sourceTree = "<group>"; };
 		E5DCFDFF2B450ED00044D9B5 /* NPBackButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPBackButton_component.swift; sourceTree = "<group>"; };
 		E5DCFE012B450EEA0044D9B5 /* NPSkipButton_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPSkipButton_component.swift; sourceTree = "<group>"; };
@@ -2633,11 +2637,21 @@
 				E52CFF762B464FF500DF5EBF /* VideoPlayerEngine.swift */,
 				E5F43D4D2B0AF2E500864502 /* AEPlayer.swift */,
 				E5DAAA562BE42EC700721C99 /* AEPlayerOnline.swift */,
+				E5DAAA5E2BE4314600721C99 /* OnlineStreamingEngine */,
 				E5DAAA582BE42F0C00721C99 /* AEPlayerOffline.swift */,
 				E52D5B822B51BDE700E1E8DC /* EQManager.swift */,
 				E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */,
 			);
 			path = "Player Engine";
+			sourceTree = "<group>";
+		};
+		E5DAAA5E2BE4314600721C99 /* OnlineStreamingEngine */ = {
+			isa = PBXGroup;
+			children = (
+				E5DAAA612BE4345300721C99 /* StreamAssetGatherer.swift */,
+				E5DAAA5F2BE4315400721C99 /* StreamRanger.swift */,
+			);
+			path = OnlineStreamingEngine;
 			sourceTree = "<group>";
 		};
 		E5DE81C12B55C83C0066527C /* Just for Testing */ = {
@@ -2946,6 +2960,7 @@
 				E5E6A1CA2A7DC25A00880E6B /* SearchTrackLink_classic.swift in Sources */,
 				E56E3C6A2B6813BD0088FA50 /* RecentlyPlayedManager.swift in Sources */,
 				E5D493422A30626E0091ED01 /* SearchArtistLink.swift in Sources */,
+				E5DAAA622BE4345300721C99 /* StreamAssetGatherer.swift in Sources */,
 				E5E6A1DC2A8061EA00880E6B /* LibraryArtistLink_component.swift in Sources */,
 				E54A40042ACCAFFD007B1444 /* AlbumBackground_classic.swift in Sources */,
 				E58B673E2ACFB2B0002FA7A2 /* SearchAlbumLink_wii.swift in Sources */,
@@ -3172,6 +3187,7 @@
 				E520B2892A5A58960031C73D /* TrackMenu.swift in Sources */,
 				E58E8F9D2BA16BB8009F7E43 /* LoadingExplore_faero.swift in Sources */,
 				E5A534D42B02986600F48935 /* SearchExtendedTracks.swift in Sources */,
+				E5DAAA602BE4315400721C99 /* StreamRanger.swift in Sources */,
 				E53ED7DC2BAA856900ECC3CE /* EQPresetRow.swift in Sources */,
 				E5DAAA5B2BE42F5A00721C99 /* PlayerEngine.swift in Sources */,
 				E5018BD42A917CA900143967 /* SearchArtistExtendedAlbums.swift in Sources */,

@@ -17,14 +17,14 @@ import AudioKit
     var status: AVPlayer.Status
     var volume: Float { return self.player.volume }
     var player: AVPlayer
-    var duration: Double {
-        return (player.currentItem?.duration.seconds ?? Double.nan) / 2
-    }
+    var duration: Double = Double.nan
     var currentTime: Double {
         return player.currentTime().seconds
     }
+    private var url: URL?
 
     init(url: URL? = nil) {
+        self.url = url
         if (url != nil) {
             let asset = AVAsset(url: url!)
             let playerItem = AVPlayerItem(asset: asset)
@@ -34,13 +34,16 @@ import AudioKit
         }
         self.filehash = UUID()
         self.status = .unknown
-        //self.player.automaticallyWaitsToMinimizeStalling = false
+        self.player.automaticallyWaitsToMinimizeStalling = false
+        self.player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
     }
     init(playerItem: AVPlayerItem) {
         self.player = AVPlayer(playerItem: playerItem)
+        self.duration = playerItem.duration.seconds
         self.filehash = UUID()
         self.status = .unknown
-        //self.player.automaticallyWaitsToMinimizeStalling = false
+        self.player.automaticallyWaitsToMinimizeStalling = false
+        self.player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
     }
     
     func amplitudeChart() -> [Float]? {
@@ -57,11 +60,9 @@ import AudioKit
     
     func play() {
         //self.player.play()
-        print(self.player.currentItem?.loadedTimeRanges)
         self.player.playImmediately(atRate: 1.0)
     }
     func pause() {
-        print(self.player.currentItem?.loadedTimeRanges)
         self.player.pause()
     }
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
@@ -102,5 +103,44 @@ import AudioKit
     }
     func setVolume(_ to: Float) {
         self.player.volume = min(max(to, 0), 1)
+    }
+}
+
+
+
+
+func fetchContentLength(myURL: URL?, callback: @escaping (Double?) -> Void) {
+    if let myURL = myURL {
+        var request = URLRequest(url: myURL)
+        request.addValue("bytes=0-1", forHTTPHeaderField: "Range")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { _, response, error in
+            guard error == nil else {
+                print("Error: \(error!.localizedDescription)")
+                callback(nil)
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse,
+               let contentRange = httpResponse.allHeaderFields["content-range"] as? String {
+                let parts = contentRange.components(separatedBy: "/")
+                if let totalSize = parts.last, let size = Int(totalSize) {
+                    print("FCL GOT: \(size)")
+                    let ms: Double = Double((size * 8) / 130000)
+                    print("FCL FORMATTED: \(ms)")
+                    callback(ms)
+                } else {
+                    print("FCL NIL 1")
+                    callback(nil)
+                }
+            } else {
+                print("FCL NIL 2")
+                callback(nil)
+            }
+        }
+        task.resume()
+    } else {
+        print("FCL NIL 3")
+        callback(nil)
     }
 }
