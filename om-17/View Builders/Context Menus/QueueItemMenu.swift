@@ -135,7 +135,7 @@ struct QueueItemMenu: View {
                 }
                 playerManager.prime_next_song()
             }) {
-                Label("Move to Top", systemImage: "text.insert")
+                Label("Move to Top", systemImage: "text.line.first.and.arrowtriangle.forward")
             }
             Button(action: {
                 withAnimation {

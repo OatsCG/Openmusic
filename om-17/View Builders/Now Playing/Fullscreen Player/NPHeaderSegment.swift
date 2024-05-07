@@ -15,12 +15,13 @@ struct NPHeaderSegment: View {
     @Binding var fullscreen: Bool
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
+    @State var visualWidth: CGFloat = 100
     var body: some View {
         VStack {
             if ((playerManager.currentQueueItem?.isVideo ?? false) && playerManager.currentQueueItem?.video_AVPlayer?.player != nil) {
                 YouTubePlayerView(playerManager.currentQueueItem!.video_AVPlayer!.player!)
             } else {
-                NPArtwork(fullscreen: $fullscreen)
+                NPArtwork(fullscreen: $fullscreen, visualWidth: $visualWidth)
                     .overlay {
                         PlayerDebugger()
                     }
@@ -113,6 +114,7 @@ struct NPHeaderSegment: View {
                         }
                     }
                 }
+                .frame(width: visualWidth)
             }
         }
             .scaleEffect((playerManager.isPlaying || playerManager.currentQueueItem?.isVideo == true) ? 1 : 0.75)

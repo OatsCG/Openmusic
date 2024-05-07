@@ -15,7 +15,7 @@ struct NPBottomToolBar: View {
     @Environment(FontManager.self) private var fontManager
     @Environment(OMUser.self) var omUser
     @Binding var fullscreen: Bool
-    @State private var showingQueueSheet = false
+    @State var showingQueueSheet = false
     @Binding var carModeEnabled: Bool
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
@@ -76,7 +76,7 @@ struct NPBottomToolBar: View {
             .customFont(fontManager, .title2)
             .foregroundStyle(.secondary)
             .sheet(isPresented: $showingQueueSheet) {
-                QueueSheet(passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
+                QueueSheet(passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet, showingQueueSheet: $showingQueueSheet)
                     .environment(playerManager)
                     .environment(playlistImporter)
                     .environment(downloadManager)

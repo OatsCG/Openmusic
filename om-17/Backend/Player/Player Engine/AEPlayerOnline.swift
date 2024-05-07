@@ -17,7 +17,9 @@ import AudioKit
     var status: AVPlayer.Status
     var volume: Float { return self.player.volume }
     var player: AVPlayer
-    var duration: Double = Double.nan
+    var duration: Double {
+        return (player.currentItem?.duration.seconds ?? Double.nan) / 2
+    }
     var currentTime: Double {
         return player.currentTime().seconds
     }
@@ -39,7 +41,7 @@ import AudioKit
     }
     init(playerItem: AVPlayerItem) {
         self.player = AVPlayer(playerItem: playerItem)
-        self.duration = playerItem.duration.seconds
+        //self.duration = playerItem.duration.seconds
         self.filehash = UUID()
         self.status = .unknown
         self.player.automaticallyWaitsToMinimizeStalling = false

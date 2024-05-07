@@ -17,12 +17,25 @@ struct NPArtwork: View {
     @State var shouldSkip: Bool = false
     @State var shouldPrevious: Bool = false
     @Binding var fullscreen: Bool
+    @Binding var visualWidth: CGFloat
     var minDistance: CGFloat = 30
     var maxDistance: CGFloat = 200
     var maxThrowDistance: CGFloat = 400
     var body: some View {
         ZStack {
-            AlbumArtDisplay(AlbumID: playerManager.currentQueueItem?.Track.Album.AlbumID, ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .hd, Blur: 0, BlurOpacity: 0, cornerRadius: 8)
+            GeometryReader { geo in
+                AlbumArtDisplay(AlbumID: playerManager.currentQueueItem?.Track.Album.AlbumID, ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .hd, Blur: 0, BlurOpacity: 0, cornerRadius: 8)
+                    .onChange(of: geo.size.width) { oldValue, newValue in
+                        withAnimation {
+                            visualWidth = newValue
+                        }
+                    }
+                    .onAppear {
+                        withAnimation {
+                            visualWidth = geo.size.width
+                        }
+                    }
+            }
                 .scaledToFit()
                 .shadow(radius: 20)
                 .opacity(artworkOpacity)

@@ -80,13 +80,18 @@ extension PlayerManager {
         }
         switch type {
         case .began:
+            print("[pause] began interruption")
             self.pause()
         case .ended:
             guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
             let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+            self.setupRemoteTransportControls()
+            self.setAudioSession()
             if options.contains(.shouldResume) {
+                print("[pause] ended interruption, playing")
                 self.play()
             } else {
+                print("[pause] ended interruption")
                 self.pause()
             }
         default: ()
@@ -129,6 +134,7 @@ extension PlayerManager {
         }
         self.commandCenter.stopCommand.addTarget { [unowned self] event in
             print("\(self.currentQueueItem?.Track.Title ?? "nil") STOPPED")
+            self.pause()
             return .success
             
 //            if self.player.rate == 1.0 {

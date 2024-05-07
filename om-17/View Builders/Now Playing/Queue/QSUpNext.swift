@@ -17,9 +17,18 @@ struct QSUpNext: View {
         if (playerManager.trackQueue.count == 0) {
             VStack {
                 Spacer()
-                Text("Nothing Up Next")
-                    .customFont(fontManager, .title2)
-                    .foregroundStyle(.secondary)
+                if (playerManager.fetchSuggestionsModel.isFetching) {
+                    HStack {
+                        Text("Queuing ")
+                        ProgressView()
+                    }
+                        .customFont(fontManager, .title2)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("Nothing Up Next")
+                        .customFont(fontManager, .title2)
+                        .foregroundStyle(.secondary)
+                }
                 Spacer()
             }
         } else {

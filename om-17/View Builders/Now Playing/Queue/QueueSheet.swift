@@ -18,9 +18,17 @@ struct QueueSheet: View {
     @State var selectedPick: QueuePicks = .queue
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
+    @Binding var showingQueueSheet: Bool
     var body: some View {
         VStack {
             HStack(alignment: .center) {
+                Button(action: {
+                    showingQueueSheet = false
+                }) {
+                    Image(systemName: "chevron.down.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .customFont(fontManager, .title)
+                }
                 Picker("Category", selection: $selectedPick.animation()) {
                     ForEach(QueuePicks.allCases) { option in
                         Text(option == .played ? "Played" : "Up Next")
