@@ -16,9 +16,6 @@ struct EQEditor: View {
     @State var currentBands: [EQBand] = []
     @State var currentPresets: [EQPreset] = []
     @State var bandCount: Int = 8
-    @State var customizedTitle: String = ""
-    @State var customizingID: String = ""
-    @State var showingTitleCustomizer: Bool = false
     var frameHeight: CGFloat = 300
     var body: some View {
         NavigationStack {
@@ -122,77 +119,7 @@ struct EQEditor: View {
                             }
                         }
                         ForEach($currentPresets, id: \.id) { $eqPreset in
-                            Button(action: {
-                                EQBandsCurrent = EQManager.encodeBands(bands: eqPreset.bands)
-                                self.updateLocalBands()
-                                self.updateStoredBands()
-                            }) {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            Text(eqPreset.name)
-                                            if eqPreset.bands.elementsEqual(currentBands) {
-                                                Image(systemName: "checkmark.circle.fill")
-                                                    .symbolRenderingMode(.hierarchical)
-                                            }
-                                        }
-                                        HStack(spacing: 2) {
-                                            ForEach($eqPreset.bands, id: \.index) { $band in
-                                                EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)
-                                                    .drawingGroup()
-                                                    .clipShape(UnevenRoundedRectangle(
-                                                        topLeadingRadius: band.index == 0 ? 2 : 0,
-                                                        bottomLeadingRadius: band.index == 0 ? 2 : 0,
-                                                        bottomTrailingRadius: band.index < 0 ? 2 : 0,
-                                                        topTrailingRadius: band.index < 0 ? 2 : 0
-                                                    ))
-                                                    .padding(.trailing, band.index < 0 ? 2 : 0)
-                                            }
-                                        }
-                                            .frame(height: 25)
-                                            .clipShape(RoundedRectangle(cornerRadius: 4))
-                                            .padding(.trailing, 100)
-                                            .allowsHitTesting(false)
-                                    }
-                                    Spacer()
-                                    Button(action: {
-                                        self.customizedTitle = eqPreset.name
-                                        self.customizingID = eqPreset.id
-                                        self.showingTitleCustomizer = true
-                                    }) {
-                                        Image(systemName: "pencil.circle.fill")
-                                            .symbolRenderingMode(.hierarchical)
-                                            .font(.title)
-                                    }
-                                    .alert("Edit EQ Preset Title", isPresented: $showingTitleCustomizer) {
-                                        TextField("Preset Name", text: $customizedTitle)
-                                            .autocorrectionDisabled()
-                                        Button(action: {
-                                            EQManager.editPresetTitle(presetID: self.customizingID, title: self.customizedTitle)
-                                            self.updateLocalPresets()
-                                            self.updateLocalBands()
-                                        }) {
-                                            Text("Save")
-                                        }
-                                        
-                                        Button("Cancel", role: .cancel) { }
-                                    }
-                                    
-                                    Button(action: {
-                                        EQManager.deletePreset(preset: eqPreset)
-                                        self.updateLocalPresets()
-                                        self.updateLocalBands()
-                                    }) {
-                                        Image(systemName: "minus.circle.fill")
-                                            .symbolRenderingMode(.hierarchical)
-                                            .font(.title)
-                                    }
-                                }
-                                .padding(10)
-                                .background(.thinMaterial)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                            }
-                            .buttonStyle(.plain)
+                            EQPresetRow(currentBands: $currentBands, currentPresets: $currentPresets, eqPreset: $eqPreset, bandCount: $bandCount)
                         }
                     }
                 }
@@ -207,6 +134,7 @@ struct EQEditor: View {
             updateLocalPresets()
         }
     }
+    
     private func updateLocalBands() {
         withAnimation {
             self.currentBands = []
@@ -214,6 +142,7 @@ struct EQEditor: View {
             self.bandCount = self.currentBands.count - 1
         }
     }
+    
     private func updateLocalPresets() {
         withAnimation {
             self.currentPresets = EQManager.decodePresets()
