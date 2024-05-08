@@ -43,7 +43,7 @@ extension PlayerManager {
         } else {
             self.durationSeconds = 0.9
         }
-        Task {
+        DispatchQueue.main.async {
             withAnimation {
                 self.elapsedNormal = self.elapsedTime / self.durationSeconds
             }
