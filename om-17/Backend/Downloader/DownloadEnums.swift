@@ -9,6 +9,6 @@ import SwiftUI
 import SwiftData
 
 enum DownloadState: Identifiable, Codable {
-    case inactive, waiting, downloading, success, cancelled, error
+    case inactive, waiting, fetching, downloading, success, cancelled, error
     var id: Self { self }
 }

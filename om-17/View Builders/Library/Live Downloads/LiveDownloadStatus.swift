@@ -16,6 +16,9 @@ struct LiveDownloadStatus: View {
             case .waiting:
                 Image(systemName: "circle.dashed")
                     .imageScale(.large)
+            case .fetching:
+                ProgressView()
+                    .progressViewStyle(.circular)
             case .downloading:
                 CircularProgressView(progress: download.progress)
             case .inactive:

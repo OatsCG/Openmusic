@@ -15,7 +15,7 @@ import SwiftUI
     var currently_downloading: Int = 0
     var tracks_downloading: [DownloadData] = []
     //var tracks
-    var tracks_lookup: [String:Int] = [:] // playbackID: taskID
+    var tracks_lookup: [String:UUID] = [:] // playbackID: taskID
     var downloadsCount: Int
     
     init() {
@@ -30,24 +30,25 @@ import SwiftUI
             return
         }
         let thisDownload = DownloadData(track: track, explicit: explicit)
-        tracks_lookup[thisDownload.playbackID] = tracks_downloading.count
+        tracks_lookup[thisDownload.playbackID] = thisDownload.id
         tracks_downloading.append(thisDownload)
+        thisDownload.state = .waiting
         Task {
-            thisDownload.state = .waiting
-            let download_url = await get_download_url(PlaybackID: thisDownload.playbackID)
-            if download_url != nil {
-                let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Audio-\(thisDownload.playbackID).mp4")
-                DispatchQueue.main.async {
-                    let newtask = DownloadTask(dID: String(thisDownload.playbackID), source: download_url!, destination: destination!)
-                    thisDownload.downloadTask = newtask
-                    if (self.currently_downloading < self.max_downloads) {
+            if (self.currently_downloading < self.max_downloads) {
+                thisDownload.state = .fetching
+                let download_url = await get_download_url(PlaybackID: thisDownload.playbackID)
+                if download_url != nil {
+                    let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Audio-\(thisDownload.playbackID).mp4")
+                    DispatchQueue.main.async {
+                        let newtask = DownloadTask(dID: String(thisDownload.playbackID), source: download_url!, destination: destination!)
+                        thisDownload.downloadTask = newtask
                         self.downloader.start(newtask)
                         self.currently_downloading += 1
                     }
+                } else {
+                    thisDownload.state = .error
+                    thisDownload.errorReason = "Couldn't retrieve download link"
                 }
-            } else {
-                thisDownload.state = .error
-                thisDownload.errorReason = "Couldn't retrieve download link"
             }
         }
     }
@@ -83,7 +84,7 @@ import SwiftUI
         }
         let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Audio-\(PlaybackID!).mp4")
         if FileManager().fileExists(atPath: destination!.path) {
-            if (tracks_lookup[PlaybackID!] == nil || self.tracks_downloading[self.tracks_lookup[PlaybackID!]!].state == .success) {
+            if (tracks_lookup[PlaybackID!] == nil || taskID_to_tracks_downloading(taskID: self.tracks_lookup[PlaybackID!])?.state == .success) {
                 return(true)
             }
         }
@@ -275,7 +276,7 @@ import SwiftUI
     }
     
     func get_error_reason(PlaybackID: String) -> String? {
-        return self.tracks_downloading[self.tracks_lookup[PlaybackID]!].errorReason
+        return self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[PlaybackID])?.errorReason
     }
     
     private func get_download_url(PlaybackID: String) async -> URL? {
@@ -312,32 +313,37 @@ import SwiftUI
         }
     }
     
+    func taskID_to_tracks_downloading(taskID: UUID?) -> DownloadData? {
+        let firstTask: DownloadData? = self.tracks_downloading.first(where: { $0.id == taskID })
+        return firstTask
+    }
+    
     
     // DELEGATE FUNCTIONS
     func downloadStarted(downloader: Downloader, task: DownloadTask) {
         ds(downloader: downloader, task: task)
     }
     func ds(downloader: Downloader, task: DownloadTask) {
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].state = .downloading
+        self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.state = .downloading
     }
     func downloadCanceled(downloader: Downloader, task: DownloadTask) {
         dc(downloader: downloader, task: task)
     }
     func dc(downloader: Downloader, task: DownloadTask) {
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].state = .cancelled
+        self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.state = .cancelled
         self.try_next_download()
     }
     func downloadFinished(downloader: Downloader, task: DownloadTask) {
         df(downloader: downloader, task: task)
     }
     func df(downloader: Downloader, task: DownloadTask) {
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].state = .success
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].location = task.destination
+        self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.state = .success
+        self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.location = task.destination
         self.currently_downloading -= 1
         do {
-            self.tracks_downloading[self.tracks_lookup[task.dID]!].size = try FileManager.default.attributesOfItem(atPath: task.destination.path())[.size] as! Int
+            self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.size = try FileManager.default.attributesOfItem(atPath: task.destination.path())[.size] as! Int
         } catch {
-            self.tracks_downloading[self.tracks_lookup[task.dID]!].size = -1
+            self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.size = -1
         }
         self.try_next_download()
     }
@@ -345,14 +351,17 @@ import SwiftUI
         dpc(downloader: downloader, task: task)
     }
     func dpc(downloader: Downloader, task: DownloadTask) {
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].progress = task.progress // ISSUE HERE GETTING PROGRESS
+        DispatchQueue.main.async {
+            self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.progress = task.progress // ISSUE HERE GETTING PROGRESS
+        }
+        self.try_next_download()
     }
     func downloadError(downloader: Downloader, task: DownloadTask, error: Error) {
         de(downloader: downloader, task: task, error: error)
     }
     func de(downloader: Downloader, task: DownloadTask, error: Error) {
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].state = .error
-        self.tracks_downloading[self.tracks_lookup[task.dID]!].errorReason = error.localizedDescription
+        self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.state = .error
+        self.taskID_to_tracks_downloading(taskID: self.tracks_lookup[task.dID])?.errorReason = error.localizedDescription
         self.currently_downloading -= 1
         self.try_next_download()
     }
