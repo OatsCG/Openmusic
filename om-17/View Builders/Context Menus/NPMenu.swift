@@ -116,7 +116,7 @@ struct NPMenu: View {
                                 }
                             } else {
                                 Button {
-                                    downloadManager.start_download(track: StoredTrack(from: queueItem!), explicit: false)
+                                    downloadManager.add_download_task(track: StoredTrack(from: queueItem!), explicit: false)
                                 } label: {
                                     Label("Download", systemImage: "square.and.arrow.down")
                                         .symbolRenderingMode(.hierarchical)
@@ -161,7 +161,7 @@ struct NPMenu: View {
                                 }
                             } else {
                                 Button {
-                                    downloadManager.start_download(track: StoredTrack(from: queueItem!), explicit: true)
+                                    downloadManager.add_download_task(track: StoredTrack(from: queueItem!), explicit: true)
                                 } label: {
                                     Label("Download", systemImage: "square.and.arrow.down")
                                         .symbolRenderingMode(.hierarchical)
@@ -212,7 +212,7 @@ struct NPMenu: View {
                             }
                         } else {
                             Button {
-                                downloadManager.start_download(track: StoredTrack(from: queueItem!), explicit: false)
+                                downloadManager.add_download_task(track: StoredTrack(from: queueItem!), explicit: false)
                             } label: {
                                 Label("Download", systemImage: "square.and.arrow.down")
                                     .symbolRenderingMode(.hierarchical)
@@ -252,7 +252,7 @@ struct NPMenu: View {
                             }
                         } else {
                             Button {
-                                downloadManager.start_download(track: StoredTrack(from: queueItem!), explicit: true)
+                                downloadManager.add_download_task(track: StoredTrack(from: queueItem!), explicit: true)
                             } label: {
                                 Label("Download", systemImage: "square.and.arrow.down")
                                 Text("Explicit")

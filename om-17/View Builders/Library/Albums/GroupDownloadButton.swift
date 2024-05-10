@@ -37,7 +37,7 @@ struct GroupDownloadButton: View {
         } else {
             Button (action: {
                 for track in tracks {
-                    downloadManager.start_download(track: track, explicit: track.Playback_Explicit != nil)
+                    downloadManager.add_download_task(track: track, explicit: track.Playback_Explicit != nil)
                 }
             }) {
                 Image(systemName: "arrow.down.circle.fill")

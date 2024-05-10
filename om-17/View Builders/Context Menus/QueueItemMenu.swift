@@ -120,7 +120,7 @@ struct QueueItemMenu: View {
                 }
             } else {
                 Button {
-                    downloadManager.start_download(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
+                    downloadManager.add_download_task(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
                 } label: {
                     Label("Download", systemImage: "square.and.arrow.down")
                         .symbolRenderingMode(.hierarchical)

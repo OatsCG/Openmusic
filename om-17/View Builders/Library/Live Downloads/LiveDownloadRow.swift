@@ -25,11 +25,8 @@ struct LiveDownloadRow: View {
                 }
             }
             Spacer()
-            Image(systemName: download.explicit ? "e.square" : "c.square")
+            Image(systemName: download.explicit ? "e.square.fill" : "c.square.fill")
                 .symbolRenderingMode(.hierarchical)
-                .task {
-                    print("\(download.parent.Title): \(download.state)")
-                }
             LiveDownloadStatus(download: download)
                 
         }

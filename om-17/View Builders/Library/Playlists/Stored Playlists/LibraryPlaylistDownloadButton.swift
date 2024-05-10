@@ -33,7 +33,7 @@ struct LibraryPlaylistDownloadButton: View {
         } else {
             Button (action: {
                 for item in playlist.items {
-                    downloadManager.start_download(track: item.track, explicit: item.explicit)
+                    downloadManager.add_download_task(track: item.track, explicit: item.explicit)
                 }
             }) {
                 Image(systemName: "arrow.down.circle.fill")

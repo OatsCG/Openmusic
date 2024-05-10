@@ -41,7 +41,7 @@ struct LibraryAlbumMenu: View {
             } else {
                 Button(action: {
                     for track in album.Tracks {
-                        downloadManager.start_download(track: track, explicit: track.Playback_Explicit != nil)
+                        downloadManager.add_download_task(track: track, explicit: track.Playback_Explicit != nil)
                     }
                 }) {
                     Label("Download Album", systemImage: "square.and.arrow.down")

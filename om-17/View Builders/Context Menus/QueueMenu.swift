@@ -17,7 +17,7 @@ struct QueueMenu: View {
             Section("Up Next: \(playerManager.trackQueue.filter{$0.explicit == true}.count) Explicit, \(playerManager.trackQueue.filter{$0.explicit == false}.count) Clean") {
                 Button(action: {
                     for item in playerManager.trackQueue {
-                        downloadManager.start_download(track: StoredTrack(from: item), explicit: item.explicit)
+                        downloadManager.add_download_task(track: StoredTrack(from: item), explicit: item.explicit)
                     }
                 }) {
                     Label("Download All", systemImage: "square.and.arrow.down")
@@ -54,7 +54,7 @@ struct QueueMenu: View {
             Section("Played: \(playerManager.sessionHistory.filter{$0.explicit == true}.count) Explicit, \(playerManager.sessionHistory.filter{$0.explicit == false}.count) Clean") {
                 Button(action: {
                     for item in playerManager.sessionHistory {
-                        downloadManager.start_download(track: StoredTrack(from: item), explicit: item.explicit)
+                        downloadManager.add_download_task(track: StoredTrack(from: item), explicit: item.explicit)
                     }
                 }) {
                     Label("Download All", systemImage: "square.and.arrow.down")
