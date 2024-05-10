@@ -31,13 +31,13 @@ struct PlaylistItemList: View {
                         } label: {
                             Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                         }
-                            .tint(.clear)
+                        .tint(Color(.systemBackground))
                         Button {
                             playerManager.queue_next(track: item.track, explicit: item.explicit)
                         } label: {
                             Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                         }
-                            .tint(.clear)
+                        .tint(Color(.systemBackground))
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
@@ -45,7 +45,7 @@ struct PlaylistItemList: View {
                         } label: {
                             Label("Remove from Playlist", systemImage: "minus.circle.fill")
                         }
-                            .tint(.clear)
+                            .tint(.red)
                     }
             }
                 .onMove(perform: move)

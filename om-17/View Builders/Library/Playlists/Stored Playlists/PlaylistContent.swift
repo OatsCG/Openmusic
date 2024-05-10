@@ -28,6 +28,7 @@ struct PlaylistContent: View {
                     }) {
                         AlbumWideButton_component(text: "Play", subtitle: "Downloaded Only", ArtworkID: "")
                     }
+                    .buttonStyle(.plain)
                     
                     Button (action: {
                         if (!networkMonitor.isConnected) {
@@ -38,8 +39,124 @@ struct PlaylistContent: View {
                     }) {
                         AlbumWideButton_component(text: "Shuffle", subtitle: "Downloaded Only", ArtworkID: "")
                     }
-                }
                     .buttonStyle(.plain)
+                    
+                    Menu {
+                        Section {
+                            Button(action: {
+                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).reversed()))
+                            }) {
+                                Label("Play Downloaded", systemImage: "square.and.arrow.down.fill")
+                            }
+                            Menu {
+                                Menu {
+                                    Button {
+                                        playerManager.queue_songs_next(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                    } label: {
+                                        Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                    Button {
+                                        playerManager.queue_songs(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                    } label: {
+                                        Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                    Button {
+                                        playerManager.queue_songs_randomly(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                    } label: {
+                                        Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                } label: {
+                                    Label("Queue", systemImage: "forward.frame.fill")
+                                }
+                                Menu {
+                                    Button {
+                                        playerManager.queue_songs_next(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                    } label: {
+                                        Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                    Button {
+                                        playerManager.queue_songs(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                    } label: {
+                                        Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                    Button {
+                                        playerManager.queue_songs_randomly(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                    } label: {
+                                        Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                } label: {
+                                    Label("Queue Downloaded", systemImage: "square.and.arrow.down.fill")
+                                }
+                            } label: {
+                                Label("Ordered", systemImage: "play.fill")
+                            }
+                        }
+                        
+                        Section {
+                            Button(action: {
+                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                            }) {
+                                Label("Shuffle Downloaded", systemImage: "square.and.arrow.down.fill")
+                            }
+                            Menu {
+                                Menu {
+                                    Button {
+                                        playerManager.queue_songs_next(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                                    } label: {
+                                        Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                    Button {
+                                        playerManager.queue_songs(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                                    } label: {
+                                        Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                } label: {
+                                    Label("Queue", systemImage: "forward.frame.fill")
+                                }
+                                Menu {
+                                    Button {
+                                        playerManager.queue_songs_next(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                    } label: {
+                                        Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                    Button {
+                                        playerManager.queue_songs(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                    } label: {
+                                        Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
+                                            .symbolRenderingMode(.hierarchical)
+                                    }
+                                } label: {
+                                    Label("Queue Downloaded", systemImage: "square.and.arrow.down.fill")
+                                }
+                            } label: {
+                                Label("Shuffled", systemImage: "shuffle")
+                            }
+                        }
+
+                    } label: {
+                        ZStack {
+                            
+                        }
+                        Image(systemName: "ellipsis.circle")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.primary, .clear)
+                            .font(.title)
+                            .background {
+                                AlbumWideButton_component(text: "", subtitle: "", ArtworkID: "")
+                            }
+                    }
+
+                }
+                    //.buttonStyle(.plain)
                     .foregroundStyle(.primary)
                 Divider()
             }
@@ -47,6 +164,8 @@ struct PlaylistContent: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
+                .foregroundStyle(.primary)
+            
             PlaylistItemList(playlist: playlist)
         }
             .background(Color.clear)
