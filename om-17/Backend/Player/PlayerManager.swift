@@ -8,6 +8,7 @@
 import AVFoundation
 import SwiftUI
 import MediaPlayer
+import Combine
 
 @Observable class PlayerManager {
     let commandCenter = MPRemoteCommandCenter.shared()
@@ -23,8 +24,13 @@ import MediaPlayer
     var durationSeconds: Double
     var elapsedNormal: Double
     var appVolume: Float
-    var play_fade_timer: Timer = Timer()
-    var pause_fade_timer: Timer = Timer()
+    
+    //player fade
+    var play_fade_timer: Timer? = nil
+    var pause_fade_timer: Timer? = nil
+    var current_fade_step: Int = 0
+    var total_fade_steps: Int = 100
+    var startingVol: Float = 1.0
     
     //crossfade
     var crossfadeZero: Double

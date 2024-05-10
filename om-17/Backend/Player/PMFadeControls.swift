@@ -13,23 +13,22 @@ extension PlayerManager {
             self.setIsPlaying(to: true)
         }
         self.player.playImmediately()
-        self.play_fade_timer.invalidate()
-        self.pause_fade_timer.invalidate()
-        let startingVol = self.player.volume()
-        let steps = Int((UserDefaults.standard.double(forKey: "playerFadeSeconds") + 0.05) * 100) // Calculate steps based on duration, here it's assuming the time unit is in seconds
-        var step = 0
+        self.play_fade_timer?.invalidate()
+        self.pause_fade_timer?.invalidate()
+        self.startingVol = self.player.volume()
+        self.total_fade_steps = Int((UserDefaults.standard.double(forKey: "playerFadeSeconds") + 0.05) * 100) // Calculate steps based on duration, here it's assuming the time unit is in seconds
+        self.current_fade_step = 0
         if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.play_fade_timer.invalidate()
-                self.pause_fade_timer.invalidate()
-                self.play_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] playTimer in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        step += 1
-                        let to = startingVol + (self.appVolume - startingVol) * (Float(step) / Float(steps))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [unowned self] in
+                self.play_fade_timer?.invalidate()
+                self.pause_fade_timer?.invalidate()
+                self.play_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [unowned self] playTimer in
+                    DispatchQueue.main.async { [unowned self] in
+                        self.current_fade_step += 1
+                        let to = self.startingVol + (self.appVolume - self.startingVol) * (Float(self.current_fade_step) / Float(self.total_fade_steps))
                         self.player.set_volume(to: pow(to, 2))
-                        if step >= steps {
-                            self.play_fade_timer.invalidate()
+                        if self.current_fade_step >= self.total_fade_steps {
+                            self.play_fade_timer?.invalidate()
                         }
                     }
                 }
@@ -38,7 +37,7 @@ extension PlayerManager {
             DispatchQueue.main.async {
                 let to = self.appVolume
                 self.player.set_volume(to: to)
-                self.play_fade_timer.invalidate()
+                self.play_fade_timer?.invalidate()
             }
         }
     }
@@ -46,30 +45,34 @@ extension PlayerManager {
         DispatchQueue.main.async {
             self.setIsPlaying(to: false)
         }
-        self.play_fade_timer.invalidate()
-        self.pause_fade_timer.invalidate()
-        let steps = Int(UserDefaults.standard.double(forKey: "playerFadeSeconds") * 100) // Calculate steps based on duration, here it's assuming the time unit is in seconds
-        Task {
-            let startingVol = self.player.volume()
-            DispatchQueue.main.async { [weak self] in
-                var step = 0
+        self.play_fade_timer?.invalidate()
+        self.pause_fade_timer?.invalidate()
+        self.current_fade_step = 0
+        self.total_fade_steps = Int(UserDefaults.standard.double(forKey: "playerFadeSeconds") * 100)
+        self.startingVol = self.player.volume()
+        Task { [unowned self] in
+            DispatchQueue.main.async { [unowned self] in
                 if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
-                    self?.pause_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] pauseTimer in
-                        DispatchQueue.main.async { [weak self] in
-                            step += 1
-                            let to = startingVol - startingVol * (Float(step) / Float(steps))
-                            self?.player.set_volume(to: pow(to, 2))
-                            if step >= steps {
-                                self?.pause_fade_timer.invalidate()
-                                self?.player.pause()
+                    self.pause_fade_timer?.invalidate()
+                    print("[pause] starting timer")
+                    self.pause_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [unowned self] playTimer in
+                        DispatchQueue.main.async { [unowned self] in
+                            self.current_fade_step += 1
+                            let to = self.startingVol - self.startingVol * (Float(self.current_fade_step) / Float(self.total_fade_steps))
+                            self.player.set_volume(to: pow(to, 2))
+                            if self.current_fade_step >= self.total_fade_steps {
+                                self.pause_fade_timer?.invalidate()
+                                self.pause_fade_timer = nil
+                                print("[pause] in timer, paused")
+                                self.player.pause()
                             }
                         }
                     }
                 } else {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.player.set_volume(to: 0)
-                        self?.pause_fade_timer.invalidate()
-                        self?.player.pause()
+                    DispatchQueue.main.async { [unowned self] in
+                        self.player.set_volume(to: 0)
+                        self.pause_fade_timer?.invalidate()
+                        self.player.pause()
                     }
                 }
             }
