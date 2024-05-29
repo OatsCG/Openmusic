@@ -75,6 +75,6 @@ struct NPEnjoyingSession: View {
         .environment(NetworkMonitor())
         .task {
             currentTheme = "classic"
-            globalIPAddress = "server.openmusic.app"
+//            globalIPAddress = "server.openmusic.app"
         }
 }

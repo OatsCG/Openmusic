@@ -19,27 +19,27 @@ struct AddServerSheet: View {
                 Text("Input your Server URL Here.")
                     .customFont(fontManager, .title2, bold: true)
                     .padding(.top, 50)
-                Text("For help with servers check out\n**[openmusic.app](https://openmusic.app)**,")
+                Text("For help with servers, visit\n**[openmusic.app](https://openmusic.app)**,")
                     .customFont(fontManager, .subheadline)
                     .padding(.bottom, 5)
-                VStack(spacing: 3) {
-                    Text("or add the demo server")
-                        .customFont(fontManager, .subheadline)
-                    Button(action: {
-                        globalIPAddress = "https://server.openmusic.app"
-                    }) {
-                        Text(verbatim: "https://server.openmusic.app")
-                            .customFont(fontManager, .subheadline, bold: true)
-                            //.foregroundStyle(.secondary)
-                            .padding(.vertical, 5)
-                            .padding(.horizontal, 10)
-                            .background(.indigo.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                        
-                    }
-                    .buttonStyle(.plain)
-                }
-                    .padding(.bottom, 20)
+//                VStack(spacing: 3) {
+//                    Text("or add the demo server")
+//                        .customFont(fontManager, .subheadline)
+//                    Button(action: {
+//                        globalIPAddress = "https://server.openmusic.app"
+//                    }) {
+//                        Text(verbatim: "https://server.openmusic.app")
+//                            .customFont(fontManager, .subheadline, bold: true)
+//                            //.foregroundStyle(.secondary)
+//                            .padding(.vertical, 5)
+//                            .padding(.horizontal, 10)
+//                            .background(.indigo.opacity(0.2))
+//                            .clipShape(RoundedRectangle(cornerRadius: 5))
+//                        
+//                    }
+//                    .buttonStyle(.plain)
+//                }
+//                    .padding(.bottom, 20)
                 VStack {
                     HStack {
                         TextField("Server URL...", text: $globalIPAddress)

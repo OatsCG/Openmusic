@@ -11,12 +11,12 @@ struct DefaultArtwork_classic: View {
     @Environment(\.colorScheme) var colorScheme
     var animated: Bool
     var body: some View {
-        Rectangle().fill(.ultraThinMaterial)
-            .scaledToFill()
-            //.compositingGroup()
-//        Image(colorScheme == .dark ? .defaultDarkClassic : .defaultLightClassic)
-//            .resizable()
+//        Rectangle().fill(.ultraThinMaterial)
 //            .scaledToFill()
+            //.compositingGroup()
+        Image(colorScheme == .dark ? .defaultDarkClassic : .defaultLightClassic)
+            .resizable()
+            .scaledToFill()
     }
 }
 

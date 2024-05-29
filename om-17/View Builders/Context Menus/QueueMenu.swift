@@ -30,7 +30,7 @@ struct QueueMenu: View {
                     }
                     playerManager.prime_next_song()
                 }) {
-                    Label("Try Converting to Clean", systemImage: "c.square")
+                    Label("Try Converting to Clean", systemImage: "c.square.fill")
                 }
                 Button(action: {
                     for item in playerManager.trackQueue {
@@ -40,7 +40,7 @@ struct QueueMenu: View {
                     }
                     playerManager.prime_next_song()
                 }) {
-                    Label("Try Converting to Explicit", systemImage: "e.square")
+                    Label("Try Converting to Explicit", systemImage: "e.square.fill")
                 }
             }
             Section {
@@ -67,7 +67,7 @@ struct QueueMenu: View {
                     }
                     playerManager.prime_next_song()
                 }) {
-                    Label("Try Converting to Clean", systemImage: "c.square")
+                    Label("Try Converting to Clean", systemImage: "c.square.fill")
                 }
                 Button(action: {
                     for item in playerManager.sessionHistory {
@@ -77,7 +77,7 @@ struct QueueMenu: View {
                     }
                     playerManager.prime_next_song()
                 }) {
-                    Label("Try Converting to Explicit", systemImage: "e.square")
+                    Label("Try Converting to Explicit", systemImage: "e.square.fill")
                 }
             }
             Section {

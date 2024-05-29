@@ -87,6 +87,6 @@ struct QSUpNext: View {
         .environment(NetworkMonitor())
         .task {
             currentTheme = "classic"
-            globalIPAddress = "https://server.openmusic.app"
+//            globalIPAddress = "https://server.openmusic.app"
         }
 }

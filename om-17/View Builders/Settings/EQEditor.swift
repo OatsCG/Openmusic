@@ -189,6 +189,6 @@ func printBands(bands: [EQBand]) {
         .environment(OMUser())
         .task {
             currentTheme = "classic"
-            globalIPAddress = "https://server.openmusic.app"
+//            globalIPAddress = "https://server.openmusic.app"
         }
 }

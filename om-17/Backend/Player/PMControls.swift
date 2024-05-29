@@ -96,6 +96,7 @@ extension PlayerManager {
                         self.prime_next_song()
                     } else {
                         self.player.seek(to: 0)
+                        self.play()
                         if (self.trackQueue.first != nil) {
                             self.trackQueue.first?.audio_AVPlayer?.pause()
                             self.trackQueue.first?.audio_AVPlayer?.seek_to_zero()
