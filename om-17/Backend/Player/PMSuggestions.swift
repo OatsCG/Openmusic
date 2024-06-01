@@ -28,20 +28,26 @@ extension PlayerManager {
     }
     
     func getEnjoyedSongs(limit: Int) -> [QueueItem] {
-        let enjoyedSongs: [QueueItem] = self.sessionHistory.filter({ $0.wasSongEnjoyed == true })
-        if (enjoyedSongs.count > 0) {
-            return enjoyedSongs.suffix(limit)
-        } else {
-            if (self.sessionHistory.count > 0) {
-                return self.sessionHistory.suffix(limit)
+        // get last 5 songs in queue.
+        // if no songs in queue, get most recent 4 enjoyed songs in history plus current song
+        // if no songs in history, use current song
+        
+        var lastInQueue: [QueueItem] = self.trackQueue.suffix(5)
+        if lastInQueue.count > 0 {
+            if lastInQueue.count == 5 {
+                return lastInQueue
+            } else if let currentQueueItem = self.currentQueueItem {
+                lastInQueue.insert(currentQueueItem, at: 0)
+                return lastInQueue
             } else {
-                if (self.currentQueueItem != nil) {
-                    return [self.currentQueueItem!]
-                } else {
-                    let recentSongs: [QueueItem] = RecentlyPlayedManager.getRecentTracks().map({ return QueueItem(from: $0) })
-                    return recentSongs.suffix(limit)
-                }
+                return []
             }
+        } else {
+            var recentInHistory: [QueueItem] = self.sessionHistory.suffix(4)
+            if let currentQueueItem = self.currentQueueItem {
+                recentInHistory.append(currentQueueItem)
+            }
+            return recentInHistory
         }
     }
     

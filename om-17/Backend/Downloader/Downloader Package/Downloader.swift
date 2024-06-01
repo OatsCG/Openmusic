@@ -65,7 +65,6 @@ public class Downloader: NSObject, URLSessionDownloadDelegate {
             self.tasks[download.taskIdentifier] = task
             download.resume()
         }
-
         self.delegate?.downloadStarted(downloader: self, task: task)
     }
 
@@ -86,9 +85,7 @@ public class Downloader: NSObject, URLSessionDownloadDelegate {
                            didWriteData bytesWritten: Int64,
                            totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         guard totalBytesExpectedToWrite > 0, let task = self.tasks[downloadTask.taskIdentifier] else { return }
-
         task.progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
-
         self.delegate?.downloadProgressChanged(downloader: self, task: task)
     }
 
@@ -105,7 +102,6 @@ public class Downloader: NSObject, URLSessionDownloadDelegate {
 
         // download seems to be okay => move the downloaded file to the destination
         self.tasks.removeValue(forKey: downloadTask.taskIdentifier)
-
         do {
             try? FileManager.default.removeItem(at: task.destination)
             try FileManager.default.moveItem(at: location, to: task.destination)

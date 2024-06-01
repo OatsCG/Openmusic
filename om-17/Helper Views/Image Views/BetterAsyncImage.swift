@@ -11,12 +11,12 @@ struct BetterAsyncImage: View {
     var url: URL?
     var animated: Bool = false
     var body: some View {
-        CacheAsyncImage(url: url, transaction: Transaction(animation: .smooth(duration: 0.3))) { phase in
+        CacheAsyncImage(url: url, transaction: Transaction(animation: .smooth(duration: 0.1))) { phase in
             //AsyncImage(url: url, transaction: Transaction(animation: .spring())){ phase in
             switch phase {
             case .empty:
                 GeometryReader { geo in
-                    DefaultArtwork_component(animated: animated)
+                    LoadingArtwork_component(animated: animated)
                         .frame(width: geo.size.width, height: geo.size.height)
                 }
             case .success(let image):
@@ -28,6 +28,7 @@ struct BetterAsyncImage: View {
                 //.transition(.blurReplace)
             case .failure(_):
                 GeometryReader { geo in
+                    //Rectangle().fill(.red)
                     DefaultArtwork_component(animated: animated)
                         .frame(width: geo.size.width, height: geo.size.height)
                 }

@@ -168,7 +168,9 @@ import SwiftUI
                                                         playerManager.set_currentlyPlaying(queueItem: qitem)
                                                         if position != nil {
                                                             self?.queueItemPlayer!.seek(to: position!)
-                                                            self?.queueItemPlayer?.play()
+                                                            if (playerManager.isPlaying) {
+                                                                self?.queueItemPlayer?.play()
+                                                            }
                                                         }
                                                     }
                                                 }

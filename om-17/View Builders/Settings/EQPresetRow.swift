@@ -35,21 +35,21 @@ struct EQPresetRow: View {
                         ForEach($eqPreset.bands, id: \.index) { $band in
                             if (band.index == 0) {
                                 EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)
-                                    .clipShape(UnevenRoundedRectangle(
-                                        topLeadingRadius: 2,
-                                        bottomLeadingRadius: 2,
-                                        bottomTrailingRadius: 0,
-                                        topTrailingRadius: 0
-                                    ))
+//                                    .clipShape(UnevenRoundedRectangle(
+//                                        topLeadingRadius: 2,
+//                                        bottomLeadingRadius: 2,
+//                                        bottomTrailingRadius: 0,
+//                                        topTrailingRadius: 0
+//                                    ))
                                     .padding(.trailing, 0)
                             } else if (band.index < 0) {
                                 EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)
-                                    .clipShape(UnevenRoundedRectangle(
-                                        topLeadingRadius: 0,
-                                        bottomLeadingRadius: 0,
-                                        bottomTrailingRadius: 2,
-                                        topTrailingRadius: 2
-                                    ))
+//                                    .clipShape(UnevenRoundedRectangle(
+//                                        topLeadingRadius: 0,
+//                                        bottomLeadingRadius: 0,
+//                                        bottomTrailingRadius: 2,
+//                                        topTrailingRadius: 2
+//                                    ))
                                     .padding(.trailing, 2)
                             } else {
                                 EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)

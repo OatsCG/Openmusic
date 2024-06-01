@@ -17,7 +17,7 @@ struct BufferProgressLabel: View {
     @Binding var visibleState: DebuggerState
     var body: some View {
         HStack(alignment: .center) {
-            if networkMonitor.isConnected == false {
+            if networkMonitor.isConnected == false && playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == true {
                 Image(systemName: "network.slash")
                 Text("No Connection")
                     .task {

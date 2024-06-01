@@ -34,6 +34,7 @@ import Combine
     
     //crossfade
     var crossfadeZero: Double
+    var crossfadeZeroDownload: Double
     var crossfadeSeconds: Double
     var isCrossfading: Bool
     var crossfadeTimer: Timer
@@ -85,6 +86,7 @@ import Combine
         self.elapsedNormal = 0
         self.appVolume = 1
         self.crossfadeZero = 0.15
+        self.crossfadeZeroDownload = 0.05
         self.crossfadeSeconds = 0
         self.isCrossfading = false
         self.didAddFromRepeat = false
@@ -114,6 +116,7 @@ import Combine
         self.elapsedNormal = 0
         self.appVolume = 1
         self.crossfadeZero = 0.15
+        self.crossfadeZeroDownload = 0.05
         self.crossfadeSeconds = UserDefaults.standard.double(forKey: "crossfadeSeconds") == 0 ? 0.15 : UserDefaults.standard.double(forKey: "crossfadeSeconds")
         self.isCrossfading = false
         self.didAddFromRepeat = false

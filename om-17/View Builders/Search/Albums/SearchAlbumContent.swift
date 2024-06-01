@@ -53,6 +53,7 @@ struct SearchAlbumContent: View {
                                     .symbolRenderingMode(.hierarchical)
                                     .font(.title3)
                             }
+                            .disabled((albumModel.fetchedAlbum?.Tracks.count ?? 0) == 0)
                         }
                         // Copy link
                         Button (action: {

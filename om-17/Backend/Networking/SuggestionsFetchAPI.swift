@@ -48,6 +48,10 @@ func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<Imp
             return
         }
         isFetching = true
+        if (songs.count == 0) {
+            self.isFetching = false
+            return
+        }
         fetchSuggestionsData(songs: songs) { (result) in
             switch result {
             case .success(let data):

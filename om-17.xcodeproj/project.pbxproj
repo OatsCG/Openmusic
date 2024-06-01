@@ -232,6 +232,7 @@
 		E579DE612B3E7A0F009324C1 /* FetchedArtistContentHeader_spotty.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579DE422B3E7A0F009324C1 /* FetchedArtistContentHeader_spotty.swift */; };
 		E579DE632B3E9EA1009324C1 /* SearchAlbumHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579DE622B3E9EA1009324C1 /* SearchAlbumHeader.swift */; };
 		E579DE652B3E9F5B009324C1 /* LibraryAlbumHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E579DE642B3E9F5B009324C1 /* LibraryAlbumHeader.swift */; };
+		E57A784D2C09FD59006D7908 /* LoadingArtwork_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57A784C2C09FD59006D7908 /* LoadingArtwork_component.swift */; };
 		E57CC5732B5996C000537031 /* calibri.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E57CC5722B5996C000537031 /* calibri.ttf */; };
 		E57CC5752B5996C700537031 /* calibrib.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E57CC5742B5996C700537031 /* calibrib.ttf */; };
 		E57F7F992B86B0A600AEAD97 /* AddServerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57F7F982B86B0A600AEAD97 /* AddServerSheet.swift */; };
@@ -779,6 +780,7 @@
 		E579DE422B3E7A0F009324C1 /* FetchedArtistContentHeader_spotty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedArtistContentHeader_spotty.swift; sourceTree = "<group>"; };
 		E579DE622B3E9EA1009324C1 /* SearchAlbumHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAlbumHeader.swift; sourceTree = "<group>"; };
 		E579DE642B3E9F5B009324C1 /* LibraryAlbumHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumHeader.swift; sourceTree = "<group>"; };
+		E57A784C2C09FD59006D7908 /* LoadingArtwork_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingArtwork_component.swift; sourceTree = "<group>"; };
 		E57CC5722B5996C000537031 /* calibri.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = calibri.ttf; sourceTree = "<group>"; };
 		E57CC5742B5996C700537031 /* calibrib.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = calibrib.ttf; sourceTree = "<group>"; };
 		E57F7F982B86B0A600AEAD97 /* AddServerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerSheet.swift; sourceTree = "<group>"; };
@@ -1493,6 +1495,7 @@
 			children = (
 				E5705DC62A8164490087A43F /* MiniPlayer_component.swift */,
 				E58B67032ACFB099002FA7A2 /* DefaultArtwork_component.swift */,
+				E57A784C2C09FD59006D7908 /* LoadingArtwork_component.swift */,
 				E51375FA2B44C3CF0005F2D7 /* ScrubberBar_component.swift */,
 				E5DCFDFD2B450E490044D9B5 /* NPPlayButton_component.swift */,
 				E5DCFDFF2B450ED00044D9B5 /* NPBackButton_component.swift */,
@@ -3409,6 +3412,7 @@
 				E579DE4F2B3E7A0F009324C1 /* LoadingExplore_spotty.swift in Sources */,
 				E5A4310E2B0592E600507DB2 /* LiveImportStatus.swift in Sources */,
 				E5977C3F2AF47CE500C55003 /* PlaylistReviewTracks.swift in Sources */,
+				E57A784D2C09FD59006D7908 /* LoadingArtwork_component.swift in Sources */,
 				E5705DBD2A80935E0087A43F /* SearchAlbumLink_honeycrisp.swift in Sources */,
 				E5EF91D72A6EBE400035B689 /* SettingsPage.swift in Sources */,
 			);

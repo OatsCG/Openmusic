@@ -33,7 +33,9 @@ struct LibraryPlaylistDownloadButton: View {
         } else {
             Button (action: {
                 for item in playlist.items {
-                    downloadManager.add_download_task(track: item.track, explicit: item.explicit)
+                    if item.importData.status == .success {
+                        downloadManager.add_download_task(track: item.track, explicit: item.explicit)
+                    }
                 }
             }) {
                 Image(systemName: "arrow.down.circle.fill")

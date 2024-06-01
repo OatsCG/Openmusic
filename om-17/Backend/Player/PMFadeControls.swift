@@ -54,7 +54,6 @@ extension PlayerManager {
             DispatchQueue.main.async { [unowned self] in
                 if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
                     self.pause_fade_timer?.invalidate()
-                    print("[pause] starting timer")
                     self.pause_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [unowned self] playTimer in
                         DispatchQueue.main.async { [unowned self] in
                             self.current_fade_step += 1
@@ -63,7 +62,6 @@ extension PlayerManager {
                             if self.current_fade_step >= self.total_fade_steps {
                                 self.pause_fade_timer?.invalidate()
                                 self.pause_fade_timer = nil
-                                print("[pause] in timer, paused")
                                 self.player.pause()
                             }
                         }

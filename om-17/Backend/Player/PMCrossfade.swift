@@ -12,11 +12,12 @@ extension PlayerManager {
         // if crossfadeAlbums == false and consecutive
         if self.can_crossfade() {
             if !self.isCrossfading {
-                if (self.elapsedTime == self.durationSeconds) {
-                    // elapsed time is reporting incorrectly
-                    self.play()
-                    return
-                }
+//                if (self.elapsedTime == self.durationSeconds) {
+//                    print("ELAPSED IS EQUAL")
+//                    // elapsed time is reporting incorrectly
+//                    self.play()
+//                    return
+//                }
                 if self.trackQueue.first != nil && self.is_next_item_ready() {
                     //if in range, not crossfading, song ready
                     self.isCrossfading = true
@@ -25,7 +26,7 @@ extension PlayerManager {
                     print("starting animation: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
                     // if crossfadeAlbums == false and consecutive
                     if self.crossfadeAlbums == false && self.is_consecutive() {
-                        self.crossfade(duration: self.crossfadeZero) {
+                        self.crossfade(duration: self.pickCrossfadeZero()) {
                             DispatchQueue.main.async {
                                 self.update_elapsed_time()
                                 if (self.isCrossfading) {
@@ -65,7 +66,11 @@ extension PlayerManager {
     }
     
     func can_crossfade() -> Bool {
-        return self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.crossfadeZero : self.crossfadeSeconds)
+        return self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds)
+    }
+    
+    func pickCrossfadeZero() -> Double {
+        return (self.trackQueue.first?.audio_AVPlayer?.isRemote ?? false) ? self.crossfadeZero : self.crossfadeZeroDownload
     }
     
     typealias TransitionCompletionHandler = () -> Void

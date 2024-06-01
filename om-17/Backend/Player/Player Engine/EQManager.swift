@@ -228,7 +228,9 @@ class EQManager {
                     if let playerManager = playerManager {
                         //playerManager.pause()
                         Task {
-                            await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                            if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
+                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                            }
                         }
                     }
                 } else {

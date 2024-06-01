@@ -84,12 +84,16 @@ func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) async {
     }
 }
 
-func ArtworkExists(ArtworkID: String) -> Bool {
-    let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
-    if FileManager().fileExists(atPath: destination!.path) {
-        return(true)
+func ArtworkExists(ArtworkID: String?) -> Bool {
+    if let ArtworkID = ArtworkID {
+        let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
+        if FileManager().fileExists(atPath: destination!.path) {
+            return true
+        }
+        return false
+    } else {
+        return false
     }
-    return(false)
 }
 
 func RetrieveArtwork(ArtworkID: String) -> URL {

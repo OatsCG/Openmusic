@@ -64,12 +64,18 @@ extension PlayerManager {
                 self.queue_start_over()
                 self.player_forward(userInitiated: userInitiated)
             }
-            if (self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
-                Task {
-                    self.player_forward(userInitiated: userInitiated)
+            
+            if (self.currentQueueItem?.audio_AVPlayer?.isRemote == true) {
+                if self.currentQueueItem?.currentlyPriming == false {
+                    if self.currentQueueItem?.fetchedPlayback != nil {
+                        if self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "" {
+                            self.player_forward(userInitiated: userInitiated)
+                            return
+                        }
+                    }
                 }
-                return
             }
+            
             Task {
                 self.scheduleNotification()
                 self.prime_current_song(continueCurrent: continueCurrent)

@@ -39,27 +39,38 @@ extension PlayerManager {
         // push track data to Media Center
         if (self.currentlyTryingInfoCenterAlbumArtUpdate == false && self.currentQueueItem != nil) {
             self.currentlyTryingInfoCenterAlbumArtUpdate = true
-            Task.detached { [weak self] in
-                do {
-                    self?.nowPlayingInfo?[MPMediaItemPropertyTitle] = self?.currentQueueItem?.Track.Title
-                    self?.nowPlayingInfo?[MPMediaItemPropertyArtist] = stringArtists(artistlist: self?.currentQueueItem?.Track.Album.Artists ?? [])
-                    let url: URL? = BuildArtworkURL(imgID: self?.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
-                    if url == nil {return}
-                    let (data, _) = try await URLSession.shared.data(from: url!)
-                    if let image = UIImage(data: data) {
-                        self?.nowPlayingInfo?[MPMediaItemPropertyArtwork] =
-                        MPMediaItemArtwork(boundsSize: image.size) { size in
-                            return image
+            Task.detached { [unowned self] in
+                self.nowPlayingInfo?[MPMediaItemPropertyTitle] = self.currentQueueItem?.Track.Title
+                self.nowPlayingInfo?[MPMediaItemPropertyArtist] = stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
+                self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+                
+                var artworkURL: URL? = nil
+                if ArtworkExists(ArtworkID: self.currentQueueItem?.Track.Album.Artwork) {
+                    if let artwork = self.currentQueueItem?.Track.Album.Artwork {
+                        artworkURL = RetrieveArtwork(ArtworkID: artwork)
+                    }
+                } else {
+                    artworkURL = BuildArtworkURL(imgID: self.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
+                }
+                if let artworkURL = artworkURL {
+                    do {
+                        let (data, _) = try await URLSession.shared.data(from: artworkURL)
+                        if let image = UIImage(data: data) {
+                            self.nowPlayingInfo?[MPMediaItemPropertyArtwork] =
+                            MPMediaItemArtwork(boundsSize: image.size) { size in
+                                return image
+                            }
                         }
+                    } catch {
+                        print("error pushing to Media Center")
                     }
-                    MPNowPlayingInfoCenter.default().nowPlayingInfo = self?.nowPlayingInfo
-                    //print("wrote to MPNowPlayingInfoCenter: \(MPNowPlayingInfoCenter.default().nowPlayingInfo!)")
-                    //await syncPlayingTimeControls()
-                    DispatchQueue.main.async { [weak self] in
-                        self?.currentlyTryingInfoCenterAlbumArtUpdate = false
-                    }
-                } catch {
-                    print("error pushing to Media Center")
+                }
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+
+                
+                DispatchQueue.main.async { [unowned self] in
+                    self.currentlyTryingInfoCenterAlbumArtUpdate = false
                 }
             }
         }
@@ -146,6 +157,7 @@ extension PlayerManager {
         self.commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
             if let event = event as? MPChangePlaybackPositionCommandEvent {
                 self.player.seek(to: event.positionTime)
+                self.play()
                 syncPlayingTimeControls()
                 return .success
             }

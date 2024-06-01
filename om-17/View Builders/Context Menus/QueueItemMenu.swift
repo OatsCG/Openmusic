@@ -146,8 +146,12 @@ struct QueueItemMenu: View {
                 Label("Move Randomly", systemImage: "arrow.up.and.down.text.horizontal")
             }
             Button(action: {
+                let copiedQueueItem: QueueItem = QueueItem(from: queueItem)
+                if let track = copiedQueueItem.Track as? ImportedTrack {
+                    copiedQueueItem.Track = FetchedTrack(from: track)
+                }
                 withAnimation {
-                    playerManager.trackQueue.insert(QueueItem(from: queueItem), at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
+                    playerManager.trackQueue.insert(copiedQueueItem, at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
                 }
                 playerManager.prime_next_song()
             }) {
