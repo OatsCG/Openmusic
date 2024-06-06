@@ -8,8 +8,11 @@
 import Foundation
 import SwiftUI
 
-func fetchServerStatus(fetchHash: UUID, completion: @escaping (Result<ServerStatus, Error>, UUID) -> Void) {
-    let url = "\(globalIPAddress())/status"
+func fetchServerStatus(with tempIPAddress: String? = nil, fetchHash: UUID, completion: @escaping (Result<ServerStatus, Error>, UUID) -> Void) {
+    var url = "\(globalIPAddress())/status"
+    if let tempIPAddress = tempIPAddress {
+        url = "\(tempIPAddress)/status"
+    }
     guard let url = URL(string: url) else {
         print("Invalid URL.")
         return
@@ -34,12 +37,12 @@ func fetchServerStatus(fetchHash: UUID, completion: @escaping (Result<ServerStat
 @Observable class StatusViewModel {
     var serverStatus: ServerStatus? = nil
     var fetchHash: UUID = UUID()
-    func runCheck() {
+    func runCheck(with ipAddress: String? = nil) {
         withAnimation() {
             self.serverStatus = nil
             self.fetchHash = UUID()
         }
-        fetchServerStatus(fetchHash: self.fetchHash) { (result, returnHash) in
+        fetchServerStatus(with: ipAddress, fetchHash: self.fetchHash) { (result, returnHash) in
             switch result {
             case .success(let data):
                 if (self.fetchHash == returnHash) {

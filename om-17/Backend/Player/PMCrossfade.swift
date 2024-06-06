@@ -12,12 +12,14 @@ extension PlayerManager {
         // if crossfadeAlbums == false and consecutive
         if self.can_crossfade() {
             if !self.isCrossfading {
-//                if (self.elapsedTime == self.durationSeconds) {
+                if (self.elapsedTime == self.durationSeconds) {
 //                    print("ELAPSED IS EQUAL")
-//                    // elapsed time is reporting incorrectly
-//                    self.play()
-//                    return
-//                }
+                    // elapsed time is reporting incorrectly
+                    if self.isPlaying {
+                        self.play()
+                    }
+                    return
+                }
                 if self.trackQueue.first != nil && self.is_next_item_ready() {
                     //if in range, not crossfading, song ready
                     self.isCrossfading = true
@@ -66,7 +68,16 @@ extension PlayerManager {
     }
     
     func can_crossfade() -> Bool {
-        return self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds)
+        let cancf = self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds)
+//        if cancf == true {
+//            print("CAN CROSSFADE:")
+//            print(self.is_current_item_ready())
+//            print(self.durationSeconds)
+//            print(self.elapsedTime)
+//            print(self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds))
+//            print("END")
+//        }
+        return cancf
     }
     
     func pickCrossfadeZero() -> Double {

@@ -154,4 +154,13 @@ extension PlayerManager {
             self.prime_next_song()
         }
     }
+    
+    func try_auto_skip_if_necessary() {
+        if (self.currentQueueItem?.isDownloaded == false) {
+            if self.currentQueueItem?.primeStatus == .failed {
+                self.player_forward(userInitiated: true)
+                return
+            }
+        }
+    }
 }

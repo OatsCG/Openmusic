@@ -16,8 +16,13 @@ struct BetterAsyncImage: View {
             switch phase {
             case .empty:
                 GeometryReader { geo in
-                    LoadingArtwork_component(animated: animated)
-                        .frame(width: geo.size.width, height: geo.size.height)
+                    if url == nil {
+                        DefaultArtwork_component(animated: animated)
+                            .frame(width: geo.size.width, height: geo.size.height)
+                    } else {
+                        LoadingArtwork_component(animated: animated)
+                            .frame(width: geo.size.width, height: geo.size.height)
+                    }
                 }
             case .success(let image):
                 GeometryReader { geo in

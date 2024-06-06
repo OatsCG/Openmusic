@@ -13,7 +13,7 @@ protocol PlayerEngineProtocol: Equatable {
     var id: UUID {get set}
     var isReady: Bool {get set}
     var isSeeking: Bool {get set}
-    var currentTime: Double  {get}
+    var currentTime: Double {get}
     func duration() -> Double
     func volume() -> Float
     func set_volume(to: Float)

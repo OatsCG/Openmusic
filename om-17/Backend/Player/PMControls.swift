@@ -65,16 +65,7 @@ extension PlayerManager {
                 self.player_forward(userInitiated: userInitiated)
             }
             
-            if (self.currentQueueItem?.audio_AVPlayer?.isRemote == true) {
-                if self.currentQueueItem?.currentlyPriming == false {
-                    if self.currentQueueItem?.fetchedPlayback != nil {
-                        if self.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "" {
-                            self.player_forward(userInitiated: userInitiated)
-                            return
-                        }
-                    }
-                }
-            }
+            //self.try_auto_skip_if_necessary()
             
             Task {
                 self.scheduleNotification()

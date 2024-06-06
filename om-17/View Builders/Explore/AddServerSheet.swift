@@ -11,6 +11,7 @@ struct AddServerSheet: View {
     @Environment(FontManager.self) private var fontManager
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @Binding var showingServerSheet: Bool
+    @State var tempIPAddress: String = ""
     @State var viewModel: StatusViewModel = StatusViewModel()
     var body: some View {
         ScrollView {
@@ -19,43 +20,25 @@ struct AddServerSheet: View {
                 Text("Input your Server URL Here.")
                     .customFont(fontManager, .title2, bold: true)
                     .padding(.top, 50)
-                Text("For help with servers, visit\n**[openmusic.app](https://openmusic.app)**,")
+                Text("For help with servers, visit\n**[create.openmusic.app](https://create.openmusic.app)**")
                     .customFont(fontManager, .subheadline)
                     .padding(.bottom, 5)
-//                VStack(spacing: 3) {
-//                    Text("or add the demo server")
-//                        .customFont(fontManager, .subheadline)
-//                    Button(action: {
-//                        globalIPAddress = "https://server.openmusic.app"
-//                    }) {
-//                        Text(verbatim: "https://server.openmusic.app")
-//                            .customFont(fontManager, .subheadline, bold: true)
-//                            //.foregroundStyle(.secondary)
-//                            .padding(.vertical, 5)
-//                            .padding(.horizontal, 10)
-//                            .background(.indigo.opacity(0.2))
-//                            .clipShape(RoundedRectangle(cornerRadius: 5))
-//                        
-//                    }
-//                    .buttonStyle(.plain)
-//                }
-//                    .padding(.bottom, 20)
                 VStack {
                     HStack {
-                        TextField("Server URL...", text: $globalIPAddress)
+                        TextField("Server URL...", text: $tempIPAddress)
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.never)
                             .keyboardType(.URL)
                             .multilineTextAlignment(.leading)
-                            .onChange(of: globalIPAddress) {
-                                updateGlobalIPAddress(with: globalIPAddress)
-                                self.viewModel.runCheck()
+                            .onChange(of: tempIPAddress) {
+                                //updateGlobalIPAddress(with: globalIPAddress)
+                                self.viewModel.runCheck(with: tempIPAddress)
                             }
                             .onAppear {
-                                self.viewModel.runCheck()
+                                self.viewModel.runCheck(with: tempIPAddress)
                             }
                         Divider()
-                        Button(action: {self.viewModel.runCheck()}) {
+                        Button(action: {self.viewModel.runCheck(with: tempIPAddress)}) {
                             HStack {
                                 if (viewModel.serverStatus == nil) {
                                     Image(systemName: "circle.fill")
@@ -102,7 +85,7 @@ struct AddServerSheet: View {
                                 ((viewModel.serverStatus?.footer ?? "") != "")) {
                                 Divider()
                                 HStack {
-                                    Text("From: \(globalIPAddress)/status")
+                                    Text("From: \(tempIPAddress)/status")
                                         .customFont(fontManager, .caption)
                                         .foregroundStyle(.quaternary)
                                     Spacer()
@@ -144,7 +127,9 @@ struct AddServerSheet: View {
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                     .background(.quinary)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                Text("By clicking **Add Server**, you are stating that the server “\(tempIPAddress)” and all of its content (audio files, images, titles, etc) are owned by you.\n\nYou are also giving permission for the Openmusic app to display and play your content, as well as to use your server’s endpoints for suggestions and discovery features.")
                 Button(action: {
+                    updateGlobalIPAddress(with: tempIPAddress)
                     showingServerSheet = false
                 }) {
                     HStack {

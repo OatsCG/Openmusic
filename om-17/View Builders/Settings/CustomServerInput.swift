@@ -11,22 +11,34 @@ struct CustomServerInput: View {
     @Environment(FontManager.self) private var fontManager
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @State var viewModel: StatusViewModel = StatusViewModel()
+    @State var showingServerSheet: Bool = false
     var body: some View {
         VStack {
             HStack {
-                TextField("Server URL...", text: $globalIPAddress)
-                    //.disabled(true)
-                    //.foregroundStyle(.secondary)
+                TextField("No URL Entered", text: $globalIPAddress)
+                //Text(globalIPAddress)
+                    .disabled(true)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .keyboardType(.URL)
-                    .onChange(of: globalIPAddress) {
-                        updateGlobalIPAddress(with: globalIPAddress)
-                        self.viewModel.runCheck()
-                    }
                     .onAppear {
                         self.viewModel.runCheck()
                     }
+                Divider()
+                Button(action: { showingServerSheet = true }) {
+                    Text("Edit")
+                        .foregroundStyle(.primary)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 7)
+                        .background(.quinary.opacity(0.2))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                }
+                    .buttonStyle(.plain)
+                    .sheet(isPresented: $showingServerSheet, content: {
+                        AddServerSheet(showingServerSheet: $showingServerSheet)
+                    })
                 Divider()
                 Button(action: {self.viewModel.runCheck()}) {
                     HStack {
@@ -67,43 +79,6 @@ struct CustomServerInput: View {
                 }
                     .buttonStyle(.plain)
             }
-//            Group {
-//                if (viewModel.serverStatus?.online ?? false) {
-//                    if (
-//                        ((viewModel.serverStatus?.title ?? "") != "") ||
-//                        ((viewModel.serverStatus?.body ?? "") != "") ||
-//                        ((viewModel.serverStatus?.footer ?? "") != "")) {
-//                        Divider()
-//                    }
-//                    VStack {
-//                        if ((viewModel.serverStatus?.title ?? "") != "") {
-//                            HStack {
-//                                Text(viewModel.serverStatus?.title ?? "")
-//                                    .customFont(fontManager, .subheadline, bold: true)
-//                                    .foregroundStyle(.secondary)
-//                                Spacer()
-//                            }
-//                        }
-//                        if ((viewModel.serverStatus?.body ?? "") != "") {
-//                            HStack {
-//                                Text(viewModel.serverStatus?.body ?? "")
-//                                    .customFont(fontManager, .caption)
-//                                    .foregroundStyle(.secondary)
-//                                Spacer()
-//                            }
-//                        }
-//                        if ((viewModel.serverStatus?.footer ?? "") != "") {
-//                            HStack {
-//                                Text(viewModel.serverStatus?.footer ?? "")
-//                                    .customFont(fontManager, .footnote)
-//                                    .foregroundStyle(.tertiary)
-//                                Spacer()
-//                            }
-//                        }
-//                    }
-//                        .lineLimit(1)
-//                }
-//            }
         }
     }
 }

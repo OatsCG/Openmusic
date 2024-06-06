@@ -166,6 +166,7 @@ import Combine
                 self?.update_elapsed_time()
                 self?.repeat_check()
                 self?.crossfade_check()
+                self?.try_auto_skip_if_necessary()
                 self?.timerMidFire = false
                 //print(ToastManager.shared.currentToast?.message)
             }

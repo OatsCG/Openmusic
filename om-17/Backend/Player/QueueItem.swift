@@ -20,11 +20,14 @@ import SwiftUI
     var isVideo: Bool = false
     var currentlyPriming: Bool = false
     var wasSongEnjoyed: Bool = false
+    var primeStatus: PrimeStatus = .waiting
+    var isDownloaded: Bool = false
     
     init(from: any Track, explicit: Bool? = nil) {
         self.queueID = UUID()
         self.Track = from
         self.explicit = (explicit != nil ? explicit! : (from.Playback_Explicit != nil))
+        self.update_download_status()
         self.setVideo(to: false)
     }
     
@@ -33,10 +36,9 @@ import SwiftUI
         self.Track = from.Track
         self.fetchedPlayback = from.fetchedPlayback
         self.explicit = from.explicit
-        
         self.audio_AVPlayer = PlayerEngine()
-        
         self.video_AVPlayer = VideoPlayerEngine(ytid: from.fetchedPlayback?.YT_Video_ID)
+        self.update_download_status()
         
         if (from.audio_AVPlayer != nil) {
             if (from.audio_AVPlayer!.has_file()) {
@@ -78,6 +80,7 @@ import SwiftUI
         self.audio_AVPlayer = nil
         self.video_AVPlayer = nil
         self.queueItemPlayer = nil
+        self.update_download_status()
     }
     
     func isReady() -> Bool {
@@ -94,6 +97,9 @@ import SwiftUI
     }
     
     func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) async {
+        if self.isDownloaded == false {
+            self.primeStatus = .waiting
+        }
         if seek {
             if let timestamp = self.queueItemPlayer?.currentTime {
                 DispatchQueue.main.async {
@@ -137,18 +143,17 @@ import SwiftUI
                         var url: URL? = nil
                         var isRemote: Bool = true
                         if (self?.isVideo == false) {
-                            if let qitem = self {
-                                if isDownloaded {
-                                    url = DownloadManager.shared.get_stored_location(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
-                                    isRemote = false
-                                } else {
-                                    self?.fetchedPlayback = playbackData
-                                    url = URL(string: self?.fetchedPlayback?.Playback_Audio_URL ?? "")
-                                }
+                            if isDownloaded {
+                                url = DownloadManager.shared.get_stored_location(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
+                                isRemote = false
+                            } else {
+                                self?.fetchedPlayback = playbackData
+                                url = URL(string: self?.fetchedPlayback?.Playback_Audio_URL ?? "")
                             }
                         }
                         if url != nil {
                             DispatchQueue.main.async { [weak self, url, isRemote] in
+                                self?.primeStatus = .success
                                 self?.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
                                 self?.video_AVPlayer = VideoPlayerEngine(ytid: self?.fetchedPlayback?.YT_Video_ID)
                                 if (self?.isVideo == true) {
@@ -179,6 +184,8 @@ import SwiftUI
                                     }
                                 }
                             }
+                        } else {
+                            self?.primeStatus = .failed
                         }
                         if (playerManager.currentQueueItem?.queueID != self?.queueID) {
                             self?.audio_AVPlayer?.pause()
@@ -189,6 +196,7 @@ import SwiftUI
                 }
             }
         } else {
+            self.primeStatus = .success
             if position != nil {
                 self.queueItemPlayer!.seek(to: position!)
                 playerManager.addSuggestions()
@@ -208,6 +216,14 @@ import SwiftUI
         return
     }
     
+    func update_download_status() {
+        if DownloadManager.shared.is_downloaded(self.Track, explicit: self.explicit) {
+            isDownloaded = true
+        } else {
+            isDownloaded = false
+        }
+    }
+    
     // Conform to Hashable
     func hash(into hasher: inout Hasher) {
         hasher.combine(queueID)
@@ -217,4 +233,10 @@ import SwiftUI
     static func ==(lhs: QueueItem, rhs: QueueItem) -> Bool {
         return lhs.queueID == rhs.queueID
     }
+}
+
+
+
+enum PrimeStatus {
+    case waiting, success, failed, tryingAgain
 }
