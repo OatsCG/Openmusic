@@ -19,20 +19,6 @@ struct ExplorePage: View {
         ZStack {
             NavigationStack(path: $exploreNSPath) {
                 ScrollView {
-//                    HStack {
-//                        Text("Explore")
-//                            .font(.largeTitle .bold())
-//                        Spacer()
-//                        NavigationLink(value: UserViewNPM()) {
-//                            Image(systemName: "person.circle.fill")
-//                                .symbolRenderingMode(.hierarchical)
-//                                .font(.largeTitle)
-//                        }
-//                        .buttonStyle(.plain)
-//                    }
-//                        .padding()
-
-                    
                     if viewModel.exploreResults == nil {
                         Group {
                             if (viewModel.isSearching == true || self.hasFirstLoaded == false) {

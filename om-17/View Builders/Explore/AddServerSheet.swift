@@ -127,7 +127,9 @@ struct AddServerSheet: View {
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                     .background(.quinary)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                Text("By clicking **Add Server**, you are stating that the server “\(tempIPAddress)” and all of its content (audio files, images, titles, etc) are owned by you.\n\nYou are also giving permission for the Openmusic app to display and play your content, as well as to use your server’s endpoints for suggestions and discovery features.")
+                if viewModel.serverStatus?.online == true {
+                    Text("By clicking **Add Server**, you are stating that the server “\(tempIPAddress)” and all of its content (audio files, images, titles, etc) are owned by you.\n\nYou are also giving permission for the Openmusic app to display and play your content, as well as to use your server’s endpoints for suggestions and discovery features.")
+                }
                 Button(action: {
                     updateGlobalIPAddress(with: tempIPAddress)
                     showingServerSheet = false
