@@ -68,16 +68,12 @@ extension PlayerManager {
     }
     
     func can_crossfade() -> Bool {
-        let cancf = self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds)
-//        if cancf == true {
-//            print("CAN CROSSFADE:")
-//            print(self.is_current_item_ready())
-//            print(self.durationSeconds)
-//            print(self.elapsedTime)
-//            print(self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds))
-//            print("END")
-//        }
-        return cancf
+        if self.durationSeconds == 0.9 {
+            return false
+        } else {
+            let cancf: Bool = self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds)
+            return cancf
+        }
     }
     
     func pickCrossfadeZero() -> Double {

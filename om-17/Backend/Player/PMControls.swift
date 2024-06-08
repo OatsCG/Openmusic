@@ -106,7 +106,9 @@ extension PlayerManager {
     
     func setIsPlaying(to: Bool) {
         if self.isPlaying != to {
-            try? self.audioSession.setActive(true)
+            if (to == true) {
+                try? self.audioSession.setActive(true)
+            }
             withAnimation(.bouncy) {
                 self.isPlaying = to
             }

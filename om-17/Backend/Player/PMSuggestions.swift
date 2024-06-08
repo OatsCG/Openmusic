@@ -19,10 +19,7 @@ extension PlayerManager {
         }
         
         if self.currentQueueItem != nil {
-            var songs: [NaiveTrack] = []
-            for song in getEnjoyedSongs(limit: 5) {
-                songs.append(NaiveTrack(title: song.Track.Title, album: song.Track.Album.Title, artists: stringArtists(artistlist: song.Track.Album.Artists)))
-            }
+            var songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
             self.fetchSuggestionsModel.runSearch(songs: songs, playerManager: self)
         }
     }
@@ -49,6 +46,14 @@ extension PlayerManager {
             }
             return recentInHistory
         }
+    }
+    
+    func getEnjoyedSongsNaive(limit: Int) -> [NaiveTrack] {
+        var songs: [NaiveTrack] = []
+        for song in self.getEnjoyedSongs(limit: 5) {
+            songs.append(NaiveTrack(title: song.Track.Title, album: song.Track.Album.Title, artists: stringArtists(artistlist: song.Track.Album.Artists)))
+        }
+        return songs
     }
     
     func trySuggestingPlaylistCreation() {

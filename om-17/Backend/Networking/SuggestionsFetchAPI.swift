@@ -55,9 +55,9 @@ func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<Imp
         fetchSuggestionsData(songs: songs) { (result) in
             switch result {
             case .success(let data):
-                //withAnimation { // UNDO LATER?
-                playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
-                //}
+                if (playerManager.getEnjoyedSongsNaive(limit: 5) == songs) {
+                    playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
+                }
                 self.isFetching = false
             case .failure(let error):
                 print("Error: \(error)")
@@ -66,4 +66,3 @@ func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<Imp
         }
     }
 }
-

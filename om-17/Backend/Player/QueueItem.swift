@@ -80,6 +80,10 @@ import SwiftUI
         self.audio_AVPlayer = nil
         self.video_AVPlayer = nil
         self.queueItemPlayer = nil
+        self.currentlyPriming = false
+        self.update_prime_status(.waiting)
+        
+        
         self.update_download_status()
     }
     
@@ -98,7 +102,7 @@ import SwiftUI
     
     func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) async {
         if self.isDownloaded == false {
-            self.primeStatus = .waiting
+            self.update_prime_status(.waiting)
         }
         if seek {
             if let timestamp = self.queueItemPlayer?.currentTime {
@@ -119,6 +123,13 @@ import SwiftUI
         if (self.currentlyPriming) {
             return
         }
+        if (self.primeStatus == .failed || self.primeStatus == .success) {
+            DispatchQueue.main.async { [playerManager] in
+                playerManager.prime_next_song()
+            }
+            return
+        }
+        
         if DownloadManager.shared.is_downloaded(self, explicit: self.explicit) {
             if self.audio_AVPlayer?.isRemote == true {
                 if self.queueID != playerManager.currentQueueItem?.queueID {
@@ -128,6 +139,7 @@ import SwiftUI
         }
         self.currentlyPriming = true
         if self.queueItemPlayer == nil {
+            self.update_prime_status(.loading)
             DispatchQueue.main.async { [unowned self] in
                 let isExplicit: Bool = self.explicit
                 let playback_explicit: String? = self.Track.Playback_Explicit
@@ -153,7 +165,10 @@ import SwiftUI
                         }
                         if url != nil {
                             DispatchQueue.main.async { [weak self, url, isRemote] in
-                                self?.primeStatus = .success
+                                self?.update_prime_status(.success)
+                                DispatchQueue.main.async { [playerManager] in
+                                    playerManager.prime_next_song()
+                                }
                                 self?.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
                                 self?.video_AVPlayer = VideoPlayerEngine(ytid: self?.fetchedPlayback?.YT_Video_ID)
                                 if (self?.isVideo == true) {
@@ -170,6 +185,10 @@ import SwiftUI
                                             if success {
                                                 DispatchQueue.main.async { [weak self, weak qitem] in
                                                     if let qitem = qitem {
+                                                        self?.update_prime_status(.primed)
+                                                        DispatchQueue.main.async { [playerManager] in
+                                                            playerManager.prime_next_song()
+                                                        }
                                                         playerManager.set_currentlyPlaying(queueItem: qitem)
                                                         if position != nil {
                                                             self?.queueItemPlayer!.seek(to: position!)
@@ -179,13 +198,22 @@ import SwiftUI
                                                         }
                                                     }
                                                 }
+                                            } else {
+                                                print("PREROLL FAILED")
+                                                self?.update_prime_status(.failed)
+                                                DispatchQueue.main.async { [playerManager] in
+                                                    playerManager.prime_next_song()
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         } else {
-                            self?.primeStatus = .failed
+                            self?.update_prime_status(.failed)
+                            DispatchQueue.main.async { [playerManager] in
+                                playerManager.prime_next_song()
+                            }
                         }
                         if (playerManager.currentQueueItem?.queueID != self?.queueID) {
                             self?.audio_AVPlayer?.pause()
@@ -196,7 +224,9 @@ import SwiftUI
                 }
             }
         } else {
-            self.primeStatus = .success
+            if (self.primeStatus == .waiting) {
+                self.update_prime_status(.success)
+            }
             if position != nil {
                 self.queueItemPlayer!.seek(to: position!)
                 playerManager.addSuggestions()
@@ -213,14 +243,23 @@ import SwiftUI
             }
             self.currentlyPriming = false
         }
+        DispatchQueue.main.async { [playerManager] in
+            playerManager.prime_next_song()
+        }
         return
     }
     
     func update_download_status() {
         if DownloadManager.shared.is_downloaded(self.Track, explicit: self.explicit) {
-            isDownloaded = true
+            self.isDownloaded = true
         } else {
-            isDownloaded = false
+            self.isDownloaded = false
+        }
+    }
+    
+    func update_prime_status(_ status: PrimeStatus) {
+        withAnimation {
+            self.primeStatus = status
         }
     }
     
@@ -238,5 +277,5 @@ import SwiftUI
 
 
 enum PrimeStatus {
-    case waiting, success, failed, tryingAgain
+    case waiting, loading, success, primed, failed, passed
 }

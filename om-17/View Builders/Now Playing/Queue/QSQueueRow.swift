@@ -52,6 +52,35 @@ struct QSQueueRow: View {
                     )
                 }
                 Spacer()
+                if (queueItem.primeStatus == .loading) {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .controlSize(.small)
+                        .padding(3)
+                } else if (queueItem.primeStatus == .success) {
+                    Image(systemName: "circle.dashed")
+                        .symbolEffect(.pulse, isActive: true)
+                        .foregroundStyle(.tertiary)
+                } else if (queueItem.primeStatus == .primed) {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(.tertiary)
+                } else if (queueItem.primeStatus == .failed || queueItem.primeStatus == .passed) {
+                    Menu {
+                        Section("An error occurred loading this track.") {
+                            Button(action: {
+                                Task {
+                                    await self.queueItem.prime_object_fresh(playerManager: playerManager)
+                                }
+                            }) {
+                                Label("Refresh Track", systemImage: "arrow.clockwise")
+                            }
+                        }
+                        
+                    } label: {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .symbolRenderingMode(.multicolor)
+                    }
+                }
                 PlaybackExplicityDownloadedIcon(track: FetchedTrack(from: queueItem), explicit: queueItem.explicit)
                 if let _ = queueItem.Track as? ImportedTrack {
                     QSQueueRowSparkle()

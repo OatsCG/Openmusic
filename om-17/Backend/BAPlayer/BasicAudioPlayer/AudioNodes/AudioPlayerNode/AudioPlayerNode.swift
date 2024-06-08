@@ -256,7 +256,6 @@ public class AudioPlayerNode {
     ///
     /// - parameter time: The time to which to seek.
     public func seek(to time: TimeInterval) {
-        print("[time elapsed] wants inner seek to \(time)")
         guard let f = file else {
             log.error("Failed to seek: no audio file is loaded.")
             return

@@ -26,7 +26,7 @@ struct SettingsPage: View {
                 } header: {
                     Text("NETWORKING")
                 } footer: {
-                    Text("Openmusic is not responsible for the content served by community servers, including copyrighted music. Research your country's copyright laws before streaming. For help with servers, visit [create.openmusic.app](https://create.openmusic.app).")
+                    Text("Openmusic is not responsible for the content served by your server, including copyrighted music. Research your country's copyright laws before streaming. For help with servers, visit [create.openmusic.app](https://create.openmusic.app).")
                 }
                 
                 NavigationLink(destination: ThemingOptions()) {

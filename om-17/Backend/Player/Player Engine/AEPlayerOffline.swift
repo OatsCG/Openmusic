@@ -23,7 +23,6 @@ import AudioKit
         return player.duration > 0 ? player.duration : Double.nan
     }
     var currentTime: Double {
-        print("[time elapsed] \(player.currentTime)")
         return player.currentTime
     }
 

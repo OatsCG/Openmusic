@@ -9,11 +9,29 @@ import SwiftUI
 
 extension PlayerManager {
     func prime_next_song() {
-        //PREQUEUE THE NEXT 5 SONGS
-        for track in self.trackQueue.prefix(5) {
-            track.prime_object(playerManager: self)
+        // begin prime queue
+        var next5songs: ArraySlice<QueueItem> = self.trackQueue.prefix(5)
+        if let cqi = self.currentQueueItem {
+            next5songs.insert(cqi, at: 0)
+        }
+        
+        // instantly prime downloaded songs
+        let firstDownloaded: QueueItem? = next5songs.first(where: { $0.isDownloaded && $0.primeStatus == .waiting })
+        
+        if let firstDownloaded = firstDownloaded {
+            firstDownloaded.prime_object(playerManager: self)
+        } else {
+            // prime first remote song that needs it
+            for track in next5songs {
+                if track.primeStatus == .waiting || track.primeStatus == .loading {
+                    track.prime_object(playerManager: self)
+                    break
+                }
+            }
         }
     }
+    
+    //func
     
     func prime_current_song(continueCurrent: Bool = false) {
         if (self.currentQueueItem != nil) {

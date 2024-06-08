@@ -53,11 +53,13 @@ func fetchAlbumVideoData(albumID: String, completion: @escaping (Result<String, 
                 }
                 let attemptedURL: URL? = URL(string: data)
                 if let attemptedURL = attemptedURL {
-                    withAnimation(.linear(duration: 1).delay(2)) {
-                        if (thisSessionID != self.currentSessionID) {
-                            return
+                    if (thisSessionID != self.currentSessionID) {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        withAnimation(.linear(duration: 1).delay(2)) {
+                            self.fetchedAlbumVideo = attemptedURL
                         }
-                        self.fetchedAlbumVideo = attemptedURL
                     }
                 }
             case .failure(let error):

@@ -223,8 +223,12 @@ struct ImportedTrack: Codable, Hashable, Track {
     }
 }
 
-struct NaiveTrack {
+struct NaiveTrack: Equatable {
     var title: String
     var album: String
     var artists: String
+    
+    static func ==(lhs: NaiveTrack, rhs: NaiveTrack) -> Bool {
+        return lhs.title == rhs.title && lhs.album == rhs.album && lhs.artists == rhs.artists
+    }
 }

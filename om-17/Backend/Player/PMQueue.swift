@@ -158,6 +158,8 @@ extension PlayerManager {
     func try_auto_skip_if_necessary() {
         if (self.currentQueueItem?.isDownloaded == false) {
             if self.currentQueueItem?.primeStatus == .failed {
+                self.currentQueueItem?.update_prime_status(.passed)
+                print("AUTOSKIPPED")
                 self.player_forward(userInitiated: true)
                 return
             }
