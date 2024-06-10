@@ -11,6 +11,7 @@ import SwiftData
 struct ExplorePage: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(NetworkMonitor.self) var networkMonitor
+    @Environment(OMUser.self) var omUser
     @State var viewModel: ExploreViewModel = ExploreViewModel()
     @Binding var exploreNSPath: NavigationPath
     @State var hasFirstLoaded: Bool = false
@@ -111,6 +112,19 @@ struct ExplorePage: View {
                     viewModel.runSearch()
                 }
                 .navigationTitle("Explore")
+//                .toolbar {
+//                    ToolbarItem(placement: .topBarTrailing) {
+//                        NavigationLink(value: OMUserNPM()) {
+//                            HStack {
+//                                Text(omUser.userName)
+//                                    .customFont(FontManager.shared, .body, bold: true)
+//                                Image(systemName: "person.circle.fill")
+//                                    .symbolRenderingMode(.hierarchical)
+//                                    .font(.title2)
+//                            }
+//                        }
+//                    }
+//                }
                 .navigationBarTitleDisplayMode(.automatic)
                 .safeAreaPadding(.bottom, 80)
                 .safeAreaPadding(.top, 20)
@@ -120,6 +134,9 @@ struct ExplorePage: View {
                 .sheet(isPresented: $showingServerSheet, content: {
                     AddServerSheet(showingServerSheet: $showingServerSheet)
                 })
+                .navigationDestination(for: OMUserNPM.self) { npm in
+                    UserView()
+                }
                 .navigationDestination(for: SearchAlbumContentNPM.self) { npm in
                     SearchAlbumContent(album: npm.album)
                 }
@@ -159,35 +176,10 @@ struct ExplorePage: View {
                 .navigationDestination(for: UserViewNPM.self) { npm in
                     UserView()
                 }
-                .toolbar {
-//                    ToolbarItem(placement: .topBarTrailing) {
-//                        Image(systemName: "person.circle.fill")
-//                            .symbolRenderingMode(.hierarchical)
-//                            .font(.title2)
-//                    }
-                }
             }
         }
     }
 }
-
-
-/*
- 
- VStack(spacing: 20) {
-     SearchShelfTracks(tracks: viewModel.searchResults?.Tracks)
-     Divider()
-     SearchShelfAlbums(viewModel: viewModel)
-     Divider()
-     SearchShelfSingles(viewModel: viewModel)
-     Divider()
-     SearchShelfArtists(viewModel: viewModel)
- }
-}
-}
-}
-.safeAreaPadding(.bottom, 80)
- */
 
 
 

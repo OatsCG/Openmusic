@@ -13,6 +13,9 @@
 		E5018BD22A917C9400143967 /* SearchArtistExtendedTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BD12A917C9400143967 /* SearchArtistExtendedTracks.swift */; };
 		E5018BD42A917CA900143967 /* SearchArtistExtendedAlbums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BD32A917CA900143967 /* SearchArtistExtendedAlbums.swift */; };
 		E5018BD62A917CB400143967 /* SearchArtistExtendedSingles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BD52A917CB400143967 /* SearchArtistExtendedSingles.swift */; };
+		E5062DED2C15240300B00AB4 /* OAuthSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E5062DEC2C15240300B00AB4 /* OAuthSwift */; };
+		E5062DEF2C155A3F00B00AB4 /* DiscordAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5062DEE2C155A3F00B00AB4 /* DiscordAPI.swift */; };
+		E5062DF22C1560DE00B00AB4 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = E5062DF12C1560DE00B00AB4 /* Starscream */; };
 		E506D9E62B00B9E100D3AAAD /* NPHeaderSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E506D9E52B00B9E100D3AAAD /* NPHeaderSegment.swift */; };
 		E506D9E82B00BB9200D3AAAD /* NPTitles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E506D9E72B00BB9200D3AAAD /* NPTitles.swift */; };
 		E51375E72B4378030005F2D7 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51375E62B4378030005F2D7 /* FontManager.swift */; };
@@ -512,6 +515,7 @@
 		E5EA87852B966C5F002CE2C2 /* VibePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EA87842B966C5F002CE2C2 /* VibePage.swift */; };
 		E5ECC7F52A378934009ABD7F /* QueueSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ECC7F42A378934009ABD7F /* QueueSheet.swift */; };
 		E5EF91D72A6EBE400035B689 /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EF91D62A6EBE400035B689 /* SettingsPage.swift */; };
+		E5F2CA0C2C1520E500241B8E /* OAuthPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F2CA0B2C1520E500241B8E /* OAuthPipeline.swift */; };
 		E5F39D092B8FF31800DF1952 /* AnimatedAlbumArtDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F39D082B8FF31800DF1952 /* AnimatedAlbumArtDisplay.swift */; };
 		E5F39D0B2B90027000DF1952 /* ArtworkVideoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F39D0A2B90027000DF1952 /* ArtworkVideoAPI.swift */; };
 		E5F43D482B0AC89000864502 /* LoadingBigTracks_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D472B0AC89000864502 /* LoadingBigTracks_classic.swift */; };
@@ -564,6 +568,7 @@
 		E5018BD12A917C9400143967 /* SearchArtistExtendedTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistExtendedTracks.swift; sourceTree = "<group>"; };
 		E5018BD32A917CA900143967 /* SearchArtistExtendedAlbums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistExtendedAlbums.swift; sourceTree = "<group>"; };
 		E5018BD52A917CB400143967 /* SearchArtistExtendedSingles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistExtendedSingles.swift; sourceTree = "<group>"; };
+		E5062DEE2C155A3F00B00AB4 /* DiscordAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscordAPI.swift; sourceTree = "<group>"; };
 		E506D9E52B00B9E100D3AAAD /* NPHeaderSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPHeaderSegment.swift; sourceTree = "<group>"; };
 		E506D9E72B00BB9200D3AAAD /* NPTitles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPTitles.swift; sourceTree = "<group>"; };
 		E51375E62B4378030005F2D7 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
@@ -1063,6 +1068,7 @@
 		E5EA87842B966C5F002CE2C2 /* VibePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibePage.swift; sourceTree = "<group>"; };
 		E5ECC7F42A378934009ABD7F /* QueueSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueSheet.swift; sourceTree = "<group>"; };
 		E5EF91D62A6EBE400035B689 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
+		E5F2CA0B2C1520E500241B8E /* OAuthPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthPipeline.swift; sourceTree = "<group>"; };
 		E5F39D082B8FF31800DF1952 /* AnimatedAlbumArtDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedAlbumArtDisplay.swift; sourceTree = "<group>"; };
 		E5F39D0A2B90027000DF1952 /* ArtworkVideoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkVideoAPI.swift; sourceTree = "<group>"; };
 		E5F43D472B0AC89000864502 /* LoadingBigTracks_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBigTracks_classic.swift; sourceTree = "<group>"; };
@@ -1081,6 +1087,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5062DED2C15240300B00AB4 /* OAuthSwift in Frameworks */,
 				E5F43D932B0B2D4B00864502 /* RxMusicPlayer in Frameworks */,
 				E5F43D512B0AFB8600864502 /* SwiftAudioPlayer in Frameworks */,
 				E52CFF752B46385600DF5EBF /* YouTubePlayerKit in Frameworks */,
@@ -1088,6 +1095,7 @@
 				E5255BF32AAAB68F007F12CE /* AudioKit in Frameworks */,
 				E59E30B12A41310B007B7874 /* MarqueeText in Frameworks */,
 				E5255BFA2AAB6FA4007F12CE /* AudioStreaming in Frameworks */,
+				E5062DF22C1560DE00B00AB4 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2592,6 +2600,7 @@
 		E5D493332A305B980091ED01 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				E5F2CA0A2C1520AA00241B8E /* Discord RPC */,
 				E59600932B3B7963009E5858 /* StatusFetchAPI.swift */,
 				E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */,
 				E5D493342A305BA20091ED01 /* SearchFetchAPI.swift */,
@@ -2759,6 +2768,15 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		E5F2CA0A2C1520AA00241B8E /* Discord RPC */ = {
+			isa = PBXGroup;
+			children = (
+				E5F2CA0B2C1520E500241B8E /* OAuthPipeline.swift */,
+				E5062DEE2C155A3F00B00AB4 /* DiscordAPI.swift */,
+			);
+			path = "Discord RPC";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2784,6 +2802,8 @@
 				E5F43D922B0B2D4B00864502 /* RxMusicPlayer */,
 				E52CFF742B46385600DF5EBF /* YouTubePlayerKit */,
 				E52BA2D32B7DF8F200A11C30 /* SwipeActions */,
+				E5062DEC2C15240300B00AB4 /* OAuthSwift */,
+				E5062DF12C1560DE00B00AB4 /* Starscream */,
 			);
 			productName = "om-17";
 			productReference = E5C9E94B2A2E98FC0056E45F /* om-17.app */;
@@ -2866,6 +2886,8 @@
 				E52CFF732B46385600DF5EBF /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 				E52BA2D22B7DF8F200A11C30 /* XCRemoteSwiftPackageReference "SwipeActions" */,
 				E5DD1D1E2BC65FBA007A1858 /* XCRemoteSwiftPackageReference "Glur" */,
+				E5F2CA0D2C15211000241B8E /* XCRemoteSwiftPackageReference "OAuthSwift" */,
+				E5062DF02C1560B900B00AB4 /* XCRemoteSwiftPackageReference "Starscream" */,
 			);
 			productRefGroup = E5C9E94C2A2E98FC0056E45F /* Products */;
 			projectDirPath = "";
@@ -3110,6 +3132,7 @@
 				E5CB98E02AB8CE5000043ED4 /* TrackMenuPreview_classic.swift in Sources */,
 				E53B3BFF2A9303E500C5063B /* LibraryArtistShelfAlbums.swift in Sources */,
 				E5B7D1172AA816E900EAB1A7 /* PlaylistContentHeading_classic.swift in Sources */,
+				E5062DEF2C155A3F00B00AB4 /* DiscordAPI.swift in Sources */,
 				E5977C342AF335DC00C55003 /* PlaylistFunctions.swift in Sources */,
 				E514642F2ACE02AA00FDBAF5 /* PlaylistBackground_honeycrisp.swift in Sources */,
 				E520B28B2A5B2EF10031C73D /* LibraryArtistLink.swift in Sources */,
@@ -3226,6 +3249,7 @@
 				E514642D2ACE029C00FDBAF5 /* PlaylistBackground_classic.swift in Sources */,
 				E5A928E12A313281000E52C5 /* ArtistCookie.swift in Sources */,
 				E53ED7DA2BAA497D00ECC3CE /* EQBandSlider.swift in Sources */,
+				E5F2CA0C2C1520E500241B8E /* OAuthPipeline.swift in Sources */,
 				E5DCFE062B450F690044D9B5 /* NPPlayButton_honeycrisp.swift in Sources */,
 				E515FAED2B411083001985F2 /* VolumeObserver.swift in Sources */,
 				E5C250B92B03E89400783F54 /* PopularityIcon.swift in Sources */,
@@ -3803,6 +3827,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E5062DF02C1560B900B00AB4 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.8;
+			};
+		};
 		E5255BF12AAAB68F007F12CE /* XCRemoteSwiftPackageReference "AudioKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AudioKit/AudioKit/";
@@ -3851,6 +3883,14 @@
 				minimumVersion = 1.0.4;
 			};
 		};
+		E5F2CA0D2C15211000241B8E /* XCRemoteSwiftPackageReference "OAuthSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/OAuthSwift/OAuthSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 		E5F43D4F2B0AFB8600864502 /* XCRemoteSwiftPackageReference "SwiftAudioPlayer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tanhakabir/SwiftAudioPlayer";
@@ -3870,6 +3910,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E5062DEC2C15240300B00AB4 /* OAuthSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5F2CA0D2C15211000241B8E /* XCRemoteSwiftPackageReference "OAuthSwift" */;
+			productName = OAuthSwift;
+		};
+		E5062DF12C1560DE00B00AB4 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5062DF02C1560B900B00AB4 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
 		E5255BF22AAAB68F007F12CE /* AudioKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E5255BF12AAAB68F007F12CE /* XCRemoteSwiftPackageReference "AudioKit" */;

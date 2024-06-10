@@ -43,17 +43,41 @@ struct NPTitles: View {
                                 startDelay: 3,
                                 alignment: fullscreen ? .center : .leading
                             )
-                            if !playerManager.currentQueueItem!.Track.Features.isEmpty {
+                            if (fullscreen) {
                                 Menu {
-                                    ForEach(playerManager.currentQueueItem!.Track.Features, id: \.ArtistID) { artist in
-                                        Button(action: {}) {
-                                            Label(artist.Name, systemImage: "")
+                                    Section("Artists") {
+                                        ForEach(playerManager.currentQueueItem!.Track.Album.Artists, id: \.ArtistID) { artist in
+                                            Button(action: {}) {
+                                                Label(artist.Name, systemImage: "person.circle.fill")
+                                            }
                                         }
                                     }
                                 } label: {
                                     MarqueeText(
-                                        text: "feat. \(stringArtists(artistlist: playerManager.currentQueueItem!.Track.Features))",
-                                        font: FontManager.shared.currentThemeUIFont(fontManager, .headline),
+                                        text: stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists),
+                                        font: FontManager.shared.currentThemeUIFont(fontManager, .headline, bold: true),
+                                        leftFade: 10,
+                                        rightFade: 10,
+                                        startDelay: 3,
+                                        alignment: fullscreen ? .center : .leading
+                                    )
+                                        .foregroundStyle(.secondary)
+                                }
+                                    .buttonStyle(.plain)
+                            }
+                            if (playerManager.currentQueueItem!.Track.Features.isEmpty || stringArtists(artistlist: playerManager.currentQueueItem!.Track.Features, exclude: playerManager.currentQueueItem!.Track.Album.Artists) == "") == false {
+                                Menu {
+                                    Section("Features") {
+                                        ForEach(playerManager.currentQueueItem!.Track.Features, id: \.ArtistID) { artist in
+                                            Button(action: {}) {
+                                                Label(artist.Name, systemImage: "person.circle.fill")
+                                            }
+                                        }
+                                    }
+                                } label: {
+                                    MarqueeText(
+                                        text: "feat. \(stringArtists(artistlist: playerManager.currentQueueItem!.Track.Features, exclude: playerManager.currentQueueItem!.Track.Album.Artists))",
+                                        font: FontManager.shared.currentThemeUIFont(fontManager, fullscreen ? .callout : .headline),
                                         leftFade: 10,
                                         rightFade: 10,
                                         startDelay: 3,

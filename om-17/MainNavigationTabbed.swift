@@ -13,6 +13,7 @@ struct MainNavigationTabbed: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(FontManager.self) private var fontManager
+    @Environment(OMUser.self) private var omUser
     @AppStorage("currentTheme") var currentTheme: String = "classic"
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("preferredAppearance") var preferredAppearance: String = "auto"
@@ -44,8 +45,11 @@ struct MainNavigationTabbed: View {
         .onOpenURL { url in
             print("URL FOUND")
             let components: [String] = url.pathComponents
-            //   openmusicapp://open/album/\(encodedAlbum!)
-            //   components = ["/", "album", "encodedAlbum"]
+            //   openmusicapp://open/album/<encodedAlbum>
+            //   components = ["/", "album", encodedAlbum]
+            //   openmusicapp://open/discord?code=<CODE>
+            //   components = ["/", "discord", CODE]
+            print(components)
             let type = components[1]
             if type == "album" {
                 let encodedAlbum = components[2]
@@ -59,6 +63,22 @@ struct MainNavigationTabbed: View {
                 } else {
                     ToastManager.shared.propose(toast: Toast.linkopenfailed())
                 }
+            } else if type == "discord" {
+                print(url)
+                if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                    if let queryItems = comps.queryItems {
+                        if let codeItem = queryItems.first(where: { $0.name == "code" }) {
+                            if let codeValue = codeItem.value {
+                                print("Code: \(codeValue)")
+                                omUser.updateDiscordCode(to: codeValue)
+                                ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Updated Discord ID", .systemSuccess))
+                            }
+                        }
+                    }
+                }
+//                let code = components[2]
+//                omUser.updateDiscordCode(to: code)
+//                ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Updated Discord ID", .systemSuccess))
             }
         }
     }

@@ -7,13 +7,18 @@
 
 import Foundation
 
-func stringArtists(artistlist: [SearchedArtist]) -> String {
-    var artistNames: [String] = []
+func stringArtists(artistlist: [SearchedArtist], exclude: [SearchedArtist] = []) -> String {
     if (artistlist.count == 0) {
         return ""
     }
+    var artistNames: [String] = []
     for x in artistlist {
-        artistNames.append(x.Name)
+        if exclude.contains(where: { $0.ArtistID == x.ArtistID }) == false {
+            artistNames.append(x.Name)
+        }
+    }
+    if (artistNames.count == 0) {
+        return ""
     }
     return artistNames.joined(separator: ", ")
 }

@@ -80,6 +80,7 @@ extension PlayerManager {
         } else {
             queueItem.audio_AVPlayer?.pause()
         }
+        
         self.setAudioSession()
         self.addSuggestions()
     }

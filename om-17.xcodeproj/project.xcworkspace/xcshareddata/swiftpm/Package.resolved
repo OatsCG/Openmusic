@@ -1,5 +1,5 @@
 {
-  "originHash" : "1cb62664ade07a569b8590a6aa25cb6dedf8d3fa1d1b4bfb742078a040a66ed6",
+  "originHash" : "d43806a876fa78302b1667e0b163dfd31f6a74c9cf71766c597eaba3ad2cd808",
   "pins" : [
     {
       "identity" : "audiokit",
@@ -20,6 +20,33 @@
       }
     },
     {
+      "identity" : "brightfutures",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Thomvis/BrightFutures.git",
+      "state" : {
+        "revision" : "fa66fa183dce7196d431244d0215748cd14c5758",
+        "version" : "8.2.0"
+      }
+    },
+    {
+      "identity" : "erik",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/phimage/Erik.git",
+      "state" : {
+        "revision" : "109a130e9cdb00789a43a7a625293eeb12d22989",
+        "version" : "5.1.0"
+      }
+    },
+    {
+      "identity" : "filekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nvzqz/FileKit.git",
+      "state" : {
+        "revision" : "9006d2888025fbe893c3c396327b2fe45a8c177b",
+        "version" : "6.1.0"
+      }
+    },
+    {
       "identity" : "glur",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/joogps/Glur",
@@ -29,12 +56,30 @@
       }
     },
     {
+      "identity" : "kanna",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tid-kijyun/Kanna.git",
+      "state" : {
+        "revision" : "41c3d28ea0eac07e4551b28def9de1ede702e739",
+        "version" : "5.3.0"
+      }
+    },
+    {
       "identity" : "marqueetext",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/joekndy/MarqueeText",
       "state" : {
         "branch" : "master",
         "revision" : "e18d514455563ad00581e0d825146c6f15b1c6c4"
+      }
+    },
+    {
+      "identity" : "oauthswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/OAuthSwift/OAuthSwift",
+      "state" : {
+        "revision" : "d85964b96dbce94df961f28b996187c835089903",
+        "version" : "2.2.0"
       }
     },
     {
@@ -56,12 +101,30 @@
       }
     },
     {
+      "identity" : "starscream",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/daltoniam/Starscream",
+      "state" : {
+        "revision" : "c6bfd1af48efcc9a9ad203665db12375ba6b145a",
+        "version" : "4.0.8"
+      }
+    },
+    {
       "identity" : "swiftaudioplayer",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tanhakabir/SwiftAudioPlayer",
       "state" : {
         "revision" : "2fdfc62ce9f5d8b818ee1b2a9ac061fce4f64af9",
         "version" : "7.6.0"
+      }
+    },
+    {
+      "identity" : "swifter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/httpswift/swifter.git",
+      "state" : {
+        "revision" : "9483a5d459b45c3ffd059f7b55f9638e268632fd",
+        "version" : "1.5.0"
       }
     },
     {

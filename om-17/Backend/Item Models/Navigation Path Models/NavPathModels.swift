@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+struct OMUserNPM: Hashable {
+
+}
+
 struct SearchAlbumContentNPM: Hashable {
     var album: SearchedAlbum
 }

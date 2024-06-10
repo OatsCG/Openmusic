@@ -22,6 +22,7 @@ struct QSQueueRow: View {
     var body: some View {
         Button(action: {
             // move to top of queue
+            ToastManager.shared.propose(toast: Toast.queuenext(queueItem.Track.Album.Artwork))
             withAnimation {
                 if (isQueue) {
                     playerManager.trackQueue.move(fromOffsets: IndexSet(integer: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0), toOffset: 0)
