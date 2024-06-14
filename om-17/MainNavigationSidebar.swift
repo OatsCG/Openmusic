@@ -8,95 +8,55 @@
 import SwiftUI
 
 struct MainNavigationSidebar: View {
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.colorScheme) var colorScheme
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(FontManager.self) var fontManager
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(FontManager.self) private var fontManager
+    @Environment(OMUser.self) private var omUser
     @AppStorage("currentTheme") var currentTheme: String = "classic"
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("preferredAppearance") var preferredAppearance: String = "auto"
-    
     @Binding var exploreNSPath: NavigationPath
     @Binding var searchNSPath: NavigationPath
     @Binding var libraryNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
     @Binding var selectionBinding: Int
-    
-    @State var selectedCategoryId: MenuItem.ID?
-    var dataModel = splitviewModel()
-    
     var body: some View {
-        NavigationSplitView(columnVisibility: .constant(.automatic)) {
-            List(dataModel.mainMenuItems, selection: $selectedCategoryId) { item in
-                HStack {
-                    Image(systemName: item.image)
-                        .symbolRenderingMode(.hierarchical)
-                    Text(item.name)
+        TabView(selection: $selectionBinding) {
+            ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
+                .tabItem {
+                    Label("Home", systemImage: "globe")
                 }
-            }
-                .navigationTitle("Openmusic")
-        } detail: {
-            switch selectedCategoryId {
-            case dataModel.mainMenuItems[0].id:
-                ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
-                    .toolbar(.hidden, for: .tabBar)
-            case dataModel.mainMenuItems[1].id:
-                SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
-                    .toolbar(.hidden, for: .tabBar)
-            case dataModel.mainMenuItems[2].id:
-                LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)
-                    .toolbar(.hidden, for: .tabBar)
-            case dataModel.mainMenuItems[3].id:
-                SettingsTab()
-                    .toolbar(.hidden, for: .tabBar)
-            case .none:
-                ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
-                    .toolbar(.hidden, for: .tabBar)
-            case .some(_):
-                ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
-                    .toolbar(.hidden, for: .tabBar)
-            }
-//            TabView(selection: $selectionBinding) {
-//                ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
-//                    .tag(0)
-//                    .toolbar(.hidden, for: .tabBar)
-//                SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight, selectionBinding: $selectionBinding)
-//                    .tag(1)
-//                    .toolbar(.hidden, for: .tabBar)
-//                LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)
-//                    .tag(2)
-//                    .toolbar(.hidden, for: .tabBar)
-//                SettingsTab()
-//                    .tag(3)
-//                    .toolbar(.hidden, for: .tabBar)
-//            }
-//            .tabViewStyle(.page(indexDisplayMode: .never))
+                .tag(0)
+            SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                .tag(1)
+            LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)
+                .tabItem {
+                    Label("Library", systemImage: "music.note.list")
+                }
+                .tag(2)
+            SettingsTab()
+                .tabItem {
+                    Label("Options", systemImage: "gear")
+                }
+                .tag(3)
+            
         }
-//        .onChange(of: selectedCategoryId) {
-//            switch selectedCategoryId {
-//            case dataModel.mainMenuItems[0].id:
-//                selectionBinding = 0
-//            case dataModel.mainMenuItems[1].id:
-//                selectionBinding = 1
-//            case dataModel.mainMenuItems[2].id:
-//                selectionBinding = 2
-//            case dataModel.mainMenuItems[3].id:
-//                selectionBinding = 3
-//            case .none:
-//                selectionBinding = 0
-//            case .some(_):
-//                selectionBinding = 0
-//            }
-//        }
         .customFont(fontManager, .subheadline)
         .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
         .preferredColorScheme(activeAppearance(theme: currentTheme, appearance: Appearance(rawValue: preferredAppearance)))
         .onOpenURL { url in
             print("URL FOUND")
             let components: [String] = url.pathComponents
-            //   openmusicapp://open/album/\(encodedAlbum!)
-            //   components = ["/", "album", "encodedAlbum"]
+            //   openmusicapp://open/album/<encodedAlbum>
+            //   components = ["/", "album", encodedAlbum]
+            //   openmusicapp://open/discord?code=<CODE>
+            //   components = ["/", "discord", CODE]
+            print(components)
             let type = components[1]
             if type == "album" {
                 let encodedAlbum = components[2]
@@ -110,6 +70,22 @@ struct MainNavigationSidebar: View {
                 } else {
                     ToastManager.shared.propose(toast: Toast.linkopenfailed())
                 }
+            } else if type == "discord" {
+                print(url)
+                if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                    if let queryItems = comps.queryItems {
+                        if let codeItem = queryItems.first(where: { $0.name == "code" }) {
+                            if let codeValue = codeItem.value {
+                                print("Code: \(codeValue)")
+                                omUser.updateDiscordCode(to: codeValue)
+                                ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Updated Discord ID", .systemSuccess))
+                            }
+                        }
+                    }
+                }
+//                let code = components[2]
+//                omUser.updateDiscordCode(to: code)
+//                ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Updated Discord ID", .systemSuccess))
             }
         }
     }

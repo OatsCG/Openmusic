@@ -140,6 +140,8 @@ struct ThemePreview_classic: View {
                 )
             
             MiniPlayer_classic()
+                .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
+                .aspectRatio(contentMode: .fit)
                 .disabled(true)
                 .scaleEffect(miniplayerSize)
                 .opacity(miniplayerOpacity)

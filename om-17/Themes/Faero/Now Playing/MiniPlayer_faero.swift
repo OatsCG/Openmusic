@@ -70,8 +70,6 @@ struct MiniPlayer_faero: View {
             .overlay {
                 AeroGlossOverlay(baseCornerRadius: 15, padding: 0)
             }
-            .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
-            .aspectRatio(contentMode: .fit)
             .contentShape(RoundedRectangle(cornerRadius: 15))
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 15))

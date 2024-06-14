@@ -66,8 +66,6 @@ struct MiniPlayer_honeycrisp: View {
                     Rectangle().foregroundStyle(.regularMaterial)
                 }
             })
-            .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
-            .aspectRatio(contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .padding(.bottom, 5)
             .padding(.horizontal, 10)

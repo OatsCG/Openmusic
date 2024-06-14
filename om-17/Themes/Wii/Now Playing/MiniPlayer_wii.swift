@@ -76,8 +76,6 @@ struct MiniPlayer_wii: View {
                     .padding([.horizontal, .bottom], -1)
                     .padding(.top, 1)
             })
-            .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
-            .aspectRatio(contentMode: .fit)
             .contentShape(.rect)
             .clipped()
             .clipShape(.rect)

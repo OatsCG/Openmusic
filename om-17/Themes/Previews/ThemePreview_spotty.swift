@@ -138,6 +138,8 @@ struct ThemePreview_spotty: View {
                 )
             
             MiniPlayer_spotty()
+                .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
+                .aspectRatio(contentMode: .fit)
                 .disabled(true)
                 .scaleEffect(miniplayerSize)
                 .opacity(miniplayerOpacity)

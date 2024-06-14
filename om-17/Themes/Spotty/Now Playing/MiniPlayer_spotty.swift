@@ -72,8 +72,6 @@ struct MiniPlayer_spotty: View {
                     }
                 }
             })
-            .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
-            .aspectRatio(contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .padding([.horizontal, .bottom], 5)
             .environment(\.colorScheme, .dark)

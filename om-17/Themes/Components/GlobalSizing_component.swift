@@ -112,22 +112,22 @@ func SearchArtistLink_sizing(h: UserInterfaceSizeClass?, v: UserInterfaceSizeCla
     }
 }
 
-func Miniplayer_sizing(h: UserInterfaceSizeClass?, v: UserInterfaceSizeClass?) -> (width: CGFloat, height: CGFloat) {
+func Miniplayer_sizing(h: UserInterfaceSizeClass?, v: UserInterfaceSizeClass?) -> (width: CGFloat?, height: CGFloat) {
     if (h == .compact) {
         if (v == .compact) {
             // iOS small landscape
-            return(width: 0, height: 55)
+            return(width: nil, height: 65)
         } else {
             // iOS portrait
-            return(width: 0, height: 55)
+            return(width: nil, height: 65)
         }
     } else {
         if (v == .compact) {
             // iOS big landscape
-            return(width: 0, height: 55)
+            return(width: 500, height: 65)
         } else {
             // iPadOS + MacOS
-            return(width: 0, height: 65)
+            return(width: 500, height: 90)
         }
     }
 }

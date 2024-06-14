@@ -138,6 +138,8 @@ struct ThemePreview_wii: View {
                 )
             
             MiniPlayer_wii()
+                .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
+                .aspectRatio(contentMode: .fit)
                 .disabled(true)
                 .scaleEffect(miniplayerSize)
                 .opacity(miniplayerOpacity)

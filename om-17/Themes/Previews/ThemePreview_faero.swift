@@ -138,6 +138,8 @@ struct ThemePreview_faero: View {
                 )
             
             MiniPlayer_faero()
+                .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
+                .aspectRatio(contentMode: .fit)
                 .disabled(true)
                 .scaleEffect(miniplayerSize)
                 .opacity(miniplayerOpacity)

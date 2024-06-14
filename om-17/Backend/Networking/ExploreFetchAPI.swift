@@ -45,15 +45,19 @@ func fetchExploreResults(completion: @escaping (Result<ExploreResults, Error>) -
         fetchExploreResults() { (result) in
             switch result {
             case .success(let data):
-                withAnimation {
-                    self.isSearching = false
-                    self.exploreResults = data
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self.isSearching = false
+                        self.exploreResults = data
+                    }
                 }
             case .failure(let error):
-                withAnimation {
-                    self.isSearching = false
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self.isSearching = false
+                    }
+                    print("Error: \(error)")
                 }
-                print("Error: \(error)")
             }
         }
     }

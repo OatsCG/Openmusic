@@ -25,7 +25,7 @@ struct SearchAlbumLink_classic: View {
             .lineLimit(1)
             .padding(.all, 4)
             .background {
-                AlbumBackground(ArtworkID: album.Artwork, blur: 40, light_opacity: 0.2, dark_opacity: 0.5, spin: false)
+                AlbumBackground(ArtworkID: album.Artwork, blur: 40, light_opacity: 0.05, dark_opacity: 0.5, spin: false)
             }
             .cornerRadius(8)
     }

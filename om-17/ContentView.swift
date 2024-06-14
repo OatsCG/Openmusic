@@ -24,7 +24,7 @@ struct ContentView: View {
     @State var exploreNSPath = NavigationPath()
     @State var searchNSPath = NavigationPath()
     @State var libraryNSPath = NavigationPath()
-    @State var tabbarHeight: CGFloat = 100
+    @State var tabbarHeight: CGFloat = 83
     var selectionBinding: Binding<Int> { Binding(
         get: {
             self.selections.1
@@ -45,19 +45,27 @@ struct ContentView: View {
     )}
     
     var body: some View {
-        MainNavigationTabbed(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
-            .sheet(isPresented: $onboard) {
-                onboard = false
-            } content: {
-                OnboardSheet(onboard: $onboard)
-                    .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
-            }
+//        MainNavigationTabbed(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
+//            .sheet(isPresented: $onboard) {
+//                onboard = false
+//            } content: {
+//                OnboardSheet(onboard: $onboard)
+//                    .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
+//            }
 
-//        if (horizontalSizeClass == .regular && verticalSizeClass == .regular) {
-//            MainNavigationSidebar(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
-//        } else {
-//            MainNavigationTabbed(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
-//        }
+        Group {
+            if (horizontalSizeClass == .regular && verticalSizeClass == .regular) {
+                MainNavigationSidebar(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
+            } else {
+                MainNavigationSidebar(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
+            }
+        }
+        .sheet(isPresented: $onboard) {
+            onboard = false
+        } content: {
+            OnboardSheet(onboard: $onboard)
+                .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
+        }
     }
 }
 
@@ -78,6 +86,8 @@ struct ContentView: View {
         .environment(PlaylistImporter())
         .environment(DownloadManager())
         .environment(NetworkMonitor())
+        .environment(FontManager())
+        .environment(OMUser())
         .task {
             currentTheme = "classic"
 //            globalIPAddress = "server.openmusic.app"

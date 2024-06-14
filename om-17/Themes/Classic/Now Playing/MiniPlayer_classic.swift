@@ -40,7 +40,6 @@ struct MiniPlayer_classic: View {
                         startDelay: 3
                     )
                         .foregroundStyle(.secondary)
-                    
                 }
             }
             Spacer()
@@ -63,16 +62,15 @@ struct MiniPlayer_classic: View {
             .background(alignment: .top, content: {
                 ZStack {
                     Rectangle().foregroundStyle(.thinMaterial)
-                    AlbumBackground(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, blur: 30, light_opacity: 0.2, dark_opacity: 0.2, spin: false)
+                    AlbumBackground(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, blur: 30, light_opacity: 0.05, dark_opacity: 0.2, spin: false)
+                        .aspectRatio(contentMode: .fill)
                 }
             })
-            .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
-            .aspectRatio(contentMode: .fit)
             .contentShape(RoundedRectangle(cornerRadius: 15))
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 15))
             .padding([.horizontal, .bottom], 5)
-            .shadow(radius: 5)
+            .shadow(color: .black.opacity(0.2), radius: 8)
     }
 }
 

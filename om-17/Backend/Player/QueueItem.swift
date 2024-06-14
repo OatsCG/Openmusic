@@ -123,7 +123,7 @@ import SwiftUI
         if (self.currentlyPriming) {
             return
         }
-        if (self.primeStatus == .failed || self.primeStatus == .success) {
+        if (self.primeStatus == .failed || self.primeStatus == .success || self.primeStatus == .passed) {
             DispatchQueue.main.async { [playerManager] in
                 playerManager.prime_next_song()
             }
@@ -220,7 +220,6 @@ import SwiftUI
                         }
                         self?.currentlyPriming = false
                     }
-                    
                 }
             }
         } else {

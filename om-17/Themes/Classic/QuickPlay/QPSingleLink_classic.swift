@@ -75,7 +75,7 @@ struct QPSingleLink_classic: View {
             Spacer()
         }
             .background {
-                AlbumBackground(ArtworkID: track.Album.Artwork, blur: 40, light_opacity: 0.2, dark_opacity: 0.1, spin: false)
+                AlbumBackground(ArtworkID: track.Album.Artwork, blur: 40, light_opacity: 0.05, dark_opacity: 0.1, spin: false)
                     .allowsHitTesting(false)
             }
             .cornerRadius(10)

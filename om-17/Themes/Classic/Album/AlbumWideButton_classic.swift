@@ -29,7 +29,7 @@ struct AlbumWideButton_classic: View {
             .customFont(fontManager, .body)
             .padding(10)
             .background {
-                AlbumBackground(ArtworkID: ArtworkID, blur: 50, light_opacity: 0.15, dark_opacity: 0.3, spin: false, saturate: true)
+                AlbumBackground(ArtworkID: ArtworkID, blur: 50, light_opacity: 0.05, dark_opacity: 0.3, spin: false, saturate: true)
             }
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .contentShape(Rectangle())

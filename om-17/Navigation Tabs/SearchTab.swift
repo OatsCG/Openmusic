@@ -22,20 +22,20 @@ struct SearchTab: View {
                     }
                         .ignoresSafeArea()
                 }
-            VStack {
-                Spacer()
-                GeometryReader { geo in
-                    Rectangle().fill(.clear)
-                        .onAppear {
-                            tabbarHeight = UIScreen.main.bounds.height - geo.frame(in: .global).minY
-                        }
-                        .onChange(of: geo.frame(in: .global).minY) {
-                            tabbarHeight = UIScreen.main.bounds.height - geo.frame(in: .global).minY
-                        }
-                }
-                .frame(height: 1)
-            }
-            .ignoresSafeArea(.keyboard, edges: .bottom)
+//            VStack {
+//                Spacer()
+//                GeometryReader { geo in
+//                    Rectangle().fill(.clear)
+//                        .onAppear {
+//                            tabbarHeight = UIScreen.main.bounds.height - geo.frame(in: .global).minY
+//                        }
+//                        .onChange(of: geo.frame(in: .global).minY) {
+//                            tabbarHeight = UIScreen.main.bounds.height - geo.frame(in: .global).minY
+//                        }
+//                }
+//                .frame(height: 1)
+//            }
+//            .ignoresSafeArea(.keyboard, edges: .bottom)
             MiniPlayer(passedNSPath: $searchNSPath)
         }
             .toolbarBackground(.hidden, for: .tabBar)

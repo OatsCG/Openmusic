@@ -26,7 +26,7 @@ struct TabbarBackground_spotty: View {
             }
             VariableBlurView()
                 .ignoresSafeArea()
-                .frame(height: max(tabbarHeight + Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height, 0))
+                .frame(height: max(tabbarHeight, 0))
         }
     }
 }

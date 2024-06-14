@@ -22,43 +22,29 @@ struct ExplorePage: View {
                 ScrollView {
                     if viewModel.exploreResults == nil {
                         Group {
-                            if (viewModel.isSearching == true || self.hasFirstLoaded == false) {
+                            if (viewModel.isSearching == true) {
                                 LoadingExplore_component()
                             } else {
-                                VStack {
-                                    Spacer()
-                                    if (globalIPAddress() != "") {
+                                if (globalIPAddress() == "") {
+                                    NoServerAddedComponent(showingServerSheet: $showingServerSheet)
+                                } else if networkMonitor.isConnected == false {
+                                    VStack {
+                                        Spacer()
                                         ContentUnavailableView {
                                             Label("No Connection", systemImage: "wifi.exclamationmark")
                                         } description: {
                                             Text("Check your server connection in Options.")
                                         }
-                                    } else {
-                                        HStack {
-                                            Spacer()
-                                            VStack {
-                                                Image(systemName: "network.slash")
-                                                    .font(.largeTitle)
-                                                    .scaleEffect(1.35)
-                                                    .foregroundStyle(.secondary)
-                                                    .padding(.bottom, 10)
-                                                Text("No Server Added")
-                                                    .font(.title2.bold())
-                                                    .multilineTextAlignment(.center)
-                                                Text("Openmusic streams from custom servers.\nAdd a server to get started.")
-                                                    .foregroundStyle(.secondary)
-                                                    .multilineTextAlignment(.center)
-                                                Button(action: {
-                                                    showingServerSheet.toggle()
-                                                }) {
-                                                    AlbumWideButton_component(text: "Add a Server", ArtworkID: "")
-                                                        .frame(width: 200)
-                                                }
-                                            }
-                                            Spacer()
-                                        }
+                                        Spacer()
                                     }
-                                    Spacer()
+                                } else {
+                                    LoadingExplore_component()
+                                        .onAppear {
+                                            viewModel.runSearch()
+                                            withAnimation {
+                                                self.hasFirstLoaded = true
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -84,27 +70,6 @@ struct ExplorePage: View {
                                 Divider()
                                     .padding(.bottom, 15)
                             }
-                        }
-                            //.transition(.blurReplace)
-                        
-                        Button(action: {
-                            Task.detached {
-                                playRandomSongs { (result) in
-                                    switch result {
-                                    case .success(let data):
-                                        withAnimation {
-                                            playerManager.fresh_play_multiple(tracks: data.Tracks)
-                                        }
-                                    case .failure(let error):
-                                        print("Error: \(error)")
-                                    }
-                                }
-                            }
-                        }) {
-                            Text("I'm Feeling Lucky")
-                                .padding(10)
-                                .background(.thinMaterial)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                     }
                 }
