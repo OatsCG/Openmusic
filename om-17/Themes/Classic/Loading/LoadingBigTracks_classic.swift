@@ -66,6 +66,7 @@ struct LoadingBigTracks_classic: View {
                         }
                 }
             }
+                .padding(.top, 1)
                 //.safeAreaPadding(.horizontal, 10)
         }
     }

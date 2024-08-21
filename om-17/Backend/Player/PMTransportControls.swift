@@ -43,7 +43,9 @@ extension PlayerManager {
                 self.nowPlayingInfo?[MPMediaItemPropertyTitle] = self.currentQueueItem?.Track.Title
                 self.nowPlayingInfo?[MPMediaItemPropertyArtist] = stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
                 self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+                DispatchQueue.main.async { [unowned self] in
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+                }
                 
                 var artworkURL: URL? = nil
                 if ArtworkExists(ArtworkID: self.currentQueueItem?.Track.Album.Artwork) {

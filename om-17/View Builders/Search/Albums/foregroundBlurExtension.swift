@@ -57,7 +57,7 @@ extension View {
 
 
 #Preview {
-    @Environment(FontManager.self) var fontManager
+    @Previewable @Environment(FontManager.self) var fontManager
     return VStack {
         Text("This Is Acting (Deluxe Version)")
             .customFont(fontManager, .title, bold: true)
@@ -74,7 +74,7 @@ extension View {
 }
 
 #Preview {
-    @Environment(FontManager.self) var fontManager
+    @Previewable @Environment(FontManager.self) var fontManager
     return VStack {
         Text("This Is Acting (Deluxe Version)")
             .customFont(fontManager, .title, bold: true)

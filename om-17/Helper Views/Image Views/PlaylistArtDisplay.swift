@@ -100,6 +100,7 @@ struct PlaylistArtCanvas: View {
             
                 .blur(radius: geo.size.width / 20, opaque: true)
                 .saturation(0.4)
+                .drawingGroup()
                 .onReceive(timer) { _ in
                     withAnimation {
                         xOffset = xOffset + geo.size.width / 100
@@ -123,6 +124,7 @@ struct PlaylistArtDisplay: View {
                 .cornerRadius(cornerRadius)
                 .blur(radius: Blur)
                 .opacity(BlurOpacity)
+                .drawingGroup()
             PlaylistArtwork(playlist: playlist, animate: true)
                 //.background(.black)
                 .cornerRadius(cornerRadius)

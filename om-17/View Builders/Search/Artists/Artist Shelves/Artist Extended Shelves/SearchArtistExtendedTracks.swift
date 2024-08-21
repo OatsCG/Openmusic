@@ -37,6 +37,7 @@ struct SearchArtistExtendedTracks: View {
                 }
             }
                 .safeAreaPadding()
+                .padding(.top, 1)
         }
             .background {
                 GlobalBackground_component()

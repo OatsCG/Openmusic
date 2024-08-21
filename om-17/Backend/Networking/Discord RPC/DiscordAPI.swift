@@ -5,139 +5,141 @@
 //  Created by Charlie Giannis on 2024-06-08.
 //
 
-import Foundation
-import Starscream
-
-class DiscordRPC {
-    var socket: WebSocket!
-    var token: String
-
-    init(token: String) {
-        self.token = token
-    }
-    
-    func connect() {
-        return
-    }
-    
-    func sendActivityUpdate(song: String) {
-        let url = URL(string: "https://discord.com/api/v9/users/@me/settings")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "PATCH"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
-        let activity: [String: Any] = [
-            "custom_status": [
-                "text": "Listening to \(song)"
-            ]
-        ]
-        
-        request.httpBody = try? JSONSerialization.data(withJSONObject: activity, options: [])
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error updating activity: \(error)")
-                return
-            }
-            print("Activity updated successfully")
-        }
-        task.resume()
-    }
-}
-
-
-//class DiscordRPC: WebSocketDelegate {
-//    func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient) {
-//        print(event)
+//import Foundation
+//import Discord
+//
+//let clientId = "1249112062899130538"
+//let accessToken = "X1WenxSLqosU-Mndl_tfokW5vCzlBhsw" // Replace with your user's access token
+//
+//
+//class DiscordRPC: DiscordClientDelegate {
+//    func client(_ client: Discord.DiscordClient, didConnect connected: Bool) {
+//        return
 //    }
 //    
-//    var socket: WebSocket!
-//    var token: String
-//
-//    init(token: String) {
-//        self.token = token
-//        var request = URLRequest(url: URL(string: "wss://gateway.discord.gg/?v=6&encoding=json")!)
-//        socket = WebSocket(request: request)
-//        socket.delegate = self
+//    func client(_ client: Discord.DiscordClient, didDisconnectWithReason reason: Discord.DiscordGatewayCloseReason, closed: Bool) {
+//        return
 //    }
-//
-//    func connect() {
-//        socket.connect()
+//    
+//    func client(_ client: Discord.DiscordClient, shouldAttemptResuming reason: Discord.DiscordGatewayCloseReason, closed: Bool) -> Bool {
+//        return true
 //    }
-//
+//    
+//    func client(_ client: Discord.DiscordClient, didCreateChannel channel: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didDeleteChannel channel: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateChannel channel: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didCreateThread thread: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didDeleteThread thread: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateThread thread: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didCreateGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didDeleteGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didAddGuildMember member: Discord.DiscordGuildMember) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didRemoveGuildMember member: Discord.DiscordGuildMember) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateGuildMember member: Discord.DiscordGuildMember) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateMessage message: Discord.DiscordMessage) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didCreateMessage message: Discord.DiscordMessage) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didAddReaction reaction: Discord.DiscordEmoji, toMessage messageID: Discord.MessageID, onChannel channel: Discord.DiscordChannel, user userID: Discord.UserID) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didRemoveReaction reaction: Discord.DiscordEmoji, fromMessage messageID: Discord.MessageID, onChannel channel: Discord.DiscordChannel, user userID: Discord.UserID) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didRemoveAllReactionsFrom messageID: Discord.MessageID, onChannel channel: Discord.DiscordChannel) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didCreateRole role: Discord.DiscordRole, onGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didDeleteRole role: Discord.DiscordRole, fromGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateRole role: Discord.DiscordRole, onGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didReceivePresenceUpdate presence: Discord.DiscordPresence) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didCreateInteraction interaction: Discord.DiscordInteraction) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didReceiveReady ready: Discord.DiscordReadyEvent) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didReceiveVoiceStateUpdate voiceState: Discord.DiscordVoiceState) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didHandleGuildMemberChunk chunk: [Discord.DiscordGuildMember], forGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didNotHandleDispatchEvent event: Discord.DiscordDispatchEvent) {
+//        return
+//    }
+//    
+//    func client(_ client: Discord.DiscordClient, didUpdateEmojis emojis: [Discord.DiscordEmoji], onGuild guild: Discord.DiscordGuild) {
+//        return
+//    }
+//    
+//    var client: DiscordClient? = nil
+//    
+//    init() {
+//        self.client = DiscordClient(token: DiscordToken(rawValue: accessToken), delegate: self)
+//    }
+//    
 //    func sendActivityUpdate(song: String) {
-//        let activity = [
-//            "op": 3,
-//            "d": [
-//                "since": Int(Date().timeIntervalSince1970 * 1000),
-//                "game": [
-//                    "name": song,
-//                    "type": 2, // 2 for Listening to
-//                    "details": "Listening to \(song)"
-//                ]
-//            ]
-//        ] as [String : Any]
-//
-//        if let data = try? JSONSerialization.data(withJSONObject: activity, options: []) {
-//            socket.write(data: data)
-//        }
-//    }
-//
-//    func websocketDidConnect(socket: WebSocketClient) {
-//        print("Connected to Discord RPC")
-//    }
-//
-//    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-//        print("Disconnected from Discord RPC: \(error?.localizedDescription ?? "No error")")
-//    }
-//
-//    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-//        guard let jsonData = text.data(using: .utf8),
-//              let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] else {
-//            return
-//        }
-//
-//        if let op = json["op"] as? Int {
-//            if op == 10 {
-//                // Hello packet, respond with identify
-//                let identify = [
-//                    "op": 2,
-//                    "d": [
-//                        "token": self.token,
-//                        "properties": [
-//                            "$os": "mac",
-//                            "$browser": "Openmusic",
-//                            "$device": "Openmusic"
-//                        ],
-//                        "presence": [
-//                            "activities": [],
-//                            "status": "online",
-//                            "since": nil,
-//                            "afk": false
-//                        ]
-//                    ]
-//                ] as [String : Any]
-//
-//                if let data = try? JSONSerialization.data(withJSONObject: identify, options: []) {
-//                    socket.write(data: data)
-//                }
-//            } else if op == 1 {
-//                // Heartbeat request, respond with heartbeat
-//                let heartbeat = [
-//                    "op": 1,
-//                    "d": Int(Date().timeIntervalSince1970 * 1000)
-//                ] as [String : Any]
-//
-//                if let data = try? JSONSerialization.data(withJSONObject: heartbeat, options: []) {
-//                    socket.write(data: data)
-//                }
-//            }
-//        }
-//    }
-//
-//    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-//        print("Received data: \(data)")
+//        self.client?.setPresence(DiscordPresenceUpdate(activities: [.init(name: "Openmusic", type: .listening)]))
 //    }
 //}
-//

@@ -31,6 +31,7 @@ struct LibraryArtistContent: View {
                     LibraryArtistShelfFeatures(tracks: features, artistName: artist.Name)
                 }
             }
+            .padding(.top, 1)
         }
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaPadding(.bottom, 80)

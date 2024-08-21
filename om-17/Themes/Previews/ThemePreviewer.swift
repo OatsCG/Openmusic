@@ -230,8 +230,8 @@ struct ThemePreviews: View {
 
 
 #Preview {
-    @AppStorage("customFonts") var customFonts: Bool = true
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("customFonts") var customFonts: Bool = true
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
 //    @AppStorage("globalIPAddress") var globalIPAddress: String = ""
 //    let config = ModelConfiguration(isStoredInMemoryOnly: true)
 //    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)

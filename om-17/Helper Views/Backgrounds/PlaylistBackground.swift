@@ -28,6 +28,7 @@ struct PlaylistBackground: View {
                             .opacity(colorScheme == .dark ? dark_opacity : light_opacity)
                             .scaleEffect(1.4)
                             .rotationEffect(.degrees(isRotating))
+                            .drawingGroup()
                     }
                     .clipped()
             } else {
@@ -39,6 +40,7 @@ struct PlaylistBackground: View {
                             .opacity(colorScheme == .dark ? dark_opacity : light_opacity)
                             .scaleEffect(1.4)
                             .rotationEffect(.degrees(isRotating))
+                            .drawingGroup()
                     }
                     .clipped()
             }

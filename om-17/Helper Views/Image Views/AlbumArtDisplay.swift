@@ -8,6 +8,23 @@
 import Foundation
 import SwiftUI
 
+@Observable class ArtworkExistsObj {
+    var artworkExists: Bool?
+    
+    init(artworkExists: Bool? = nil) {
+        self.artworkExists = artworkExists
+    }
+    
+    func update(ArtworkID: String?) {
+        Task.detached { [weak self] in
+            let tempartworkExists = ArtworkExists(ArtworkID: ArtworkID)
+            DispatchQueue.main.async { [weak self, tempartworkExists] in
+                self?.artworkExists = tempartworkExists
+            }
+        }
+    }
+}
+
 struct AlbumArtDisplay: View {
     @Environment(\.colorScheme) var colorScheme
     var AlbumID: String?
@@ -17,14 +34,16 @@ struct AlbumArtDisplay: View {
     var BlurOpacity: Double
     var cornerRadius: Double
     @State var albumVideoViewModel: AlbumVideoViewModel = AlbumVideoViewModel()
+    var artworkExistsObj: ArtworkExistsObj = ArtworkExistsObj()
     var body: some View {
         ZStack {
-            if (ArtworkExists(ArtworkID: self.ArtworkID ?? "")) {
+            if artworkExistsObj.artworkExists == true {
                 if (BlurOpacity > 0) {
                     BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false)
                         .cornerRadius(cornerRadius)
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
+                        .drawingGroup()
                 }
                 ZStack {
                     BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: true)
@@ -39,6 +58,7 @@ struct AlbumArtDisplay: View {
                         .cornerRadius(cornerRadius)
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
+                        .drawingGroup()
                 }
                 ZStack {
                     BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: true)
@@ -56,6 +76,7 @@ struct AlbumArtDisplay: View {
             }
         }
         .task {
+            self.artworkExistsObj.update(ArtworkID: self.ArtworkID ?? "")
             if (AlbumID != nil) {
                 albumVideoViewModel.runSearch(albumID: AlbumID!)
             }

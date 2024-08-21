@@ -23,6 +23,7 @@ struct MiniPlayer: View {
     @State private var showingNPCover = false
     @Binding var passedNSPath: NavigationPath
     var minDistance: CGFloat = 30
+    
     var body: some View {
         VStack {
             Spacer()
@@ -79,5 +80,24 @@ struct MiniPlayer: View {
 }
 
 #Preview {
-    ContentView()
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
+
+    let playlist = StoredPlaylist(Title: "Test!")
+    container.mainContext.insert(playlist)
+    
+    return ContentView()
+        .modelContainer(container)
+        .environment(PlayerManager())
+        .environment(PlaylistImporter())
+        .environment(DownloadManager())
+        .environment(NetworkMonitor())
+        .environment(FontManager())
+        .environment(OMUser())
+        .task {
+            currentTheme = "classic"
+//            globalIPAddress = "server.openmusic.app"
+        }
 }

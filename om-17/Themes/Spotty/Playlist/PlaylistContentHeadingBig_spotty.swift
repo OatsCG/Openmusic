@@ -40,6 +40,7 @@ struct PlaylistContentHeadingBig_spotty: View {
                 ZStack {
                     PlaylistArtBGDisplay(playlist: playlist)
                         .blur(radius: 400, opaque: true)
+                        .drawingGroup()
                     Rectangle().fill(Color(white: 0.07))
                         .opacity(1)
                         .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black]), startPoint: .top, endPoint: .bottom))

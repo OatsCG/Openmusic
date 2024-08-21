@@ -16,25 +16,26 @@ struct ArtistPageImageDisplay: View {
     var cornerRadius: Double
     var aspectRatioValue: CGFloat = 1.5
     var someheight: CGFloat = 400
+    var uiImageObj: UIImageObj = UIImageObj()
     var body: some View {
         ZStack {
             if (ArtistBannerExists(ArtworkID: self.ArtworkID ?? "")) {
-                if let uiImage = UIImage(contentsOfFile: RetrieveArtwork(ArtworkID: ArtworkID!).path()) {
+                if let uiImage = uiImageObj.uiImage {
                     Image(uiImage: uiImage)
                         .resizable()
                         .frame(height: someheight, alignment: .top)
-                        
                         .scaledToFill()
-                        //.aspectRatio(aspectRatioValue, contentMode: .fill)
                         .cornerRadius(cornerRadius)
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
+                        .drawingGroup()
                     Image(uiImage: uiImage)
                         .resizable()
                         .frame(height: someheight, alignment: .top)
                         .scaledToFill()
-                        //.aspectRatio(contentMode: .fill)
                         .cornerRadius(cornerRadius)
+                } else {
+                    Rectangle().fill(.clear)
                 }
             } else {
                 CacheAsyncImage(url: BuildArtistBannerURL(imgID: self.ArtworkID, resolution: self.Resolution, aspectRatio: 2), transaction: Transaction(animation: .spring())){ phase in
@@ -65,6 +66,7 @@ struct ArtistPageImageDisplay: View {
                 .cornerRadius(cornerRadius)
                 .blur(radius: Blur)
                 .opacity(BlurOpacity)
+                .drawingGroup()
                 
                 //AsyncImage(url: BuildArtistBannerURL(imgID: self.ArtworkID, size: self.Resolution, aspectRatio: 2), transaction: Transaction(animation: .spring())){ phase in
                 CacheAsyncImage(url: BuildArtistBannerURL(imgID: self.ArtworkID, resolution: self.Resolution, aspectRatio: 2), transaction: Transaction(animation: .spring())){ phase in
@@ -99,18 +101,40 @@ struct ArtistPageImageDisplay: View {
         .frame(height: someheight, alignment: .top)
         //.aspectRatio(aspectRatioValue, contentMode: .fill)
         .allowsHitTesting(false)
+        .onAppear {
+            self.uiImageObj.loadImage(path: RetrieveArtwork(ArtworkID: ArtworkID!).path())
+        }
         //.scaledToFit()
     }
 }
+
+@Observable class UIImageObj {
+    var uiImage: UIImage?
+    
+    init(uiImage: UIImage? = nil) {
+        self.uiImage = uiImage
+    }
+    
+    func loadImage(path: String) {
+        Task.detached { [weak self] in
+            let tempuiImage = UIImage(contentsOfFile: path)
+            DispatchQueue.main.async { [weak self, tempuiImage] in
+                self?.uiImage = tempuiImage
+            }
+        }
+    }
+}
+
 
 struct ArtistPageBGDisplay: View {
     @Environment(\.colorScheme) var colorScheme
     var ArtworkID: String?
     var Resolution: Resolution
+    var uiImageObj: UIImageObj = UIImageObj()
     var body: some View {
         ZStack {
             if (ArtistBannerExists(ArtworkID: self.ArtworkID ?? "")) {
-                if let uiImage = UIImage(contentsOfFile: RetrieveArtwork(ArtworkID: ArtworkID!).path()) {
+                if let uiImage = uiImageObj.uiImage {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -134,6 +158,9 @@ struct ArtistPageBGDisplay: View {
                     }
                 }
             }
+        }
+        .task {
+            uiImageObj.loadImage(path: RetrieveArtwork(ArtworkID: ArtworkID!).path())
         }
     }
 }

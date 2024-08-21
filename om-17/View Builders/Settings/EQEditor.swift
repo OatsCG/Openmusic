@@ -124,6 +124,7 @@ struct EQEditor: View {
                     }
                 }
                 .safeAreaPadding()
+                .padding(.top, 1)
             }
                 .background {
                     GlobalBackground_component()
@@ -172,8 +173,8 @@ func printBands(bands: [EQBand]) {
 }
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
-    @AppStorage("globalIPAddress") var globalIPAddress: String = ""
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
 

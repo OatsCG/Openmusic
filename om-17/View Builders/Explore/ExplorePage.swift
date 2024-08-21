@@ -30,10 +30,14 @@ struct ExplorePage: View {
                                 } else if networkMonitor.isConnected == false {
                                     VStack {
                                         Spacer()
-                                        ContentUnavailableView {
-                                            Label("No Connection", systemImage: "wifi.exclamationmark")
-                                        } description: {
-                                            Text("Check your server connection in Options.")
+                                        HStack {
+                                            Spacer()
+                                            ContentUnavailableView {
+                                                Label("No Connection", systemImage: "wifi.exclamationmark")
+                                            } description: {
+                                                Text("Check your server connection in Options.")
+                                            }
+                                            Spacer()
                                         }
                                         Spacer()
                                     }
@@ -73,6 +77,7 @@ struct ExplorePage: View {
                         }
                     }
                 }
+                .frame(width: UIScreen.main.bounds.width)
                 .refreshable {
                     viewModel.runSearch()
                 }
@@ -96,6 +101,7 @@ struct ExplorePage: View {
                 .background {
                     GlobalBackground_component()
                 }
+                .containerRelativeFrame(.horizontal)
                 .sheet(isPresented: $showingServerSheet, content: {
                     AddServerSheet(showingServerSheet: $showingServerSheet)
                 })
@@ -149,8 +155,8 @@ struct ExplorePage: View {
 
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
-    @AppStorage("globalIPAddress") var globalIPAddress: String = ""
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
 

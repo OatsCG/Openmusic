@@ -12,21 +12,36 @@ struct LibraryAlbumLink_classic: View {
     var tracks: [any Track]
     var body: some View {
         VStack(alignment: .leading) {
-            AlbumArtDisplay(ArtworkID: tracks[0].Album.Artwork, Resolution: .tile, Blur: 0, BlurOpacity: 0.0, cornerRadius: 6.0)
-            Text(tracks[0].Album.Title)
-                .foregroundColor(.primary)
-                .customFont(fontManager, .callout)
-            Text(stringArtists(artistlist: tracks[0].Album.Artists))
-                .foregroundColor(.secondary)
-                .customFont(fontManager, .caption)
+            AlbumArtDisplay(ArtworkID: tracks[0].Album.Artwork, Resolution: .tile, Blur: 0, BlurOpacity: 0.0, cornerRadius: 0.0)
+                .scaledToFill()
+//                .overlay {
+//                    Rectangle()
+//                        .fill(LinearGradient(
+//                            stops: [
+//                                .init(color: .white.opacity(0.1), location: 0.0),
+//                                .init(color: .clear, location: 0.1),
+//                            ],
+//                            startPoint: .top,
+//                            endPoint: .bottom
+//                        ))
+//                }
+            VStack(alignment: .leading) {
+                Text(tracks[0].Album.Title)
+                    .foregroundColor(.primary)
+                    .customFont(fontManager, .callout)
+                Text(stringArtists(artistlist: tracks[0].Album.Artists))
+                    .foregroundColor(.secondary)
+                    .customFont(fontManager, .caption)
+            }
+            .padding(.horizontal, 5)
+            .padding(.bottom, 8)
         }
             .multilineTextAlignment(.leading)
             .lineLimit(1)
-            .padding(.all, 4)
             .background {
                 AlbumBackground(ArtworkID: tracks[0].Album.Artwork, blur: 40, light_opacity: 0.05, dark_opacity: 0.5, spin: false)
             }
-            .cornerRadius(8)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 

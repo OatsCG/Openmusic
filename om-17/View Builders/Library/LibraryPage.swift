@@ -30,6 +30,7 @@ struct LibraryPage: View {
                         }
                     }
                         .padding(.all, 12)
+                        .padding(.top, 1)
                 }
                     .navigationTitle(selectedPick.rawValue.capitalized)
                     .navigationBarTitleDisplayMode(.large)

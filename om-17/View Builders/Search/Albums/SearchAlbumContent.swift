@@ -26,6 +26,7 @@ struct SearchAlbumContent: View {
                 }
             }
                 .safeAreaPadding(.horizontal, 20)
+                .padding(.top, 1)
         }
             .scrollDismissesKeyboard(.interactively)
             .navigationBarTitleDisplayMode(.inline)

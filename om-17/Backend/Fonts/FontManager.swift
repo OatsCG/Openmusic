@@ -259,8 +259,8 @@ extension View {
 
 
 #Preview {
-    @Environment(FontManager.self) var fontManager
-    @AppStorage("currentTheme") var currentTheme: String = "faero"
+    @Previewable @Environment(FontManager.self) var fontManager
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "faero"
     return ScrollView {
         HStack(spacing: 40) {
             VStack {

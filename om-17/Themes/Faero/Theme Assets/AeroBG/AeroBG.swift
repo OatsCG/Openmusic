@@ -150,7 +150,7 @@ struct AeroBG: View {
 }
 
 #Preview {
-    @AppStorage("themeAnimations") var themeAnimations: Bool = true
+    @Previewable @AppStorage("themeAnimations") var themeAnimations: Bool = true
     return ScrollView {
         VStack {
             Text("hello!")

@@ -28,6 +28,7 @@ struct PlaylistReviewTracks: View {
             }
                 .multilineTextAlignment(.center)
                 .padding(10)
+                .padding(.top, 1)
         }
             .safeAreaPadding(.bottom, 80)
             .tint(.none)

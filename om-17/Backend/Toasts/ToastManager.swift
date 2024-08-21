@@ -14,7 +14,6 @@ import SwiftUI
     var on: Bool = false
     
     func propose(toast: Toast) {
-        //UIImpactFeedbackGenerator(style: .light).impactOccurred()
         DispatchQueue.main.async {
             var popTime: Double = 2
             switch toast.type {

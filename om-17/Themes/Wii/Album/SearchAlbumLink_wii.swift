@@ -37,7 +37,7 @@ struct SearchAlbumLink_wii: View {
 }
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     return HStack {
         SearchAlbumLink_component(currentTheme: "wii", album: SearchedAlbum(default: true))
         SearchAlbumLink_component(currentTheme: "wii", album: SearchedAlbum(default: true))

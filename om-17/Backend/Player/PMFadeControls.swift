@@ -23,6 +23,7 @@ extension PlayerManager {
                 self.play_fade_timer?.invalidate()
                 self.pause_fade_timer?.invalidate()
                 self.play_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [unowned self] playTimer in
+                    // BAD ASYNC
                     DispatchQueue.main.async { [unowned self] in
                         self.current_fade_step += 1
                         let to = self.startingVol + (self.appVolume - self.startingVol) * (Float(self.current_fade_step) / Float(self.total_fade_steps))
@@ -51,10 +52,12 @@ extension PlayerManager {
         self.total_fade_steps = Int(UserDefaults.standard.double(forKey: "playerFadeSeconds") * 100)
         self.startingVol = self.player.volume()
         Task { [unowned self] in
+            // BAD ASYNC
             DispatchQueue.main.async { [unowned self] in
                 if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
                     self.pause_fade_timer?.invalidate()
                     self.pause_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [unowned self] playTimer in
+                        // BAD ASYNC
                         DispatchQueue.main.async { [unowned self] in
                             self.current_fade_step += 1
                             let to = self.startingVol - self.startingVol * (Float(self.current_fade_step) / Float(self.total_fade_steps))

@@ -44,8 +44,8 @@ import SwiftUI
                 let download_url = await self.get_download_url(PlaybackID: downloadData.playbackID)
                 if download_url != nil {
                     let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Audio-\(downloadData.playbackID).mp4")
-                    DispatchQueue.main.async { [unowned self] in
-                        let newtask = DownloadTask(dID: String(downloadData.playbackID), source: download_url!, destination: destination!)
+                    let newtask = DownloadTask(dID: String(downloadData.playbackID), source: download_url!, destination: destination!)
+                    DispatchQueue.main.async { [unowned self, newtask] in
                         downloadData.downloadTask = newtask
                         self.downloader.start(newtask)
                         self.try_next_download()
@@ -63,15 +63,13 @@ import SwiftUI
     }
     
     func try_next_download() {
-        print("in try_next_download")
-        if (self.currently_downloading < self.max_downloads) {
-            print("good inequality")
-            let nextdl: DownloadData? = self.tracks_downloading.first(where: {$0.state == .waiting})
-            if let nextdl = nextdl {
-                print("good data, beginning download...")
-                self.begin_download(downloadData: nextdl)
-                print("trying next download again.")
-                try_next_download()
+        Task.detached { [unowned self] in
+            if (self.currently_downloading < self.max_downloads) {
+                let nextdl: DownloadData? = self.tracks_downloading.first(where: {$0.state == .waiting})
+                if let nextdl = nextdl {
+                    self.begin_download(downloadData: nextdl)
+                    self.try_next_download()
+                }
             }
         }
     }

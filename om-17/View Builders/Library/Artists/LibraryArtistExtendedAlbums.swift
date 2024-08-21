@@ -19,6 +19,7 @@ struct LibraryArtistExtendedAlbums: View {
                     SearchAlbumLink(album: SearchedAlbum(from: album))
                 }
             }
+            .padding(.top, 1)
         }
             .navigationTitle("Albums by \(artistName)")
             .navigationBarTitleDisplayMode(.inline)

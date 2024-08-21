@@ -22,6 +22,7 @@ struct ArtistCookieImageDisplay: View {
                     .contentShape(Circle())
                     .clipShape(Circle())
                     .blur(radius: Blur)
+                    .drawingGroup()
                 Image(colorScheme == .light ? "defaultalbumartlight" : "defaultalbumartdark")
                     .resizable()
                     .contentShape(Circle())
@@ -33,6 +34,7 @@ struct ArtistCookieImageDisplay: View {
                     .clipShape(Circle())
                     .blur(radius: Blur)
                     .opacity(BlurOpacity)
+                    .drawingGroup()
                 
                 //CachedAsyncImage(url: URL(string: imgURL), transaction: Transaction(animation: .spring())){ phase in
                 BetterAsyncImage(url: imgURL)
@@ -45,7 +47,7 @@ struct ArtistCookieImageDisplay: View {
 }
 
 #Preview {
-    @Environment(FontManager.self) var fontManager
+    @Previewable @Environment(FontManager.self) var fontManager
     return ScrollView(.horizontal) {
         HStack {
             Button(action: {}) {

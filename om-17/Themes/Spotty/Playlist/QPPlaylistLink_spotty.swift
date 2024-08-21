@@ -116,7 +116,7 @@ struct QPPlaylistLink_spotty: View {
 }
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredPlaylist.self, configurations: config)
 

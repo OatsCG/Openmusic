@@ -37,7 +37,7 @@ struct LibraryAlbumLink_wii: View {
 }
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     return HStack {
         LibraryAlbumLink_component(tracks: [FetchedTrack(default: true)])
         LibraryAlbumLink_component(tracks: [FetchedTrack(default: true)])

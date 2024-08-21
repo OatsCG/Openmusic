@@ -88,7 +88,7 @@ struct AlbumContentHeading_wii: View {
 }
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "wii"
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "wii"
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
 

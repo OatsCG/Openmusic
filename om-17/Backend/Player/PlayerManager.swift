@@ -161,6 +161,7 @@ import Combine
     func timer_fired() {
         if self.timerMidFire == false {
             self.timerMidFire = true
+            // BAD ASYNC
             DispatchQueue.main.async { [weak self] in
                 self?.syncPlayingTimeControls()
                 self?.update_elapsed_time()

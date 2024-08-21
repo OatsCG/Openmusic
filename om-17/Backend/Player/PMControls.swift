@@ -47,6 +47,7 @@ extension PlayerManager {
             self.player.seek_to_zero()
         }
         self.player = PlayerEngine()
+        // BAD ASYNC
         DispatchQueue.main.async {
             if (self.currentQueueItem != nil) {
                 withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
@@ -54,6 +55,7 @@ extension PlayerManager {
                 }
             }
             if (self.trackQueue.first != nil) {
+                // BAD ASYNC
                 DispatchQueue.main.async {
                     withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
                         self.currentQueueItem = self.trackQueue.removeFirst()
@@ -78,6 +80,7 @@ extension PlayerManager {
     func player_backward(userInitiated: Bool = false) {
         self.isCrossfading = false
         self.didAddFromRepeat = false
+        // BAD ASYNC
         DispatchQueue.main.async {
             withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
                 if (self.currentQueueItem != nil) {

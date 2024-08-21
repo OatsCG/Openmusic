@@ -112,7 +112,7 @@ struct OnboardSheet: View {
 }
 
 #Preview {
-    @State var pres: Bool = true
+    @Previewable @State var pres: Bool = true
     return Text("hi!")
         .sheet(isPresented: $pres) {
             OnboardSheet(onboard: $pres)

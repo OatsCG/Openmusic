@@ -42,6 +42,7 @@ struct PlaylistContentHeading_spotty: View {
                     PlaylistArtBGDisplay(playlist: playlist)
                         .blur(radius: 400, opaque: true)
                         .scaledToFill()
+                        .drawingGroup()
                     Rectangle().fill(Color(white: 0.07))
                         .scaledToFill()
                         .opacity(1)

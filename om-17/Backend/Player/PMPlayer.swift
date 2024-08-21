@@ -56,33 +56,38 @@ extension PlayerManager {
     }
     
     func set_currentlyPlaying(queueItem: QueueItem) {
-        if (self.currentQueueItem != nil) {
-            if (self.currentQueueItem!.queueID == queueItem.queueID) {
-                if (self.currentQueueItem!.queueItemPlayer != nil) {
-                    //if current avplayer doesnt equal queueitem avplayer
-                    if (queueItem.queueItemPlayer != nil && !self.player.isEqual(to: queueItem.queueItemPlayer)) {
-                        if queueItem.queueItemPlayer != nil {
-                            // NEW SONG SET
-                            self.player.pause()
-                            self.player = queueItem.queueItemPlayer!
-                            self.player.set_volume(to: self.appVolume)
-                            if (self.is_playing()) {
-                                self.player.playImmediately()
+        print(queueItem.Track.Title)
+        Task.detached {
+            DispatchQueue.main.async { [unowned self] in
+                if (self.currentQueueItem != nil) {
+                    if (self.currentQueueItem!.queueID == queueItem.queueID) {
+                        if (self.currentQueueItem!.queueItemPlayer != nil) {
+                            //if current avplayer doesnt equal queueitem avplayer
+                            if (queueItem.queueItemPlayer != nil && !self.player.isEqual(to: queueItem.queueItemPlayer)) {
+                                if queueItem.queueItemPlayer != nil {
+                                    // NEW SONG SET
+                                    self.player.pause()
+                                    self.player = queueItem.queueItemPlayer!
+                                    self.player.set_volume(to: self.appVolume)
+                                    if (self.is_playing()) {
+                                        self.player.playImmediately()
+                                    }
+                                }
+                                setupNowPlaying()
+                                defineInterruptionObserver()
                             }
                         }
-                        setupNowPlaying()
-                        defineInterruptionObserver()
+                    } else {
+                        queueItem.audio_AVPlayer?.pause()
                     }
+                } else {
+                    queueItem.audio_AVPlayer?.pause()
                 }
-            } else {
-                queueItem.audio_AVPlayer?.pause()
+                
+                self.setAudioSession()
+                self.addSuggestions()
             }
-        } else {
-            queueItem.audio_AVPlayer?.pause()
         }
-        
-        self.setAudioSession()
-        self.addSuggestions()
     }
     
     func setAudioSession() {

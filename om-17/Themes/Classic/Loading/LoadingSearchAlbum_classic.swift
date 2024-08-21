@@ -48,6 +48,7 @@ struct LoadingSearchAlbum_classic: View {
             .cornerRadius(8)
             .frame(width: SearchAlbumLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).width)
             .onAppear {
+                gradientStop = 0
                 withAnimation(.easeInOut(duration: 1.8).repeatForever(autoreverses: false)) {
                     gradientStop = 2
                 }

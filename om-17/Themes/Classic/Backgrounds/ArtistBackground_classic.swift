@@ -20,6 +20,7 @@ struct ArtistBackground_classic: View {
             ArtistPageBGDisplay(ArtworkID: artwork, Resolution: .background)
                 .blur(radius: 100, opaque: true)
                 .opacity(0.2)
+                .drawingGroup()
         }
             .ignoresSafeArea()
     }

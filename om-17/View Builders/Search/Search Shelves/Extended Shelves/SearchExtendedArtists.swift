@@ -22,6 +22,7 @@ struct SearchExtendedArtists: View {
                     }
                 }
                 .safeAreaPadding()
+                .padding(.top, 1)
             }
         }
             .background {

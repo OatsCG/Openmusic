@@ -29,6 +29,7 @@ extension PlayerManager {
                     // if crossfadeAlbums == false and consecutive
                     if self.crossfadeAlbums == false && self.is_consecutive() {
                         self.crossfade(duration: self.pickCrossfadeZero()) {
+                            // BAD ASYNC
                             DispatchQueue.main.async {
                                 self.update_elapsed_time()
                                 if (self.isCrossfading) {
@@ -41,6 +42,7 @@ extension PlayerManager {
                         }
                     } else {
                         self.crossfade(duration: self.crossfadeSeconds) {
+                            // BAD ASYNC
                             DispatchQueue.main.async {
                                 if (self.isCrossfading) {
                                     print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
@@ -86,6 +88,7 @@ extension PlayerManager {
         var step = 0
         
         self.crossfadeTimer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { crossfadeTimer in
+            // BAD ASYNC
             DispatchQueue.main.async {
                 step += 1
                 self.trackQueue[0].queueItemPlayer?.set_volume(to: self.appVolume * (Float(step) / Float(steps)))

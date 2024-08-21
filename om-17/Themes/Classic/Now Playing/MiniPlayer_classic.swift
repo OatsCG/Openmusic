@@ -32,6 +32,7 @@ struct MiniPlayer_classic: View {
                         rightFade: 16,
                         startDelay: 3
                     )
+//                    .contentTransition(.)
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Album.Title + (playerManager.currentQueueItem!.Track.Album.Artists.count > 0 ? (" • " + stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists)) : (" • Various Artists")),
                         font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),

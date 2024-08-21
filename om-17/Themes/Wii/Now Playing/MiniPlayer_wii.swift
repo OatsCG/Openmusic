@@ -200,7 +200,7 @@ struct wiiMPBackground: View {
 
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     let playerManager = PlayerManager()
     return VStack {
         Spacer()

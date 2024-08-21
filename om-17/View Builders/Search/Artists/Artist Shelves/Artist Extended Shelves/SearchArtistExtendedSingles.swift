@@ -23,6 +23,7 @@ struct SearchArtistExtendedSingles: View {
                     }
                 }
                 .safeAreaPadding()
+                .padding(.top, 1)
             }
         }
             .background {

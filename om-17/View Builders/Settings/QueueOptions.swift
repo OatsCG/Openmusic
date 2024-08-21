@@ -22,7 +22,7 @@ struct QueueOptions: View {
                 })
             }
                 .scrollContentBackground(.hidden)
-                .navigationTitle("Notifications")
+                .navigationTitle("Queue")
                 .navigationBarTitleDisplayMode(.inline)
                 .background {
                     GlobalBackground_component()

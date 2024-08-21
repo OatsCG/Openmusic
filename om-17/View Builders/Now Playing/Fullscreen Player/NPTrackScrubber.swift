@@ -149,13 +149,14 @@ struct ScrubberBarAmplitudes: View {
         }
         .background {
             Rectangle().fill(.black).blur(radius: 10).opacity(0.2)
+                .drawingGroup()
         }
     }
 }
 
 
 #Preview {
-    @AppStorage("currentTheme") var currentTheme: String = "classic"
+    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
 

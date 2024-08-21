@@ -12,12 +12,12 @@ func secondsToText(seconds: Int) -> String {
     let minutes: Int = Int((seconds - hours * 3600) / 60)
     let seconds: Int = Int(seconds - (hours * 3600) - (minutes * 60))
     if (hours > 0) {
-        //return(String(hours) + ":" + String(minute) + ":" + String(second))
         return String(format: "%i:%02i:%02i", hours, minutes, seconds)
     } else {
         return String(format: "%i:%02i", minutes, seconds)
     }
 }
+
 func secondsToText(seconds: Double) -> String {
     if (seconds.isFinite == false) {
         return "--:--"

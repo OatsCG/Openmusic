@@ -22,6 +22,7 @@ struct SearchExtendedAlbums: View {
                     }
                 }
                 .safeAreaPadding()
+                .padding(.top, 1)
             }
         }
             .background {

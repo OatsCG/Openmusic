@@ -33,6 +33,7 @@ struct SearchArtistContent: View {
                     }
                 }
             }
+            .padding(.top, 1)
         }
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaPadding(.bottom, 80)

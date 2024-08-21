@@ -15,33 +15,19 @@ struct BetterAsyncImage: View {
             //AsyncImage(url: url, transaction: Transaction(animation: .spring())){ phase in
             switch phase {
             case .empty:
-                GeometryReader { geo in
-                    if url == nil {
-                        DefaultArtwork_component(animated: animated)
-                            .frame(width: geo.size.width, height: geo.size.height)
-                    } else {
-                        LoadingArtwork_component(animated: animated)
-                            .frame(width: geo.size.width, height: geo.size.height)
-                    }
+                if url == nil {
+                    DefaultArtwork_component(animated: animated)
+                } else {
+                    LoadingArtwork_component(animated: animated)
                 }
             case .success(let image):
-                GeometryReader { geo in
-                    image
-                        .resizable()
-                        .frame(width: geo.size.width, height: geo.size.height)
-                }
+                image
+                    .resizable()
                 //.transition(.blurReplace)
             case .failure(_):
-                GeometryReader { geo in
-                    //Rectangle().fill(.red)
-                    DefaultArtwork_component(animated: animated)
-                        .frame(width: geo.size.width, height: geo.size.height)
-                }
+                DefaultArtwork_component(animated: animated)
             @unknown default:
-                GeometryReader { geo in
-                    DefaultArtwork_component(animated: animated)
-                        .frame(width: geo.size.width, height: geo.size.height)
-                }
+                DefaultArtwork_component(animated: animated)
             }
         }
         .clipped()
