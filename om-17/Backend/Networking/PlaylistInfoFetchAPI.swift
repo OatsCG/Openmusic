@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func fetchPlaylistInfoData(playlistID: String, type: Platform, completion: @escaping (Result<FetchedPlaylistInfo, Error>) -> Void) {
+func fetchPlaylistInfoData(playlistID: String, type: Platform, completion: @escaping @Sendable (Result<FetchedPlaylistInfo, Error>) -> Void) {
     let url = "\(globalIPAddress())/playlistinfo?platform=\(type.rawValue)&id=\(playlistID)"
     guard let url = URL(string: url) else {
         print("Invalid URL.")
@@ -30,7 +30,7 @@ func fetchPlaylistInfoData(playlistID: String, type: Platform, completion: @esca
     task.resume()
 }
 
-@Observable class PlaylistInfoViewModel {
+@Observable final class PlaylistInfoViewModel: Sendable {
     var fetchedPlaylistInfo: FetchedPlaylistInfo? = nil
     func runSearch(playlistURL: String) {
         fetchedPlaylistInfo = nil

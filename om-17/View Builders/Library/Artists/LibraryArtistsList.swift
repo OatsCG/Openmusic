@@ -77,13 +77,15 @@ struct LibraryArtistsList: View {
                 }
             }
                 .task {
-                    Task.detached {
-                        let g = groupArtists(tracks: tracks.sorted{$0.dateAdded > $1.dateAdded})
-                        self.artistAlbums = g.0
-                        self.artistFeatures = g.1
-                        let joined: [SearchedArtist] = Array(Set(Array(artistAlbums!.keys) + Array(artistFeatures!.keys)))
+                    Task.detached { [self] in
+                        let g = await groupArtists(tracks: self.tracks.sorted{$0.dateAdded > $1.dateAdded})
+                        await MainActor.run {
+                            self.artistAlbums = g.0
+                            self.artistFeatures = g.1
+                        }
+                        let joined: [SearchedArtist] = await Array(Set(Array(artistAlbums!.keys) + Array(artistFeatures!.keys)))
                         let sortedJoined: [SearchedArtist] = joined.sorted(by: { $0.Name < $1.Name })
-                        DispatchQueue.main.async {
+                        await MainActor.run {
                             self.joinedArtists = sortedJoined
                         }
                     }

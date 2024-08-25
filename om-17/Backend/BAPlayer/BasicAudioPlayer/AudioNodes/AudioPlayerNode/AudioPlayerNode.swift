@@ -177,9 +177,7 @@ public class AudioPlayerNode {
             frameCount: frameCount,
             at: time,
             completionCallbackType: .dataPlayedBack) {_ in
-                Task { [weak self] in
-                    await self?.playbackCompletionHandler()
-                }
+                self.playbackCompletionHandler()
             }
         
         node.prepare(withFrameCount: frameCount)
@@ -190,38 +188,36 @@ public class AudioPlayerNode {
     // MARK: - Controlling Playback
     
     public func play(at when: AVAudioTime? = nil) {
-        DispatchQueue.main.async { [weak self] in
-            guard self?.file != nil else {
-                log.error("Failed to play. No audio file is loaded.")
-                return
-            }
-            
-            guard let e = self?.node.engine else {
-                log.error("Failed to play: the node must be attached to an engine.")
-                return
-            }
-            
-            guard e.isRunning else {
-                log.error("Failed to play: audio engine is stopped.")
-                return
-            }
-            
-            guard self?.status != .playing else {
-                log.debug("The player is already playing.")
-                return
-            }
-            
-            if self?.needsScheduling == true { self?.schedule(at: when) }
-            
-            self?.node.play()
-            
-            // Collect the offset of the sample time if it is nil.
-            if self?.sampleTimeOffset == nil, let pt = self?.node.playerTime {
-                self?.sampleTimeOffset = pt.sampleTime
-            }
-            
-            self?.status = .playing
+        guard self.file != nil else {
+            log.error("Failed to play. No audio file is loaded.")
+            return
         }
+        
+        guard let e = self.node.engine else {
+            log.error("Failed to play: the node must be attached to an engine.")
+            return
+        }
+        
+        guard e.isRunning else {
+            log.error("Failed to play: audio engine is stopped.")
+            return
+        }
+        
+        guard self.status != .playing else {
+            log.debug("The player is already playing.")
+            return
+        }
+        
+        if self.needsScheduling == true { self.schedule(at: when) }
+        
+        self.node.play()
+        
+        // Collect the offset of the sample time if it is nil.
+        if self.sampleTimeOffset == nil, let pt = self.node.playerTime {
+            self.sampleTimeOffset = pt.sampleTime
+        }
+        
+        self.status = .playing
     }
     
     public func pause() {
@@ -233,21 +229,17 @@ public class AudioPlayerNode {
     
     /// Stops playback and removes any scheduled events.
     public func stop() {
-        Task { [weak self] in
-            guard self?.status != .noSource else { return }
-            
-            if self?.status == .ready && self?.needsScheduling == true {
-                log.debug("Couldn't stop the node: it is already stopped and there are no scheduled events.")
-                return
-            }
-            
-            self?.blocksNextCompletionHandler = true
-            DispatchQueue.main.async { [weak self] in
-                self?.node.stop()
-                self?.status = .ready
-                self?.needsScheduling = true
-            }
+        guard self.status != .noSource else { return }
+        
+        if self.status == .ready && self.needsScheduling == true {
+            log.debug("Couldn't stop the node: it is already stopped and there are no scheduled events.")
+            return
         }
+        
+        self.blocksNextCompletionHandler = true
+        self.node.stop()
+        self.status = .ready
+        self.needsScheduling = true
     }
     
     /// Sets the current playback time.
@@ -280,7 +272,7 @@ public class AudioPlayerNode {
     }
     
     /// Executed when the scheduled audio has been completely played.
-    @MainActor
+    //@MainActor
     private func playbackCompletionHandler() {
         guard !blocksNextCompletionHandler else {
             blocksNextCompletionHandler = false

@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-//@MainActor
-@Observable class DownloadManager: DownloaderDelegate {
+@Observable final class DownloadManager: DownloaderDelegate, Sendable {
     static let shared = DownloadManager()
     let downloader: Downloader = Downloader()
     let max_downloads: Int = 8
@@ -40,8 +39,11 @@ import SwiftUI
         if (self.currently_downloading < self.max_downloads) {
             self.currently_downloading += 1
             downloadData.state = .fetching
-            Task { [unowned self] in
+            
+            Task.detached { [unowned self] in
+                
                 let download_url = await self.get_download_url(PlaybackID: downloadData.playbackID)
+                
                 if download_url != nil {
                     let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Audio-\(downloadData.playbackID).mp4")
                     let newtask = DownloadTask(dID: String(downloadData.playbackID), source: download_url!, destination: destination!)
@@ -58,7 +60,9 @@ import SwiftUI
                         self.try_next_download()
                     }
                 }
+                
             }
+            
         }
     }
     

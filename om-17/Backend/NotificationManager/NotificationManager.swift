@@ -5,9 +5,9 @@
 //  Created by Charlie Giannis on 2024-01-27.
 //
 
-import SwiftUI
+@preconcurrency import SwiftUI
 
-class NotificationManager {
+final class NotificationManager: Sendable {
     let center = UNUserNotificationCenter.current()
     
     init() {
@@ -56,19 +56,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     // Handle notification actions
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let actionIdentifier = response.actionIdentifier
 
-        switch actionIdentifier {
-        case "SKIP_ACTION":
-            handleActionOne()
-        case "PAUSE_ACTION":
-            handleActionTwo()
-        default:
-            break
-        }
+//        switch actionIdentifier {
+//        case "SKIP_ACTION":
+//            handleActionOne()
+//        case "PAUSE_ACTION":
+//            handleActionTwo()
+//        default:
+//            break
+//        }
 
         completionHandler()
     }

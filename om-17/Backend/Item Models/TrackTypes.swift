@@ -94,7 +94,7 @@ struct FetchedTrack: Codable, Hashable, Track {
 }
 
 @Model
-class StoredTrack: Hashable, Track {
+final class StoredTrack: Hashable, Sendable, Track {
     @Attribute(.unique) var TrackID: String
     var Title: String
     var Playback_Clean: String?
@@ -117,9 +117,7 @@ class StoredTrack: Hashable, Track {
         self.Features = from.Features
         self.dateAdded = Date()
         self.originServer = globalIPAddress()
-        Task {
-            downloadAlbumArt(ArtworkID: from.Album.Artwork, completion: {_ in })
-        }
+        downloadAlbumArt(ArtworkID: from.Album.Artwork, completion: {_ in })
     }
     init(from: QueueItem) {
         self.TrackID = from.Track.TrackID
@@ -132,9 +130,7 @@ class StoredTrack: Hashable, Track {
         self.Features = from.Track.Features
         self.dateAdded = Date()
         self.originServer = globalIPAddress()
-        Task {
-            downloadAlbumArt(ArtworkID: from.Track.Album.Artwork, completion: {_ in })
-        }
+        downloadAlbumArt(ArtworkID: from.Track.Album.Artwork, completion: {_ in })
     }
     
     required init(from decoder:Decoder) throws {

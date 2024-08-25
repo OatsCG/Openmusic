@@ -19,7 +19,7 @@ func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
     }
 }
 
-func downloadAlbumArt(ArtworkID: String, completion: @escaping (URL?) -> Void) {
+func downloadAlbumArt(ArtworkID: String, completion: @escaping @Sendable (URL?) -> Void) {
     let downloadURL: String = "https://lh3.googleusercontent.com/\(ArtworkID)=w\(1080)-h\(1080)-l90-rj"
     let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
     if let destinationURL = destinationURL {
@@ -51,7 +51,7 @@ func downloadAlbumArt(ArtworkID: String, completion: @escaping (URL?) -> Void) {
     }
 }
 
-func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) async {
+func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) {
     let downloadURL: URL? = URL(string: ArtworkURL)
     if downloadURL == nil {
         return

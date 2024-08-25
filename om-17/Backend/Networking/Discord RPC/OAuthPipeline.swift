@@ -16,12 +16,12 @@ class DiscordOAuth {
             state: "DISCORD",
             completionHandler: { response in
                 // Save credential.oauthToken for future use
-                switch response {
-                case .success((let credential, let response, let parameters)):
-                    print("CREDENTIAL: \(credential)")
-                case .failure(_):
-                    print("ERROR DOING OAUTH")
-                }
+//                switch response {
+//                case .success((let credential, let response, let parameters)):
+//                    print("CREDENTIAL: \(credential)")
+//                case .failure(_):
+//                    print("ERROR DOING OAUTH")
+//                }
             }
         )
     }

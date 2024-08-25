@@ -18,7 +18,9 @@ struct NPProximityWarning: View {
                 .onAppear {
                     _ = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { _ in
                         withAnimation {
-                            self.showing = false
+                            DispatchQueue.main.async {
+                                self.showing = false
+                            }
                         }
                     }
                 }

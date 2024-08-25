@@ -21,7 +21,7 @@ protocol PlayerEngineProtocol: Equatable {
     func clear_file()
     func seek(to: Double)
     func seek_to_zero()
-    func preroll(completion: @escaping (_ success: Bool) -> Void)
+    func preroll(completion: @escaping @Sendable (_ success: Bool) -> Void)
     func playImmediately()
     func play()
     func pause()

@@ -22,22 +22,20 @@ import AVFoundation
             return
         }
         self.alreadyAttempted = true
-        Task.detached {
-            if let audioFile = audioFile {
-                let avgCount: Int = 60
-                let avgRange: Int = 100
-                if let amplitudes = self.getAmplitudes(audioFile: audioFile, numberOfAmplitudes: avgCount * avgRange) {
-                    var tempAmplitudes: [Float] = []
-                    for i in 0..<avgCount {
-                        var thisAmp: Float = 0
-                        for j in 0..<avgRange {
-                            thisAmp += amplitudes[(i * avgRange) + j]
-                        }
-                        tempAmplitudes.append(thisAmp / Float(avgRange))
+        if let audioFile = audioFile {
+            let avgCount: Int = 60
+            let avgRange: Int = 100
+            if let amplitudes = self.getAmplitudes(audioFile: audioFile, numberOfAmplitudes: avgCount * avgRange) {
+                var tempAmplitudes: [Float] = []
+                for i in 0..<avgCount {
+                    var thisAmp: Float = 0
+                    for j in 0..<avgRange {
+                        thisAmp += amplitudes[(i * avgRange) + j]
                     }
-                    
-                    self.amplitudes = self.normalizeAmplitudes(tempAmplitudes)
+                    tempAmplitudes.append(thisAmp / Float(avgRange))
                 }
+                
+                self.amplitudes = self.normalizeAmplitudes(tempAmplitudes)
             }
         }
     }

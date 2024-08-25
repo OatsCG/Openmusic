@@ -40,7 +40,7 @@ struct FileManagerView: View {
                     print(url)
                     rawFileURL = url
                     //self.fileURLToImport = url
-                    let asset = AVAsset(url: url)
+                    let asset = AVURLAsset(url: url)
                     Task {
                         self.fileTrack = await get_metadata(asset: asset)
                         self.presentImporter = true

@@ -16,7 +16,7 @@ struct NPVolumeScrubber: View {
     @Environment(FontManager.self) private var fontManager
     @State var isDragging: Bool = false
     @State var inAppVolume: Bool = false
-    @State var sysVolume: Float = VolumeObserver.shared.getVolume()
+    @State var sysVolume: Float = VolumeObserver.shared.currentVolume
     
     var body: some View {
         HStack {
@@ -123,7 +123,7 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
                         withAnimation(.interactiveSpring(duration: 0.3)) {
                             self.isDragging = true
                         }
-                        currentVolume = VolumeObserver.shared.getVolume()
+                        currentVolume = VolumeObserver.shared.currentVolume
                     }
                     
                     withAnimation(.interactiveSpring) {
@@ -138,7 +138,7 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
                     }
                     withAnimation(.interactiveSpring) {
                         dragAmount = 0
-                        currentVolume = VolumeObserver.shared.getVolume()
+                        currentVolume = VolumeObserver.shared.currentVolume
                     }
                 }
         }
@@ -147,16 +147,16 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
             let currentNormal = min(max(CGFloat(currentVolumePost), 0), 1) * geo_width
             ScrubberBar_component(isDragging: $isDragging, width: $geo_width, currentNormal: currentNormal, pressedNormal: currentNormal)
                 .gesture(drag)
-                .onChange(of: VolumeObserver.shared.getVolume()) {
+                .onChange(of: VolumeObserver.shared.currentVolume) {
                     if (isDragging == false) {
                         withAnimation(.interactiveSpring) {
-                            currentVolume = VolumeObserver.shared.getVolume()
+                            currentVolume = VolumeObserver.shared.currentVolume
                             currentVolumePost = currentVolume
                         }
                     }
                 }
                 .onAppear {
-                    currentVolume = VolumeObserver.shared.getVolume()
+                    currentVolume = VolumeObserver.shared.currentVolume
                     currentVolumePost = currentVolume
                 }
         }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func fetchPlaylistTracksFetchData(importData: ImportData, completion: @escaping (Result<ImportedTracks, Error>) -> Void) {
+func fetchPlaylistTracksFetchData(importData: ImportData, completion: @escaping @Sendable (Result<ImportedTracks, Error>) -> Void) {
     let title = importData.from.title?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
     let album = importData.from.album?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
     let artist = importData.from.artist?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""

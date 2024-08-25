@@ -8,9 +8,9 @@
 import SwiftUI
 import MediaPlayer
 
-@Observable class VolumeObserver {
-    static let shared = VolumeObserver()
-    let volumeView: MPVolumeView = MPVolumeView()
+@Observable final class VolumeObserver: Sendable {
+    @MainActor static let shared = VolumeObserver()
+    @MainActor let volumeView: MPVolumeView = MPVolumeView()
     let slider: UISlider?
     var currentVolume: Float
     var volumeTimer: Timer?
@@ -18,7 +18,7 @@ import MediaPlayer
     var newValue: Float? = nil
     var VolumeSkipObserver: ((Float?) -> Void)?
     
-    private init() {
+    @MainActor private init() {
         self.slider = self.volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         if (self.slider != nil) {
             self.currentVolume = self.slider!.value
@@ -31,10 +31,10 @@ import MediaPlayer
         }
     }
     
-    @objc private func sliderValueChanged(_ sender: UISlider) {
-        if (self.slider?.value != self.getVolume()) {
+    @MainActor @objc private func sliderValueChanged(_ sender: UISlider) {
+        if (self.slider?.value != self.currentVolume) {
             if (self.slider != nil) {
-                self.oldValue = self.getVolume()
+                self.oldValue = self.currentVolume
                 self.newValue = self.slider!.value
                 DispatchQueue.main.async {
                     withAnimation(.interactiveSpring) {
@@ -46,9 +46,9 @@ import MediaPlayer
         }
     }
     
-    func getVolume() -> Float {
-        return self.currentVolume
-    }
+//    func getVolume() -> Float {
+//        return self.currentVolume
+//    }
     
     func setVolume(_ volume: Float) {
         DispatchQueue.main.async {

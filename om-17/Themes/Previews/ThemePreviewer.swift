@@ -184,8 +184,11 @@ struct ThemePreviews: View {
     func updateTrackTimer() {
         self.timer?.invalidate()
         self.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
-            runUpdateTracks()
-            
+            Task {
+                await MainActor.run {
+                    runUpdateTracks()
+                }
+            }
         }
     }
     func runUpdateTracks() {
@@ -196,23 +199,27 @@ struct ThemePreviews: View {
     
     func updateTrack(index: Int) {
         self.timer = Timer.scheduledTimer(withTimeInterval: Double.random(in: 0.0...2.0), repeats: false) { _ in
-            withAnimation {
-                if index == 1 {
-                    track1 = findRandomTrack()
-                } else if index == 2 {
-                    track2 = findRandomTrack()
-                } else if index == 3 {
-                    track3 = findRandomTrack()
-                } else if index == 4 {
-                    track4 = findRandomTrack()
-                } else if index == 5 {
-                    track5 = findRandomTrack()
-                } else if index == 6 {
-                    track6 = findRandomTrack()
-                } else if index == 7 {
-                    track7 = findRandomTrack()
-                    pm.currentQueueItem = QueueItem(from: track7, explicit: nil)
-                    pm.update_timer(to: 5)
+            Task {
+                await MainActor.run {
+                    withAnimation {
+                        if index == 1 {
+                            track1 = findRandomTrack()
+                        } else if index == 2 {
+                            track2 = findRandomTrack()
+                        } else if index == 3 {
+                            track3 = findRandomTrack()
+                        } else if index == 4 {
+                            track4 = findRandomTrack()
+                        } else if index == 5 {
+                            track5 = findRandomTrack()
+                        } else if index == 6 {
+                            track6 = findRandomTrack()
+                        } else if index == 7 {
+                            track7 = findRandomTrack()
+                            pm.currentQueueItem = QueueItem(from: track7, explicit: nil)
+                            pm.update_timer(to: 5)
+                        }
+                    }
                 }
             }
         }

@@ -12,7 +12,7 @@ import SwiftAudioPlayer
 import AudioKit
 
 
-@Observable class AEPlayerOffline: AEPlayer {
+@Observable final class AEPlayerOffline: AEPlayer, Sendable {
     var filehash: UUID
     var status: AVPlayer.Status
     var volume: Float { return self.player.playerNode.volume }

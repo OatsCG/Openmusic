@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-func fetchExploreResults(completion: @escaping (Result<ExploreResults, Error>) -> Void) {
+func fetchExploreResults(completion: @escaping @Sendable (Result<ExploreResults, Error>) -> Void) {
     let url = "\(globalIPAddress())/explore"
     guard let url = URL(string: url) else {
         print("Invalid URL.")
@@ -31,7 +31,7 @@ func fetchExploreResults(completion: @escaping (Result<ExploreResults, Error>) -
     task.resume()
 }
 
-@Observable class ExploreViewModel {
+@Observable final class ExploreViewModel: Sendable {
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
     func runSearch() {

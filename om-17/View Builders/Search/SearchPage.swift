@@ -94,10 +94,14 @@ struct SearchPage: View {
         qsTimer?.invalidate()
         rsTimer?.invalidate()
         qsTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
-            runQuickSearch()
+            DispatchQueue.main.async {
+                runQuickSearch()
+            }
         }
         rsTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
-            add_recent()
+            DispatchQueue.main.async {
+                add_recent()
+            }
         }
     }
     func runQuickSearch() {

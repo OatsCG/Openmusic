@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func fetchAlbumVideoData(albumID: String, completion: @escaping (Result<String, Error>) -> Void) {
+func fetchAlbumVideoData(albumID: String, completion: @escaping @Sendable (Result<String, Error>) -> Void) {
     guard (UserDefaults.standard.bool(forKey: "artworkVideoAnimations") == true) else {
         return
     }
@@ -33,7 +33,7 @@ func fetchAlbumVideoData(albumID: String, completion: @escaping (Result<String, 
     task.resume()
 }
 
-@Observable class AlbumVideoViewModel {
+@Observable final class AlbumVideoViewModel: Sendable {
     var fetchedAlbumVideo: URL? = nil
     var currentSessionID: UUID = UUID()
     func runSearch(albumID: String) {

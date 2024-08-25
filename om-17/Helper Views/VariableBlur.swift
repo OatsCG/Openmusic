@@ -118,10 +118,10 @@ public struct VariableBlurView: UIViewRepresentable {
 }
 
 
-class variableBlurGradientConstructor {
-    static var shared: variableBlurGradientConstructor = variableBlurGradientConstructor()
-    var globalBlur: CGImage
-    var flatBlur: CGImage
+final class variableBlurGradientConstructor: Sendable {
+    static let shared: variableBlurGradientConstructor = variableBlurGradientConstructor()
+    let globalBlur: CGImage
+    let flatBlur: CGImage
     init() {
         self.globalBlur = createVerticalGradientImage(size: .init(width: 100, height: 100))!
         self.flatBlur = createflatImage(size: .init(width: 100, height: 100))!

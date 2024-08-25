@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable class ToastManager {
+@Observable final class ToastManager: Sendable {
     static let shared = ToastManager()
     var toastHistory: [Toast] = []
     var currentToast: Toast? = nil
@@ -79,13 +79,13 @@ import SwiftUI
 //    }
 }
 
-class Toast: Equatable {
-    var id: UUID = UUID()
-    var artworkID: String
-    var message: String
-    var timeProposed: Date
-    var type: ToastType
-    var isSuggestion: Bool = false
+final class Toast: Equatable, Sendable {
+    let id: UUID = UUID()
+    let artworkID: String
+    let message: String
+    let timeProposed: Date
+    let type: ToastType
+    let isSuggestion: Bool
     
     init(artworkID: String?, message: String, _ type: ToastType, wasSuggested: Bool = false) {
         self.artworkID = artworkID ?? ""

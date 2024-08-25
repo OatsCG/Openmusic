@@ -54,15 +54,15 @@ struct UserView: View {
                 }) {
                     Text("Try Updating Discord")
                 }
-                .onAppear {
-                    if let discordID = omUser.discordID {
-                        //discordRPC = DiscordRPC(token: discordID)
-//                        discordRPC = DiscordRPC()
-                        print("rpc initialized")
-                        //discordRPC?.connect()
-                        print("tried connect")
-                    }
-                }
+//                .onAppear {
+//                    if let discordID = omUser.discordID {
+//                        //discordRPC = DiscordRPC(token: discordID)
+////                        discordRPC = DiscordRPC()
+//                        print("rpc initialized")
+//                        //discordRPC?.connect()
+//                        print("tried connect")
+//                    }
+//                }
                 .alert("Remove Discord Profile?", isPresented: $showingDisconnectDiscordAlert) {
                     Button(action: {
                         omUser.updateDiscordCode(to: nil)

@@ -73,7 +73,7 @@ struct NPHeaderSegment: View {
                     Spacer()
                     Menu {
                         Button(action: {
-                            Task {
+                            Task.detached { [self] in
                                 await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
                             }
                         }) {

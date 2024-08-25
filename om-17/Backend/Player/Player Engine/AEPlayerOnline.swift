@@ -12,7 +12,7 @@ import SwiftAudioPlayer
 import AudioKit
 
 
-@Observable class AEPlayerOnline: AEPlayer {
+@Observable final class AEPlayerOnline: AEPlayer, Sendable {
     var filehash: UUID
     var status: AVPlayer.Status
     var volume: Float { return self.player.volume }
@@ -28,7 +28,7 @@ import AudioKit
     init(url: URL? = nil) {
         self.url = url
         if (url != nil) {
-            let asset = AVAsset(url: url!)
+            let asset = AVURLAsset(url: url!)
             let playerItem = AVPlayerItem(asset: asset)
             self.player = AVPlayer(playerItem: playerItem)
         } else {
@@ -67,7 +67,7 @@ import AudioKit
     func pause() {
         self.player.pause()
     }
-    func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping @Sendable (Bool) -> Void) {
         self.player.seek(to: to, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) {_ in
             completionHandler(true)
         }
@@ -75,7 +75,7 @@ import AudioKit
     func has_file() -> Bool {
         return self.player.currentItem != nil
     }
-    func preroll(parent: PlayerEngine, completion: @escaping (Bool) -> Void) {
+    func preroll(parent: PlayerEngine, completion: @escaping @Sendable (Bool) -> Void) {
         if (parent.isReady) {
             self.player.cancelPendingPrerolls()
             completion(true)
@@ -111,7 +111,7 @@ import AudioKit
 
 
 
-func fetchContentLength(myURL: URL?, callback: @escaping (Double?) -> Void) {
+func fetchContentLength(myURL: URL?, callback: @escaping @Sendable (Double?) -> Void) {
     if let myURL = myURL {
         var request = URLRequest(url: myURL)
         request.addValue("bytes=0-1", forHTTPHeaderField: "Range")

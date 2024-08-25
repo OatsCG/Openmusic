@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 
-@Observable class PlaylistImporter {
+@Observable final class PlaylistImporter: Sendable {
     var newPlaylists: [ImportedPlaylist] = []
     var currentContext: ModelContext? = nil
     
@@ -28,29 +28,26 @@ import SwiftData
     
     func beginTask(playlistImport: PlaylistImport) {
         // start task
-        Task.detached {
-            self.publish_status(playlistImport: playlistImport, status: .importing)
-            
-            fetchPlaylistTracksFetchData(importData: playlistImport.importData) { (result) in
-                switch result {
-                case .success(let importedTracks):
-                    self.publish_imports(playlistImport: playlistImport, imports: importedTracks)
-                    if (importedTracks.Tracks.count == 0) {
-                        self.publish_status(playlistImport: playlistImport, status: .zeroed)
-                    } else if (importedTracks.Tracks.first!.isAccurate() == false) { // .score() < 1.5
-                        self.publish_status(playlistImport: playlistImport, status: .uncertain)
-                    } else {
-                        self.publish_status(playlistImport: playlistImport, status: .success)
-                        self.publish_successful_track(playlistImport: playlistImport, track: importedTracks.Tracks.first!)
-                    }
-                    self.attempt_next_fetch()
-                case .failure(let error):
-                    print(error)
-                    self.publish_status(playlistImport: playlistImport, status: .hold)
-                    self.attempt_next_fetch()
+        self.publish_status(playlistImport: playlistImport, status: .importing)
+        
+        fetchPlaylistTracksFetchData(importData: playlistImport.importData) { (result) in
+            switch result {
+            case .success(let importedTracks):
+                self.publish_imports(playlistImport: playlistImport, imports: importedTracks)
+                if (importedTracks.Tracks.count == 0) {
+                    self.publish_status(playlistImport: playlistImport, status: .zeroed)
+                } else if (importedTracks.Tracks.first!.isAccurate() == false) { // .score() < 1.5
+                    self.publish_status(playlistImport: playlistImport, status: .uncertain)
+                } else {
+                    self.publish_status(playlistImport: playlistImport, status: .success)
+                    self.publish_successful_track(playlistImport: playlistImport, track: importedTracks.Tracks.first!)
                 }
+                self.attempt_next_fetch()
+            case .failure(let error):
+                print(error)
+                self.publish_status(playlistImport: playlistImport, status: .hold)
+                self.attempt_next_fetch()
             }
-            
         }
     }
     

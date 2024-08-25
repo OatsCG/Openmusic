@@ -20,11 +20,11 @@ protocol AEPlayer {
     var volume: Float { get }
     func play()
     func pause()
-    func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void)
+    func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping @Sendable (Bool) -> Void)
     func has_file() -> Bool
     func modifyEQ(index: Int, value: Double)
     func resetEQ(playerManager: PlayerManager)
-    func preroll(parent: PlayerEngine, completion: @escaping (_ success: Bool) -> Void)
+    func preroll(parent: PlayerEngine, completion: @escaping @Sendable (_ success: Bool) -> Void)
     func setVolume(_ to: Float) -> Void
     func amplitudeChart() -> [Float]?
 }

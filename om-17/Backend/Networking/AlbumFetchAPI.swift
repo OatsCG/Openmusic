@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-func fetchAlbumData(AlbumID: String, completion: @escaping (Result<FetchedAlbum, Error>) -> Void) {
+func fetchAlbumData(AlbumID: String, completion: @escaping @Sendable (Result<FetchedAlbum, Error>) -> Void) {
     let url = "\(globalIPAddress())/album?id=\(AlbumID)"
     guard let url = URL(string: url) else {
         print("Invalid URL.")
@@ -31,7 +31,7 @@ func fetchAlbumData(AlbumID: String, completion: @escaping (Result<FetchedAlbum,
     task.resume()
 }
 
-@Observable class AlbumViewModel {
+@Observable final class AlbumViewModel: Sendable {
     var fetchedAlbum: FetchedAlbum? = nil
     var isSearching: Bool = false
     func runSearch(albumID: String) {

@@ -25,10 +25,10 @@ struct NPEnjoyingSession: View {
                     playlist.Image = nil
                     playlist.importURL = nil
                     
-                    let tracksToAdd: [ImportedTrack] = playerManager.sessionHistory.filter({ $0.wasSongEnjoyed == true }).compactMap { $0.Track as? ImportedTrack }
+                    let tracksToAdd: [ImportedTrack] = await playerManager.sessionHistory.filter({ $0.wasSongEnjoyed == true }).compactMap { $0.Track as? ImportedTrack }
                     playlist.add_tracks(tracks: tracksToAdd.map { FetchedTrack(from: $0) })
-                    modelContext.insert(playlist)
-                    try? modelContext.save()
+                    await modelContext.insert(playlist)
+                    try? await modelContext.save()
                 }
                 withAnimation {
                     playerManager.hasSuggestedPlaylistCreation = true

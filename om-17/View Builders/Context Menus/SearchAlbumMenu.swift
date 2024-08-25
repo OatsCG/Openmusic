@@ -22,8 +22,10 @@ struct SearchAlbumMenu: View {
                         fetchAlbumData(AlbumID: searchedAlbum.AlbumID) { (result) in
                             switch result {
                             case .success(let data):
-                                //main.async
-                                self.album = data
+                                //self.album = data
+                                Task {
+                                    await self.updateAlbum(data)
+                                }
                             case .failure(let error):
                                 print("Error: \(error)")
                             }
@@ -156,8 +158,9 @@ struct SearchAlbumMenu: View {
                 }
             }
         }
-        
-
+    }
+    func updateAlbum(_ album: FetchedAlbum) async {
+        self.album = album
     }
 }
 

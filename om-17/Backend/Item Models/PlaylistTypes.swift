@@ -73,9 +73,7 @@ class StoredPlaylist: Hashable, Playlist {
         self.dateCreated = Date()
         self.importURL = importURL
         self.items = []
-        Task {
-            await downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: Image)
-        }
+        downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: Image)
     }
     init(fetchedInfoTracks: FetchedPlaylistInfoTracks, platform: Platform) {
         self.PlaylistID = UUID()
@@ -89,9 +87,7 @@ class StoredPlaylist: Hashable, Playlist {
             let item = PlaylistItem(importData: ImportData(from: ImportedFrom(platform: platform, url: "", title: track.title, album: track.album, artist: track.artists), status: .hold, dateAdded: Date()), playlistID: self.PlaylistID, index: self.items.count)
             self.items.append(item)
         }
-        Task {
-            await downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: fetchedInfoTracks.artwork)
-        }
+        downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: fetchedInfoTracks.artwork)
     }
     init(from: ImportedPlaylist) {
         self.PlaylistID = UUID()
@@ -105,9 +101,7 @@ class StoredPlaylist: Hashable, Playlist {
             let playlistItem: PlaylistItem = PlaylistItem(from: item)
             self.items.append(playlistItem)
         }
-        Task {
-            await downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: from.Image ?? "")
-        }
+        downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: from.Image ?? "")
     }
     
     func pin() {
@@ -241,7 +235,7 @@ struct PlaylistItem: Codable, Hashable {
     }
 }
 
-@Observable class ImportedPlaylist: Hashable {
+@Observable final class ImportedPlaylist: Hashable, Sendable {
     var PlaylistID: UUID
     var Title: String
     var Bio: String
@@ -323,7 +317,7 @@ struct PlaylistItem: Codable, Hashable {
     }
 }
 
-@Observable class PlaylistImport: Codable, Hashable {
+@Observable final class PlaylistImport: Codable, Hashable, Sendable {
     var id: UUID
     var playlistID: UUID
     var track: FetchedTrack

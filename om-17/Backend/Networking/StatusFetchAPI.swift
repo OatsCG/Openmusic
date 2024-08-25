@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-func fetchServerStatus(with tempIPAddress: String? = nil, fetchHash: UUID, completion: @escaping (Result<ServerStatus, Error>, UUID) -> Void) {
+func fetchServerStatus(with tempIPAddress: String? = nil, fetchHash: UUID, completion: @escaping @Sendable (Result<ServerStatus, Error>, UUID) -> Void) {
     var url = "\(globalIPAddress())/status"
     if let tempIPAddress = tempIPAddress {
         url = "\(tempIPAddress)/status"
@@ -34,7 +34,7 @@ func fetchServerStatus(with tempIPAddress: String? = nil, fetchHash: UUID, compl
     task.resume()
 }
 
-@Observable class StatusViewModel {
+@Observable final class StatusViewModel: Sendable {
     var serverStatus: ServerStatus? = nil
     var fetchHash: UUID = UUID()
     func runCheck(with ipAddress: String? = nil) {

@@ -9,7 +9,7 @@ import SwiftUI
 import YouTubePlayerKit
 import Combine
 
-@Observable class VideoPlayerEngine: PlayerEngineProtocol {
+@Observable final class VideoPlayerEngine: PlayerEngineProtocol, Sendable {
     var id: UUID
     var player: YouTubePlayer?
     var isPlaying: Bool = false

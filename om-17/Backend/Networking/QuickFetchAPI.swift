@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func fetchQuickSearchResults(query: String, completion: @escaping (Result<FetchedTracks, Error>) -> Void) {
+func fetchQuickSearchResults(query: String, completion: @escaping @Sendable (Result<FetchedTracks, Error>) -> Void) {
     let url = "\(globalIPAddress())/quick?q=\(query)"
     guard let url = URL(string: url) else {
         print("Invalid URL.")
@@ -30,7 +30,7 @@ func fetchQuickSearchResults(query: String, completion: @escaping (Result<Fetche
     task.resume()
 }
 
-@Observable class QuickSearchViewModel {
+@Observable final class QuickSearchViewModel: Sendable {
     var fetchedTracks: FetchedTracks? = nil
     var lastSearch: String = ""
     var SearchInitialized: Bool = false

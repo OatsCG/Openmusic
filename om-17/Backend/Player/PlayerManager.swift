@@ -5,17 +5,17 @@
 //  Created by Charlie Giannis on 2022-09-18.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import SwiftUI
-import MediaPlayer
+@preconcurrency import MediaPlayer
 import Combine
 
-@Observable class PlayerManager {
+@Observable final class PlayerManager: Sendable {
     let commandCenter = MPRemoteCommandCenter.shared()
     let audioSession = AVAudioSession.sharedInstance()
     
     // audio engine
-    var audioEngine = AVAudioEngine()
+    let audioEngine = AVAudioEngine()
     
     //player
     var player: any PlayerEngineProtocol

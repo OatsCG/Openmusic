@@ -6,7 +6,7 @@
 //  Licensed under MIT License.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 
 /// A basic audio player built with AVAudioEngine and its accessory elements.
 ///

@@ -65,11 +65,13 @@ struct PlaybackModesIcon: View {
     }
     private func updateIsLiked() {
         Timer.scheduledTimer(withTimeInterval: 0.9, repeats: false) { _ in
-            withAnimation {
-                if (omUser.isSongLiked(track: track)) {
-                    self.isLiked = true
-                } else {
-                    self.isLiked = false
+            DispatchQueue.main.async {
+                withAnimation {
+                    if (omUser.isSongLiked(track: track)) {
+                        self.isLiked = true
+                    } else {
+                        self.isLiked = false
+                    }
                 }
             }
         }

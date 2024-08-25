@@ -11,7 +11,7 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-@Observable class PlayerEngine: PlayerEngineProtocol {
+@Observable final class PlayerEngine: PlayerEngineProtocol, Sendable {
     var id: UUID
     
     var isSeeking: Bool
@@ -112,7 +112,7 @@ import AudioKit
         }
     }
     /// Primes the player for playback, and then performs the comletion callback
-    func preroll(completion: @escaping (_ success: Bool) -> Void) {
+    func preroll(completion: @Sendable @escaping (_ success: Bool) -> Void) {
         self.player.preroll(parent: self, completion: completion)
     }
 

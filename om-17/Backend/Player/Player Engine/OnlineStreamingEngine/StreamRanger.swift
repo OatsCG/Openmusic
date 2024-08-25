@@ -7,7 +7,7 @@
 
 import Foundation
 
-func bufferAudioData(from url: URL, startSeconds: Int, secondsToBuffer: Int, completionHandler: @escaping (Data?, Error?) -> Void) {
+func bufferAudioData(from url: URL, startSeconds: Int, secondsToBuffer: Int, completionHandler: @escaping @Sendable (Data?, Error?) -> Void) {
     // Assuming a bit rate of 128 kbps which translates to 16 KBps (kilobytes per second)
     let bytesPerSecond = 16000 // Adjust based on actual bit rate if known
     let startByte = startSeconds * bytesPerSecond

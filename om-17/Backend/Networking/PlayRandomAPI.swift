@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func playRandomSongs(completion: @escaping (Result<RandomTracks, Error>) -> Void) {
+func playRandomSongs(completion: @escaping @Sendable (Result<RandomTracks, Error>) -> Void) {
     let url = "\(globalIPAddress())/random"
     guard let url = URL(string: url) else {
         print("Invalid URL.")

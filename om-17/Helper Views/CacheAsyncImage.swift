@@ -84,9 +84,8 @@ struct CacheAsyncImage<Content, Content2>: View where Content: View, Content2: V
     }
 }
 
-fileprivate class ImageCache{
-    static private var cache: [URL: Image] = [:]
-    static private var existingURLs: [URL] = []
+fileprivate class ImageCache {
+
     static subscript(url: URL?) -> Image?{
         get {
             return nil // disabling cache for now

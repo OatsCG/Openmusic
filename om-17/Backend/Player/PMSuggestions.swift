@@ -19,7 +19,7 @@ extension PlayerManager {
         }
         
         if self.currentQueueItem != nil {
-            var songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
+            let songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
             self.fetchSuggestionsModel.runSearch(songs: songs, playerManager: self)
         }
     }

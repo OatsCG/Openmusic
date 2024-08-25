@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-func fetchSearchResults(query: String, completion: @escaping (Result<SearchResults, Error>) -> Void) {
+func fetchSearchResults(query: String, completion: @escaping @Sendable (Result<SearchResults, Error>) -> Void) {
     let url = "\(globalIPAddress())/search?q=\(query)"
     guard let url = URL(string: url) else {
         print("Invalid URL.")
@@ -31,7 +31,7 @@ func fetchSearchResults(query: String, completion: @escaping (Result<SearchResul
     task.resume()
 }
 
-@Observable class SearchViewModel {
+@Observable final class SearchViewModel: Sendable {
     var searchResults: SearchResults? = nil
     var lastSearch: String = ""
     var SearchInitialized: Bool = false

@@ -6,9 +6,6 @@
 //
 
 import SwiftUI
-
-import AVFoundation
-
 import AVFoundation
 
 class EQManager {
@@ -215,33 +212,30 @@ class EQManager {
     }
     
     func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) {
-        Task {
-            if (self.isReady == false) {
-                return
+        if (self.isReady == false) {
+            return
+        }
+        if (enabled == false) {
+            for i in 0..<eqNode.bands.count {
+                eqNode.bands[i].gain = 0
             }
-            if (enabled == false) {
-                for i in 0..<eqNode.bands.count {
-                    eqNode.bands[i].gain = 0
-                }
-            } else {
-                if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
-                    if let playerManager = playerManager {
-                        //playerManager.pause()
-                        Task {
-                            if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
-                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
-                            }
+        } else {
+            if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
+                if let playerManager = playerManager {
+                    //playerManager.pause()
+                    Task {
+                        if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
+                            await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
                         }
                     }
-                } else {
-                    for band in EQManager.decodeCurrentBands() {
-                        reallyAdjustBand(for: band.index, value: Float(band.value))
-                    }
+                }
+            } else {
+                for band in EQManager.decodeCurrentBands() {
+                    reallyAdjustBand(for: band.index, value: Float(band.value))
                 }
             }
         }
     }
-
 }
 
 @Observable class EQBand: Equatable {

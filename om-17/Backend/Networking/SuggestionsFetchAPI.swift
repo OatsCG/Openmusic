@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<ImportedTracks, Error>) -> Void) {
+func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping @Sendable (Result<ImportedTracks, Error>) -> Void) {
     var songsAsStrings: [String] = []
     for song in songs {
         let title: String = song.title.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
@@ -41,7 +41,7 @@ func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping (Result<Imp
 }
 
 
-@Observable class FetchSuggestionsModel {
+@Observable final class FetchSuggestionsModel: Sendable {
     var isFetching: Bool = false
     func runSearch(songs: [NaiveTrack], playerManager: PlayerManager) {
         if (isFetching == true) {

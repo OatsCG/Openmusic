@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable class FontManager {
+@Observable final class FontManager: Sendable {
     static let shared: FontManager = FontManager()
     var currentlyChosenTheme: Theme
     

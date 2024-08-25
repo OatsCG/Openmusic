@@ -108,7 +108,7 @@ struct ArtistPageImageDisplay: View {
     }
 }
 
-@Observable class UIImageObj {
+@Observable final class UIImageObj: Sendable {
     var uiImage: UIImage?
     
     init(uiImage: UIImage? = nil) {

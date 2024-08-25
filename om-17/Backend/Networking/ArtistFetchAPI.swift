@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-func fetchArtistData(ArtistID: String, completion: @escaping (Result<FetchedArtist, Error>) -> Void) {
+func fetchArtistData(ArtistID: String, completion: @escaping @Sendable (Result<FetchedArtist, Error>) -> Void) {
     let url = "\(globalIPAddress())/artist?id=\(ArtistID)"
     guard let url = URL(string: url) else {
         print("Invalid URL.")
@@ -30,7 +30,7 @@ func fetchArtistData(ArtistID: String, completion: @escaping (Result<FetchedArti
     task.resume()
 }
 
-@Observable class ArtistViewModel {
+@Observable final class ArtistViewModel: Sendable {
     var fetchedArtist: FetchedArtist? = nil
     func runSearch(artistID: String) {
         fetchArtistData(ArtistID: artistID) { (result) in
