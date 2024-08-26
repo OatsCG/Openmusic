@@ -148,7 +148,7 @@ import SwiftUI
                     Task.detached { [weak self] in
                         var playbackData: FetchedPlayback? = nil
                         if (!isDownloaded) {
-                            playbackData = try? await fetchPlaybackData(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
+                            playbackData = try? await fetchPlaybackData(playbackID: isExplicit ? playback_explicit! : playback_clean!)
                         }
                         //getting audio url
                         DispatchQueue.main.async { [weak self, playbackData] in

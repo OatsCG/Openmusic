@@ -7,43 +7,58 @@
 
 import SwiftUI
 
-func fetchPlaylistInfoData(playlistID: String, type: Platform, completion: @escaping @Sendable (Result<FetchedPlaylistInfo, Error>) -> Void) {
-    let url = "\(globalIPAddress())/playlistinfo?platform=\(type.rawValue)&id=\(playlistID)"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch playlist info data
+func fetchPlaylistInfoData(playlistID: String, type: Platform) async throws -> FetchedPlaylistInfo {
+    let urlString = "\(globalIPAddress())/playlistinfo?platform=\(type.rawValue)&id=\(playlistID)"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(FetchedPlaylistInfo.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(FetchedPlaylistInfo.self, from: data)
 }
 
-@Observable final class PlaylistInfoViewModel: Sendable {
+// Actor to manage playlist info data
+actor PlaylistInfoViewActor {
+    private var fetchedPlaylistInfo: FetchedPlaylistInfo? = nil
+    
+    func runSearch(playlistID: String, type: Platform) async throws {
+        let playlistInfo = try await fetchPlaylistInfoData(playlistID: playlistID, type: type)
+        self.fetchedPlaylistInfo = playlistInfo
+    }
+    
+    func getFetchedPlaylistInfo() -> FetchedPlaylistInfo? {
+        return fetchedPlaylistInfo
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class PlaylistInfoViewModel {
+    private let viewActor = PlaylistInfoViewActor()
+    
     var fetchedPlaylistInfo: FetchedPlaylistInfo? = nil
+    
     func runSearch(playlistURL: String) {
-        fetchedPlaylistInfo = nil
-        let naivePlaylistInfo = recognizePlaylist(url: playlistURL)
-        if (naivePlaylistInfo.platform == .unknown) {
-            return
-        }
-        fetchPlaylistInfoData(playlistID: naivePlaylistInfo.id, type: naivePlaylistInfo.platform) { (result) in
-            switch result {
-            case .success(let data):
-                //main.async
-                self.fetchedPlaylistInfo = data
-            case .failure(let error):
+        Task {
+            // Recognize the playlist
+            let naivePlaylistInfo = recognizePlaylist(url: playlistURL)
+            if naivePlaylistInfo.platform == .unknown {
+                return
+            }
+            
+            do {
+                // Fetch playlist info
+                try await viewActor.runSearch(playlistID: naivePlaylistInfo.id, type: naivePlaylistInfo.platform)
+                
+                let playlistInfo = await viewActor.getFetchedPlaylistInfo()
+                
+                await MainActor.run {
+                    self.fetchedPlaylistInfo = playlistInfo
+                }
+            } catch {
                 print("Error: \(error)")
             }
         }

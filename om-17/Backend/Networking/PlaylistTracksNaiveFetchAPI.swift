@@ -7,39 +7,51 @@
 
 import SwiftUI
 
-func fetchPlaylistTracksNaiveData(playlistID: String, type: Platform, completion: @escaping @Sendable (Result<FetchedPlaylistInfoTracks, Error>) -> Void) {
-    let url = "\(globalIPAddress())/playlisttracks?platform=\(type.rawValue)&id=\(playlistID)"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch playlist tracks naive data
+func fetchPlaylistTracksNaiveData(playlistID: String, type: Platform) async throws -> FetchedPlaylistInfoTracks {
+    let urlString = "\(globalIPAddress())/playlisttracks?platform=\(type.rawValue)&id=\(playlistID)"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(FetchedPlaylistInfoTracks.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(FetchedPlaylistInfoTracks.self, from: data)
 }
 
-@Observable final class PlaylistTracksNaiveViewModel: Sendable {
+// Actor to manage playlist tracks data
+actor PlaylistTracksNaiveViewActor {
+    private var fetchedPlaylistInfoTracks: FetchedPlaylistInfoTracks? = nil
+    
+    func runSearch(playlistID: String, platform: Platform) async throws {
+        let tracks = try await fetchPlaylistTracksNaiveData(playlistID: playlistID, type: platform)
+        self.fetchedPlaylistInfoTracks = tracks
+    }
+    
+    func getFetchedPlaylistInfoTracks() -> FetchedPlaylistInfoTracks? {
+        return fetchedPlaylistInfoTracks
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class PlaylistTracksNaiveViewModel {
+    private let viewActor = PlaylistTracksNaiveViewActor()
+    
     var fetchedPlaylistInfoTracks: FetchedPlaylistInfoTracks? = nil
+    
     func runSearch(playlistID: String, platform: Platform) {
-        fetchedPlaylistInfoTracks = nil
-        fetchPlaylistTracksNaiveData(playlistID: playlistID, type: platform) { (result) in
-            switch result {
-            case .success(let data):
-                //main.async
-                self.fetchedPlaylistInfoTracks = data
-            case .failure(let error):
+        Task {
+            do {
+                try await viewActor.runSearch(playlistID: playlistID, platform: platform)
+                
+                let tracks = await viewActor.getFetchedPlaylistInfoTracks()
+                
+                await MainActor.run {
+                    self.fetchedPlaylistInfoTracks = tracks
+                }
+            } catch {
                 print("Error: \(error)")
             }
         }

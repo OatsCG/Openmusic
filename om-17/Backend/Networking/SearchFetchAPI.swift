@@ -8,62 +8,114 @@
 import Foundation
 import SwiftUI
 
-func fetchSearchResults(query: String, completion: @escaping @Sendable (Result<SearchResults, Error>) -> Void) {
-    let url = "\(globalIPAddress())/search?q=\(query)"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch search results
+func fetchSearchResults(query: String) async throws -> SearchResults {
+    let urlString = "\(globalIPAddress())/search?q=\(query)"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(SearchResults.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(SearchResults.self, from: data)
 }
 
-@Observable final class SearchViewModel: Sendable {
+// Actor to manage search data
+actor SearchViewActor {
+    private var searchResults: SearchResults? = nil
+    private var lastSearch: String = ""
+    private var searchInitialized: Bool = false
+    private var attemptingSearch: Bool = false
+    private var fullSearchSubmitted: Bool = false
+    private var searchHasChanged: Bool = false
+    
+    func runSearch(query: String) async throws {
+        guard !attemptingSearch else { return }
+        
+        searchInitialized = true
+        attemptingSearch = true
+        fullSearchSubmitted = true
+        searchHasChanged = false
+        lastSearch = query
+        
+        defer { attemptingSearch = false }
+        
+        let results = try await fetchSearchResults(query: query)
+        self.searchResults = results
+    }
+    
+    func getSearchResults() -> SearchResults? {
+        return searchResults
+    }
+    
+    func getLastSearch() -> String {
+        return lastSearch
+    }
+    
+    func getSearchInitialized() -> Bool {
+        return searchInitialized
+    }
+    
+    func getAttemptingSearch() -> Bool {
+        return attemptingSearch
+    }
+    
+    func getFullSearchSubmitted() -> Bool {
+        return fullSearchSubmitted
+    }
+    
+    func getSearchHasChanged() -> Bool {
+        return searchHasChanged
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class SearchViewModel {
+    private let viewActor = SearchViewActor()
+    
     var searchResults: SearchResults? = nil
     var lastSearch: String = ""
-    var SearchInitialized: Bool = false
-    var attenptingSearch: Bool = false
+    var searchInitialized: Bool = false
+    var attemptingSearch: Bool = false
     var fullSearchSubmitted: Bool = false
     var searchHasChanged: Bool = false
     
     func runSearch(query: String) {
-        withAnimation {
-            self.SearchInitialized = true
-            self.attenptingSearch = true
-            self.fullSearchSubmitted = true
-            self.searchHasChanged = false
-            self.lastSearch = query
-        }
-        fetchSearchResults(query: query) { (result) in
-            switch result {
-            case .success(let data):
-                //main.async
-                withAnimation {
-                    self.searchResults = data
-                    self.attenptingSearch = false
+        Task {
+            do {
+                try await viewActor.runSearch(query: query)
+                
+                let results = await viewActor.getSearchResults()
+                let lastSearch = await viewActor.getLastSearch()
+                let searchInitialized = await viewActor.getSearchInitialized()
+                let attemptingSearch = await viewActor.getAttemptingSearch()
+                let fullSearchSubmitted = await viewActor.getFullSearchSubmitted()
+                let searchHasChanged = await viewActor.getSearchHasChanged()
+                
+                await MainActor.run {
+                    withAnimation {
+                        self.searchResults = results
+                        self.lastSearch = lastSearch
+                        self.searchInitialized = searchInitialized
+                        self.attemptingSearch = attemptingSearch
+                        self.fullSearchSubmitted = fullSearchSubmitted
+                        self.searchHasChanged = searchHasChanged
+                    }
                 }
-            case .failure(let error):
+            } catch {
                 print("Error: \(error)")
-                withAnimation {
-                    self.searchResults = nil
-                    self.attenptingSearch = false
+                await MainActor.run {
+                    withAnimation {
+                        self.searchResults = nil
+                        self.attemptingSearch = false
+                    }
                 }
             }
         }
     }
+    
     func runLastSearch() {
         self.runSearch(query: self.lastSearch)
     }

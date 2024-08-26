@@ -29,7 +29,7 @@ struct SearchResultsView: View {
                 } else if (viewModel.fullSearchSubmitted == false) {
                     QuickSearchList(viewModel: $viewModel, quickViewModel: $quickViewModel, searchField: $searchField)
                 } else { // after a submit
-                    if viewModel.attenptingSearch {
+                    if viewModel.attemptingSearch {
                         LoadingSearchResults_component()
                     } else if viewModel.searchResults == nil {
                         Spacer()

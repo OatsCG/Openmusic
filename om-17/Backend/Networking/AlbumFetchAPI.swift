@@ -8,46 +8,58 @@
 import Foundation
 import SwiftUI
 
-func fetchAlbumData(AlbumID: String, completion: @escaping @Sendable (Result<FetchedAlbum, Error>) -> Void) {
-    let url = "\(globalIPAddress())/album?id=\(AlbumID)"
+func fetchAlbumData(albumID: String) async throws -> FetchedAlbum {
+    let url = "\(globalIPAddress())/album?id=\(albumID)"
     guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+        throw URLError(.badURL)
     }
-    
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(FetchedAlbum.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(FetchedAlbum.self, from: data)
 }
 
-@Observable final class AlbumViewModel: Sendable {
-    var fetchedAlbum: FetchedAlbum? = nil
-    var isSearching: Bool = false
-    func runSearch(albumID: String) {
-        if isSearching {
-            return
-        }
-        self.isSearching = true
+
+actor AlbumViewActor {
+    private var fetchedAlbum: FetchedAlbum? = nil
+    private var isSearching: Bool = false
+    
+    func runSearch(albumID: String) async throws {
+        guard !isSearching else { return }
+        isSearching = true
         
-        fetchAlbumData(AlbumID: albumID) { (result) in
-            switch result {
-            case .success(let data):
-                self.isSearching = false
-                withAnimation {
-                    self.fetchedAlbum = data
+        defer { isSearching = false }
+        
+        let album = try await fetchAlbumData(albumID: albumID)
+        self.fetchedAlbum = album
+    }
+    
+    func getFetchedAlbum() -> FetchedAlbum? {
+        return fetchedAlbum
+    }
+    func getIsSearching() -> Bool {
+        return isSearching
+    }
+}
+
+
+@MainActor
+@Observable class AlbumViewModel {
+    private let viewActor = AlbumViewActor()
+    
+    var fetchedAlbum: FetchedAlbum? = nil
+    
+    func runSearch(albumID: String) {
+        Task {
+            do {
+                try await viewActor.runSearch(albumID: albumID)
+                
+                let album = await viewActor.getFetchedAlbum()
+                await MainActor.run {
+                    withAnimation {
+                        self.fetchedAlbum = album
+                    }
                 }
-            case .failure(let error):
+            } catch {
                 print("Error: \(error)")
             }
         }

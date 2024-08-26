@@ -7,61 +7,77 @@
 
 import SwiftUI
 
-func fetchSuggestionsData(songs: [NaiveTrack], completion: @escaping @Sendable (Result<ImportedTracks, Error>) -> Void) {
-    var songsAsStrings: [String] = []
-    for song in songs {
-        let title: String = song.title.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
-        let album: String = song.album.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
-        let artist: String = song.artists.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
-        songsAsStrings.append("\(title)OMSEPSONGCOMPONENT\(album)OMSEPSONGCOMPONENT\(artist)")
-    }
-    let songsJoined: String = songsAsStrings.joined(separator: "OMSEPNEWSONG")
-    
-    let url = "\(globalIPAddress())/suggest?songs=\(songsJoined)"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch suggestions data
+func fetchSuggestionsData(songs: [NaiveTrack]) async throws -> ImportedTracks {
+    let songsAsStrings: [String] = songs.map { song in
+        let title = song.title.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
+        let album = song.album.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
+        let artist = song.artists.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
+        return "\(title)OMSEPSONGCOMPONENT\(album)OMSEPSONGCOMPONENT\(artist)"
     }
     
-    //async let (data, _) = URLSession.shared.data(from: url)
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(ImportedTracks.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
+    let songsJoined = songsAsStrings.joined(separator: "OMSEPNEWSONG")
+    
+    let urlString = "\(globalIPAddress())/suggest?songs=\(songsJoined)"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
-    task.resume()
+    
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(ImportedTracks.self, from: data)
 }
 
-
-@Observable final class FetchSuggestionsModel: Sendable {
-    var isFetching: Bool = false
-    func runSearch(songs: [NaiveTrack], playerManager: PlayerManager) {
-        if (isFetching == true) {
+// Actor to manage suggestions data fetching
+actor FetchSuggestionsActor {
+    private var isFetching: Bool = false
+    
+    func runSearch(songs: [NaiveTrack], playerManager: PlayerManager) async throws {
+        guard !isFetching else { return }
+        guard !songs.isEmpty else {
+            isFetching = false
             return
         }
+        
         isFetching = true
-        if (songs.count == 0) {
-            self.isFetching = false
-            return
+        
+        defer { isFetching = false }
+        
+        let data = try await fetchSuggestionsData(songs: songs)
+        
+        if playerManager.getEnjoyedSongsNaive(limit: 5) == songs {
+            playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
         }
-        fetchSuggestionsData(songs: songs) { (result) in
-            switch result {
-            case .success(let data):
-                if (playerManager.getEnjoyedSongsNaive(limit: 5) == songs) {
-                    playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
+    }
+    
+    func getIsFetching() -> Bool {
+        return isFetching
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class FetchSuggestionsModel {
+    private let suggestionsActor = FetchSuggestionsActor()
+    
+    var isFetching: Bool = false
+    
+    func runSearch(songs: [NaiveTrack], playerManager: PlayerManager) {
+        Task {
+            do {
+                try await suggestionsActor.runSearch(songs: songs, playerManager: playerManager)
+                
+                let fetching = await suggestionsActor.getIsFetching()
+                
+                await MainActor.run {
+                    self.isFetching = fetching
                 }
-                self.isFetching = false
-            case .failure(let error):
+            } catch {
                 print("Error: \(error)")
-                self.isFetching = false
+                await MainActor.run {
+                    self.isFetching = false
+                }
             }
         }
     }

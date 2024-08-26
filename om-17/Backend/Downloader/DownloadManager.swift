@@ -294,7 +294,7 @@ import SwiftUI
     
     private func get_download_url(PlaybackID: String) async -> URL? {
         do {
-            let fetchedData = try await fetchPlaybackData(PlaybackID: PlaybackID)
+            let fetchedData = try await fetchPlaybackData(playbackID: PlaybackID)
             if fetchedData.Playback_Audio_URL == "" {
                 return nil
             }

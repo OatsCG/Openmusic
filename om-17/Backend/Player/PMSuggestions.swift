@@ -10,7 +10,7 @@ import SwiftUI
 // @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
 
 extension PlayerManager {
-    func addSuggestions() {
+    @MainActor func addSuggestions() {
         guard self.trackQueue.count < 10 else {
             return
         }

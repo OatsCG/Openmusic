@@ -8,60 +8,77 @@
 import Foundation
 import SwiftUI
 
-func fetchExploreResults(completion: @escaping @Sendable (Result<ExploreResults, Error>) -> Void) {
-    let url = "\(globalIPAddress())/explore"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch explore results
+func fetchExploreResults() async throws -> ExploreResults {
+    let urlString = "\(globalIPAddress())/explore"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(ExploreResults.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(ExploreResults.self, from: data)
 }
 
-@Observable final class ExploreViewModel: Sendable {
+// Actor to manage explore data
+actor ExploreViewActor {
+    private var exploreResults: ExploreResults? = nil
+    private var isSearching: Bool = false
+    
+    func runSearch() async throws {
+        guard !isSearching else { return }
+        isSearching = true
+        
+        defer { isSearching = false }
+        
+        let results = try await fetchExploreResults()
+        self.exploreResults = results
+    }
+    
+    func getExploreResults() -> ExploreResults? {
+        return exploreResults
+    }
+    
+    func getIsSearching() -> Bool {
+        return isSearching
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class ExploreViewModel {
+    private let viewActor = ExploreViewActor()
+    
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
+    
     func runSearch() {
-        if (self.isSearching) {
-            return
-        }
-        withAnimation {
-            self.isSearching = true
-            self.exploreResults = nil
-        }
-        fetchExploreResults() { (result) in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
+        Task {
+            do {
+                try await viewActor.runSearch()
+                
+                let results = await viewActor.getExploreResults()
+                let searching = await viewActor.getIsSearching()
+                
+                await MainActor.run {
                     withAnimation {
-                        self.isSearching = false
-                        self.exploreResults = data
+                        self.exploreResults = results
+                        self.isSearching = searching
                     }
                 }
-            case .failure(let error):
-                DispatchQueue.main.async {
+            } catch {
+                await MainActor.run {
                     withAnimation {
                         self.isSearching = false
                     }
-                    print("Error: \(error)")
                 }
+                print("Error: \(error)")
             }
         }
     }
 }
+
 
 
 struct ExploreResults: Codable, Hashable {

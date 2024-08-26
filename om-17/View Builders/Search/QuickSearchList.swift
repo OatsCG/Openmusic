@@ -19,7 +19,7 @@ struct QuickSearchList: View {
 //            if quickViewModel.attenptingSearch {
 //                LoadingTracklist_component()
 //            }
-            if quickViewModel.fetchedTracks == nil && quickViewModel.SearchInitialized {
+            if quickViewModel.fetchedTracks == nil && quickViewModel.searchInitialized {
                 LoadingBigTracks_component()
                     .safeAreaPadding(.horizontal, 10)
                 //LoadingTracklist_component()

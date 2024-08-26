@@ -8,59 +8,92 @@
 import Foundation
 import SwiftUI
 
-func fetchServerStatus(with tempIPAddress: String? = nil, fetchHash: UUID, completion: @escaping @Sendable (Result<ServerStatus, Error>, UUID) -> Void) {
-    var url = "\(globalIPAddress())/status"
+// Function to fetch server status
+func fetchServerStatus(with tempIPAddress: String? = nil) async throws -> ServerStatus {
+    var urlString = "\(globalIPAddress())/status"
     if let tempIPAddress = tempIPAddress {
-        url = "\(tempIPAddress)/status"
-    }
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+        urlString = "\(tempIPAddress)/status"
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error), fetchHash)
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(ServerStatus.self, from: data)
-                completion(.success(fetchedData), fetchHash)
-            } catch {
-                completion(.failure(error), fetchHash)
-            }
-        }
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
-    task.resume()
+    
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(ServerStatus.self, from: data)
 }
 
-@Observable final class StatusViewModel: Sendable {
+// Actor to manage server status data
+actor StatusViewActor {
+    private var serverStatus: ServerStatus? = nil
+    private var fetchHash: UUID = UUID()
+    private var isFetching: Bool = false
+    
+    func runCheck(with ipAddress: String? = nil) async throws {
+        guard !isFetching else { return }
+        isFetching = true
+        
+        defer { isFetching = false }
+        
+        let newFetchHash = UUID()
+        self.fetchHash = newFetchHash
+        
+        do {
+            let status = try await fetchServerStatus(with: ipAddress)
+            if self.fetchHash == newFetchHash {
+                self.serverStatus = status
+            }
+        } catch {
+            if self.fetchHash == newFetchHash {
+                self.serverStatus = ServerStatus(online: false, om_verify: "")
+            }
+            throw error
+        }
+    }
+    
+    func getServerStatus() -> ServerStatus? {
+        return serverStatus
+    }
+    
+    func getFetchHash() -> UUID {
+        return fetchHash
+    }
+    
+    func getIsFetching() -> Bool {
+        return isFetching
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class StatusViewModel {
+    private let viewActor = StatusViewActor()
+    
     var serverStatus: ServerStatus? = nil
     var fetchHash: UUID = UUID()
+    
     func runCheck(with ipAddress: String? = nil) {
-        withAnimation() {
-            self.serverStatus = nil
-            self.fetchHash = UUID()
-        }
-        fetchServerStatus(with: ipAddress, fetchHash: self.fetchHash) { (result, returnHash) in
-            switch result {
-            case .success(let data):
-                if (self.fetchHash == returnHash) {
+        Task {
+            do {
+                try await viewActor.runCheck(with: ipAddress)
+                
+                let status = await viewActor.getServerStatus()
+                let currentHash = await viewActor.getFetchHash()
+                
+                await MainActor.run {
                     withAnimation {
-                        self.serverStatus = data
+                        self.serverStatus = status
+                        self.fetchHash = currentHash
                     }
                 }
-            case .failure(let error):
-                if (self.fetchHash == returnHash) {
-                    withAnimation {
-                        self.serverStatus = ServerStatus(online: false, om_verify: "")
-                    }
-                }
+            } catch {
                 print("Error: \(error)")
             }
         }
     }
 }
+
 
 
 struct ServerStatus: Codable, Hashable {

@@ -16,7 +16,7 @@ struct SearchAlbumContent: View {
     var body: some View {
         ScrollView {
             VStack {
-                SearchAlbumHeader(album: album, albumModel: albumModel)
+                SearchAlbumHeader(album: album, albumModel: $albumModel)
                     .background(Color.clear)
                     .textCase(nil)
                 if albumModel.fetchedAlbum == nil {

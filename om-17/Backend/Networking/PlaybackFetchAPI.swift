@@ -8,13 +8,14 @@
 
 import Foundation
 
-func fetchPlaybackData(PlaybackID: String) async throws -> FetchedPlayback {
-    let url = "\(globalIPAddress())/playback?id=\(PlaybackID)"
-    guard let url = URL(string: url) else {
+func fetchPlaybackData(playbackID: String) async throws -> FetchedPlayback {
+    let urlString = "\(globalIPAddress())/playback?id=\(playbackID)"
+    
+    guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
+    
     let (data, _) = try await URLSession.shared.data(from: url)
     let decoder = JSONDecoder()
-    let fetchedData = try decoder.decode(FetchedPlayback.self, from: data)
-    return fetchedData
+    return try decoder.decode(FetchedPlayback.self, from: data)
 }

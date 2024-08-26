@@ -8,8 +8,8 @@
 import SwiftUI
 import SwiftData
 
-
-@Observable final class PlaylistImporter: Sendable {
+@MainActor
+@Observable class PlaylistImporter {
     var newPlaylists: [ImportedPlaylist] = []
     var currentContext: ModelContext? = nil
     
@@ -30,23 +30,22 @@ import SwiftData
         // start task
         self.publish_status(playlistImport: playlistImport, status: .importing)
         
-        fetchPlaylistTracksFetchData(importData: playlistImport.importData) { (result) in
-            switch result {
-            case .success(let importedTracks):
-                self.publish_imports(playlistImport: playlistImport, imports: importedTracks)
+        Task.detached {
+            do {
+                let importedTracks = try await fetchPlaylistTracksFetchData(importData: playlistImport.importData)
+                await self.publish_imports(playlistImport: playlistImport, imports: importedTracks)
                 if (importedTracks.Tracks.count == 0) {
-                    self.publish_status(playlistImport: playlistImport, status: .zeroed)
+                    await self.publish_status(playlistImport: playlistImport, status: .zeroed)
                 } else if (importedTracks.Tracks.first!.isAccurate() == false) { // .score() < 1.5
-                    self.publish_status(playlistImport: playlistImport, status: .uncertain)
+                    await self.publish_status(playlistImport: playlistImport, status: .uncertain)
                 } else {
-                    self.publish_status(playlistImport: playlistImport, status: .success)
-                    self.publish_successful_track(playlistImport: playlistImport, track: importedTracks.Tracks.first!)
+                    await self.publish_status(playlistImport: playlistImport, status: .success)
+                    await self.publish_successful_track(playlistImport: playlistImport, track: importedTracks.Tracks.first!)
                 }
-                self.attempt_next_fetch()
-            case .failure(let error):
-                print(error)
-                self.publish_status(playlistImport: playlistImport, status: .hold)
-                self.attempt_next_fetch()
+                await self.attempt_next_fetch()
+            } catch {
+                await self.publish_status(playlistImport: playlistImport, status: .hold)
+                await self.attempt_next_fetch()
             }
         }
     }
@@ -54,13 +53,13 @@ import SwiftData
     func attempt_next_fetch() {
         Task.detached {
             //try await Task.sleep(until: .now + .seconds(2), clock: .continuous)
-            self.check_playlist_end()
-            let nextPlaylist: ImportedPlaylist? = self.newPlaylists.first(where: { $0.is_importing_successful() == false })
+            await self.check_playlist_end()
+            let nextPlaylist: ImportedPlaylist? = await self.newPlaylists.first(where: { $0.is_importing_successful() == false })
             if let nextPlaylist = nextPlaylist {
                 let nextImport = nextPlaylist.items.first(where: { $0.importData.status == .hold })
                 if let nextImport = nextImport {
                     //print("attempting next")
-                    self.beginTask(playlistImport: nextImport)
+                    await self.beginTask(playlistImport: nextImport)
                 }
             }
         }
@@ -78,24 +77,20 @@ import SwiftData
     func check_playlist_end() {
         let successfulPlaylists: [ImportedPlaylist] = self.newPlaylists.filter({$0.is_importing_successful()})
         for playlist in successfulPlaylists {
-            DispatchQueue.main.async {
-                let finishedPlaylistIndex: Int? = self.newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID})
-                if let finishedPlaylistIndex = finishedPlaylistIndex {
-                    let storedPlaylist = StoredPlaylist(from: playlist)
-                    self.currentContext?.insert(storedPlaylist)
-                    try? self.currentContext?.save()
-                    self.newPlaylists.remove(at: finishedPlaylistIndex)
-                }
+            let finishedPlaylistIndex: Int? = self.newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID})
+            if let finishedPlaylistIndex = finishedPlaylistIndex {
+                let storedPlaylist = StoredPlaylist(from: playlist)
+                self.currentContext?.insert(storedPlaylist)
+                try? self.currentContext?.save()
+                self.newPlaylists.remove(at: finishedPlaylistIndex)
             }
         }
     }
     
     func publish_status(playlistImport: PlaylistImport, status: ImportStatus) {
-        DispatchQueue.main.async {
-            playlistImport.set_status(status: status)
-            Task.detached {
-                self.check_playlist_end()
-            }
+        playlistImport.set_status(status: status)
+        Task.detached {
+            await self.check_playlist_end()
         }
     }
     

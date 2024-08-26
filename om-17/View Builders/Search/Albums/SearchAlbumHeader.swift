@@ -13,7 +13,7 @@ struct SearchAlbumHeader: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(PlayerManager.self) var playerManager
     @State var album: SearchedAlbum
-    @State var albumModel: AlbumViewModel
+    @Binding var albumModel: AlbumViewModel
     var body: some View {
         VStack {
             AlbumContentHeading_component(album: album, tracks: albumModel.fetchedAlbum?.Tracks)

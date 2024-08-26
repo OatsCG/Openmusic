@@ -7,59 +7,96 @@
 
 import SwiftUI
 
-func fetchQuickSearchResults(query: String, completion: @escaping @Sendable (Result<FetchedTracks, Error>) -> Void) {
-    let url = "\(globalIPAddress())/quick?q=\(query)"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch quick search results
+func fetchQuickSearchResults(query: String) async throws -> FetchedTracks {
+    let urlString = "\(globalIPAddress())/quick?q=\(query)"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(FetchedTracks.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(FetchedTracks.self, from: data)
 }
 
-@Observable final class QuickSearchViewModel: Sendable {
+// Actor to manage quick search data
+actor QuickSearchViewActor {
+    private var fetchedTracks: FetchedTracks? = nil
+    private var lastSearch: String = ""
+    private var searchInitialized: Bool = false
+    private var attemptingSearch: Bool = false
+    
+    func runSearch(query: String) async throws {
+        guard !attemptingSearch else { return }
+        
+        searchInitialized = true
+        attemptingSearch = true
+        lastSearch = query
+        
+        defer { attemptingSearch = false }
+        
+        let tracks = try await fetchQuickSearchResults(query: query)
+        self.fetchedTracks = tracks
+    }
+    
+    func getFetchedTracks() -> FetchedTracks? {
+        return fetchedTracks
+    }
+    
+    func getLastSearch() -> String {
+        return lastSearch
+    }
+    
+    func getSearchInitialized() -> Bool {
+        return searchInitialized
+    }
+    
+    func getAttemptingSearch() -> Bool {
+        return attemptingSearch
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class QuickSearchViewModel {
+    private let viewActor = QuickSearchViewActor()
+    
     var fetchedTracks: FetchedTracks? = nil
     var lastSearch: String = ""
-    var SearchInitialized: Bool = false
-    var attenptingSearch: Bool = false
+    var searchInitialized: Bool = false
+    var attemptingSearch: Bool = false
     
     func runSearch(query: String) {
-        withAnimation(.interactiveSpring(duration: 0.3)) {
-            self.SearchInitialized = true
-            self.attenptingSearch = true
-            //self.searchResults = nil
-            self.lastSearch = query
-        }
-        fetchQuickSearchResults(query: query) { (result) in
-            switch result {
-            case .success(let data):
-                //main.async
-                withAnimation(.interactiveSpring(duration: 0.3)) {
-                    self.fetchedTracks = data
-                    self.attenptingSearch = false
+        Task {
+            do {
+                try await viewActor.runSearch(query: query)
+                
+                let tracks = await viewActor.getFetchedTracks()
+                let lastSearch = await viewActor.getLastSearch()
+                let searchInitialized = await viewActor.getSearchInitialized()
+                let attemptingSearch = await viewActor.getAttemptingSearch()
+                
+                await MainActor.run {
+                    withAnimation(.interactiveSpring(duration: 0.3)) {
+                        self.fetchedTracks = tracks
+                        self.lastSearch = lastSearch
+                        self.searchInitialized = searchInitialized
+                        self.attemptingSearch = attemptingSearch
+                    }
                 }
-            case .failure(let error):
+            } catch {
                 print("Error: \(error)")
-                withAnimation(.interactiveSpring(duration: 0.3)) {
-                    self.fetchedTracks = nil
-                    self.attenptingSearch = false
+                await MainActor.run {
+                    withAnimation(.interactiveSpring(duration: 0.3)) {
+                        self.fetchedTracks = nil
+                        self.attemptingSearch = false
+                    }
                 }
             }
         }
     }
+    
     func runLastSearch() {
         self.runSearch(query: self.lastSearch)
     }

@@ -7,28 +7,18 @@
 
 import SwiftUI
 
-func playRandomSongs(completion: @escaping @Sendable (Result<RandomTracks, Error>) -> Void) {
-    let url = "\(globalIPAddress())/random"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+func playRandomSongs() async throws -> RandomTracks {
+    let urlString = "\(globalIPAddress())/random"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(RandomTracks.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    task.resume()
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(RandomTracks.self, from: data)
 }
+
 
 struct RandomTracks: Codable {
     var Tracks: [FetchedTrack]

@@ -19,19 +19,12 @@ struct SearchAlbumMenu: View {
             Label("Loading", systemImage: "circle.dashed")
                 .task {
                     if (album == nil) {
-                        fetchAlbumData(AlbumID: searchedAlbum.AlbumID) { (result) in
-                            switch result {
-                            case .success(let data):
-                                //self.album = data
-                                Task {
-                                    await self.updateAlbum(data)
-                                }
-                            case .failure(let error):
-                                print("Error: \(error)")
-                            }
+                        Task.detached {
+                            let result: FetchedAlbum = try await fetchAlbumData(albumID: searchedAlbum.AlbumID)
+                            await self.updateAlbum(result)
                         }
                     }
-            }
+                }
         } else {
             if are_tracks_stored(tracks: album!.Tracks, context: modelContext) {
                 Button(role: .destructive, action: {

@@ -7,62 +7,78 @@
 
 import SwiftUI
 
-func fetchAlbumVideoData(albumID: String, completion: @escaping @Sendable (Result<String, Error>) -> Void) {
-    guard (UserDefaults.standard.bool(forKey: "artworkVideoAnimations") == true) else {
-        return
-    }
-    let url = "\(globalIPAddress())/ampVideo?id=\(albumID)"
-    guard let url = URL(string: url) else {
-        print("Invalid URL.")
-        return
+// Function to fetch album video data
+func fetchAlbumVideoData(albumID: String) async throws -> String {
+    // Check if artwork video animations are enabled
+    guard UserDefaults.standard.bool(forKey: "artworkVideoAnimations") == true else {
+        throw NSError(domain: "com.yourapp.error", code: 1, userInfo: [NSLocalizedDescriptionKey: "Artwork video animations are disabled."])
     }
     
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            completion(.failure(error))
-        } else if let data = data {
-            let decoder = JSONDecoder()
-            do {
-                let fetchedData = try decoder.decode(String.self, from: data)
-                completion(.success(fetchedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }
+    let urlString = "\(globalIPAddress())/ampVideo?id=\(albumID)"
+    
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
     }
-    task.resume()
+    
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    return try decoder.decode(String.self, from: data)
 }
 
-@Observable final class AlbumVideoViewModel: Sendable {
+// Actor to manage album video data
+actor AlbumVideoViewActor {
+    private var fetchedAlbumVideo: URL? = nil
+    private var currentSessionID: UUID = UUID()
+    
+    func runSearch(albumID: String) async throws {
+        let thisSessionID = UUID()
+        self.currentSessionID = thisSessionID
+        self.fetchedAlbumVideo = nil
+        
+        let videoData = try await fetchAlbumVideoData(albumID: albumID)
+        
+        guard thisSessionID == self.currentSessionID else {
+            print("Search aborted")
+            return
+        }
+        
+        if let url = URL(string: videoData), thisSessionID == self.currentSessionID {
+            self.fetchedAlbumVideo = url
+        }
+    }
+    
+    func getFetchedAlbumVideo() -> URL? {
+        return fetchedAlbumVideo
+    }
+    
+    func getCurrentSessionID() -> UUID {
+        return currentSessionID
+    }
+}
+
+// ViewModel to manage view updates
+@MainActor
+@Observable class AlbumVideoViewModel {
+    private let viewActor = AlbumVideoViewActor()
+    
     var fetchedAlbumVideo: URL? = nil
     var currentSessionID: UUID = UUID()
+    
     func runSearch(albumID: String) {
-        let thisSessionID: UUID = UUID()
-        self.currentSessionID = thisSessionID
-        withAnimation {
-            self.fetchedAlbumVideo = nil
-        }
-        print("starting search with \(albumID)")
-        fetchAlbumVideoData(albumID: albumID) { (result) in
-            switch result {
-            case .success(let data):
-                print("success")
-                if (thisSessionID != self.currentSessionID) {
-                    print("aborted")
-                    return
-                }
-                let attemptedURL: URL? = URL(string: data)
-                if let attemptedURL = attemptedURL {
-                    if (thisSessionID != self.currentSessionID) {
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        withAnimation(.linear(duration: 1).delay(2)) {
-                            self.fetchedAlbumVideo = attemptedURL
-                        }
+        Task {
+            do {
+                try await viewActor.runSearch(albumID: albumID)
+                
+                let albumVideo = await viewActor.getFetchedAlbumVideo()
+                let sessionID = await viewActor.getCurrentSessionID()
+                
+                await MainActor.run {
+                    withAnimation(.linear(duration: 1).delay(2)) {
+                        self.fetchedAlbumVideo = albumVideo
+                        self.currentSessionID = sessionID
                     }
                 }
-            case .failure(let error):
+            } catch {
                 print("Error: \(error)")
             }
         }
