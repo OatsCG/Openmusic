@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E50189AF2C7C223B004FD1A9 /* DownloadManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50189AE2C7C2239004FD1A9 /* DownloadManagerDelegate.swift */; };
+		E50189B12C7C2402004FD1A9 /* DownloadManagerActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50189B02C7C23FD004FD1A9 /* DownloadManagerActor.swift */; };
 		E5018BCB2A9130D300143967 /* StoredChecks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BCA2A9130D300143967 /* StoredChecks.swift */; };
 		E5018BCD2A91410900143967 /* ArtistPageImageDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BCC2A91410900143967 /* ArtistPageImageDisplay.swift */; };
 		E5018BCF2A91431200143967 /* DownloadArtistBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BCE2A91431200143967 /* DownloadArtistBanner.swift */; };
@@ -563,6 +565,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E50189AE2C7C2239004FD1A9 /* DownloadManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerDelegate.swift; sourceTree = "<group>"; };
+		E50189B02C7C23FD004FD1A9 /* DownloadManagerActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerActor.swift; sourceTree = "<group>"; };
 		E5018BCA2A9130D300143967 /* StoredChecks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredChecks.swift; sourceTree = "<group>"; };
 		E5018BCC2A91410900143967 /* ArtistPageImageDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistPageImageDisplay.swift; sourceTree = "<group>"; };
 		E5018BCE2A91431200143967 /* DownloadArtistBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadArtistBanner.swift; sourceTree = "<group>"; };
@@ -1118,6 +1122,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E50189AD2C7C2213004FD1A9 /* DownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				E50189AE2C7C2239004FD1A9 /* DownloadManagerDelegate.swift */,
+				E51CE7772A5C982800377848 /* DownloadManager.swift */,
+				E50189B02C7C23FD004FD1A9 /* DownloadManagerActor.swift */,
+			);
+			path = DownloadManager;
+			sourceTree = "<group>";
+		};
 		E5018BD02A9170E700143967 /* Artist Extended Shelves */ = {
 			isa = PBXGroup;
 			children = (
@@ -2209,7 +2223,7 @@
 			isa = PBXGroup;
 			children = (
 				E5E665792A5F661100397F67 /* DownloadData.swift */,
-				E51CE7772A5C982800377848 /* DownloadManager.swift */,
+				E50189AD2C7C2213004FD1A9 /* DownloadManager */,
 				E5E665742A5F50FB00397F67 /* DownloadEnums.swift */,
 				E51CE7752A5C981E00377848 /* DownloadArtwork.swift */,
 				E5018BCE2A91431200143967 /* DownloadArtistBanner.swift */,
@@ -3132,6 +3146,7 @@
 				E579DE582B3E7A0F009324C1 /* TrackMenuPreview_spotty.swift in Sources */,
 				E5974D752A6C92A0009286E2 /* AlbumBackground.swift in Sources */,
 				E52D58A52A36605000270019 /* ArtistTypes.swift in Sources */,
+				E50189AF2C7C223B004FD1A9 /* DownloadManagerDelegate.swift in Sources */,
 				E5E665782A5F63CB00397F67 /* LiveDownloadsList.swift in Sources */,
 				E5CB98E02AB8CE5000043ED4 /* TrackMenuPreview_classic.swift in Sources */,
 				E53B3BFF2A9303E500C5063B /* LibraryArtistShelfAlbums.swift in Sources */,
@@ -3168,6 +3183,7 @@
 				E58E8FD12BA172AF009F7E43 /* BAPlayer+Rendering.swift in Sources */,
 				E579DE592B3E7A0F009324C1 /* LibraryAlbumLink_spotty.swift in Sources */,
 				E51375F32B44B71D0005F2D7 /* NPBackground_component.swift in Sources */,
+				E50189B12C7C2402004FD1A9 /* DownloadManagerActor.swift in Sources */,
 				E532D4E72B420D3B00D7CC25 /* PlaylistMenuPreview_classic.swift in Sources */,
 				E56E1D4E2BC9C4EE00C4DB42 /* VariableBlur.swift in Sources */,
 				E5A00A452B0160F1001C59DB /* ProximityManager.swift in Sources */,

@@ -12,7 +12,7 @@ struct LiveDownloadsList: View {
     @Environment(DownloadManager.self) var downloadManager
     @State var expanded: Bool = false
     var body: some View {
-        if (downloadManager.tracks_downloading.count > 0) {
+        if (downloadManager.tracksDownloading.count > 0) {
             VStack {
                 Button(action: {
                     withAnimation {
@@ -33,7 +33,7 @@ struct LiveDownloadsList: View {
                     //.padding(.all, 10)
                     .background(.thinMaterial)
                 List {
-                    ForEach(downloadManager.tracks_downloading, id: \.id) { download in
+                    ForEach(downloadManager.tracksDownloading, id: \.id) { download in
                         LiveDownloadRow(download: download)
                     }
                 }

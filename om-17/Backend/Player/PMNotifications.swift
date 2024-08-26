@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension PlayerManager {
-    func scheduleNotification() {
+    @MainActor func scheduleNotification() {
         if self.currentQueueItem != nil {
             self.notificationManager.scheduleNotification(track: self.currentQueueItem!.Track)
         }

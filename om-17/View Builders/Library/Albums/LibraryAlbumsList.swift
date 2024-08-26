@@ -28,7 +28,9 @@ struct LibraryAlbumsList: View {
                 HStack {
                     Button(action: {
                         if (!networkMonitor.isConnected) {
-                            playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
+                            }
                         } else {
                             playerManager.fresh_play_multiple(tracks: tracks.reversed())
                         }
@@ -40,14 +42,18 @@ struct LibraryAlbumsList: View {
                         .clipped()
                         .contextMenu {
                             Button(action: {
-                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
+                                }
                             }) {
                                 Label("Play Downloaded", systemImage: "play.fill")
                             }
                         }
                     Button(action: {
                         if (!networkMonitor.isConnected) {
-                            playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                            }
                         } else {
                             playerManager.fresh_play_multiple(tracks: tracks.shuffled())
                         }
@@ -59,7 +65,9 @@ struct LibraryAlbumsList: View {
                         .clipped()
                         .contextMenu {
                             Button(action: {
-                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                                }
                             }) {
                                 Label("Shuffle Downloaded", systemImage: "shuffle")
                             }

@@ -11,6 +11,9 @@ struct MiniPlayer_component: View {
     @AppStorage("currentTheme") var currentTheme: String = "classic"
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    
+    var namespace: Namespace.ID
+    
     var body: some View {
         HStack {
             if (horizontalSizeClass == .regular) {
@@ -37,6 +40,7 @@ struct MiniPlayer_component: View {
                 }
                 .frame(height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
                 .aspectRatio(contentMode: .fit)
+                .matchedTransitionSource(id: "NP_TRANSITION_ID", in: namespace)
             } else {
                 Group {
                     switch currentTheme {
@@ -58,12 +62,13 @@ struct MiniPlayer_component: View {
                 }
                 .frame(width: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).width, height: Miniplayer_sizing(h: horizontalSizeClass, v: verticalSizeClass).height)
                 .aspectRatio(contentMode: .fill)
+                .matchedTransitionSource(id: "NP_TRANSITION_ID", in: namespace)
             }
         }
         
     }
 }
 
-#Preview {
-    MiniPlayer_component()
-}
+//#Preview {
+//    MiniPlayer_component()
+//}

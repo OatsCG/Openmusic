@@ -26,7 +26,9 @@ struct LibraryRecentsList: View {
                 HStack {
                     Button(action: {
                         if (!networkMonitor.isConnected) {
-                            playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks))
+                            }
                         } else {
                             playerManager.fresh_play_multiple(tracks: tracks)
                         }
@@ -38,14 +40,18 @@ struct LibraryRecentsList: View {
                         .contentShape(RoundedRectangle(cornerRadius: 10))
                         .contextMenu {
                             Button(action: {
-                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
+                                }
                             }) {
                                 Label("Play Downloaded", systemImage: "play.fill")
                             }
                         }
                     Button(action: {
                         if (!networkMonitor.isConnected) {
-                            playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                            }
                         } else {
                             playerManager.fresh_play_multiple(tracks: tracks.shuffled())
                         }
@@ -57,7 +63,9 @@ struct LibraryRecentsList: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .contextMenu {
                             Button(action: {
-                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
+                                }
                             }) {
                                 Label("Shuffle Downloaded", systemImage: "shuffle")
                             }

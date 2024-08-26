@@ -21,7 +21,9 @@ struct PlaylistContent: View {
                 HStack(spacing: 10) {
                     Button (action: {
                         if (!networkMonitor.isConnected) {
-                            playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                            }
                         } else {
                             playerManager.fresh_play_multiple(tracks: playlist.items.filter({ $0.importData.status == .success }))
                         }
@@ -32,7 +34,9 @@ struct PlaylistContent: View {
                     
                     Button (action: {
                         if (!networkMonitor.isConnected) {
-                            playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                            }
                         } else {
                             playerManager.fresh_play_multiple(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
                         }
@@ -44,7 +48,9 @@ struct PlaylistContent: View {
                     Menu {
                         Section {
                             Button(action: {
-                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).reversed()))
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).reversed()))
+                                }
                             }) {
                                 Label("Play Downloaded", systemImage: "square.and.arrow.down.fill")
                             }
@@ -73,19 +79,25 @@ struct PlaylistContent: View {
                                 }
                                 Menu {
                                     Button {
-                                        playerManager.queue_songs_next(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                        Task {
+                                            await playerManager.queue_songs_next(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                        }
                                     } label: {
                                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)
                                     }
                                     Button {
-                                        playerManager.queue_songs(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                        Task {
+                                            await playerManager.queue_songs(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                        }
                                     } label: {
                                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)
                                     }
                                     Button {
-                                        playerManager.queue_songs_randomly(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                        Task {
+                                            await playerManager.queue_songs_randomly(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
+                                        }
                                     } label: {
                                         Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                             .symbolRenderingMode(.hierarchical)
@@ -100,7 +112,9 @@ struct PlaylistContent: View {
                         
                         Section {
                             Button(action: {
-                                playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                }
                             }) {
                                 Label("Shuffle Downloaded", systemImage: "square.and.arrow.down.fill")
                             }
@@ -123,13 +137,17 @@ struct PlaylistContent: View {
                                 }
                                 Menu {
                                     Button {
-                                        playerManager.queue_songs_next(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                        Task {
+                                            await playerManager.queue_songs_next(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                        }
                                     } label: {
                                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)
                                     }
                                     Button {
-                                        playerManager.queue_songs(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                        Task {
+                                            await playerManager.queue_songs(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
+                                        }
                                     } label: {
                                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)

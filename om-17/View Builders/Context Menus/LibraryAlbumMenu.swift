@@ -13,6 +13,7 @@ struct LibraryAlbumMenu: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(\.modelContext) private var modelContext
     var album: StoredAlbum
+    @State var arePlaybacksDownloaded: Bool = false
     var body: some View {
         if are_tracks_stored(tracks: album.Tracks, context: modelContext) {
             Button(role: .destructive, action: {
@@ -25,7 +26,7 @@ struct LibraryAlbumMenu: View {
             }) {
                 Label("Remove from Library", systemImage: "minus.circle")
             }
-            if downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!}) {
+            if arePlaybacksDownloaded {
                 Button(role: .destructive, action: {
                     for track in album.Tracks {
                         if track.Playback_Clean != nil {
@@ -41,7 +42,7 @@ struct LibraryAlbumMenu: View {
             } else {
                 Button(action: {
                     for track in album.Tracks {
-                        downloadManager.add_download_task(track: track, explicit: track.Playback_Explicit != nil)
+                        downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
                     }
                 }) {
                     Label("Download Album", systemImage: "square.and.arrow.down")
@@ -138,8 +139,16 @@ struct LibraryAlbumMenu: View {
                     .symbolRenderingMode(.hierarchical)
             }
         }
+        .onAppear {
+            Task {
+                await updateArePlaybacksDownloaded()
+            }
+        }
         
 
+    }
+    func updateArePlaybacksDownloaded() async {
+        arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
     }
 }
 

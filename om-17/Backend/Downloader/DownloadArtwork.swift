@@ -19,37 +19,33 @@ func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
     }
 }
 
-func downloadAlbumArt(ArtworkID: String, completion: @escaping @Sendable (URL?) -> Void) {
-    let downloadURL: String = "https://lh3.googleusercontent.com/\(ArtworkID)=w\(1080)-h\(1080)-l90-rj"
-    let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
-    if let destinationURL = destinationURL {
-        if FileManager().fileExists(atPath: destinationURL.path) {
-            completion(destinationURL)
-            return
-        } else {
-            let urlRequest = URLRequest(url: URL(string: downloadURL)!)
-            let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-                if error != nil {
-                    return
-                }
-                guard let response = response as? HTTPURLResponse else { return }
-                if response.statusCode == 200 {
-                    guard let data = data else {
-                        return
-                    }
-                    //main.async
-                    do {
-                        try data.write(to: destinationURL, options: Data.WritingOptions.atomic)
-                        completion(destinationURL)
-                    } catch _ {
-                        return
-                    }
-                }
-            }
-            dataTask.resume()
+func downloadAlbumArt(artworkID: String) async -> URL? {
+    let downloadURLString = "https://lh3.googleusercontent.com/\(artworkID)=w\(1080)-h\(1080)-l90-rj"
+    
+    guard let downloadURL = URL(string: downloadURLString),
+          let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(artworkID).jpg") else {
+        return nil
+    }
+    
+    // Check if the file already exists
+    if FileManager.default.fileExists(atPath: destinationURL.path) {
+        return destinationURL
+    }
+    
+    do {
+        let (data, response) = try await URLSession.shared.data(from: downloadURL)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            return nil
         }
+        
+        try data.write(to: destinationURL, options: .atomic)
+        return destinationURL
+    } catch {
+        return nil
     }
 }
+
 
 func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) {
     let downloadURL: URL? = URL(string: ArtworkURL)

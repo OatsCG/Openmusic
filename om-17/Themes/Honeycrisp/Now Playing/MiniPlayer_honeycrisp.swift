@@ -13,6 +13,7 @@ struct MiniPlayer_honeycrisp: View {
     @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    
     var body: some View {
         HStack {
             AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 7)

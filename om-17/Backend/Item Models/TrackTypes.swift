@@ -117,7 +117,9 @@ final class StoredTrack: Hashable, Sendable, Track {
         self.Features = from.Features
         self.dateAdded = Date()
         self.originServer = globalIPAddress()
-        downloadAlbumArt(ArtworkID: from.Album.Artwork, completion: {_ in })
+        Task.detached {
+            await downloadAlbumArt(artworkID: from.Album.Artwork)
+        }
     }
     init(from: QueueItem) {
         self.TrackID = from.Track.TrackID
@@ -130,7 +132,9 @@ final class StoredTrack: Hashable, Sendable, Track {
         self.Features = from.Track.Features
         self.dateAdded = Date()
         self.originServer = globalIPAddress()
-        downloadAlbumArt(ArtworkID: from.Track.Album.Artwork, completion: {_ in })
+        Task.detached {
+            await downloadAlbumArt(artworkID: from.Track.Album.Artwork)
+        }
     }
     
     required init(from decoder:Decoder) throws {

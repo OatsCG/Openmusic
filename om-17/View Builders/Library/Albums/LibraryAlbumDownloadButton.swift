@@ -10,8 +10,9 @@ import SwiftUI
 struct LibraryAlbumDownloadButton: View {
     @Environment(DownloadManager.self) var downloadManager
     var album: StoredAlbum
+    @State var arePlaybacksDownloaded: Bool = false
     var body: some View {
-        if (downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})) {
+        if arePlaybacksDownloaded {
             Menu {
                 Button(role: .destructive, action: {
                     for track in album.Tracks {
@@ -32,12 +33,20 @@ struct LibraryAlbumDownloadButton: View {
         } else {
             Button (action: {
                 for track in (album.Tracks) {
-                    downloadManager.add_download_task(track: track, explicit: track.Playback_Explicit != nil)
+                    downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
                 }
             }) {
                 Image(systemName: "arrow.down.circle")
             }
+            .onAppear {
+                Task {
+                    await updatePlaybacksDownloaded()
+                }
+            }
         }
+    }
+    func updatePlaybacksDownloaded() async {
+        arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
     }
 }
 

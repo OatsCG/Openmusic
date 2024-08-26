@@ -21,6 +21,9 @@ struct NowPlayingSheet: View {
     @State var carModeEnabled: Bool = false
     @Binding var passedNSPath: NavigationPath
     @State var currentAlbum: SearchedAlbum? = nil
+    
+    var namespace: Namespace.ID? = nil
+    
     var body: some View {
         VStack {
             Button(action: {

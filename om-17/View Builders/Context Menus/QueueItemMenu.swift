@@ -17,6 +17,7 @@ struct QueueItemMenu: View {
     var queueItem: QueueItem
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
+    @State var isDownloaded: Bool = false
     var body: some View {
         Section {
             if is_track_stored(TrackID: queueItem.Track.TrackID, context: modelContext) {
@@ -111,7 +112,7 @@ struct QueueItemMenu: View {
                     //square.on.square.dashed
                 }
             }
-            if downloadManager.is_downloaded(queueItem, explicit: queueItem.explicit) {
+            if isDownloaded {
                 Button(role: .destructive) {
                     downloadManager.delete_playback(PlaybackID: queueItem.explicit ? queueItem.Track.Playback_Explicit! : queueItem.Track.Playback_Clean!)
                 } label: {
@@ -120,7 +121,7 @@ struct QueueItemMenu: View {
                 }
             } else {
                 Button {
-                    downloadManager.add_download_task(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
+                    downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
                 } label: {
                     Label("Download", systemImage: "square.and.arrow.down")
                         .symbolRenderingMode(.hierarchical)
@@ -166,7 +167,15 @@ struct QueueItemMenu: View {
                 Label("Remove From Queue", systemImage: "minus.circle")
             }
         }
+        .onAppear {
+            Task {
+                await updateIsDownloaded()
+            }
+        }
         
+    }
+    func updateIsDownloaded() async {
+        isDownloaded = await downloadManager.is_downloaded(queueItem, explicit: queueItem.explicit)
     }
 }
 

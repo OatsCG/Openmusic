@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@Observable class DownloadData: Identifiable {
+@Observable final class DownloadData: Identifiable, Sendable {
     let id = UUID()
     var playbackID: String
     var downloadTask: DownloadTask?

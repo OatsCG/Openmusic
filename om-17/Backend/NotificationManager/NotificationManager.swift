@@ -23,6 +23,7 @@ final class NotificationManager: Sendable {
         UNUserNotificationCenter.current().setNotificationCategories([category])
     }
     
+    @MainActor
     func scheduleNotification(track: any Track) {
         let content = UNMutableNotificationContent()
 //        content.title = "Now Playing"
@@ -31,15 +32,17 @@ final class NotificationManager: Sendable {
         content.title = track.Title
         content.body = "By \(stringArtists(artistlist: track.Album.Artists))"
         //content.categoryIdentifier = "SKIP_CATEGORY"
-        downloadAlbumArt(ArtworkID: track.Album.Artwork) { localURL in
+        
+        Task {
+            let localURL: URL? = await downloadAlbumArt(artworkID: track.Album.Artwork)
             if let localURL = localURL,
                let attachment = try? UNNotificationAttachment(identifier: UUID().uuidString, url: localURL, options: nil) {
                 content.attachments = [attachment]
-
+                
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: .leastNonzeroMagnitude, repeats: false)
                 let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
                 if (UserDefaults.standard.bool(forKey: "SkipNotifyEnabled")) {
-                    self.center.add(request)
+                    try? await self.center.add(request)
                 }
             }
         }
@@ -59,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-        let actionIdentifier = response.actionIdentifier
+        _ = response.actionIdentifier
 
 //        switch actionIdentifier {
 //        case "SKIP_ACTION":

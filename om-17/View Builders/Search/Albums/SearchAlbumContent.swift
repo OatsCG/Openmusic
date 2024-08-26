@@ -32,10 +32,12 @@ struct SearchAlbumContent: View {
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaPadding(.bottom, 160)
             .onAppear {
-                albumModel.runSearch(albumID: album.AlbumID)
-                Task {
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                if (albumModel.fetchedAlbum == nil) {
                     albumModel.runSearch(albumID: album.AlbumID)
+                    Task {
+                        try? await Task.sleep(nanoseconds: 1_000_000_000)
+                        albumModel.runSearch(albumID: album.AlbumID)
+                    }
                 }
             }
             

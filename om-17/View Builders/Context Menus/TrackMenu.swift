@@ -16,6 +16,8 @@ struct TrackMenu: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     var track: any Track
+    @State var isDownloadedExp: Bool = false
+    @State var isDownloadedClean: Bool = false
     var body: some View {
         Section {
             if is_track_stored(TrackID: track.TrackID, context: modelContext) {
@@ -98,7 +100,7 @@ struct TrackMenu: View {
                         } label: {
                             Label("Play", systemImage: "play.fill")
                         }
-                        if downloadManager.is_downloaded(track, explicit: false) {
+                        if isDownloadedClean {
                             Button(role: .destructive) {
                                 downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
                                 //print("REMOVE DOWNLOAD \(track.Playback_Clean!)")
@@ -108,7 +110,7 @@ struct TrackMenu: View {
                             }
                         } else {
                             Button {
-                                downloadManager.add_download_task(track: track, explicit: false)
+                                downloadManager.addDownloadTask(track: track, explicit: false)
                             } label: {
                                 Label("Download", systemImage: "square.and.arrow.down")
                                     .symbolRenderingMode(.hierarchical)
@@ -137,7 +139,7 @@ struct TrackMenu: View {
                     }
                 } label: {
                     Label("Clean", systemImage: "c.square")
-                    if (downloadManager.is_downloaded(track, explicit: false)) {
+                    if isDownloadedClean {
                         Text("Downloaded")
                     }
                 }
@@ -148,7 +150,7 @@ struct TrackMenu: View {
                         } label: {
                             Label("Play", systemImage: "play.fill")
                         }
-                        if downloadManager.is_downloaded(track, explicit: true) {
+                        if isDownloadedExp {
                             Button(role: .destructive) {
                                 downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
                                 //print("REMOVE DOWNLOAD \(track.Playback_Explicit!)")
@@ -158,7 +160,7 @@ struct TrackMenu: View {
                             }
                         } else {
                             Button {
-                                downloadManager.add_download_task(track: track, explicit: true)
+                                downloadManager.addDownloadTask(track: track, explicit: true)
                             } label: {
                                 Label("Download", systemImage: "square.and.arrow.down")
                                     .symbolRenderingMode(.hierarchical)
@@ -187,7 +189,7 @@ struct TrackMenu: View {
                     }
                 } label: {
                     Label("Explicit", systemImage: "e.square")
-                    if (downloadManager.is_downloaded(track, explicit: true)) {
+                    if isDownloadedExp {
                         Text("Downloaded")
                     }
                 }
@@ -204,7 +206,7 @@ struct TrackMenu: View {
                     } label: {
                         Label("Play", systemImage: "play.fill")
                     }
-                    if downloadManager.is_downloaded(track, explicit: false) {
+                    if isDownloadedClean {
                         Button(role: .destructive) {
                             downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
                             //print("REMOVE DOWNLOAD \(track.Playback_Clean!)")
@@ -214,7 +216,7 @@ struct TrackMenu: View {
                         }
                     } else {
                         Button {
-                            downloadManager.add_download_task(track: track, explicit: false)
+                            downloadManager.addDownloadTask(track: track, explicit: false)
                         } label: {
                             Label("Download", systemImage: "square.and.arrow.down")
                                 .symbolRenderingMode(.hierarchical)
@@ -249,7 +251,7 @@ struct TrackMenu: View {
                     } label: {
                         Label("Play", systemImage: "play.fill")
                     }
-                    if downloadManager.is_downloaded(track, explicit: true) {
+                    if isDownloadedExp {
                         Button(role: .destructive) {
                             downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
                             //print("REMOVE DOWNLOAD \(track.Playback_Explicit!)")
@@ -259,7 +261,7 @@ struct TrackMenu: View {
                         }
                     } else {
                         Button {
-                            downloadManager.add_download_task(track: track, explicit: true)
+                            downloadManager.addDownloadTask(track: track, explicit: true)
                         } label: {
                             Label("Download", systemImage: "square.and.arrow.down")
                                 .symbolRenderingMode(.hierarchical)
@@ -289,6 +291,15 @@ struct TrackMenu: View {
                 }
            }
         }
+        .onAppear {
+            Task {
+                await updateIsDownloaded()
+            }
+        }
+    }
+    func updateIsDownloaded() async {
+        isDownloadedExp = await downloadManager.is_downloaded(track, explicit: true)
+        isDownloadedClean = await downloadManager.is_downloaded(track, explicit: false)
     }
 }
 

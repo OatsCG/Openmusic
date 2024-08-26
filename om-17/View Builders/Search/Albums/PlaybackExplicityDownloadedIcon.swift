@@ -13,6 +13,7 @@ struct PlaybackExplicityDownloadedIcon: View {
     var track: any Track
     var explicit: Bool = false
     var isDownloaded: Bool? = nil
+    @State var isFoundDownloaded: Bool = false
     var body: some View {
         VStack {
             ZStack {
@@ -34,12 +35,21 @@ struct PlaybackExplicityDownloadedIcon: View {
                     Image(systemName: "chevron.compact.down")
                         .foregroundStyle(.tertiary)
                 }
-            } else if downloadManager.is_downloaded(track, explicit: explicit) {
+            } else if isFoundDownloaded {
                 Image(systemName: "chevron.compact.down")
                     .foregroundStyle(.tertiary)
             }
         }
             .padding([.top, .leading], (track.Playback_Explicit != nil && track.Playback_Clean != nil) ? 4 : 0)
+            .onAppear {
+                Task {
+                    await findDownload()
+                }
+            }
+    }
+    
+    func findDownload() async {
+        self.isFoundDownloaded = await downloadManager.is_downloaded(track, explicit: explicit)
     }
 }
 

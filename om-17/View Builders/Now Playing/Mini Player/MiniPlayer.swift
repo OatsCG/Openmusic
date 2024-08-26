@@ -24,13 +24,16 @@ struct MiniPlayer: View {
     @Binding var passedNSPath: NavigationPath
     var minDistance: CGFloat = 30
     
+    @Namespace var namespace
+    
     var body: some View {
         VStack {
             Spacer()
                 .allowsHitTesting(false)
             VStack(spacing: 10) {
                 MiniToasts()
-                MiniPlayer_component()
+                MiniPlayer_component(namespace: namespace)
+                    
                     .contextMenu {
                         NPMenu(queueItem: playerManager.currentQueueItem, playlists: playlists, passedNSPath: $passedNSPath, showingNPSheet: .constant(true))
                             .environment(fontManager)
@@ -43,20 +46,22 @@ struct MiniPlayer: View {
                         }
                     }
                     .sheet(isPresented: $showingNPSheet, content: {
-                        NowPlayingSheet(showingNPSheet: $showingNPSheet, passedNSPath: $passedNSPath)
+                        NowPlayingSheet(showingNPSheet: $showingNPSheet, passedNSPath: $passedNSPath, namespace: namespace)
                             .environment(playerManager)
                             .environment(playlistImporter)
                             .environment(downloadManager)
                             .environment(networkMonitor)
                             .environment(omUser)
+                            .navigationTransition(.zoom(sourceID: "NP_TRANSITION_ID", in: namespace))
                     })
                     .fullScreenCover(isPresented: $showingNPCover, content: {
-                        NowPlayingSheet(showingNPSheet: $showingNPCover, passedNSPath: $passedNSPath)
-                            .environment(playerManager)
-                            .environment(playlistImporter)
-                            .environment(downloadManager)
-                            .environment(networkMonitor)
-                            .environment(omUser)
+                        Text("removed cover!")
+//                        NowPlayingSheet(showingNPSheet: $showingNPCover, passedNSPath: $passedNSPath)
+//                            .environment(playerManager)
+//                            .environment(playlistImporter)
+//                            .environment(downloadManager)
+//                            .environment(networkMonitor)
+//                            .environment(omUser)
                     })
                     .gesture(DragGesture(minimumDistance: minDistance, coordinateSpace: .local)
                         .onEnded { value in

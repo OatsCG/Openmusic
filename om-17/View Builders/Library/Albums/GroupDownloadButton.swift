@@ -10,56 +10,72 @@ import SwiftUI
 struct GroupDownloadButton: View {
     @Environment(DownloadManager.self) var downloadManager
     var tracks: [any Track]
+    @State var tracksDownloaded: Bool = false
+    @State var tracksDownloading: Bool = false
     var body: some View {
-        if (tracks_downloaded(tracks: tracks)) {
-            Menu {
-                Button(role: .destructive, action: {
+        Group {
+            if tracksDownloaded {
+                Menu {
+                    Button(role: .destructive, action: {
+                        for track in tracks {
+                            if track.Playback_Clean != nil {
+                                downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
+                            }
+                            if track.Playback_Explicit != nil {
+                                downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
+                            }
+                        }
+                    }) {
+                        Label("Remove Downloads", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "checkmark.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.title3)
+                }
+            } else if tracksDownloading {
+                Image(systemName: "circle.dashed")
+                    .symbolRenderingMode(.hierarchical)
+                    .font(.title3)
+            } else {
+                Button (action: {
                     for track in tracks {
-                        if track.Playback_Clean != nil {
-                            downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
-                        }
-                        if track.Playback_Explicit != nil {
-                            downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
-                        }
+                        downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
                     }
                 }) {
-                    Label("Remove Downloads", systemImage: "trash")
+                    Image(systemName: "arrow.down.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.title3)
                 }
-            } label: {
-                Image(systemName: "checkmark.circle.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .font(.title3)
             }
-        } else if (are_tracks_downloading(tracks: tracks)) {
-            Image(systemName: "circle.dashed")
-                .symbolRenderingMode(.hierarchical)
-                .font(.title3)
-        } else {
-            Button (action: {
-                for track in tracks {
-                    downloadManager.add_download_task(track: track, explicit: track.Playback_Explicit != nil)
-                }
-            }) {
-                Image(systemName: "arrow.down.circle.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .font(.title3)
+        }
+        .onAppear {
+            Task {
+                await updateTracksDownloaded(tracks: tracks)
+            }
+        }
+        .onChange(of: downloadManager.sumProgression) {
+            Task {
+                await are_tracks_downloading(tracks: tracks)
             }
         }
     }
     
-    private func tracks_downloaded(tracks: [any Track]) -> Bool {
+    private func updateTracksDownloaded(tracks: [any Track]) async {
         let preferredPlaybacks: [String] = tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!}
-        return downloadManager.are_playbacks_downloaded(PlaybackIDs: preferredPlaybacks)
+        tracksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: preferredPlaybacks)
+        
     }
     
-    private func are_tracks_downloading(tracks: [any Track]) -> Bool {
+    private func are_tracks_downloading(tracks: [any Track]) async {
         let preferredPlaybacks: [String] = tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!}
         for playback in preferredPlaybacks {
-            if downloadManager.task_exists(PlaybackID: playback) {
-                return true
+            if await downloadManager.task_exists(PlaybackID: playback) {
+                tracksDownloading = true
+                return
             }
         }
-        return false
+        tracksDownloading = false
     }
 //    
 //    private func tracks_progress(tracks: [Track]) -> Double {
