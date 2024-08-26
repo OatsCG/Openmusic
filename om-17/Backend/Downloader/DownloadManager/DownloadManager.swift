@@ -50,7 +50,7 @@ import SwiftUI
         }
     }
     
-    private func updateUI() async {
+    func updateUI() async {
         tracksDownloading = await downloadActor.tracksDownloading
         sumProgression = await downloadActor.get_sum_progression()
     }
