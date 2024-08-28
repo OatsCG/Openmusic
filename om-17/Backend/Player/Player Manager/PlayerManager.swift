@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 
-
+@MainActor
 @Observable final class PlayerManager: Sendable {
     let commandCenter = MPRemoteCommandCenter.shared()
     let audioSession = AVAudioSession.sharedInstance()
@@ -154,25 +154,23 @@ import Combine
             self.syncedTimerInterval = to
             self.syncedTimer?.invalidate()
             self.syncedTimer = Timer.scheduledTimer(withTimeInterval: to, repeats: true) { _ in
-                self.timer_fired()
+                Task {
+                    await self.timer_fired()
+                }
             }
             self.syncedTimer?.fire()
         }
     }
     
-    func timer_fired() {
+    func timer_fired() async {
         if self.timerMidFire == false {
             self.timerMidFire = true
-            // BAD ASYNC
-            DispatchQueue.main.async { [weak self] in
-                self?.syncPlayingTimeControls()
-                self?.update_elapsed_time()
-                self?.repeat_check()
-                self?.crossfade_check()
-                self?.try_auto_skip_if_necessary()
-                self?.timerMidFire = false
-                //print(ToastManager.shared.currentToast?.message)
-            }
+            self.syncPlayingTimeControls()
+            self.update_elapsed_time()
+            self.repeat_check()
+            self.crossfade_check()
+            await self.try_auto_skip_if_necessary()
+            self.timerMidFire = false
         }
     }
     

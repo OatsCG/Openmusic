@@ -55,14 +55,15 @@ extension PlayerManager {
         self.player.set_volume(to: self.appVolume)
     }
     
-    func switchCurrentlyPlaying(queueItem: QueueItem) {
-        print(queueItem.Track.Title)
-        if (self.currentQueueItem != nil) {
-            if (self.currentQueueItem!.queueID == queueItem.queueID) {
-                if (self.currentQueueItem!.queueItemPlayer != nil) {
+    func switchCurrentlyPlaying(queueItem: QueueItem) async {
+        let inputQueueItemPlayer: (any PlayerEngineProtocol)? = await queueItem.getQueueItemPlayer()
+        if let currentQueueItem = self.currentQueueItem {
+            if (currentQueueItem.queueID == queueItem.queueID) {
+                let currentQueueItemPlayer: (any PlayerEngineProtocol)? = await currentQueueItem.getQueueItemPlayer()
+                if let currentQueueItemPlayer = currentQueueItemPlayer {
                     //if current avplayer doesnt equal queueitem avplayer
-                    if (queueItem.queueItemPlayer != nil && !self.player.isEqual(to: queueItem.queueItemPlayer)) {
-                        if let player = queueItem.queueItemPlayer {
+                    if (inputQueueItemPlayer != nil && !self.player.isEqual(to: inputQueueItemPlayer)) {
+                        if let player = inputQueueItemPlayer {
                             // NEW SONG SET
                             self.player.pause()
                             self.player = player
@@ -77,15 +78,16 @@ extension PlayerManager {
                     }
                 }
             } else {
-                queueItem.audio_AVPlayer?.pause()
+                await queueItem.pauseAVPlayer()
             }
         } else {
-            queueItem.audio_AVPlayer?.pause()
+            await queueItem.pauseAVPlayer()
         }
         
         self.setAudioSession()
         self.addSuggestions()
     }
+    
     
     func setAudioSession() {
         do {

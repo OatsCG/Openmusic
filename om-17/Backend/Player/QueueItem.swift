@@ -20,7 +20,6 @@ import SwiftUI
     var primeStatus: PrimeStatus = .waiting
     var isDownloaded: Bool = false
     var isReady: Bool = false
-    
     private var queueItemActor: QueueItemActor
     
     init(from: any Track, explicit: Bool? = nil) async {
@@ -95,7 +94,7 @@ import SwiftUI
             } else if primeStatus == .failed {
                 await self.setPrimeStatus(.failed)
             } else if primeStatus == .loading { // not actually loading; just used to go to this block
-                playerManager.prime_next_song()
+                await playerManager.prime_next_song()
             }
             await self.updateUI()
             
@@ -106,7 +105,7 @@ import SwiftUI
                     await self.queueItemActor.seekIfNeeded(playerManager: playerManager)
                     await self.setPrimeStatus(.primed)
                     await self.updateUI()
-                    playerManager.switchCurrentlyPlaying(queueItem: self)
+                    await playerManager.switchCurrentlyPlaying(queueItem: self)
                     await self.updateUI()
                 } else if primeStatus == .failed {
                     await self.setPrimeStatus(.failed)
@@ -123,7 +122,7 @@ import SwiftUI
             await self.queueItemActor.setCurrentlyPriming(to: false)
             await self.updateUI()
             
-            playerManager.prime_next_song()
+            await playerManager.prime_next_song()
             await playerManager.addSuggestions()
             await self.updateUI()
         }
@@ -169,6 +168,22 @@ extension QueueItem {
 //        }
         await self.queueItemActor.update_prime_status(to)
         await self.updateUI()
+    }
+}
+
+// GET METHODS
+extension QueueItem {
+    func getQueueItemPlayer() async -> (any PlayerEngineProtocol)? {
+        return await self.queueItemActor.queueItemPlayer
+    }
+}
+
+
+
+// actions on queueItemActor
+extension QueueItem {
+    func pauseAVPlayer() async {
+        await self.queueItemActor.queueItemPlayer?.pause()
     }
     
 }

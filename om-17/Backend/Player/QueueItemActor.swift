@@ -82,7 +82,7 @@ actor QueueItemActor {
     private func clearIfDownloaded(playerManager: PlayerManager) async {
         if await DownloadManager.shared.is_downloaded(Track, explicit: self.explicit) {
             if self.audio_AVPlayer?.isRemote == true {
-                if self.queueID != playerManager.currentQueueItem?.queueID {
+                if await self.queueID != playerManager.currentQueueItem?.queueID {
                     await self.clearPlayback()
                 }
             }
@@ -97,14 +97,14 @@ actor QueueItemActor {
         } else {
             self.queueItemPlayer = self.audio_AVPlayer
         }
-        self.queueItemPlayer?.set_volume(to: playerManager.appVolume)
+        await self.queueItemPlayer?.set_volume(to: playerManager.appVolume)
         self.queueItemPlayer?.seek(to: 0)
     }
     
     func seekIfNeeded(playerManager: PlayerManager, position: Double? = nil) async {
         if let position = position {
             self.queueItemPlayer?.seek(to: position)
-            if (playerManager.isPlaying) {
+            if await (playerManager.isPlaying) {
                 self.queueItemPlayer?.play()
             }
         }
@@ -122,7 +122,7 @@ actor QueueItemActor {
     private func formulateFreshPlaybackURL(playerManager: PlayerManager) async {
         let playbackData: FetchedPlayback? = await self.fetchPlaybackDataIfNeeded()
         
-        playerManager.prime_next_song()
+        await playerManager.prime_next_song()
         
         //getting audio url
         var url: URL? = nil

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+
 protocol Track: Codable, Hashable, Sendable {
     var TrackID: String { get set }
     var Title: String { get set }
@@ -76,6 +77,8 @@ struct FetchedTrack: Codable, Hashable, Track {
         self.Album = from.Album
         self.Features = from.Features
     }
+    
+    @MainActor
     init(from: QueueItem) {
         self.TrackID = from.Track.TrackID
         self.Title = from.Track.Title
@@ -94,7 +97,7 @@ struct FetchedTrack: Codable, Hashable, Track {
 }
 
 @Model
-final class StoredTrack: Hashable, Sendable, Track {
+final class StoredTrack: Hashable, Track {
     @Attribute(.unique) var TrackID: String
     var Title: String
     var Playback_Clean: String?
@@ -121,6 +124,8 @@ final class StoredTrack: Hashable, Sendable, Track {
             await downloadAlbumArt(artworkID: from.Album.Artwork)
         }
     }
+    
+    @MainActor
     init(from: QueueItem) {
         self.TrackID = from.Track.TrackID
         self.Title = from.Track.Title
@@ -137,18 +142,32 @@ final class StoredTrack: Hashable, Sendable, Track {
         }
     }
     
+    func setTrackID(to: String) {
+        self.TrackID = to
+    }
+    
     required init(from decoder:Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.TrackID = try values.decode(String.self, forKey: .TrackID)
-        self.Title = try values.decode(String.self, forKey: .Title)
-        self.Playback_Clean = try values.decode(String.self, forKey: .Playback_Clean)
-        self.Playback_Explicit = try values.decode(String.self, forKey: .Playback_Explicit)
-        self.Length = try values.decode(Int.self, forKey: .Length)
-        self.Index = try values.decode(Int.self, forKey: .Index)
-        self.Album = try values.decode(SearchedAlbum.self, forKey: .Album)
-        self.Features = try values.decode([SearchedArtist].self, forKey: .Features)
-        self.dateAdded = try values.decode(Date.self, forKey: .dateAdded)
-        self.originServer = try values.decode(String.self, forKey: .originServer)
+        let TrackID = try values.decode(String.self, forKey: .TrackID)
+        let Title = try values.decode(String.self, forKey: .Title)
+        let Playback_Clean = try values.decode(String.self, forKey: .Playback_Clean)
+        let Playback_Explicit = try values.decode(String.self, forKey: .Playback_Explicit)
+        let Length = try values.decode(Int.self, forKey: .Length)
+        let Index = try values.decode(Int.self, forKey: .Index)
+        let Album = try values.decode(SearchedAlbum.self, forKey: .Album)
+        let Features = try values.decode([SearchedArtist].self, forKey: .Features)
+        let dateAdded = try values.decode(Date.self, forKey: .dateAdded)
+        let originServer = try values.decode(String.self, forKey: .originServer)
+        self.TrackID = TrackID
+        self.Title = Title
+        self.Playback_Clean = Playback_Clean
+        self.Playback_Explicit = Playback_Explicit
+        self.Length = Length
+        self.Index = Index
+        self.Album = Album
+        self.Features = Features
+        self.dateAdded = dateAdded
+        self.originServer = originServer
     }
     
     func encode(to encoder: Encoder) throws {
@@ -168,6 +187,9 @@ final class StoredTrack: Hashable, Sendable, Track {
         case TrackID, Title, Playback_Clean, Playback_Explicit, Length, Index, Album, Features, dateAdded, originServer
     }
 }
+
+
+
 
 struct FetchedTracks: Codable, Hashable {
     var Tracks: [FetchedTrack]
