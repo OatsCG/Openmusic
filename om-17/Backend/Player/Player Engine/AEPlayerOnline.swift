@@ -75,34 +75,37 @@ import AudioKit
     func has_file() -> Bool {
         return self.player.currentItem != nil
     }
-    func preroll(parent: PlayerEngine, completion: @escaping @Sendable (Bool) -> Void) {
-        if (parent.isReady) {
+    func preroll(parent: PlayerEngine) async -> Bool {
+        if parent.isReady {
             self.player.cancelPendingPrerolls()
-            completion(true)
-            return
+            return true
         }
-        parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
-            if player.status == .readyToPlay {
-                print("STATUS READY STATUS READY")
-                self.status = .readyToPlay
-                parent.statusObservation?.invalidate()
-                player.cancelPendingPrerolls()
-                let currentRate: Float = player.rate
-                player.rate = 0
-                player.preroll(atRate: 1.0) { prerollSuccess in
-                    player.seek(to: CMTime.zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
-                        player.rate = currentRate
-                        parent.isReady = true
-                        completion(true)
-                        
+        
+        return await withCheckedContinuation { continuation in
+            parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
+                if player.status == .readyToPlay {
+                    print("STATUS READY STATUS READY")
+                    self.status = .readyToPlay
+                    parent.statusObservation?.invalidate()
+                    player.cancelPendingPrerolls()
+                    let currentRate: Float = player.rate
+                    player.rate = 0
+                    player.preroll(atRate: 1.0) { prerollSuccess in
+                        player.seek(to: CMTime.zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
+                            player.rate = currentRate
+                            parent.isReady = true
+                            continuation.resume(returning: true)
+                        }
                     }
+                } else if player.status == .failed {
+                    print("STATUS FAILED STATUS FAILED")
+                    self.status = .failed
+                    continuation.resume(returning: false)
                 }
-            } else if player.status == .failed {
-                print("STATUS FAILED STATUS FAILED")
-                self.status = .failed
             }
         }
     }
+
     func setVolume(_ to: Float) {
         self.player.volume = min(max(to, 0), 1)
     }

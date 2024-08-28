@@ -9,89 +9,57 @@ import Foundation
 import AVFoundation
 import SwiftUI
 
-@Observable final class QueueItem: Hashable, Sendable {
+@MainActor
+@Observable class QueueItem: Hashable {
     let queueID: UUID
     var Track: any Track
-    var fetchedPlayback: FetchedPlayback? = nil
-    var queueItemPlayer: (any PlayerEngineProtocol)? = nil
-    var audio_AVPlayer: PlayerEngine? = nil
-    var video_AVPlayer: VideoPlayerEngine? = nil
     var explicit: Bool = false
     var isVideo: Bool = false
     var currentlyPriming: Bool = false
     var wasSongEnjoyed: Bool = false
     var primeStatus: PrimeStatus = .waiting
     var isDownloaded: Bool = false
+    var isReady: Bool = false
     
-    init(from: any Track, explicit: Bool? = nil) {
+    private var queueItemActor: QueueItemActor
+    
+    init(from: any Track, explicit: Bool? = nil) async {
         self.queueID = UUID()
         self.Track = from
-        self.explicit = (explicit != nil ? explicit! : (from.Playback_Explicit != nil))
-        self.update_download_status()
-        self.setVideo(to: false)
+        var explicity: Bool = false
+        if let explicit = explicit {
+            explicity = explicit
+        } else {
+            explicity = from.Playback_Explicit != nil
+        }
+        self.explicit = explicity
+        self.queueItemActor = await QueueItemActor(queueID: self.queueID, Track: from, fetchedPlayback: nil, explicit: explicity, audio_AVPlayer: nil)
     }
     
-    init(from: QueueItem) {
+    init(from: QueueItem) async {
         self.queueID = UUID()
         self.Track = from.Track
-        self.fetchedPlayback = from.fetchedPlayback
         self.explicit = from.explicit
-        self.audio_AVPlayer = PlayerEngine()
-        self.video_AVPlayer = VideoPlayerEngine(ytid: from.fetchedPlayback?.YT_Video_ID)
-        self.update_download_status()
-        
-        if (from.audio_AVPlayer != nil) {
-            if (from.audio_AVPlayer!.has_file()) {
-                self.audio_AVPlayer = PlayerEngine(copy: from.audio_AVPlayer)
-            }
-        }
-        self.setVideo(to: false)
-        self.audio_AVPlayer?.pause()
-        self.audio_AVPlayer?.seek_to_zero()
+        self.queueItemActor = await QueueItemActor(queueID: self.queueID, Track: from.Track, fetchedPlayback: from.queueItemActor.fetchedPlayback, explicit: from.explicit, audio_AVPlayer: from.queueItemActor.audio_AVPlayer)
+        await self.updateUI()
     }
     
-    func setExplicity(to: Bool) {
-        if to != self.explicit {
-            self.explicit = to
-            self.clearPlayback()
-        }
+    func updateUI() async {
+        await self.queueItemActor.updateDownloadStatus()
+        self.currentlyPriming = await self.queueItemActor.currentlyPriming
+        self.primeStatus = await self.queueItemActor.primeStatus
+        self.isDownloaded = await self.queueItemActor.isDownloaded
+        self.isReady = await self.queueItemActor.isReady()
+        self.isVideo = await self.queueItemActor.isVideo
+        return
     }
     
-    func setVideo(to: Bool) {
-        if (self.isVideo != to) {
-            //self.queueItemPlayer?.pause()
-        }
-        if to == true && self.fetchedPlayback?.YT_Video_ID != nil {
-            self.isVideo = true
-            self.video_AVPlayer = VideoPlayerEngine(ytid: self.fetchedPlayback?.YT_Video_ID)
-            //self.queueItemPlayer = self.video_AVPlayer
-        } else if (to == false) {
-            self.isVideo = false
-            self.queueItemPlayer = self.audio_AVPlayer
-        }
-    }
-    
-    func clearPlayback() {
-        self.audio_AVPlayer?.pause()
-        self.audio_AVPlayer?.clear_file()
-        self.video_AVPlayer?.pause()
-        self.video_AVPlayer?.clear_file()
-        self.fetchedPlayback = nil
-        self.audio_AVPlayer = nil
-        self.video_AVPlayer = nil
-        self.queueItemPlayer = nil
+    func clearPlayback() async {
         self.currentlyPriming = false
-        self.update_prime_status(.waiting)
-        
-        
-        self.update_download_status()
-    }
-    
-    func isReady() -> Bool {
-        if queueItemPlayer != nil && self.queueItemPlayer!.isReady && !self.queueItemPlayer!.duration().isNaN && self.queueItemPlayer!.duration() > 0 {
-            return true
-        }
-        return false
+        await self.queueItemActor.setCurrentlyPriming(to: false)
+        await self.setPrimeStatus(.waiting)
+        await self.queueItemActor.clearPlayback()
+        await self.updateUI()
     }
     
     func userEnjoyedSong() {
@@ -100,175 +68,114 @@ import SwiftUI
         }
     }
     
-    func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) async {
-        if self.isDownloaded == false {
-            self.update_prime_status(.waiting)
-        }
-        if seek {
-            if let timestamp = self.queueItemPlayer?.currentTime {
-                DispatchQueue.main.async {
-                    self.clearPlayback()
+    func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) {
+        Task {
+            if self.isDownloaded == false {
+                await self.setPrimeStatus(.waiting)
+                await self.updateUI()
+            }
+            if seek {
+                if let timestamp = await self.queueItemActor.getCurrentTimestamp() {
+                    await self.clearPlayback()
                     self.prime_object(playerManager: playerManager, position: timestamp)
                 }
-            }
-        } else {
-            DispatchQueue.main.async {
-                self.clearPlayback()
+            } else {
+                await self.clearPlayback()
                 self.prime_object(playerManager: playerManager)
             }
         }
     }
     
     func prime_object(playerManager: PlayerManager, continueCurrent: Bool = false, position: Double? = nil) {
-        // assume run in main thread OR detached
-        Task.detached {
-            if (self.currentlyPriming) {
-                return
-            }
-            if (self.primeStatus == .failed || self.primeStatus == .success || self.primeStatus == .passed) {
+        Task.detached { [self] in
+            let primeStatus: PrimeStatus = await self.queueItemActor.primeObjectForSwitch(playerManager: playerManager, continueCurrent: continueCurrent, position: position)
+            await self.updateUI()
+            if primeStatus == .success {
+                await self.setPrimeStatus(.success)
+            } else if primeStatus == .failed {
+                await self.setPrimeStatus(.failed)
+            } else if primeStatus == .loading { // not actually loading; just used to go to this block
                 playerManager.prime_next_song()
-                return
+            }
+            await self.updateUI()
+            
+            if primeStatus != .failed {
+                let prerollStatus = await self.queueItemActor.prerollEngine(playerManager: playerManager)
+                await self.updateUI()
+                if primeStatus == .success {
+                    await self.queueItemActor.seekIfNeeded(playerManager: playerManager)
+                    await self.setPrimeStatus(.primed)
+                    await self.updateUI()
+                    playerManager.switchCurrentlyPlaying(queueItem: self)
+                    await self.updateUI()
+                } else if primeStatus == .failed {
+                    await self.setPrimeStatus(.failed)
+                    await self.updateUI()
+                } else if primeStatus == .waiting { // not actually waiting; just used to go to this block
+                    await self.updateUI()
+                }
             }
             
-            if await DownloadManager.shared.is_downloaded(self, explicit: self.explicit) {
-                if self.audio_AVPlayer?.isRemote == true {
-                    if self.queueID != playerManager.currentQueueItem?.queueID {
-                        self.clearPlayback()
-                    }
-                }
+            if await playerManager.currentQueueItem?.queueID != self.queueItemActor.queueID {
+                await self.queueItemActor.audio_AVPlayer?.pause()
+                await self.updateUI()
             }
-            self.currentlyPriming = true
-            if self.queueItemPlayer == nil {
-                self.update_prime_status(.loading)
-                let isExplicit: Bool = self.explicit
-                let playback_explicit: String? = self.Track.Playback_Explicit
-                let playback_clean: String? = self.Track.Playback_Clean
-                Task.detached { [unowned self] in
-                    let isDownloaded: Bool = await DownloadManager.shared.is_downloaded(self, explicit: isExplicit)
-                    var playbackData: FetchedPlayback? = nil
-                    if (!isDownloaded) {
-                        playbackData = try? await fetchPlaybackData(playbackID: isExplicit ? playback_explicit! : playback_clean!)
-                    }
-                    //getting audio url
-                    DispatchQueue.main.async { [weak self, playbackData] in
-                        var url: URL? = nil
-                        var isRemote: Bool = true
-                        if (self?.isVideo == false) {
-                            if isDownloaded {
-                                url = DownloadManager.shared.get_stored_location(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
-                                isRemote = false
-                            } else {
-                                self?.fetchedPlayback = playbackData
-                                url = URL(string: self?.fetchedPlayback?.Playback_Audio_URL ?? "")
-                            }
-                        }
-                        if url != nil {
-                            self?.update_prime_status(.success)
-                            playerManager.prime_next_song()
-                            self?.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
-                            self?.video_AVPlayer = VideoPlayerEngine(ytid: self?.fetchedPlayback?.YT_Video_ID)
-                            if (self?.isVideo == true) {
-                                //self.queueItemPlayer = self.video_AVPlayer
-                            } else {
-                                self?.queueItemPlayer = self?.audio_AVPlayer
-                            }
-                            self?.queueItemPlayer?.set_volume(to: playerManager.appVolume)
-                            self?.queueItemPlayer?.seek(to: 0)
-                            if let qitem = self {
-                                playerManager.set_currentlyPlaying(queueItem: qitem)
-                                Task.detached { [weak self, weak qitem] in
-                                    self?.queueItemPlayer?.preroll() { success in
-                                        if success {
-                                            DispatchQueue.main.async { [weak self, weak qitem] in
-                                                if let qitem = qitem {
-                                                    self?.update_prime_status(.primed)
-                                                    playerManager.prime_next_song()
-                                                    playerManager.set_currentlyPlaying(queueItem: qitem)
-                                                    if position != nil {
-                                                        self?.queueItemPlayer!.seek(to: position!)
-                                                        if (playerManager.isPlaying) {
-                                                            self?.queueItemPlayer?.play()
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            print("PREROLL FAILED")
-                                            self?.update_prime_status(.failed)
-                                            DispatchQueue.main.async { [playerManager] in
-                                                playerManager.prime_next_song()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            self?.update_prime_status(.failed)
-                            playerManager.prime_next_song()
-                        }
-                        if (playerManager.currentQueueItem?.queueID != self?.queueID) {
-                            self?.audio_AVPlayer?.pause()
-                        }
-                        self?.currentlyPriming = false
-                    }
-                }
-            } else {
-                if (self.primeStatus == .waiting) {
-                    self.update_prime_status(.success)
-                }
-                if position != nil {
-                    self.queueItemPlayer!.seek(to: position!)
-                    await playerManager.addSuggestions()
-                }
-                self.queueItemPlayer!.preroll() { success in
-                    if success {
-                        DispatchQueue.main.async {
-                            if position != nil {
-                                self.queueItemPlayer!.seek(to: position!)
-                            }
-                            playerManager.set_currentlyPlaying(queueItem: self)
-                        }
-                    }
-                }
-                self.currentlyPriming = false
-            }
-            DispatchQueue.main.async { [playerManager] in
-                playerManager.prime_next_song()
-            }
+            await self.queueItemActor.setCurrentlyPriming(to: false)
+            await self.updateUI()
+            
+            playerManager.prime_next_song()
+            await playerManager.addSuggestions()
+            await self.updateUI()
         }
         return
     }
     
-    func update_download_status() {
-        Task {
-            if await DownloadManager.shared.is_downloaded(self.Track, explicit: self.explicit) {
-                await MainActor.run {
-                    self.isDownloaded = true
-                }
-            } else {
-                await MainActor.run {
-                    self.isDownloaded = false
-                }
-            }
-        }
-    }
-    
-    func update_prime_status(_ status: PrimeStatus) {
-        withAnimation {
-            self.primeStatus = status
-        }
-    }
-    
     // Conform to Hashable
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(queueID)
     }
 
     // Define equality
-    static func ==(lhs: QueueItem, rhs: QueueItem) -> Bool {
+    nonisolated static func ==(lhs: QueueItem, rhs: QueueItem) -> Bool {
         return lhs.queueID == rhs.queueID
     }
 }
+
+
+// SET METHODS
+extension QueueItem {
+    func setCurrentlyPriming(to: Bool) {
+        self.currentlyPriming = to
+    }
+    func setExplicity(to: Bool) {
+        Task {
+            if to != self.explicit {
+                self.explicit = to
+                await self.queueItemActor.setExplicity(to: to)
+                await self.clearPlayback()
+            }
+        }
+    }
+    func setVideo(to: Bool) {
+        Task {
+            await self.queueItemActor.setVideo(to: to)
+            await self.updateUI()
+        }
+        return
+    }
+    func setPrimeStatus(_ to: PrimeStatus) async {
+//        withAnimation {
+//            self.primeStatus = status
+//        }
+        await self.queueItemActor.update_prime_status(to)
+        await self.updateUI()
+    }
+    
+}
+
+
+
+
 
 
 

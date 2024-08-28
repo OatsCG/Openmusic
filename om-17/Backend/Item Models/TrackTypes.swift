@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-protocol Track: Codable, Hashable {
+protocol Track: Codable, Hashable, Sendable {
     var TrackID: String { get set }
     var Title: String { get set }
     var Playback_Clean: String? { get set }

@@ -87,22 +87,23 @@ import AudioKit
     func has_file() -> Bool {
         return self.player.status != .noSource
     }
-    func preroll(parent: PlayerEngine, completion: @escaping (_ success: Bool) -> Void) {
+    func preroll(parent: PlayerEngine) async -> Bool {
         self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
+
         if parent.isReady {
-            completion(true)
-            return
+            return true
         } else {
-            if (self.has_file() && self.eqManager.audioEngine == nil) {
-                DispatchQueue.main.async {
+            if self.has_file() && self.eqManager.audioEngine == nil {
+                await MainActor.run {
                     self.eqManager.setEngine(audioEngine: self.player.engine, playerNode: self.player.playerNode.node)
                     self.amplitudeFetcher.try_amplitude_fetch(audioFile: self.player.file)
                     parent.isReady = self.has_file()
                 }
             }
-            completion(self.has_file())
+            return self.has_file()
         }
     }
+
     func setVolume(_ to: Float) {
         if (self.eqManager.isReady) {
             Task {

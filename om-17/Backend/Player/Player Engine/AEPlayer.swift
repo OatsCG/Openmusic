@@ -24,7 +24,7 @@ protocol AEPlayer {
     func has_file() -> Bool
     func modifyEQ(index: Int, value: Double)
     func resetEQ(playerManager: PlayerManager)
-    func preroll(parent: PlayerEngine, completion: @escaping @Sendable (_ success: Bool) -> Void)
+    func preroll(parent: PlayerEngine) async -> Bool
     func setVolume(_ to: Float) -> Void
     func amplitudeChart() -> [Float]?
 }
