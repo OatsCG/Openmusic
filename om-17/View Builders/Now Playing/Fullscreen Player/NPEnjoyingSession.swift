@@ -19,16 +19,16 @@ struct NPEnjoyingSession: View {
                 .customFont(fontManager, .title3, bold: true)
             Text("Add a playlist of your favourites.")
             Button(action: {
-                Task.detached {
+                Task {
                     let playlist = StoredPlaylist(Title: "Listening Session")
                     playlist.Bio = Date().formatted(date: .long, time: .shortened)
                     playlist.Image = nil
                     playlist.importURL = nil
                     
-                    let tracksToAdd: [ImportedTrack] = await playerManager.sessionHistory.filter({ $0.wasSongEnjoyed == true }).compactMap { $0.Track as? ImportedTrack }
+                    let tracksToAdd: [ImportedTrack] = playerManager.sessionHistory.filter({ $0.wasSongEnjoyed == true }).compactMap { $0.Track as? ImportedTrack }
                     playlist.add_tracks(tracks: tracksToAdd.map { FetchedTrack(from: $0) })
-                    await modelContext.insert(playlist)
-                    try? await modelContext.save()
+                    modelContext.insert(playlist)
+                    try? modelContext.save()
                 }
                 withAnimation {
                     playerManager.hasSuggestedPlaylistCreation = true

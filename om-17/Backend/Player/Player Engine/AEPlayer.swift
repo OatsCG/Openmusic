@@ -23,7 +23,7 @@ protocol AEPlayer {
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping @Sendable (Bool) -> Void)
     func has_file() -> Bool
     func modifyEQ(index: Int, value: Double)
-    func resetEQ(playerManager: PlayerManager)
+    func resetEQ(playerManagerActor: PlayerManagerActor)
     func preroll(parent: PlayerEngine) async -> Bool
     func setVolume(_ to: Float) -> Void
     func amplitudeChart() -> [Float]?

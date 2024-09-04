@@ -46,8 +46,8 @@ actor FetchSuggestionsActor {
         
         let data = try await fetchSuggestionsData(songs: songs)
         
-        if playerManager.getEnjoyedSongsNaive(limit: 5) == songs {
-            playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
+        if await playerManager.getEnjoyedSongsNaive(limit: 5) == songs {
+            await playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
         }
     }
     

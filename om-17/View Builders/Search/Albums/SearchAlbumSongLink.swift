@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 // playerManager.currentQueueItem?.Track.TrackID == track.TrackID
+@MainActor
 func isPlayingTrackID(playerManager: PlayerManager, trackID: String) -> Bool {
     let queueItem: QueueItem? = playerManager.currentQueueItem
     if (queueItem == nil) {

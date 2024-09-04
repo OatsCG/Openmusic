@@ -55,10 +55,10 @@ import AudioKit
         self.eqManager.adjustEQBand(for: index, value: Float(value))
     }
     
-    func resetEQ(playerManager: PlayerManager) {
+    func resetEQ(playerManagerActor: PlayerManagerActor) {
         
         //self.eqManager = EQManager()
-        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
+        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManagerActor: playerManagerActor)
         //self.eqManager.resetEQ()
     }
     

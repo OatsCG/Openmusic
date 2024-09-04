@@ -17,7 +17,7 @@ struct BufferProgressLabel: View {
     @Binding var visibleState: DebuggerState
     var body: some View {
         HStack(alignment: .center) {
-            if networkMonitor.isConnected == false && playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == true {
+            if networkMonitor.isConnected == false && playerManager.currentQueueItem?.isDownloaded == false {
                 Image(systemName: "network.slash")
                 Text("No Connection")
                     .task {
@@ -47,7 +47,7 @@ struct BufferProgressLabel: View {
                     }
                 } else {
                     if playerManager.currentQueueItem?.fetchedPlayback == nil {
-                        if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
+                        if playerManager.currentQueueItem?.isDownloaded == true {
                             Image(systemName: "checkmark")
                             Text("Playback Downloaded")
                                 .task {
@@ -104,7 +104,7 @@ struct BufferProgressLabel: View {
                                 }
                             }
                         } else {
-                            if playerManager.currentQueueItem?.audio_AVPlayer?.isReady == true {
+                            if playerManager.currentQueueItem?.isReady == true {
                                 if (playerManager.currentQueueItem?.audio_AVPlayer?.player.status == .readyToPlay) {
                                     if (playerManager.currentQueueItem?.audio_AVPlayer?.player.duration ?? 0 > 0) {
                                         Image(systemName: "checkmark")

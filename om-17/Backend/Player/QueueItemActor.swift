@@ -79,17 +79,17 @@ actor QueueItemActor {
         self.primeStatus = status
     }
     
-    private func clearIfDownloaded(playerManager: PlayerManager) async {
+    private func clearIfDownloaded(playerManagerActor: PlayerManagerActor) async {
         if await DownloadManager.shared.is_downloaded(Track, explicit: self.explicit) {
             if self.audio_AVPlayer?.isRemote == true {
-                if await self.queueID != playerManager.currentQueueItem?.queueID {
+                if await self.queueID != playerManagerActor.currentQueueItem?.queueID {
                     await self.clearPlayback()
                 }
             }
         }
     }
     
-    private func primeEngineForPreroll(playerManager: PlayerManager, url: URL, isRemote: Bool) async {
+    private func primeEngineForPreroll(playerManagerActor: PlayerManagerActor, url: URL, isRemote: Bool) async {
         self.audio_AVPlayer = PlayerEngine(url: url, remote: isRemote)
         self.video_AVPlayer = VideoPlayerEngine(ytid: self.fetchedPlayback?.YT_Video_ID)
         if (self.isVideo == true) {
@@ -97,14 +97,14 @@ actor QueueItemActor {
         } else {
             self.queueItemPlayer = self.audio_AVPlayer
         }
-        await self.queueItemPlayer?.set_volume(to: playerManager.appVolume)
+        await self.queueItemPlayer?.set_volume(to: playerManagerActor.appVolume)
         self.queueItemPlayer?.seek(to: 0)
     }
     
-    func seekIfNeeded(playerManager: PlayerManager, position: Double? = nil) async {
+    func seekIfNeeded(playerManagerActor: PlayerManagerActor, position: Double? = nil) async {
         if let position = position {
             self.queueItemPlayer?.seek(to: position)
-            if await (playerManager.isPlaying) {
+            if await (playerManagerActor.isPlaying) {
                 self.queueItemPlayer?.play()
             }
         }
@@ -119,10 +119,10 @@ actor QueueItemActor {
         return nil
     }
     
-    private func formulateFreshPlaybackURL(playerManager: PlayerManager) async {
+    private func formulateFreshPlaybackURL(playerManagerActor: PlayerManagerActor) async {
         let playbackData: FetchedPlayback? = await self.fetchPlaybackDataIfNeeded()
         
-        await playerManager.prime_next_song()
+        await playerManagerActor.prime_next_song()
         
         //getting audio url
         var url: URL? = nil
@@ -137,9 +137,9 @@ actor QueueItemActor {
         self.formulatedURL = url
     }
     
-    func prerollEngine(playerManager: PlayerManager) async -> PrimeStatus {
+    func prerollEngine(playerManagerActor: PlayerManagerActor) async -> PrimeStatus {
         if let formulatedURL = self.formulatedURL {
-            await self.primeEngineForPreroll(playerManager: playerManager, url: formulatedURL, isRemote: !self.isDownloaded)
+            await self.primeEngineForPreroll(playerManagerActor: playerManagerActor, url: formulatedURL, isRemote: !self.isDownloaded)
             let successfulPreroll = await self.queueItemPlayer?.preroll()
             if successfulPreroll == true {
                 return .primed
@@ -151,18 +151,20 @@ actor QueueItemActor {
         }
     }
     
-    func primeFreshQueueItemPlayer(playerManager: PlayerManager) async -> Bool {
-        await self.formulateFreshPlaybackURL(playerManager: playerManager)
-        if let formulatedURL = self.formulatedURL {
+    func primeFreshQueueItemPlayer(playerManagerActor: PlayerManagerActor) async -> Bool {
+        await self.formulateFreshPlaybackURL(playerManagerActor: playerManagerActor)
+        if self.formulatedURL != nil {
             return true
         } else {
             return false
         }
     }
     
-    func primeExistingQueueItemPlayer(playerManager: PlayerManager, position: Double? = nil) async -> Bool {
+    func primeExistingQueueItemPlayer(position: Double? = nil) async -> Bool {
         if let position = position {
-            self.queueItemPlayer!.seek(to: position)
+            if let queueItemPlayer = self.queueItemPlayer {
+                queueItemPlayer.seek(to: position)
+            }
         }
         if (self.primeStatus == .waiting) {
             return true
@@ -170,26 +172,26 @@ actor QueueItemActor {
         return false
     }
     
-    func primeObjectForSwitch(playerManager: PlayerManager, continueCurrent: Bool = false, position: Double? = nil) async -> PrimeStatus {
+    func primeObjectForSwitch(playerManagerActor: PlayerManagerActor, continueCurrent: Bool = false, position: Double? = nil) async -> PrimeStatus {
         guard !self.currentlyPriming else { return .waiting }
 
         if (self.primeStatus == .failed || self.primeStatus == .success || self.primeStatus == .passed) {
             return .loading
         }
         
-        await self.clearIfDownloaded(playerManager: playerManager)
+        await self.clearIfDownloaded(playerManagerActor: playerManagerActor)
         
         self.currentlyPriming = true
         
         if self.queueItemPlayer == nil {
-            let primeSucceeded = await primeFreshQueueItemPlayer(playerManager: playerManager)
+            let primeSucceeded = await primeFreshQueueItemPlayer(playerManagerActor: playerManagerActor)
             if primeSucceeded {
                 return .success
             } else {
                 return .failed
             }
         } else {
-            let primeSucceeded = await primeExistingQueueItemPlayer(playerManager: playerManager, position: position)
+            let primeSucceeded = await primeExistingQueueItemPlayer(position: position)
             if primeSucceeded {
                 return .success
             } else {

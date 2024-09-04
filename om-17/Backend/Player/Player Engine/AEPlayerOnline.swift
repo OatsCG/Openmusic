@@ -56,7 +56,7 @@ import AudioKit
         return
     }
     
-    func resetEQ(playerManager: PlayerManager) {
+    func resetEQ(playerManagerActor: PlayerManagerActor) {
         return
     }
     

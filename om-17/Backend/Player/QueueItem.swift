@@ -13,6 +13,7 @@ import SwiftUI
 @Observable class QueueItem: Hashable {
     let queueID: UUID
     var Track: any Track
+    var fetchedPlayback: FetchedPlayback? = nil
     var explicit: Bool = false
     var isVideo: Bool = false
     var currentlyPriming: Bool = false
@@ -46,6 +47,7 @@ import SwiftUI
     func updateUI() async {
         await self.queueItemActor.updateDownloadStatus()
         self.currentlyPriming = await self.queueItemActor.currentlyPriming
+        self.fetchedPlayback = await self.queueItemActor.fetchedPlayback
         self.primeStatus = await self.queueItemActor.primeStatus
         self.isDownloaded = await self.queueItemActor.isDownloaded
         self.isReady = await self.queueItemActor.isReady()
@@ -67,7 +69,7 @@ import SwiftUI
         }
     }
     
-    func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) {
+    func prime_object_fresh(playerManagerActor: PlayerManagerActor, continueCurrent: Bool = false, seek: Bool = false) {
         Task {
             if self.isDownloaded == false {
                 await self.setPrimeStatus(.waiting)
@@ -76,36 +78,36 @@ import SwiftUI
             if seek {
                 if let timestamp = await self.queueItemActor.getCurrentTimestamp() {
                     await self.clearPlayback()
-                    self.prime_object(playerManager: playerManager, position: timestamp)
+                    self.prime_object(playerManagerActor: playerManagerActor, position: timestamp)
                 }
             } else {
                 await self.clearPlayback()
-                self.prime_object(playerManager: playerManager)
+                self.prime_object(playerManagerActor: playerManagerActor)
             }
         }
     }
     
-    func prime_object(playerManager: PlayerManager, continueCurrent: Bool = false, position: Double? = nil) {
+    func prime_object(playerManagerActor: PlayerManagerActor, continueCurrent: Bool = false, position: Double? = nil) {
         Task.detached { [self] in
-            let primeStatus: PrimeStatus = await self.queueItemActor.primeObjectForSwitch(playerManager: playerManager, continueCurrent: continueCurrent, position: position)
+            let primeStatus: PrimeStatus = await self.queueItemActor.primeObjectForSwitch(playerManagerActor: playerManagerActor, continueCurrent: continueCurrent, position: position)
             await self.updateUI()
             if primeStatus == .success {
                 await self.setPrimeStatus(.success)
             } else if primeStatus == .failed {
                 await self.setPrimeStatus(.failed)
             } else if primeStatus == .loading { // not actually loading; just used to go to this block
-                await playerManager.prime_next_song()
+                await playerManagerActor.prime_next_song()
             }
             await self.updateUI()
             
             if primeStatus != .failed {
-                let prerollStatus = await self.queueItemActor.prerollEngine(playerManager: playerManager)
+                let prerollStatus = await self.queueItemActor.prerollEngine(playerManagerActor: playerManagerActor)
                 await self.updateUI()
                 if primeStatus == .success {
-                    await self.queueItemActor.seekIfNeeded(playerManager: playerManager)
+                    await self.queueItemActor.seekIfNeeded(playerManagerActor: playerManagerActor)
                     await self.setPrimeStatus(.primed)
                     await self.updateUI()
-                    await playerManager.switchCurrentlyPlaying(queueItem: self)
+                    await playerManagerActor.switchCurrentlyPlaying(queueItem: self)
                     await self.updateUI()
                 } else if primeStatus == .failed {
                     await self.setPrimeStatus(.failed)
@@ -115,15 +117,14 @@ import SwiftUI
                 }
             }
             
-            if await playerManager.currentQueueItem?.queueID != self.queueItemActor.queueID {
+            if await playerManagerActor.currentQueueItem?.queueID != self.queueItemActor.queueID {
                 await self.queueItemActor.audio_AVPlayer?.pause()
                 await self.updateUI()
             }
             await self.queueItemActor.setCurrentlyPriming(to: false)
             await self.updateUI()
             
-            await playerManager.prime_next_song()
-            await playerManager.addSuggestions()
+            await playerManagerActor.prime_next_song()
             await self.updateUI()
         }
         return
@@ -176,6 +177,10 @@ extension QueueItem {
     func getQueueItemPlayer() async -> (any PlayerEngineProtocol)? {
         return await self.queueItemActor.queueItemPlayer
     }
+    
+    func getAudioAVPlayer() async -> PlayerEngine? {
+        return await self.queueItemActor.audio_AVPlayer
+    }
 }
 
 
@@ -186,6 +191,13 @@ extension QueueItem {
         await self.queueItemActor.queueItemPlayer?.pause()
     }
     
+    func playAVPlayer() async {
+        await self.queueItemActor.queueItemPlayer?.play()
+    }
+    
+    func resetEQ(playerManagerActor: PlayerManagerActor) async {
+        await self.queueItemActor.audio_AVPlayer?.player.resetEQ(playerManagerActor: playerManagerActor)
+    }
 }
 
 

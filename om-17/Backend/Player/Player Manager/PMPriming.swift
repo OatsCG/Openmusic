@@ -9,80 +9,45 @@ import SwiftUI
 
 extension PlayerManager {
     func prime_next_song() {
-        Task.detached {
-            DispatchQueue.main.async { [unowned self] in
-                // begin prime queue
-                var next5songs: ArraySlice<QueueItem> = self.trackQueue.prefix(5)
-                if let cqi = self.currentQueueItem {
-                    next5songs.insert(cqi, at: 0)
-                }
-                
-                // instantly prime downloaded songs
-                let firstDownloaded: QueueItem? = next5songs.first(where: { $0.isDownloaded && $0.primeStatus == .waiting })
-                
-                if let firstDownloaded = firstDownloaded {
-                    firstDownloaded.prime_object(playerManager: self)
-                } else {
-                    // prime first remote song that needs it
-                    for track in next5songs {
-                        if track.primeStatus == .waiting || track.primeStatus == .loading {
-                            track.prime_object(playerManager: self)
-                            break
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    //func
-    
-    func prime_current_song(continueCurrent: Bool = false) {
-        if (self.currentQueueItem != nil) {
-            self.currentQueueItem!.prime_object(playerManager: self, continueCurrent: continueCurrent)
+        Task {
+            await self.PMActor.prime_next_song(playerManager: self)
         }
     }
     
     func is_current_item_ready() -> Bool {
-        if (self.currentQueueItem == nil) {
-            return true
+        if let currentQueueItem = self.currentQueueItem {
+            return currentQueueItem.isReady
         } else {
-            return self.currentQueueItem!.isReady()
+            return true
         }
     }
     
     func is_next_item_ready() -> Bool {
-        if (self.trackQueue.first == nil) {
-            return true
-        } else {
-            if (self.trackQueue[0].queueItemPlayer != nil) {
-                if (self.trackQueue[0].isReady() == true) {
-                    return true
-                }
+        if let nextQueueItem = self.trackQueue.first {
+            if (nextQueueItem.isReady == true) {
+                return true
             }
+        } else {
+            return true
         }
         return false
     }
     
-    func resetEQs() {
+    func resetEQs() async {
         let wasPlaying: Bool = self.isPlaying
-        print("reseting. wasPlaying: \(wasPlaying)")
-        self.currentQueueItem?.audio_AVPlayer?.player.resetEQ(playerManager: self)
+        await self.currentQueueItem?.resetEQ(playerManager: self)
         for item in self.sessionHistory {
-            if item.audio_AVPlayer?.isRemote == false {
-                item.audio_AVPlayer?.player.resetEQ(playerManager: self)
+            if item.isDownloaded == true {
+                await item.resetEQ(playerManager: self)
             }
         }
         for item in self.trackQueue {
-            if item.audio_AVPlayer?.isRemote == false {
-                item.audio_AVPlayer?.player.resetEQ(playerManager: self)
+            if item.isDownloaded == true {
+                await item.resetEQ(playerManager: self)
             }
         }
-        print("still? \(self.isPlaying)")
         if wasPlaying {
-            self.currentQueueItem?.audio_AVPlayer?.player.play()
-            //self.pause()
-            //self.play()
+            await self.currentQueueItem?.playAVPlayer()
         }
     }
 }

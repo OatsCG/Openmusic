@@ -211,7 +211,7 @@ class EQManager {
         }
     }
     
-    func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) {
+    func update_EQ(enabled: Bool, playerManagerActor: PlayerManagerActor? = nil) {
         if (self.isReady == false) {
             return
         }
@@ -221,11 +221,11 @@ class EQManager {
             }
         } else {
             if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
-                if let playerManager = playerManager {
+                if let playerManagerActor = playerManagerActor {
                     //playerManager.pause()
                     Task {
-                        if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
-                            await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                        if await playerManagerActor.currentQueueItem?.isDownloaded == true {
+                            await playerManagerActor.currentQueueItem?.prime_object_fresh(playerManagerActor: playerManagerActor, seek: true)
                         }
                     }
                 }

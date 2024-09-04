@@ -386,6 +386,7 @@
 		E5A00A422B015993001C59DB /* NPProximityWarning.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A00A412B015993001C59DB /* NPProximityWarning.swift */; };
 		E5A00A452B0160F1001C59DB /* ProximityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A00A442B0160F1001C59DB /* ProximityManager.swift */; };
 		E5A00A472B016147001C59DB /* DepthConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A00A462B016147001C59DB /* DepthConverter.swift */; };
+		E5A1DD8B2C87C8E7006EA568 /* PMARepeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55FFF472C7EE96600DD1B60 /* PMARepeat.swift */; };
 		E5A365202A35826600243176 /* SearchArtistContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A3651F2A35826600243176 /* SearchArtistContent.swift */; };
 		E5A365222A35839300243176 /* ArtistFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A365212A35839300243176 /* ArtistFetchAPI.swift */; };
 		E5A365252A35880C00243176 /* SearchArtistShelfTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A365242A35880C00243176 /* SearchArtistShelfTracks.swift */; };
@@ -3176,6 +3177,7 @@
 				E59600922B3B76D5009E5858 /* CustomServerInput.swift in Sources */,
 				E5DCFE0E2B4510530044D9B5 /* NPBackButton_honeycrisp.swift in Sources */,
 				E59E30B32A4138A4007B7874 /* MiniArtistCookies.swift in Sources */,
+				E5A1DD8B2C87C8E7006EA568 /* PMARepeat.swift in Sources */,
 				E5DCFE082B450F760044D9B5 /* NPPlayButton_wii.swift in Sources */,
 				E506D9E62B00B9E100D3AAAD /* NPHeaderSegment.swift in Sources */,
 				E58E8FD02BA172AF009F7E43 /* BAPlayer.swift in Sources */,
