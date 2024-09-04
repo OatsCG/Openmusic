@@ -81,7 +81,9 @@ struct MiniPlayer_honeycrisp: View {
         MiniPlayer_honeycrisp()
             .environment(playerManager)
             .task {
-                playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
+                Task {
+                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                }
             }
         Spacer()
     }
@@ -96,8 +98,10 @@ struct MiniPlayer_honeycrisp: View {
         ExplorePage(exploreNSPath: .constant(NavigationPath()))
             .environment(playerManager)
             .task {
-                playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
                 currentTheme = "honeycrisp"
+                Task {
+                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                }
             }
         Spacer()
     }

@@ -103,9 +103,7 @@ struct QueueItemMenu: View {
             if (queueItem.Track.Playback_Clean != nil && queueItem.Track.Playback_Explicit != nil) {
                 Button(action: {
                     queueItem.explicit.toggle()
-                    Task {
-                        await queueItem.prime_object_fresh(playerManager: playerManager)
-                    }
+                    queueItem.prime_object_fresh(playerManagerActor: playerManager.PMActor)
                 }) {
                     Label("Toggle Explicity", systemImage: "arrow.left.arrow.right.square")
                     //arrow.left.arrow.right.square
@@ -147,14 +145,18 @@ struct QueueItemMenu: View {
                 Label("Move Randomly", systemImage: "arrow.up.and.down.text.horizontal")
             }
             Button(action: {
-                let copiedQueueItem: QueueItem = QueueItem(from: queueItem)
-                if let track = copiedQueueItem.Track as? ImportedTrack {
-                    copiedQueueItem.Track = FetchedTrack(from: track)
+                Task {
+                    let copiedQueueItem: QueueItem = await QueueItem(from: queueItem)
+                    await MainActor.run {
+                        if let track = copiedQueueItem.Track as? ImportedTrack {
+                            copiedQueueItem.Track = FetchedTrack(from: track)
+                        }
+                        withAnimation {
+                            playerManager.trackQueue.insert(copiedQueueItem, at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
+                        }
+                        playerManager.prime_next_song()
+                    }
                 }
-                withAnimation {
-                    playerManager.trackQueue.insert(copiedQueueItem, at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
-                }
-                playerManager.prime_next_song()
             }) {
                 Label("Duplicate in Queue", systemImage: "plus.square.on.square")
             }

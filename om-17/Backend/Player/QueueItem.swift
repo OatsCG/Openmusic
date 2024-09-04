@@ -21,6 +21,8 @@ import SwiftUI
     var primeStatus: PrimeStatus = .waiting
     var isDownloaded: Bool = false
     var isReady: Bool = false
+    var status: AVPlayer.Status? = nil
+    var duration: Double? = nil
     private var queueItemActor: QueueItemActor
     
     init(from: any Track, explicit: Bool? = nil) async {
@@ -52,6 +54,8 @@ import SwiftUI
         self.isDownloaded = await self.queueItemActor.isDownloaded
         self.isReady = await self.queueItemActor.isReady()
         self.isVideo = await self.queueItemActor.isVideo
+        self.status = await self.queueItemActor.audio_AVPlayer?.player.status
+        self.duration = await self.queueItemActor.audio_AVPlayer?.player.duration
         return
     }
     
@@ -180,6 +184,9 @@ extension QueueItem {
     
     func getAudioAVPlayer() async -> PlayerEngine? {
         return await self.queueItemActor.audio_AVPlayer
+    }
+    func getVideoAVPlayer() async -> VideoPlayerEngine? {
+        return await self.queueItemActor.video_AVPlayer
     }
 }
 

@@ -12,11 +12,11 @@ extension PlayerManager {
     func cycle_repeat_mode() {
         withAnimation {
             if (self.repeatMode == .off) {
-                self.repeatMode = .queue
+                self.setRepeatMode(to: .queue)
             } else if (self.repeatMode == .queue) {
-                self.repeatMode = .single
+                self.setRepeatMode(to: .single)
             } else {
-                self.repeatMode = .off
+                self.setRepeatMode(to: .off)
             }
         }
     }

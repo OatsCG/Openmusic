@@ -52,7 +52,9 @@ struct PlaybackOptions: View {
                 Section {
                     Toggle("Enable EQ", isOn: $EQEnabled)
                         .onChange(of: EQEnabled) { oldValue, newValue in
-                            playerManager.currentQueueItem?.audio_AVPlayer?.update_EQ(enabled: newValue)
+                            Task {
+                                await playerManager.currentQueueItem?.getAudioAVPlayer()?.update_EQ(enabled: newValue)
+                            }
                         }
                         .tint(.green)
                     NavigationLink(destination: EQEditor()) {

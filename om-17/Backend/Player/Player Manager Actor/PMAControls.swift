@@ -34,7 +34,7 @@ extension PlayerManagerActor {
         self.isCrossfading = false
         self.didAddFromRepeat = false
         if (continueCurrent == false) {
-            //self.setIsPlaying(to: false)
+            self.setIsPlaying(to: false)
             self.player.pause()
             self.player.seek_to_zero()
         }
@@ -69,7 +69,7 @@ extension PlayerManagerActor {
         
         if (self.currentQueueItem != nil) {
             if ((self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil) {
-                //self.setIsPlaying(to: false)
+                self.setIsPlaying(to: false)
                 self.player.pause()
                 self.player.seek_to_zero()
                 self.player = PlayerEngine()

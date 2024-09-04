@@ -85,7 +85,9 @@ struct MiniPlayer_spotty: View {
         MiniPlayer_spotty()
             .environment(playerManager)
             .task {
-                playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
+                Task {
+                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                }
             }
         Spacer()
     }

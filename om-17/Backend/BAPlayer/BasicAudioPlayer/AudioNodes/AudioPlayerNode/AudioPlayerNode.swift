@@ -6,6 +6,7 @@
 //  Licensed under MIT License.
 //
 
+import SwiftUI
 import AVFoundation
 
 /// An AVAudioPlayerNode wrapper that encapsulates all basic playback control functionality.
@@ -278,10 +279,12 @@ public class AudioPlayerNode {
             blocksNextCompletionHandler = false
             return
         }
-        self.node.stop()
-        status = .ready
-        needsScheduling = true
-        delegate?.playerNodePlaybackDidComplete(self)
-        if doesLoop { play() }
+        DispatchQueue.main.async { [self] in
+            self.node.stop()
+            status = .ready
+            needsScheduling = true
+            delegate?.playerNodePlaybackDidComplete(self)
+            if doesLoop { play() }
+        }
     }
 }

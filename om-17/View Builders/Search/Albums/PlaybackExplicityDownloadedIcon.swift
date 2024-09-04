@@ -30,11 +30,9 @@ struct PlaybackExplicityDownloadedIcon: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.primary, .clear)
             }
-            if let isDownloaded = isDownloaded {
-                if (isDownloaded == true) {
-                    Image(systemName: "chevron.compact.down")
-                        .foregroundStyle(.tertiary)
-                }
+            if let isDownloaded = isDownloaded, isDownloaded == true {
+                Image(systemName: "chevron.compact.down")
+                    .foregroundStyle(.tertiary)
             } else if isFoundDownloaded {
                 Image(systemName: "chevron.compact.down")
                     .foregroundStyle(.tertiary)

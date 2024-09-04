@@ -17,10 +17,12 @@ func store_track(_ track: any Track, ctx: ModelContext) {
     ToastManager.shared.propose(toast: Toast.library(track.Album.Artwork))
 }
 
+@MainActor
 func store_track(_ queueItem: QueueItem, ctx: ModelContext) {
-    ctx.insert(StoredTrack(from: queueItem))
-    ToastManager.shared.propose(toast: Toast.library(queueItem.Track.Album.Artwork))
-    
+    Task {
+        ctx.insert(StoredTrack(from: queueItem))
+        ToastManager.shared.propose(toast: Toast.library(queueItem.Track.Album.Artwork))
+    }
 }
 
 func store_tracks(_ tracks: [any Track], ctx: ModelContext) {

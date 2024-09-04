@@ -75,7 +75,7 @@ class StoredPlaylist: Hashable, Playlist {
         self.items = []
         downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: Image)
     }
-    init(fetchedInfoTracks: FetchedPlaylistInfoTracks, platform: Platform) {
+    init(fetchedInfoTracks: FetchedPlaylistInfoTracks, platform: Platform) async {
         self.PlaylistID = UUID()
         self.Title = fetchedInfoTracks.name
         self.Bio = fetchedInfoTracks.description
@@ -84,12 +84,12 @@ class StoredPlaylist: Hashable, Playlist {
         self.importURL = nil
         self.items = []
         for track in fetchedInfoTracks.tracks {
-            let item = PlaylistItem(importData: ImportData(from: ImportedFrom(platform: platform, url: "", title: track.title, album: track.album, artist: track.artists), status: .hold, dateAdded: Date()), playlistID: self.PlaylistID, index: self.items.count)
+            let item = await PlaylistItem(importData: ImportData(from: ImportedFrom(platform: platform, url: "", title: track.title, album: track.album, artist: track.artists), status: .hold, dateAdded: Date()), playlistID: self.PlaylistID, index: self.items.count)
             self.items.append(item)
         }
         downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: fetchedInfoTracks.artwork)
     }
-    init(from: ImportedPlaylist) {
+    init(from: ImportedPlaylist) async {
         self.PlaylistID = UUID()
         self.Title = from.Title
         self.Bio = from.Bio
@@ -98,7 +98,7 @@ class StoredPlaylist: Hashable, Playlist {
         self.importURL = from.importURL
         self.items = []
         for item in from.items {
-            let playlistItem: PlaylistItem = PlaylistItem(from: item)
+            let playlistItem: PlaylistItem = await PlaylistItem(from: item)
             self.items.append(playlistItem)
         }
         downloadPlaylistArt(playlistID: self.PlaylistID, ArtworkURL: from.Image ?? "")
@@ -126,21 +126,21 @@ class StoredPlaylist: Hashable, Playlist {
         }
         ToastManager.shared.propose(toast: Toast.playlist(items.first?.track.Album.Artwork, playlist: self, count: items.count))
     }
-    func add_track(track: any Track) {
+    @MainActor func add_track(track: any Track) {
         self.items.append(PlaylistItem(track: track, playlistID: self.PlaylistID, index: self.items.count))
         ToastManager.shared.propose(toast: Toast.playlist(track.Album.Artwork, playlist: self))
     }
-    func add_track(queueItem: QueueItem) {
+    @MainActor func add_track(queueItem: QueueItem) {
         self.items.append(PlaylistItem(queueItem: queueItem, playlistID: self.PlaylistID, index: self.items.count))
         ToastManager.shared.propose(toast: Toast.playlist(queueItem.Track.Album.Artwork, playlist: self))
     }
-    func add_tracks(tracks: [any Track]) {
+    @MainActor func add_tracks(tracks: [any Track]) {
         for track in tracks {
             self.items.append(PlaylistItem(track: track, playlistID: self.PlaylistID, index: self.items.count))
         }
         ToastManager.shared.propose(toast: Toast.playlist(tracks.first?.Album.Artwork, playlist: self))
     }
-    func add_tracks(queueItems: [QueueItem]) {
+    @MainActor func add_tracks(queueItems: [QueueItem]) {
         for queueItem in queueItems {
             self.items.append(PlaylistItem(queueItem: queueItem, playlistID: self.PlaylistID, index: self.items.count))
         }
@@ -166,6 +166,7 @@ class StoredPlaylist: Hashable, Playlist {
     }
 }
 
+@MainActor
 struct PlaylistItem: Codable, Hashable {
     var id: UUID
     var playlistID: UUID
@@ -227,10 +228,10 @@ struct PlaylistItem: Codable, Hashable {
         self.importData.status = .success
     }
     
-    static func == (lhs: PlaylistItem, rhs: PlaylistItem) -> Bool {
+    static nonisolated func == (lhs: PlaylistItem, rhs: PlaylistItem) -> Bool {
         return lhs.id == rhs.id
     }
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }
@@ -269,17 +270,17 @@ struct PlaylistItem: Codable, Hashable {
     func add_track(track: any Track) {
         self.items.append(PlaylistImport(track: track, playlistID: self.PlaylistID, index: self.items.count))
     }
-    func add_track(queueItem: QueueItem) {
-        self.items.append(PlaylistImport(queueItem: queueItem, playlistID: self.PlaylistID, index: self.items.count))
+    func add_track(queueItem: QueueItem) async {
+        await self.items.append(PlaylistImport(queueItem: queueItem, playlistID: self.PlaylistID, index: self.items.count))
     }
     func add_tracks(tracks: [any Track]) {
         for track in tracks {
             self.items.append(PlaylistImport(track: track, playlistID: self.PlaylistID, index: self.items.count))
         }
     }
-    func add_tracks(queueItems: [QueueItem]) {
+    func add_tracks(queueItems: [QueueItem]) async {
         for queueItem in queueItems {
-            self.items.append(PlaylistImport(queueItem: queueItem, playlistID: self.PlaylistID, index: self.items.count))
+            await self.items.append(PlaylistImport(queueItem: queueItem, playlistID: self.PlaylistID, index: self.items.count))
         }
     }
     
@@ -347,13 +348,17 @@ struct PlaylistItem: Codable, Hashable {
         self.importData = importData
         self.timesPlayed = 0
     }
-    init(queueItem: QueueItem, playlistID: UUID, explicit: Bool? = nil, index: Int) {
+    init(queueItem: QueueItem, playlistID: UUID, explicit: Bool? = nil, index: Int) async {
         self.id = UUID()
         self.playlistID = playlistID
-        self.track = FetchedTrack(from: queueItem)
-        self.explicit = explicit ?? (queueItem.Track.Playback_Explicit != nil)
         self.importData = ImportData(from: ImportedFrom(platform: .openmusic), status: .success, dateAdded: Date())
         self.timesPlayed = 0
+        self.track = await FetchedTrack(from: queueItem)
+        if let explicit = explicit {
+            self.explicit = explicit
+        } else {
+            self.explicit = await queueItem.Track.Playback_Explicit != nil
+        }
     }
     
     required init(from decoder: any Decoder) throws {

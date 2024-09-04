@@ -207,8 +207,10 @@ struct wiiMPBackground: View {
         MiniPlayer_wii()
             .environment(playerManager)
             .task {
-                playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
                 currentTheme = "wii"
+                Task {
+                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                }
             }
         Spacer()
     }

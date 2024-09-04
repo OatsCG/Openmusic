@@ -9,6 +9,7 @@ import SwiftUI
 
 extension PlayerManagerActor {
     func play_fade() async {
+        self.setIsPlaying(to: true)
         self.player.playImmediately()
         self.startingVol = self.player.volume()
         
@@ -28,6 +29,7 @@ extension PlayerManagerActor {
     }
     
     func pause_fade() async {
+        self.setIsPlaying(to: false)
         self.total_fade_steps = Int(UserDefaults.standard.double(forKey: "playerFadeSeconds") * 100)
         self.startingVol = self.player.volume()
         

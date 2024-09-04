@@ -38,13 +38,13 @@ actor PlayerManagerActor {
     var trackQueue: [QueueItem] = [] // UPDATE
     var sessionHistory: [QueueItem] = [] // UPDATE
     var didAddFromRepeat: Bool = false
+    var repeatMode: RepeatMode = .off
     
     // suggestions
     var shouldSuggestPlaylistCreation: Bool = false
     var hasSuggestedPlaylistCreation: Bool = false
     
     // controls
-    var lastVolume: (Float, Float, Double, Bool)? = nil // (old, new, time, valid start)
     var lastWaveDepth: (Bool, Double, Bool) = (false, 0, false) // (last, time, valid)
     var notificationManager: NotificationManager = NotificationManager()
     
@@ -61,26 +61,36 @@ actor PlayerManagerActor {
     
     
     init () {
+        // player
         self.player = PlayerEngine()
+        self.elapsedTime = 0
+        self.durationSeconds = 0.9
+        self.elapsedNormal = 0
+        self.appVolume = 1
         
+        // crossfade
+        self.crossfadeSeconds = UserDefaults.standard.double(forKey: "crossfadeSeconds") == 0 ? 0.15 : UserDefaults.standard.double(forKey: "crossfadeSeconds")
+        self.crossfadeZero = 0.15
+        self.crossfadeZeroDownload = 0.05
+        self.isCrossfading = false
+        self.crossfadeTimer = Timer()
+        
+        // queue
+        self.didAddFromRepeat = false
+        
+        // transport
         self.commandCenterAlreadyLoaded = false
         self.currentlyTryingInfoCenterAlbumArtUpdate = false
         
-        self.crossfadeZero = 0.15
-        self.crossfadeZeroDownload = 0.05
-        
-        self.isCrossfading = false
-        self.didAddFromRepeat = false
-        self.crossfadeTimer = Timer()
-        
-        self.appVolume = 1
-        
-        //initialize media center
-        self.setupRemoteTransportControls()
-        
         //setAudioSession()
-        //update timer
-        self.update_timer(to: 0.1)
+        
+        Task {
+            //update timer
+            await self.update_timer(to: 0.1)
+            
+            //initialize media center
+            await self.setupRemoteTransportControls()
+        }
     }
     
     func setIsPlaying(to: Bool) {
@@ -90,30 +100,40 @@ actor PlayerManagerActor {
         self.isPlaying = to
     }
     
-    func update_timer(to: Double) {
-        if (self.syncedTimerInterval == to) {
+    func update_timer(to interval: Double) {
+        if self.syncedTimerInterval == interval {
             return
         }
-        self.syncedTimerInterval = to
-        self.syncedTimer?.invalidate()
-        self.syncedTimer = Timer.scheduledTimer(withTimeInterval: to, repeats: true) { _ in
-            Task {
-                await self.timer_fired()
-            }
+        self.syncedTimerInterval = interval
+        
+        Task { [weak self] in
+            await self?.runTimerLoop(interval: interval)
         }
-        self.syncedTimer?.fire()
     }
-    
+
+    private func runTimerLoop(interval: Double) async {
+        while self.syncedTimerInterval == interval {
+            await self.timer_fired()
+            try? await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
+        }
+    }
+
     func timer_fired() async {
+        print("TIMER FIRED")
         if self.timerMidFire == false {
             self.timerMidFire = true
             await self.syncPlayingTimeControls()
             //self.update_elapsed_time()
-            self.repeat_check()
-            self.crossfade_check()
+            await self.repeat_check()
+            //self.crossfade_check()
             await self.try_auto_skip_if_necessary()
             self.timerMidFire = false
         }
+    }
+
+    
+    func setRepeatMode(to: RepeatMode) {
+        self.repeatMode = to
     }
     
     func setAppVolume(to: Float) {

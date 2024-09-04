@@ -16,21 +16,22 @@ struct NPHeaderSegment: View {
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     @State var visualWidth: CGFloat = 100
+    @State var video_AVPlayer: VideoPlayerEngine? = nil
     var body: some View {
         VStack {
-            if ((playerManager.currentQueueItem?.isVideo ?? false) && playerManager.currentQueueItem?.video_AVPlayer?.player != nil) {
-                YouTubePlayerView(playerManager.currentQueueItem!.video_AVPlayer!.player!)
+            if (playerManager.currentQueueItem?.isVideo ?? false), let videoPlayer = self.video_AVPlayer?.player {
+                YouTubePlayerView(videoPlayer)
             } else {
                 NPArtwork(fullscreen: $fullscreen, visualWidth: $visualWidth)
                     .overlay {
                         PlayerDebugger()
                     }
             }
-            if (playerManager.currentQueueItem != nil && !fullscreen) {
+            if let currentQueueItem = playerManager.currentQueueItem, !fullscreen {
                 HStack(alignment: .top) {
                     Menu {
                         Menu {
-                            ForEach(playerManager.currentQueueItem!.Track.Album.Artists, id: \.ArtistID) { artist in
+                            ForEach(currentQueueItem.Track.Album.Artists, id: \.ArtistID) { artist in
                                 Button(action: {
                                     passedNSPath.append(SearchArtistContentNPM(artist: artist))
                                     showingNPSheet = false
@@ -42,16 +43,16 @@ struct NPHeaderSegment: View {
                             Label("Artists", systemImage: "person.fill")
                         }
                         Button(action: {
-                            passedNSPath.append(SearchAlbumContentNPM(album: playerManager.currentQueueItem!.Track.Album))
+                            passedNSPath.append(SearchAlbumContentNPM(album: currentQueueItem.Track.Album))
                             showingNPSheet = false
                         }) {
                             Label("Album", systemImage: "play.square.fill")
-                            Text(playerManager.currentQueueItem!.Track.Album.Title)
+                            Text(currentQueueItem.Track.Album.Title)
                         }
                     } label: {
                         VStack(spacing: 0) {
                             MarqueeText(
-                                text: playerManager.currentQueueItem!.Track.Album.Title,
+                                text: currentQueueItem.Track.Album.Title,
                                 font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
                                 leftFade: 10,
                                 rightFade: 10,
@@ -60,7 +61,7 @@ struct NPHeaderSegment: View {
                             )
                             .foregroundStyle(.secondary)
                             MarqueeText(
-                                text: stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists),
+                                text: stringArtists(artistlist: currentQueueItem.Track.Album.Artists),
                                 font: FontManager.shared.currentThemeUIFont(fontManager, .caption),
                                 leftFade: 10,
                                 rightFade: 10,
@@ -74,7 +75,7 @@ struct NPHeaderSegment: View {
                     Menu {
                         Button(action: {
                             Task.detached { [self] in
-                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
+                                await playerManager.currentQueueItem?.prime_object_fresh(playerManagerActor: playerManager.PMActor, continueCurrent: false, seek: false)
                             }
                         }) {
                             Label("Refresh Track", systemImage: "arrow.clockwise")
@@ -90,12 +91,12 @@ struct NPHeaderSegment: View {
                                 Label((playerManager.currentQueueItem?.isVideo ?? false) ? "Hide Video" : "Show Video", systemImage: (playerManager.currentQueueItem?.isVideo ?? false) ? "tv.slash" : "tv")
                             }
                         }
-                        if (playerManager.currentQueueItem!.Track.Playback_Clean != nil && playerManager.currentQueueItem!.Track.Playback_Explicit != nil) {
+                        if (playerManager.currentQueueItem?.Track.Playback_Clean != nil && playerManager.currentQueueItem?.Track.Playback_Explicit != nil) {
                             Button(action: {
-                                playerManager.currentQueueItem!.explicit.toggle()
+                                playerManager.currentQueueItem?.explicit.toggle()
                                 playerManager.pause()
                                 Task {
-                                    await playerManager.currentQueueItem!.prime_object_fresh(playerManager: playerManager, seek: true)
+                                    playerManager.currentQueueItem?.prime_object_fresh(playerManagerActor: playerManager.PMActor, seek: true)
                                     //playerManager.play()
                                 }
                             }) {
@@ -109,7 +110,7 @@ struct NPHeaderSegment: View {
                                     .symbolRenderingMode(.hierarchical)
                                     .foregroundStyle(.secondary)
                             }
-                            PlaybackExplicityDownloadedIcon(track: FetchedTrack(from: playerManager.currentQueueItem!), explicit: playerManager.currentQueueItem!.explicit, isDownloaded: playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false)
+                            PlaybackExplicityDownloadedIcon(track: FetchedTrack(from: currentQueueItem), explicit: currentQueueItem.explicit, isDownloaded: playerManager.currentQueueItem?.isDownloaded == true)
                                 .opacity(0.8)
                         }
                     }
@@ -119,13 +120,16 @@ struct NPHeaderSegment: View {
         }
             .scaleEffect((playerManager.isPlaying || playerManager.currentQueueItem?.isVideo == true) ? 1 : 0.75)
             .disabled(playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false)
-            .overlay {
-                if (playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false) {
-                    ZStack {
-                        NPEnjoyingSession()
-                            .padding(30)
-                    }
-                }
+//            .overlay {
+//                if (playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false) {
+//                    ZStack {
+//                        NPEnjoyingSession()
+//                            .padding(30)
+//                    }
+//                }
+//            }
+            .task {
+                self.video_AVPlayer = await playerManager.currentQueueItem?.getVideoAVPlayer()
             }
             //.contentTransition(.numericText())
     }

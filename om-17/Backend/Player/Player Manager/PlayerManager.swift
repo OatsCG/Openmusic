@@ -43,6 +43,7 @@ import Combine
     var volumeSkipSpeed: Double
     var volumeSkipMargin: Double
     var SkipNotifyEnabled: Bool = false
+    var lastVolume: (Float, Float, Double, Bool)? = nil // (old, new, time, valid start)
     
     // actor
     var PMActor: PlayerManagerActor
@@ -101,13 +102,33 @@ import Combine
         self.update_timer(to: 0.1)
     }
     
-    func updateUI() async {
+    func updateUI(userInitiated: Bool = true) async {
+        print("update ui: START")
         await self.PMActor.setAppVolume(to: self.appVolume)
+        // player
+        let isPlaying = await self.PMActor.isPlaying
+        let elapsedTime = await self.PMActor.elapsedTime
+        let durationSeconds = await self.PMActor.durationSeconds
+        let elapsedNormal = await self.PMActor.elapsedNormal
+        let currentQueueItem = await self.PMActor.currentQueueItem
+        let trackQueue = await self.PMActor.trackQueue
+        let sessionHistory = await self.PMActor.sessionHistory
+        withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
+            self.isPlaying = isPlaying
+            self.elapsedTime = elapsedTime
+            self.durationSeconds = durationSeconds
+            self.elapsedNormal = elapsedNormal
+            self.currentQueueItem = currentQueueItem
+            self.trackQueue = trackQueue
+            self.sessionHistory = sessionHistory
+        }
+        print("update ui: DONE")
     }
     
     func update_timer(to: Double) {
         Task {
             await self.PMActor.update_timer(to: to)
+            await self.updateUI()
         }
     }
     
@@ -123,6 +144,14 @@ import Combine
     func end_song_check() {
         if (self.durationSeconds - self.elapsedTime < 0.01) {
             self.player_forward()
+        }
+    }
+    
+    func setRepeatMode(to: RepeatMode) {
+        self.repeatMode = to
+        Task {
+            await self.PMActor.setRepeatMode(to: to)
+            await self.updateUI()
         }
     }
     

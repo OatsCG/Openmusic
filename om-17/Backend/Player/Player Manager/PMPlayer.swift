@@ -14,6 +14,7 @@ extension PlayerManager {
         self.appVolume = to
         Task {
             await self.PMActor.setVolume(to: self.appVolume)
+            await self.updateUI()
         }
     }
     

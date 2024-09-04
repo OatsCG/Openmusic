@@ -73,7 +73,7 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                     let timeToSeek = dragNormal * playerManager.durationSeconds
                     localElapsedTime = timeToSeek
                     
-                    if (value.translation.height > 70 && self.playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false) {
+                    if (value.translation.height > 70 && self.playerManager.currentQueueItem?.isDownloaded == true) {
                         self.showingAmplitudes = true
                     } else {
                         self.showingAmplitudes = false
@@ -92,7 +92,7 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                         if (playerManager.currentQueueItem != nil) {
                             playerManager.elapsedTime = endNormal * playerManager.durationSeconds
                             playerManager.elapsedNormal = endNormal
-                            playerManager.player.seek(to: endNormal * playerManager.durationSeconds)
+                            playerManager.seek(to: endNormal * playerManager.durationSeconds)
                         }
                     }
                     playerManager.play()
@@ -119,9 +119,10 @@ struct ScrubberBarAmplitudes: View {
     @Environment(PlayerManager.self) var playerManager
     @Binding var isDragging: Bool
     @Binding var showingAmplitudes: Bool
+    @State var amplitudeChart: [Float]?
     var body: some View {
         Group {
-            if let amplitudes: [Float] = self.playerManager.currentQueueItem?.audio_AVPlayer?.player.amplitudeChart() {
+            if let amplitudes: [Float] = amplitudeChart {
                 if (self.showingAmplitudes) {
                     HStack(alignment: .top, spacing: 3) {
                         //Spacer()
@@ -150,6 +151,11 @@ struct ScrubberBarAmplitudes: View {
         .background {
             Rectangle().fill(.black).blur(radius: 10).opacity(0.2)
                 .drawingGroup()
+        }
+        .task {
+            Task {
+                self.amplitudeChart = await self.playerManager.currentQueueItem?.getAudioAVPlayer()?.player.amplitudeChart()
+            }
         }
     }
 }

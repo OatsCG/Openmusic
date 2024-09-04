@@ -10,7 +10,8 @@ import SwiftUI
 extension PlayerManager {
     func prime_next_song() {
         Task {
-            await self.PMActor.prime_next_song(playerManager: self)
+            await self.PMActor.prime_next_song()
+            await self.updateUI()
         }
     }
     
@@ -35,15 +36,15 @@ extension PlayerManager {
     
     func resetEQs() async {
         let wasPlaying: Bool = self.isPlaying
-        await self.currentQueueItem?.resetEQ(playerManager: self)
+        await self.currentQueueItem?.resetEQ(playerManagerActor: self.PMActor)
         for item in self.sessionHistory {
             if item.isDownloaded == true {
-                await item.resetEQ(playerManager: self)
+                await item.resetEQ(playerManagerActor: self.PMActor)
             }
         }
         for item in self.trackQueue {
             if item.isDownloaded == true {
-                await item.resetEQ(playerManager: self)
+                await item.resetEQ(playerManagerActor: self.PMActor)
             }
         }
         if wasPlaying {

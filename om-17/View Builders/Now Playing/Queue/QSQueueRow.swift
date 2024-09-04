@@ -70,7 +70,7 @@ struct QSQueueRow: View {
                         Section("An error occurred loading this track.") {
                             Button(action: {
                                 Task {
-                                    await self.queueItem.prime_object_fresh(playerManager: playerManager)
+                                    self.queueItem.prime_object_fresh(playerManagerActor: playerManager.PMActor)
                                 }
                             }) {
                                 Label("Refresh Track", systemImage: "arrow.clockwise")

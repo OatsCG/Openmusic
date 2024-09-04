@@ -74,12 +74,12 @@ import SwiftData
         }
     }
     
-    func check_playlist_end() {
+    func check_playlist_end() async {
         let successfulPlaylists: [ImportedPlaylist] = self.newPlaylists.filter({$0.is_importing_successful()})
         for playlist in successfulPlaylists {
             let finishedPlaylistIndex: Int? = self.newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID})
             if let finishedPlaylistIndex = finishedPlaylistIndex {
-                let storedPlaylist = StoredPlaylist(from: playlist)
+                let storedPlaylist = await StoredPlaylist(from: playlist)
                 self.currentContext?.insert(storedPlaylist)
                 try? self.currentContext?.save()
                 self.newPlaylists.remove(at: finishedPlaylistIndex)

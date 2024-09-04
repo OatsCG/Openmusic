@@ -82,7 +82,9 @@ struct MiniPlayer_classic: View {
         MiniPlayer_classic()
             .environment(playerManager)
             .task {
-                playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
+                Task {
+                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                }
             }
         Spacer()
     }

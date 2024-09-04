@@ -41,7 +41,9 @@ struct EQEditor: View {
                             .onChange(of: bandCount) {
                                 self.currentBands = EQManager.decodeCurrentBands(count: self.bandCount + 1)
                                 self.updateStoredBands()
-                                self.playerManager.resetEQs()
+                                Task {
+                                    await self.playerManager.resetEQs()
+                                }
                             }
                     }
                     HStack {
@@ -72,7 +74,9 @@ struct EQEditor: View {
                                             EQBandSlider(toModify: $currentBands.first!.value, title: "AMP")
                                                 .onChange(of: currentBands.first?.value) {
                                                     updateStoredBands()
-                                                    playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: -1, value: Double(currentBands.first?.value ?? 0.5))
+                                                    Task {
+                                                        await playerManager.currentQueueItem?.getAudioAVPlayer()?.player.modifyEQ(index: -1, value: Double(currentBands.first?.value ?? 0.5))
+                                                    }
                                                 }
                                                 .customFont(fontManager, .caption)
                                                 .lineLimit(1)
@@ -86,7 +90,9 @@ struct EQEditor: View {
                                                 .clipShape(UnevenRoundedRectangle(topLeadingRadius: band.index == 0 ? 5 : 0, bottomLeadingRadius: band.index == 0 ? 5 : 0, bottomTrailingRadius: 0, topTrailingRadius: 0))
                                                 .onChange(of: band.value) {
                                                     updateStoredBands()
-                                                    playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: band.index, value: band.value)
+                                                    Task {
+                                                        await playerManager.currentQueueItem?.getAudioAVPlayer()?.player.modifyEQ(index: band.index, value: band.value)
+                                                    }
                                                 }
                                         }
                                     }
