@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LibraryMusicPicker: View {
     @State private var selectedPickMusic: MusicPicks = .albums
+    @Binding var tracks: [StoredTrack]
     var body: some View {
         VStack {
             Picker("Music", selection: $selectedPickMusic) {
@@ -18,16 +19,16 @@ struct LibraryMusicPicker: View {
             }
             switch selectedPickMusic {
             case .albums:
-                LibraryAlbumsList()
+                LibraryAlbumsList(tracks: $tracks)
             case .artists:
-                LibraryArtistsList()
+                LibraryArtistsList(tracks: $tracks)
             case .songs:
-                LibrarySongsList()
+                LibrarySongsList(tracks: $tracks)
             }
         }
     }
 }
 
 #Preview {
-    LibraryMusicPicker()
+    LibraryMusicPicker(tracks: .constant([]))
 }

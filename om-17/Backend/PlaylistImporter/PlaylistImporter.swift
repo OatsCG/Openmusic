@@ -11,7 +11,7 @@ import SwiftData
 @MainActor
 @Observable class PlaylistImporter {
     var newPlaylists: [ImportedPlaylist] = []
-    var currentContext: ModelContext? = nil
+    var currentContext: BackgroundDatabase? = nil
     
     //let config = URLSessionConfiguration.background(withIdentifier: "om17ImportSession")
     //let backgroundSession: URLSession
@@ -20,8 +20,8 @@ import SwiftData
         //self.backgroundSession = URLSession(configuration: self.config)
     }
     
-    func addPlaylist(playlist: ImportedPlaylist, context: ModelContext) {
-        self.currentContext = context
+    func addPlaylist(playlist: ImportedPlaylist, database: BackgroundDatabase) {
+        self.currentContext = database
         self.newPlaylists.append(playlist)
         self.attempt_next_fetch()
     }
@@ -80,7 +80,7 @@ import SwiftData
             let finishedPlaylistIndex: Int? = self.newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID})
             if let finishedPlaylistIndex = finishedPlaylistIndex {
                 let storedPlaylist = await StoredPlaylist(from: playlist)
-                self.currentContext?.insert(storedPlaylist)
+                await self.currentContext?.insert(storedPlaylist)
                 try? self.currentContext?.save()
                 self.newPlaylists.remove(at: finishedPlaylistIndex)
             }
@@ -114,7 +114,7 @@ import SwiftData
         return self.newPlaylists.first(where: { $0.PlaylistID == playlistID })
     }
     
-    func get_context() throws -> ModelContext {
+    func get_database() throws -> BackgroundDatabase {
         if (self.currentContext == nil) {
             throw ContextError.noContextAvailable
         } else {

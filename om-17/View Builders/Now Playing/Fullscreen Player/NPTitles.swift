@@ -13,7 +13,8 @@ struct NPTitles: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(FontManager.self) private var fontManager
-    @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
+    @Environment(BackgroundDatabase.self) var database  // was \.modelContext
+    @State var playlists: [StoredPlaylist] = []
     @Binding var showingNPSheet: Bool
     @Binding var fullscreen: Bool
     @Binding var passedNSPath: NavigationPath
@@ -105,6 +106,25 @@ struct NPTitles: View {
         }
             .padding(.vertical, 10)
             .padding(.horizontal, 4)
+            .onAppear {
+                self.updatePlaylists()
+            }
+    }
+    func updatePlaylists() {
+        Task {
+            let predicate = #Predicate<StoredPlaylist> { _ in true }
+            let sortDescriptors = [SortDescriptor(\StoredPlaylist.dateCreated, order: .reverse)]
+            let playlists = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let playlists = playlists {
+                await MainActor.run {
+                    self.playlists = playlists
+                }
+            } else {
+                await MainActor.run {
+                    self.playlists = []
+                }
+            }
+        }
     }
 }
 

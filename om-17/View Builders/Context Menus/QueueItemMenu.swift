@@ -9,11 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct QueueItemMenu: View {
-    @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(OMUser.self) var omUser
     @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @State var playlists: [StoredPlaylist] = []
     var queueItem: QueueItem
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
@@ -176,6 +176,7 @@ struct QueueItemMenu: View {
             Task {
                 await updateIsDownloaded()
                 await updateIsTrackStored()
+                self.updatePlaylists()
             }
         }
         
@@ -190,6 +191,22 @@ struct QueueItemMenu: View {
         let isTrackStored = await database.is_track_stored(TrackID: queueItem.Track.TrackID)
         await MainActor.run {
             self.isTrackStored = isTrackStored
+        }
+    }
+    func updatePlaylists() {
+        Task {
+            let predicate = #Predicate<StoredPlaylist> { _ in true }
+            let sortDescriptors = [SortDescriptor(\StoredPlaylist.dateCreated, order: .reverse)]
+            let playlists = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let playlists = playlists {
+                await MainActor.run {
+                    self.playlists = playlists
+                }
+            } else {
+                await MainActor.run {
+                    self.playlists = []
+                }
+            }
         }
     }
 }

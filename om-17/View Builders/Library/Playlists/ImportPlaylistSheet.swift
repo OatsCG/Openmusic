@@ -98,7 +98,7 @@ struct ImportPlaylistSheet: View {
                 .onChange(of: tracksNaiveViewModel.fetchedPlaylistInfoTracks) {
                     if (tracksNaiveViewModel.fetchedPlaylistInfoTracks != nil) {
                         let newPlaylist: ImportedPlaylist = ImportedPlaylist(fetchedInfoTracks: tracksNaiveViewModel.fetchedPlaylistInfoTracks!, importURL: playlistURL, platform: recognizePlaylist(url: playlistURL).platform)
-                        playlistImporter.addPlaylist(playlist: newPlaylist, context: modelContext)
+                        playlistImporter.addPlaylist(playlist: newPlaylist, database: database)
                         isShowingSheet = false
                     }
                 }

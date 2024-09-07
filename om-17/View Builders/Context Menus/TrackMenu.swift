@@ -14,7 +14,7 @@ struct TrackMenu: View {
     @Environment(FontManager.self) var fontManager
     @Environment(OMUser.self) var omUser
     @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
-    @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
+    @State var playlists: [StoredPlaylist] = []
     var track: any Track
     @State var isDownloadedExp: Bool = false
     @State var isDownloadedClean: Bool = false
@@ -298,6 +298,7 @@ struct TrackMenu: View {
             Task {
                 await self.updateIsDownloaded()
                 await self.updateIsStored()
+                self.updatePlaylists()
             }
         }
     }
@@ -313,6 +314,22 @@ struct TrackMenu: View {
         let isStored = await database.is_track_stored(TrackID: track.TrackID)
         await MainActor.run {
             self.isTrackStored = isStored
+        }
+    }
+    func updatePlaylists() {
+        Task {
+            let predicate = #Predicate<StoredPlaylist> { _ in true }
+            let sortDescriptors = [SortDescriptor(\StoredPlaylist.dateCreated, order: .reverse)]
+            let playlists = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let playlists = playlists {
+                await MainActor.run {
+                    self.playlists = playlists
+                }
+            } else {
+                await MainActor.run {
+                    self.playlists = []
+                }
+            }
         }
     }
 }

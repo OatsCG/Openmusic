@@ -10,8 +10,10 @@ import SwiftData
 
 struct LibraryPage: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     @State var selectedPick: LibraryPicks = .recents
     @Binding var libraryNSPath: NavigationPath
+    @State var tracks: [StoredTrack] = []
     var body: some View {
         ZStack {
             NavigationStack(path: $libraryNSPath) {
@@ -22,11 +24,11 @@ struct LibraryPage: View {
                         LiveImportingList()
                         switch selectedPick {
                             case .music:
-                                LibraryMusicPicker()
+                                LibraryMusicPicker(tracks: $tracks)
                             case .playlists:
-                            LibraryPlaylistsList(libraryNSPath: $libraryNSPath)
+                                LibraryPlaylistsList(libraryNSPath: $libraryNSPath)
                             case .recents:
-                                LibraryRecentsList()
+                                LibraryRecentsList(tracks: $tracks)
                         }
                     }
                         .padding(.all, 12)
@@ -96,6 +98,25 @@ struct LibraryPage: View {
                     .navigationDestination(for: ManageImagesNPM.self) { npm in
                         ManageImages()
                     }
+            }
+        }
+        .onAppear {
+            self.updateTracks()
+        }
+    }
+    private func updateTracks() {
+        Task {
+            let predicate = #Predicate<StoredTrack> { _ in true }
+            let sortDescriptors = [SortDescriptor(\StoredTrack.dateAdded)]
+            let tracks = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let tracks = tracks {
+                await MainActor.run {
+                    self.tracks = tracks
+                }
+            } else {
+                await MainActor.run {
+                    self.tracks = []
+                }
             }
         }
     }

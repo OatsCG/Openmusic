@@ -119,7 +119,6 @@ actor PlayerManagerActor {
     }
 
     func timer_fired() async {
-        print("TIMER FIRED")
         if self.timerMidFire == false {
             self.timerMidFire = true
             await self.syncPlayingTimeControls()

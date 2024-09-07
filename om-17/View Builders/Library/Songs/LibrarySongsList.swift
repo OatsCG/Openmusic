@@ -12,7 +12,7 @@ struct LibrarySongsList: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
-    @Query(sort: \StoredTrack.dateAdded) private var tracks: [StoredTrack]
+    @Binding var tracks: [StoredTrack]
     var body: some View {
         if tracks.count == 0 {
             ContentUnavailableView {

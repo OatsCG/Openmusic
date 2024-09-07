@@ -15,7 +15,6 @@ struct NowPlayingSheet: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(FontManager.self) private var fontManager
-    @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @Binding var showingNPSheet: Bool
     @State var fullscreen: Bool = false
     @State var carModeEnabled: Bool = false

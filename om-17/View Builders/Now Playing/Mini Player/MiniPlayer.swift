@@ -18,7 +18,9 @@ struct MiniPlayer: View {
     @Environment(NetworkMonitor.self) var networkMonitor
     @Environment(FontManager.self) private var fontManager
     @Environment(OMUser.self) var omUser
-    @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
+    @Environment(BackgroundDatabase.self) var database  // was \.modelContext
+    //@Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
+    @State var playlists: [StoredPlaylist] = []
     @State private var showingNPSheet = false
     @State private var showingNPCover = false
     @Binding var passedNSPath: NavigationPath
@@ -81,6 +83,25 @@ struct MiniPlayer: View {
             }
         }
             .ignoresSafeArea(.keyboard, edges: .bottom)
+            .onAppear {
+                self.updatePlaylists()
+            }
+    }
+    func updatePlaylists() {
+        Task {
+            let predicate = #Predicate<StoredPlaylist> { _ in true }
+            let sortDescriptors = [SortDescriptor(\StoredPlaylist.dateCreated, order: .reverse)]
+            let playlists = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let playlists = playlists {
+                await MainActor.run {
+                    self.playlists = playlists
+                }
+            } else {
+                await MainActor.run {
+                    self.playlists = []
+                }
+            }
+        }
     }
 }
 
