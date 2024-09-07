@@ -279,7 +279,7 @@ public class AudioPlayerNode {
             blocksNextCompletionHandler = false
             return
         }
-        DispatchQueue.main.async { [self] in
+        Task.detached { [self] in
             self.node.stop()
             status = .ready
             needsScheduling = true

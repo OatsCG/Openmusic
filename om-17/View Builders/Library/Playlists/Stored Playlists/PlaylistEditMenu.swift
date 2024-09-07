@@ -10,7 +10,7 @@ import SwiftData
 import PhotosUI
 
 struct PlaylistEditMenu: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     @Environment(PlaylistImporter.self) var playlistImporter
     var playlist: StoredPlaylist
     @State var playlistTitle: String
@@ -112,7 +112,9 @@ struct PlaylistEditMenu: View {
                 }
                     .alert("Are you sure you want to delete playlist? This will remove this playlist from your library. This cannot be undone.", isPresented: $deletePlaylistAlert) {
                         Button("Delete", role: .destructive) {
-                            modelContext.delete(playlist)
+                            Task {
+                                await database.delete(playlist)
+                            }
                         }
                     }
             } header: {

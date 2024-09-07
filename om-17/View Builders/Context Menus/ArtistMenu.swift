@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ArtistMenu: View {
-    @Environment(\.modelContext) private var context
     var artist: SearchedArtist
     var body: some View {
         NavigationLink(value: SearchArtistContentNPM(artist: artist)) {

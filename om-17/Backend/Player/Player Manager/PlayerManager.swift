@@ -102,27 +102,31 @@ import Combine
         self.update_timer(to: 0.1)
     }
     
-    func updateUI(userInitiated: Bool = true) async {
+    func updateUI(userInitiated: Bool = true) {
+        // NON-DETACHED WORKS, detached does not reach IN TASK
         print("update ui: START")
-        await self.PMActor.setAppVolume(to: self.appVolume)
-        // player
-        let isPlaying = await self.PMActor.isPlaying
-        let elapsedTime = await self.PMActor.elapsedTime
-        let durationSeconds = await self.PMActor.durationSeconds
-        let elapsedNormal = await self.PMActor.elapsedNormal
-        let currentQueueItem = await self.PMActor.currentQueueItem
-        let trackQueue = await self.PMActor.trackQueue
-        let sessionHistory = await self.PMActor.sessionHistory
-        withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
-            self.isPlaying = isPlaying
-            self.elapsedTime = elapsedTime
-            self.durationSeconds = durationSeconds
-            self.elapsedNormal = elapsedNormal
-            self.currentQueueItem = currentQueueItem
-            self.trackQueue = trackQueue
-            self.sessionHistory = sessionHistory
+        Task {
+            await self.PMActor.setAppVolume(to: self.appVolume)
+            let isPlaying = await self.PMActor.isPlaying
+            let elapsedTime = await self.PMActor.elapsedTime
+            let durationSeconds = await self.PMActor.durationSeconds
+            let elapsedNormal = await self.PMActor.elapsedNormal
+            let currentQueueItem = await self.PMActor.currentQueueItem
+            let trackQueue = await self.PMActor.trackQueue
+            let sessionHistory = await self.PMActor.sessionHistory
+            DispatchQueue.main.async {
+                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
+                    self.isPlaying = isPlaying
+                    self.elapsedTime = elapsedTime
+                    self.durationSeconds = durationSeconds
+                    self.elapsedNormal = elapsedNormal
+                    self.currentQueueItem = currentQueueItem
+                    self.trackQueue = trackQueue
+                    self.sessionHistory = sessionHistory
+                }
+            }
         }
-        print("update ui: DONE")
+        print("update ui: OUT TASK")
     }
     
     func update_timer(to: Double) {
@@ -152,12 +156,6 @@ import Combine
         Task {
             await self.PMActor.setRepeatMode(to: to)
             await self.updateUI()
-        }
-    }
-    
-    func updateUI(userInitiated: Bool) {
-        withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
-            //TODO: update values from PMActor
         }
     }
 }

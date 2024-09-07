@@ -541,6 +541,11 @@
 		E5F43D4E2B0AF2E500864502 /* AEPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F43D4D2B0AF2E500864502 /* AEPlayer.swift */; };
 		E5F43D512B0AFB8600864502 /* SwiftAudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = E5F43D502B0AFB8600864502 /* SwiftAudioPlayer */; };
 		E5F43D932B0B2D4B00864502 /* RxMusicPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = E5F43D922B0B2D4B00864502 /* RxMusicPlayer */; };
+		E5FF24742C8BA16000AFCCE9 /* ModelActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF24732C8BA16000AFCCE9 /* ModelActor.swift */; };
+		E5FF24762C8BA16800AFCCE9 /* DatabaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF24752C8BA16800AFCCE9 /* DatabaseProtocol.swift */; };
+		E5FF24782C8BA61500AFCCE9 /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF24772C8BA61500AFCCE9 /* DefaultDatabase.swift */; };
+		E5FF247A2C8BA70B00AFCCE9 /* SharedDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF24792C8BA70B00AFCCE9 /* SharedDatabase.swift */; };
+		E5FF247C2C8BA75600AFCCE9 /* BackgroundDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF247B2C8BA75600AFCCE9 /* BackgroundDatabase.swift */; };
 		E5FFBD562B0A8AD000170496 /* ExploreFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */; };
 		E5FFBD582B0A8F3000170496 /* LoadingExplore_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD572B0A8F3000170496 /* LoadingExplore_component.swift */; };
 		E5FFBD5A2B0A917500170496 /* LoadingExplore_wii.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD592B0A917500170496 /* LoadingExplore_wii.swift */; };
@@ -1109,6 +1114,11 @@
 		E5F43D492B0ACBC300864502 /* LoadingBigTracks_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBigTracks_component.swift; sourceTree = "<group>"; };
 		E5F43D4B2B0AE52F00864502 /* EQEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQEditor.swift; sourceTree = "<group>"; };
 		E5F43D4D2B0AF2E500864502 /* AEPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPlayer.swift; sourceTree = "<group>"; };
+		E5FF24732C8BA16000AFCCE9 /* ModelActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelActor.swift; sourceTree = "<group>"; };
+		E5FF24752C8BA16800AFCCE9 /* DatabaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseProtocol.swift; sourceTree = "<group>"; };
+		E5FF24772C8BA61500AFCCE9 /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
+		E5FF24792C8BA70B00AFCCE9 /* SharedDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDatabase.swift; sourceTree = "<group>"; };
+		E5FF247B2C8BA75600AFCCE9 /* BackgroundDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundDatabase.swift; sourceTree = "<group>"; };
 		E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreFetchAPI.swift; sourceTree = "<group>"; };
 		E5FFBD572B0A8F3000170496 /* LoadingExplore_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingExplore_component.swift; sourceTree = "<group>"; };
 		E5FFBD592B0A917500170496 /* LoadingExplore_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingExplore_wii.swift; sourceTree = "<group>"; };
@@ -2220,6 +2230,7 @@
 		E5974D6C2A6C8F90009286E2 /* Backend */ = {
 			isa = PBXGroup;
 			children = (
+				E5FF24722C8BA0FC00AFCCE9 /* SwiftData Interactor */,
 				E54BA4002B8A76BA00FAF0F4 /* OMUser */,
 				E58FB6372B2E13F90002E5DB /* Fonts */,
 				E58E8FCC2BA172AF009F7E43 /* BasicAudioPlayer */,
@@ -2852,6 +2863,18 @@
 			path = "Discord RPC";
 			sourceTree = "<group>";
 		};
+		E5FF24722C8BA0FC00AFCCE9 /* SwiftData Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				E5FF24732C8BA16000AFCCE9 /* ModelActor.swift */,
+				E5FF24752C8BA16800AFCCE9 /* DatabaseProtocol.swift */,
+				E5FF24772C8BA61500AFCCE9 /* DefaultDatabase.swift */,
+				E5FF24792C8BA70B00AFCCE9 /* SharedDatabase.swift */,
+				E5FF247B2C8BA75600AFCCE9 /* BackgroundDatabase.swift */,
+			);
+			path = "SwiftData Interactor";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3047,6 +3070,7 @@
 				E514643D2ACE68E800FDBAF5 /* FetchedArtistContentHeader_honeycrisp.swift in Sources */,
 				E5E6A1D42A8056E900880E6B /* TrackLink_classic.swift in Sources */,
 				E579DE4B2B3E7A0F009324C1 /* TrackLink_spotty.swift in Sources */,
+				E5FF247A2C8BA70B00AFCCE9 /* SharedDatabase.swift in Sources */,
 				E579DE472B3E7A0F009324C1 /* PlaylistContentHeadingEditing_spotty.swift in Sources */,
 				E54A400C2ACCB34E007B1444 /* ArtistBackground_component.swift in Sources */,
 				E58B673F2ACFB2B0002FA7A2 /* SearchArtistContentHeader_wii.swift in Sources */,
@@ -3056,6 +3080,7 @@
 				E5DCFE1A2B4510C30044D9B5 /* NPSkipButton_spotty.swift in Sources */,
 				E54A04E22A505F5100B1FEDF /* QPAlbumTracks.swift in Sources */,
 				E5705DC02A80935E0087A43F /* LibraryArtistLink_honeycrisp.swift in Sources */,
+				E5FF24762C8BA16800AFCCE9 /* DatabaseProtocol.swift in Sources */,
 				E5D493352A305BA20091ED01 /* SearchFetchAPI.swift in Sources */,
 				E5E6A1CA2A7DC25A00880E6B /* SearchTrackLink_classic.swift in Sources */,
 				E56E3C6A2B6813BD0088FA50 /* RecentlyPlayedManager.swift in Sources */,
@@ -3275,10 +3300,12 @@
 				E5705DCD2A8176940087A43F /* AlbumContentHeading_classic.swift in Sources */,
 				E5705DC22A80935E0087A43F /* SearchArtistLink_honeycrisp.swift in Sources */,
 				E54BA4042B8A79B800FAF0F4 /* UserLikedSongs.swift in Sources */,
+				E5FF24782C8BA61500AFCCE9 /* DefaultDatabase.swift in Sources */,
 				E5018BD22A917C9400143967 /* SearchArtistExtendedTracks.swift in Sources */,
 				E5A65A042A41279F00072966 /* MiniPlayer.swift in Sources */,
 				E5B9138B2ABCE03B00E0C53C /* MiniToasts.swift in Sources */,
 				E526F9042ABA41C30024F134 /* PMHardwareControls.swift in Sources */,
+				E5FF24742C8BA16000AFCCE9 /* ModelActor.swift in Sources */,
 				E5018BCD2A91410900143967 /* ArtistPageImageDisplay.swift in Sources */,
 				E5A928D92A310497000E52C5 /* SearchShelfArtists.swift in Sources */,
 				E5A928EE2A328D34000E52C5 /* SearchAlbumTracklist.swift in Sources */,
@@ -3496,6 +3523,7 @@
 				E51CE7782A5C982800377848 /* DownloadManager.swift in Sources */,
 				E5A534E42B02A1E500F48935 /* LoadingSearchResults_wii.swift in Sources */,
 				E5F43D4A2B0ACBC300864502 /* LoadingBigTracks_component.swift in Sources */,
+				E5FF247C2C8BA75600AFCCE9 /* BackgroundDatabase.swift in Sources */,
 				E5E6657A2A5F661100397F67 /* DownloadData.swift in Sources */,
 				E5A534EE2B02BDA500F48935 /* LoadingAlbumTrack_classic.swift in Sources */,
 				E5C2DD5A2A2FE6E700E6BB97 /* ExploreShelfView.swift in Sources */,

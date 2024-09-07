@@ -123,11 +123,22 @@ actor PlayerManagerActor {
         if self.timerMidFire == false {
             self.timerMidFire = true
             await self.syncPlayingTimeControls()
-            //self.update_elapsed_time()
+            await self.updateQueueItemsUI()
+            await self.update_elapsed_time()
             await self.repeat_check()
             //self.crossfade_check()
             await self.try_auto_skip_if_necessary()
             self.timerMidFire = false
+        }
+    }
+    
+    func updateQueueItemsUI() async {
+        await self.currentQueueItem?.updateUI()
+        for historyItem in self.sessionHistory {
+            await historyItem.updateUI()
+        }
+        for queueItem in self.trackQueue {
+            await queueItem.updateUI()
         }
     }
 

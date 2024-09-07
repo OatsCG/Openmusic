@@ -11,16 +11,19 @@ import SwiftData
 struct LibraryAlbumMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var album: StoredAlbum
     @State var arePlaybacksDownloaded: Bool = false
+    @State var areTracksStored: Bool? = nil
     var body: some View {
-        if are_tracks_stored(tracks: album.Tracks, context: modelContext) {
+        if areTracksStored == true {
             Button(role: .destructive, action: {
-                withAnimation {
+                Task {
                     for track in album.Tracks {
-                        modelContext.delete(fetch_persistent_track(TrackID: track.TrackID, context: modelContext)!)
-                        try? modelContext.save()
+                        if let fetchedTrack = await database.fetch_persistent_track(TrackID: track.TrackID) {
+                            await database.delete(fetchedTrack)
+                            try? database.save()
+                        }
                     }
                 }
             }) {
@@ -50,7 +53,7 @@ struct LibraryAlbumMenu: View {
             }
         } else {
             Button(action: {
-                store_tracks(album.Tracks, ctx: modelContext)
+                database.store_tracks(album.Tracks)
             }) {
                 Label("Add to Library", systemImage: "plus.circle")
             }
@@ -148,7 +151,16 @@ struct LibraryAlbumMenu: View {
 
     }
     func updateArePlaybacksDownloaded() async {
-        arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
+        let arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
+        await MainActor.run {
+            self.arePlaybacksDownloaded = arePlaybacksDownloaded
+        }
+    }
+    func updateAreTracksStored() async {
+        let areTracksStored = await database.are_tracks_stored(tracks: album.Tracks)
+        await MainActor.run {
+            self.areTracksStored = areTracksStored
+        }
     }
 }
 

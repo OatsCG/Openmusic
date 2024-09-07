@@ -11,7 +11,6 @@ import SwiftData
 //142.189.12.151
 
 struct ContentView: View {
-    @Environment(\.modelContext) var modelContext
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass

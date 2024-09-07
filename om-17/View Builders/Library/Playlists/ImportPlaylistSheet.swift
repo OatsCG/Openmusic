@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImportPlaylistSheet: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(FontManager.self) private var fontManager
     @Binding var isShowingSheet: Bool

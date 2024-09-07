@@ -13,25 +13,28 @@ struct QueueItemMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(OMUser.self) var omUser
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var queueItem: QueueItem
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     @State var isDownloaded: Bool = false
+    @State var isTrackStored: Bool? = nil
     var body: some View {
         Section {
-            if is_track_stored(TrackID: queueItem.Track.TrackID, context: modelContext) {
+            if isTrackStored == true {
                 Button(role: .destructive, action: {
-                    withAnimation {
-                        modelContext.delete(fetch_persistent_track(TrackID: queueItem.Track.TrackID, context: modelContext)!)
-                        try? modelContext.save()
+                    Task {
+                        if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem.Track.TrackID) {
+                            await database.delete(fetchedTrack)
+                            try? database.save()
+                        }
                     }
                 }) {
                     Label("Remove from Library", systemImage: "minus.circle")
                 }
             } else {
                 Button(action: {
-                    store_track(queueItem, ctx: modelContext)
+                    database.store_track(queueItem)
                 }) {
                     Label("Add to Library", systemImage: "plus.circle")
                 }
@@ -172,12 +175,22 @@ struct QueueItemMenu: View {
         .onAppear {
             Task {
                 await updateIsDownloaded()
+                await updateIsTrackStored()
             }
         }
         
     }
     func updateIsDownloaded() async {
-        isDownloaded = await downloadManager.is_downloaded(queueItem, explicit: queueItem.explicit)
+        let isDownloaded = await downloadManager.is_downloaded(queueItem, explicit: queueItem.explicit)
+        await MainActor.run {
+            self.isDownloaded = isDownloaded
+        }
+    }
+    func updateIsTrackStored() async {
+        let isTrackStored = await database.is_track_stored(TrackID: queueItem.Track.TrackID)
+        await MainActor.run {
+            self.isTrackStored = isTrackStored
+        }
     }
 }
 

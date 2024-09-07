@@ -12,7 +12,7 @@ struct NPEnjoyingSession: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(FontManager.self) private var fontManager
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var body: some View {
         VStack {
             Text("Enjoying this session?")
@@ -27,8 +27,8 @@ struct NPEnjoyingSession: View {
                     
                     let tracksToAdd: [ImportedTrack] = playerManager.sessionHistory.filter({ $0.wasSongEnjoyed == true }).compactMap { $0.Track as? ImportedTrack }
                     playlist.add_tracks(tracks: tracksToAdd.map { FetchedTrack(from: $0) })
-                    modelContext.insert(playlist)
-                    try? modelContext.save()
+                    await database.insert(playlist)
+                    try? database.save()
                 }
                 withAnimation {
                     playerManager.hasSuggestedPlaylistCreation = true

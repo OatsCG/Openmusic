@@ -47,16 +47,22 @@ actor AlbumViewActor {
     private let viewActor = AlbumViewActor()
     
     var fetchedAlbum: FetchedAlbum? = nil
+    var areTracksStored: Bool? = nil
     
-    func runSearch(albumID: String) {
+    func runSearch(albumID: String, database: BackgroundDatabase?) {
         Task {
             do {
                 try await viewActor.runSearch(albumID: albumID)
                 
                 let album = await viewActor.getFetchedAlbum()
+                var isstored: Bool? = nil
+                if let album = album {
+                    isstored = await database?.are_tracks_stored(tracks: album.Tracks)
+                }
                 await MainActor.run {
                     withAnimation {
                         self.fetchedAlbum = album
+                        self.areTracksStored = isstored
                     }
                 }
             } catch {

@@ -13,7 +13,7 @@ struct ImportFileTrack: View {
     @Binding var track: FetchedTrack
     @State var isDownloadingTrack: Bool = false
     @Binding var rawFileURL: URL
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var body: some View {
         NavigationStack {
             Form {
@@ -81,8 +81,10 @@ struct ImportFileTrack: View {
                             print("File saved: \(destinationURL)")
                             
                             // Add Track to Library
-                            modelContext.insert(StoredTrack(from: track))
-                            try? modelContext.save()
+                            Task {
+                                await database.insert(StoredTrack(from: track))
+                                try? database.save()
+                            }
                             
                             presentImporter = false
                             

@@ -12,31 +12,34 @@ struct NPMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(OMUser.self) var omUser
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var queueItem: QueueItem?
     @State var playlists: [StoredPlaylist]
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     @State var isDownloadedExp: Bool = false
     @State var isDownloadedClean: Bool = false
+    @State var isTrackStored: Bool? = nil
     var body: some View {
         Group {
             if (queueItem == nil) {
                 Text("Not Playing")
             } else {
                 Section {
-                    if is_track_stored(TrackID: queueItem!.Track.TrackID, context: modelContext) {
+                    if isTrackStored == true {
                         Button(role: .destructive, action: {
-                            withAnimation {
-                                modelContext.delete(fetch_persistent_track(TrackID: queueItem!.Track.TrackID, context: modelContext)!)
-                                try? modelContext.save()
+                            Task {
+                                if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem!.Track.TrackID) {
+                                    await database.delete(fetchedTrack)
+                                    try? database.save()
+                                }
                             }
                         }) {
                             Label("Remove from Library", systemImage: "minus.circle")
                         }
                     } else {
                         Button(action: {
-                            store_track(queueItem!, ctx: modelContext)
+                            database.store_track(queueItem!)
                         }) {
                             Label("Add to Library", systemImage: "plus.circle")
                         }
@@ -297,13 +300,24 @@ struct NPMenu: View {
         .onAppear {
             Task {
                 await updateIsDownloaded()
+                await updateIsTrackStored()
             }
         }
     }
     func updateIsDownloaded() async {
         if let queueItem = queueItem {
-            isDownloadedExp = await downloadManager.is_downloaded(queueItem, explicit: true)
-            isDownloadedClean = await downloadManager.is_downloaded(queueItem, explicit: false)
+            let isDownloadedExp = await downloadManager.is_downloaded(queueItem, explicit: true)
+            let isDownloadedClean = await downloadManager.is_downloaded(queueItem, explicit: false)
+            await MainActor.run {
+                self.isDownloadedExp = isDownloadedExp
+                self.isDownloadedClean = isDownloadedClean
+            }
+        }
+    }
+    func updateIsTrackStored() async {
+        let isTrackStored = await database.is_track_stored(TrackID: queueItem!.Track.TrackID)
+        await MainActor.run {
+            self.isTrackStored = isTrackStored
         }
     }
 }

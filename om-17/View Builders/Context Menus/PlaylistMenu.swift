@@ -11,7 +11,6 @@ import SwiftData
 struct PlaylistMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
-    @Environment(\.modelContext) private var modelContext
     var playlist: StoredPlaylist
     var body: some View {
         Section {

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SearchAlbumContent: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     @State var toastManager: ToastManager = ToastManager.shared
     var album: SearchedAlbum
     @State var albumModel = AlbumViewModel()
@@ -33,10 +33,10 @@ struct SearchAlbumContent: View {
             .safeAreaPadding(.bottom, 160)
             .onAppear {
                 if (albumModel.fetchedAlbum == nil) {
-                    albumModel.runSearch(albumID: album.AlbumID)
+                    albumModel.runSearch(albumID: album.AlbumID, database: database)
                     Task {
                         try? await Task.sleep(nanoseconds: 1_000_000_000)
-                        albumModel.runSearch(albumID: album.AlbumID)
+                        albumModel.runSearch(albumID: album.AlbumID, database: database)
                     }
                 }
             }
@@ -46,11 +46,11 @@ struct SearchAlbumContent: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 2) {
                         // Add to library
-                        if albumModel.fetchedAlbum != nil && are_tracks_stored(tracks: albumModel.fetchedAlbum!.Tracks, context: modelContext) {
+                        if albumModel.fetchedAlbum != nil && albumModel.areTracksStored == true {
                             
                         } else {
                             Button (action: {
-                                store_tracks((albumModel.fetchedAlbum?.Tracks ?? []), ctx: modelContext)
+                                database.store_tracks((albumModel.fetchedAlbum?.Tracks ?? []))
                             }) {
                                 Image(systemName: "plus.circle.fill")
                                     .symbolRenderingMode(.hierarchical)

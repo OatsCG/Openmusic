@@ -12,7 +12,7 @@ struct PlaylistCreationButtons: View {
     @State private var showingImportPlaylistSheet: Bool = false
     @State private var addPlaylistName: String = ""
     @State private var importPlaylistURL: String = ""
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     @Binding var libraryNSPath: NavigationPath
     var body: some View {
         HStack {
@@ -27,8 +27,10 @@ struct PlaylistCreationButtons: View {
                         .autocorrectionDisabled()
                     Button(action: {
                         let playlist = StoredPlaylist(Title: addPlaylistName)
-                        modelContext.insert(playlist)
                         libraryNSPath.append(PlaylistContentNPM(playlist: playlist))
+                        Task {
+                            await database.insert(playlist)
+                        }
                     }) {
                         Text("Create")
                     }

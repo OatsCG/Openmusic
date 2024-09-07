@@ -13,25 +13,28 @@ struct TrackMenu: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(FontManager.self) var fontManager
     @Environment(OMUser.self) var omUser
-    @Environment(\.modelContext) private var modelContext
+    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     @Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     var track: any Track
     @State var isDownloadedExp: Bool = false
     @State var isDownloadedClean: Bool = false
+    @State var isTrackStored: Bool? = nil
     var body: some View {
         Section {
-            if is_track_stored(TrackID: track.TrackID, context: modelContext) {
+            if isTrackStored == true {
                 Button(role: .destructive, action: {
-                    withAnimation {
-                        modelContext.delete(fetch_persistent_track(TrackID: track.TrackID, context: modelContext)!)
-                        try? modelContext.save()
+                    Task {
+                        if let fetchedTrack = await database.fetch_persistent_track(TrackID: track.TrackID) {
+                            await database.delete(fetchedTrack)
+                            try? database.save()
+                        }
                     }
                 }) {
                     Label("Remove from Library", systemImage: "minus.circle")
                 }
             } else {
                 Button(action: {
-                    store_track(track, ctx: modelContext)
+                    database.store_track(track)
                 }) {
                     Label("Add to Library", systemImage: "plus.circle")
                 }
@@ -293,13 +296,24 @@ struct TrackMenu: View {
         }
         .onAppear {
             Task {
-                await updateIsDownloaded()
+                await self.updateIsDownloaded()
+                await self.updateIsStored()
             }
         }
     }
     func updateIsDownloaded() async {
-        isDownloadedExp = await downloadManager.is_downloaded(track, explicit: true)
-        isDownloadedClean = await downloadManager.is_downloaded(track, explicit: false)
+        let isDownloadedExp = await downloadManager.is_downloaded(track, explicit: true)
+        let isDownloadedClean = await downloadManager.is_downloaded(track, explicit: false)
+        await MainActor.run {
+            self.isDownloadedExp = isDownloadedExp
+            self.isDownloadedClean = isDownloadedClean
+        }
+    }
+    func updateIsStored() async {
+        let isStored = await database.is_track_stored(TrackID: track.TrackID)
+        await MainActor.run {
+            self.isTrackStored = isStored
+        }
     }
 }
 

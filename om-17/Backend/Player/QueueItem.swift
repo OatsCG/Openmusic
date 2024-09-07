@@ -46,17 +46,30 @@ import SwiftUI
         await self.updateUI()
     }
     
-    func updateUI() async {
-        await self.queueItemActor.updateDownloadStatus()
-        self.currentlyPriming = await self.queueItemActor.currentlyPriming
-        self.fetchedPlayback = await self.queueItemActor.fetchedPlayback
-        self.primeStatus = await self.queueItemActor.primeStatus
-        self.isDownloaded = await self.queueItemActor.isDownloaded
-        self.isReady = await self.queueItemActor.isReady()
-        self.isVideo = await self.queueItemActor.isVideo
-        self.status = await self.queueItemActor.audio_AVPlayer?.player.status
-        self.duration = await self.queueItemActor.audio_AVPlayer?.player.duration
-        return
+    func updateUI() {
+        Task {
+            await self.queueItemActor.updateDownloadStatus()
+            let currentlyPriming = await self.queueItemActor.currentlyPriming
+            let fetchedPlayback = await self.queueItemActor.fetchedPlayback
+            let primeStatus = await self.queueItemActor.primeStatus
+            let isDownloaded = await self.queueItemActor.isDownloaded
+            let isReady = await self.queueItemActor.isReady()
+            let isVideo = await self.queueItemActor.isVideo
+            let status = await self.queueItemActor.audio_AVPlayer?.player.status
+            let duration = await self.queueItemActor.audio_AVPlayer?.player.duration
+            await MainActor.run {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    self.currentlyPriming = currentlyPriming
+                    self.fetchedPlayback = fetchedPlayback
+                    self.primeStatus = primeStatus
+                    self.isDownloaded = isDownloaded
+                    self.isReady = isReady
+                    self.isVideo = isVideo
+                    self.status = status
+                    self.duration = duration
+                }
+            }
+        }
     }
     
     func clearPlayback() async {
