@@ -54,10 +54,8 @@ extension PlayerManager {
                 }
             }
             if (self.trackQueue.first != nil) {
-                DispatchQueue.main.async {
-                    withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
-                        self.currentQueueItem = self.trackQueue.removeFirst()
-                    }
+                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
+                    self.currentQueueItem = self.trackQueue.removeFirst()
                 }
             } else if (self.sessionHistory.first != nil) {
                 self.pause()

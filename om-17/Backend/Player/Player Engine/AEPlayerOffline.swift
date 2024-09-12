@@ -94,10 +94,14 @@ import AudioKit
             return
         } else {
             if (self.has_file() && self.eqManager.audioEngine == nil) {
-                DispatchQueue.main.async {
-                    self.eqManager.setEngine(audioEngine: self.player.engine, playerNode: self.player.playerNode.node)
-                    self.amplitudeFetcher.try_amplitude_fetch(audioFile: self.player.file)
-                    parent.isReady = self.has_file()
+                Task { [weak self] in
+                    if let self = self {
+                        self.eqManager.setEngine(audioEngine: self.player.engine, playerNode: self.player.playerNode.node)
+                        await self.amplitudeFetcher.try_amplitude_fetch(audioFile: self.player.file)
+                        DispatchQueue.main.async {
+                            parent.isReady = self.has_file()
+                        }
+                    }
                 }
             }
             completion(self.has_file())

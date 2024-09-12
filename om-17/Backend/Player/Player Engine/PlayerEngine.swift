@@ -132,7 +132,7 @@ import AudioKit
         self.player.pause()
     }
     
-    func update_EQ(enabled: Bool) {
+    @MainActor func update_EQ(enabled: Bool) {
         if (self.isRemote == false) {
             let thisplayer = self.player as! AEPlayerOffline
             thisplayer.eqManager.update_EQ(enabled: enabled)
