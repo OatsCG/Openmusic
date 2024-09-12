@@ -279,12 +279,12 @@ public class AudioPlayerNode {
             blocksNextCompletionHandler = false
             return
         }
-        //Task.detached { [self] in
+        Task.detached { [self] in
             self.node.stop()
             status = .ready
             needsScheduling = true
             delegate?.playerNodePlaybackDidComplete(self)
             if doesLoop { play() }
-        //}
+        }
     }
 }
