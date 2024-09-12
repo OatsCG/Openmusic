@@ -12,7 +12,7 @@ import SwiftAudioPlayer
 import AudioKit
 
 
-@Observable final class AEPlayerOffline: AEPlayer, Sendable {
+@Observable class AEPlayerOffline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status
     var volume: Float { return self.player.playerNode.volume }
@@ -55,10 +55,10 @@ import AudioKit
         self.eqManager.adjustEQBand(for: index, value: Float(value))
     }
     
-    func resetEQ(playerManagerActor: PlayerManagerActor) {
+    func resetEQ(playerManager: PlayerManager) {
         
         //self.eqManager = EQManager()
-        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManagerActor: playerManagerActor)
+        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
         //self.eqManager.resetEQ()
     }
     
@@ -87,23 +87,22 @@ import AudioKit
     func has_file() -> Bool {
         return self.player.status != .noSource
     }
-    func preroll(parent: PlayerEngine) async -> Bool {
+    func preroll(parent: PlayerEngine, completion: @escaping (_ success: Bool) -> Void) {
         self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
-
         if parent.isReady {
-            return true
+            completion(true)
+            return
         } else {
-            if self.has_file() && self.eqManager.audioEngine == nil {
-                await MainActor.run {
+            if (self.has_file() && self.eqManager.audioEngine == nil) {
+                DispatchQueue.main.async {
                     self.eqManager.setEngine(audioEngine: self.player.engine, playerNode: self.player.playerNode.node)
                     self.amplitudeFetcher.try_amplitude_fetch(audioFile: self.player.file)
                     parent.isReady = self.has_file()
                 }
             }
-            return self.has_file()
+            completion(self.has_file())
         }
     }
-
     func setVolume(_ to: Float) {
         if (self.eqManager.isReady) {
             Task {

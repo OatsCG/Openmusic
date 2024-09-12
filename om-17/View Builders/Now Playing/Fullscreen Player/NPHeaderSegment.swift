@@ -75,7 +75,7 @@ struct NPHeaderSegment: View {
                     Menu {
                         Button(action: {
                             Task.detached { [self] in
-                                await playerManager.currentQueueItem?.prime_object_fresh(playerManagerActor: playerManager.PMActor, continueCurrent: false, seek: false)
+                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
                             }
                         }) {
                             Label("Refresh Track", systemImage: "arrow.clockwise")
@@ -96,7 +96,7 @@ struct NPHeaderSegment: View {
                                 playerManager.currentQueueItem?.explicit.toggle()
                                 playerManager.pause()
                                 Task {
-                                    playerManager.currentQueueItem?.prime_object_fresh(playerManagerActor: playerManager.PMActor, seek: true)
+                                    playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
                                     //playerManager.play()
                                 }
                             }) {
@@ -129,7 +129,7 @@ struct NPHeaderSegment: View {
 //                }
 //            }
             .task {
-                self.video_AVPlayer = await playerManager.currentQueueItem?.getVideoAVPlayer()
+                self.video_AVPlayer = await playerManager.currentQueueItem?.video_AVPlayer
             }
             //.contentTransition(.numericText())
     }

@@ -9,7 +9,7 @@ import SwiftUI
 import YouTubePlayerKit
 import Combine
 
-@Observable final class VideoPlayerEngine: PlayerEngineProtocol {
+@Observable class VideoPlayerEngine: PlayerEngineProtocol {
     var id: UUID
     var player: YouTubePlayer?
     var isPlaying: Bool = false
@@ -91,12 +91,12 @@ import Combine
         self.player?.seek(to: 0, allowSeekAhead: true)
     }
     
-    func preroll() async -> Bool {
+    func preroll(completion: @escaping (Bool) -> Void) {
         if (self.player?.state?.isError == true) {
             //self.player?.reload()
-            return true
+            completion(true)
         } else {
-            return true
+            completion(true)
         }
     }
     

@@ -84,12 +84,12 @@ struct BufferProgressLabel: View {
                 }
             }
         }
-            .onChange(of: playerManager.currentQueueItem?.status) { oldValue, newValue in
+        .onChange(of: playerManager.currentQueueItem?.audio_AVPlayer?.player.status) { oldValue, newValue in
                 Task {
                     currentPlayerStatus = newValue
                 }
             }
-            .onChange(of: playerManager.currentQueueItem?.duration) { oldValue, newValue in
+        .onChange(of: playerManager.currentQueueItem?.audio_AVPlayer?.player.duration) { oldValue, newValue in
                 Task {
                     currentPlayerDuration = newValue
                 }
@@ -135,7 +135,7 @@ struct BufferLabelLevelTwo: View {
                     }
                 }
             } else {
-                if playerManager.currentQueueItem?.isReady == true {
+                if playerManager.currentQueueItem?.isReady() == true {
                     if (self.currentPlayerStatus == .readyToPlay) {
                         if (self.currentPlayerDuration ?? 0 > 0) {
                             Image(systemName: "checkmark")
@@ -186,9 +186,9 @@ struct BufferLabelLevelTwo: View {
                 }
             }
         }
-        .onChange(of: playerManager.currentQueueItem?.status) { oldValue, newValue in
+        .onChange(of: playerManager.currentQueueItem?.audio_AVPlayer?.player.status) { oldValue, newValue in
             Task {
-                let onlinePlayer = await playerManager.currentQueueItem?.getAudioAVPlayer()?.player as? AEPlayerOnline
+                let onlinePlayer = await playerManager.currentQueueItem?.audio_AVPlayer?.player as? AEPlayerOnline
                 await MainActor.run {
                     self.onlinePlayer = onlinePlayer
                 }
@@ -277,7 +277,7 @@ struct BufferLabelLevelThree: View {
                         }
                     }
             } else {
-                if (playerManager.currentQueueItem?.isReady == false) {
+                if (playerManager.currentQueueItem?.isReady() == false) {
                     Image(systemName: "exclamationmark.triangle.fill")
                     VStack {
                         Text("Audio Uninitialized")

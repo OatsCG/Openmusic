@@ -12,7 +12,7 @@ import SwiftAudioPlayer
 import AudioKit
 
 
-@Observable final class AEPlayerOnline: AEPlayer, Sendable {
+@Observable class AEPlayerOnline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status
     var volume: Float { return self.player.volume }
@@ -28,7 +28,7 @@ import AudioKit
     init(url: URL? = nil) {
         self.url = url
         if (url != nil) {
-            let asset = AVURLAsset(url: url!)
+            let asset = AVAsset(url: url!)
             let playerItem = AVPlayerItem(asset: asset)
             self.player = AVPlayer(playerItem: playerItem)
         } else {
@@ -56,7 +56,7 @@ import AudioKit
         return
     }
     
-    func resetEQ(playerManagerActor: PlayerManagerActor) {
+    func resetEQ(playerManager: PlayerManager) {
         return
     }
     
@@ -67,7 +67,7 @@ import AudioKit
     func pause() {
         self.player.pause()
     }
-    func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping @Sendable (Bool) -> Void) {
+    func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         self.player.seek(to: to, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) {_ in
             completionHandler(true)
         }
@@ -75,37 +75,74 @@ import AudioKit
     func has_file() -> Bool {
         return self.player.currentItem != nil
     }
-    func preroll(parent: PlayerEngine) async -> Bool {
-        if parent.isReady {
+    func preroll(parent: PlayerEngine, completion: @escaping (Bool) -> Void) {
+        if (parent.isReady) {
             self.player.cancelPendingPrerolls()
-            return true
+            completion(true)
+            return
         }
-        
-        return await withCheckedContinuation { continuation in
-            parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
-                if player.status == .readyToPlay {
-                    self.status = .readyToPlay
-                    parent.statusObservation?.invalidate()
-                    player.cancelPendingPrerolls()
-                    let currentRate: Float = player.rate
-                    player.rate = 0
-                    player.preroll(atRate: 1.0) { prerollSuccess in
-                        player.seek(to: CMTime.zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
-                            player.rate = currentRate
-                            parent.isReady = true
-                            continuation.resume(returning: true)
-                        }
+        parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
+            if player.status == .readyToPlay {
+                print("STATUS READY STATUS READY")
+                self.status = .readyToPlay
+                parent.statusObservation?.invalidate()
+                player.cancelPendingPrerolls()
+                let currentRate: Float = player.rate
+                player.rate = 0
+                player.preroll(atRate: 1.0) { prerollSuccess in
+                    player.seek(to: CMTime.zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
+                        player.rate = currentRate
+                        parent.isReady = true
+                        completion(true)
+                        
                     }
-                } else if player.status == .failed {
-                    self.status = .failed
-                    continuation.resume(returning: false)
                 }
+            } else if player.status == .failed {
+                print("STATUS FAILED STATUS FAILED")
+                self.status = .failed
             }
         }
     }
-
     func setVolume(_ to: Float) {
         self.player.volume = min(max(to, 0), 1)
     }
 }
 
+
+
+
+func fetchContentLength(myURL: URL?, callback: @escaping (Double?) -> Void) {
+    if let myURL = myURL {
+        var request = URLRequest(url: myURL)
+        request.addValue("bytes=0-1", forHTTPHeaderField: "Range")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { _, response, error in
+            guard error == nil else {
+                print("Error: \(error!.localizedDescription)")
+                callback(nil)
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse,
+               let contentRange = httpResponse.allHeaderFields["content-range"] as? String {
+                let parts = contentRange.components(separatedBy: "/")
+                if let totalSize = parts.last, let size = Int(totalSize) {
+                    print("FCL GOT: \(size)")
+                    let ms: Double = Double((size * 8) / 130000)
+                    print("FCL FORMATTED: \(ms)")
+                    callback(ms)
+                } else {
+                    print("FCL NIL 1")
+                    callback(nil)
+                }
+            } else {
+                print("FCL NIL 2")
+                callback(nil)
+            }
+        }
+        task.resume()
+    } else {
+        print("FCL NIL 3")
+        callback(nil)
+    }
+}

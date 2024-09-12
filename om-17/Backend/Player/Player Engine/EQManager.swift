@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+
+import AVFoundation
+
 import AVFoundation
 
 class EQManager {
@@ -179,13 +182,11 @@ class EQManager {
                 if let playerNode = self?.playerNode {
                     if let audioEngine = self?.audioEngine {
                         if let eqNode = self?.eqNode {
-                            Task.detached {
-                                let format = playerNode.outputFormat(forBus: 0)
-                                audioEngine.disconnectNodeOutput(playerNode)
-                                audioEngine.attach(eqNode)
-                                audioEngine.connect(playerNode, to: eqNode, format: format)
-                                audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: format)
-                            }
+                            let format = playerNode.outputFormat(forBus: 0)
+                            audioEngine.disconnectNodeOutput(playerNode)
+                            audioEngine.attach(eqNode)
+                            audioEngine.connect(playerNode, to: eqNode, format: format)
+                            audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: format)
                         }
                     }
                 }
@@ -213,31 +214,34 @@ class EQManager {
         }
     }
     
-    func update_EQ(enabled: Bool, playerManagerActor: PlayerManagerActor? = nil) {
-        if (self.isReady == false) {
-            return
-        }
-        if (enabled == false) {
-            for i in 0..<eqNode.bands.count {
-                eqNode.bands[i].gain = 0
+    func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) {
+        Task {
+            if (self.isReady == false) {
+                return
             }
-        } else {
-            if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
-                if let playerManagerActor = playerManagerActor {
-                    //playerManager.pause()
-                    Task {
-                        if await playerManagerActor.currentQueueItem?.isDownloaded == true {
-                            await playerManagerActor.currentQueueItem?.prime_object_fresh(playerManagerActor: playerManagerActor, seek: true)
-                        }
-                    }
+            if (enabled == false) {
+                for i in 0..<eqNode.bands.count {
+                    eqNode.bands[i].gain = 0
                 }
             } else {
-                for band in EQManager.decodeCurrentBands() {
-                    reallyAdjustBand(for: band.index, value: Float(band.value))
+                if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
+                    if let playerManager = playerManager {
+                        //playerManager.pause()
+                        Task {
+                            if await playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
+                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                            }
+                        }
+                    }
+                } else {
+                    for band in EQManager.decodeCurrentBands() {
+                        reallyAdjustBand(for: band.index, value: Float(band.value))
+                    }
                 }
             }
         }
     }
+
 }
 
 @Observable class EQBand: Equatable {

@@ -9,7 +9,7 @@ import SwiftUI
 import AVFoundation
 import CoreAudio
 
-protocol PlayerEngineProtocol: Equatable, Sendable {
+protocol PlayerEngineProtocol: Equatable {
     var id: UUID {get set}
     var isReady: Bool {get set}
     var isSeeking: Bool {get set}
@@ -21,7 +21,7 @@ protocol PlayerEngineProtocol: Equatable, Sendable {
     func clear_file()
     func seek(to: Double)
     func seek_to_zero()
-    func preroll() async -> Bool
+    func preroll(completion: @escaping (_ success: Bool) -> Void)
     func playImmediately()
     func play()
     func pause()

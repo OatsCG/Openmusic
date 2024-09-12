@@ -106,7 +106,7 @@ struct QueueItemMenu: View {
             if (queueItem.Track.Playback_Clean != nil && queueItem.Track.Playback_Explicit != nil) {
                 Button(action: {
                     queueItem.explicit.toggle()
-                    queueItem.prime_object_fresh(playerManagerActor: playerManager.PMActor)
+                    queueItem.prime_object_fresh(playerManager: playerManager)
                 }) {
                     Label("Toggle Explicity", systemImage: "arrow.left.arrow.right.square")
                     //arrow.left.arrow.right.square

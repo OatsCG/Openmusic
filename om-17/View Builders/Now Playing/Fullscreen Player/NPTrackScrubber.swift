@@ -92,7 +92,7 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                         if (playerManager.currentQueueItem != nil) {
                             playerManager.elapsedTime = endNormal * playerManager.durationSeconds
                             playerManager.elapsedNormal = endNormal
-                            playerManager.seek(to: endNormal * playerManager.durationSeconds)
+                            playerManager.currentQueueItem?.audio_AVPlayer?.seek(to: endNormal * playerManager.durationSeconds)
                         }
                     }
                     playerManager.play()
@@ -154,7 +154,7 @@ struct ScrubberBarAmplitudes: View {
         }
         .task {
             Task {
-                self.amplitudeChart = await self.playerManager.currentQueueItem?.getAudioAVPlayer()?.player.amplitudeChart()
+                self.amplitudeChart = await self.playerManager.currentQueueItem?.audio_AVPlayer?.player.amplitudeChart()
             }
         }
     }

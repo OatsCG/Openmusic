@@ -10,7 +10,7 @@ import SwiftUI
 // @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
 
 extension PlayerManager {
-    func addSuggestions() {
+    @MainActor func addSuggestions() {
         guard self.trackQueue.count < 10 else {
             return
         }
@@ -19,7 +19,7 @@ extension PlayerManager {
         }
         
         if self.currentQueueItem != nil {
-            let songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
+            var songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
             self.fetchSuggestionsModel.runSearch(songs: songs, playerManager: self)
         }
     }
@@ -54,5 +54,27 @@ extension PlayerManager {
             songs.append(NaiveTrack(title: song.Track.Title, album: song.Track.Album.Title, artists: stringArtists(artistlist: song.Track.Album.Artists)))
         }
         return songs
+    }
+    
+    func trySuggestingPlaylistCreation() {
+        if (self.shouldSuggestPlaylistCreation == true) {
+            return
+        } else {
+            if (self.hasSuggestedPlaylistCreation == true) {
+                return
+            } else {
+                let enjoyedHistory: [QueueItem] = self.sessionHistory.filter({ $0.wasSongEnjoyed == true })
+                let enjoyedCount: Int = enjoyedHistory.count
+                if (enjoyedCount > 10) {
+                    let importedTracks: [ImportedTrack] = enjoyedHistory.compactMap { $0.Track as? ImportedTrack }
+                    let importedCount: Int = importedTracks.count
+                    if (importedCount > 10) {
+                        withAnimation {
+                            self.shouldSuggestPlaylistCreation = true
+                        }
+                    }
+                }
+            }
+        }
     }
 }
