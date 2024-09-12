@@ -54,7 +54,7 @@ struct LibraryPlaylistDownloadButton: View {
     }
     
     func updatePlaybacksDownloaded() async -> Bool {
-        var playbackIDs = playlist.items.filter({ $0.importData.status == .success }).map{$0.track}.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!}
+        let playbackIDs = playlist.items.filter({ $0.importData.status == .success }).map{$0.track}.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!}
         return await downloadManager.are_playbacks_downloaded(PlaybackIDs: playbackIDs)
     }
 }

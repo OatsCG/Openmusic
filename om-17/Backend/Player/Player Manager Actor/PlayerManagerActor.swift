@@ -27,6 +27,7 @@ actor PlayerManagerActor {
     var startingVol: Float = 1.0
     
     //crossfade
+    var crossfadeAlbums: Bool
     var crossfadeSeconds: Double
     var crossfadeZero: Double
     var crossfadeZeroDownload: Double
@@ -69,6 +70,7 @@ actor PlayerManagerActor {
         self.appVolume = 1
         
         // crossfade
+        self.crossfadeAlbums = UserDefaults.standard.bool(forKey: "crossfadeAlbums")
         self.crossfadeSeconds = UserDefaults.standard.double(forKey: "crossfadeSeconds") == 0 ? 0.15 : UserDefaults.standard.double(forKey: "crossfadeSeconds")
         self.crossfadeZero = 0.15
         self.crossfadeZeroDownload = 0.05
@@ -125,7 +127,7 @@ actor PlayerManagerActor {
             await self.updateQueueItemsUI()
             await self.update_elapsed_time()
             await self.repeat_check()
-            //self.crossfade_check()
+            await self.crossfade_check()
             await self.try_auto_skip_if_necessary()
             self.timerMidFire = false
         }
@@ -140,7 +142,12 @@ actor PlayerManagerActor {
             await queueItem.updateUI()
         }
     }
-
+    
+    func end_song_check() async {
+        if (self.durationSeconds - self.elapsedTime < 0.01) {
+            await self.playerForward()
+        }
+    }
     
     func setRepeatMode(to: RepeatMode) {
         self.repeatMode = to

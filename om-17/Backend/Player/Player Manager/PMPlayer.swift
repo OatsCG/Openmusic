@@ -9,17 +9,17 @@ import SwiftUI
 import AVFoundation
 
 extension PlayerManager {
-    
     func change_volume(to: Float) {
         self.appVolume = to
         Task {
             await self.PMActor.setVolume(to: self.appVolume)
-            await self.updateUI()
+            self.updateUI()
         }
     }
     
     func switchCurrentlyPlaying(queueItem: QueueItem) async {
         await self.PMActor.switchCurrentlyPlaying(queueItem: queueItem)
+        self.updateUI()
         self.addSuggestions()
     }
 }

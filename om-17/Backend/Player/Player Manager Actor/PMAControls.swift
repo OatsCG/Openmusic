@@ -9,21 +9,33 @@ import SwiftUI
 
 extension PlayerManagerActor {
     func play() async {
+        print("play 1")
         self.setAudioSession()
+        print("play 2")
         if (self.currentQueueItem == nil) {
             if (self.trackQueue.isEmpty) {
                 if let recentTrack = RecentlyPlayedManager.getRecentTracks().first {
+                    print("play 3")
                     await self.fresh_play(track: recentTrack)
+                    print("play 4")
                     await self.play_fade()
+                    print("play 5")
                 }
             } else {
+                print("play 6")
                 await self.playerForward(userInitiated: true)
+                print("play 7")
                 await self.play_fade()
+                print("play 8")
             }
         } else {
+            print("play 9")
             await self.play_fade()
+            print("play 10")
         }
+        print("play 11")
         await self.prime_current_song()
+        print("play 12")
     }
     
     func pause() async {
@@ -35,6 +47,7 @@ extension PlayerManagerActor {
         self.didAddFromRepeat = false
         if (continueCurrent == false) {
             self.setIsPlaying(to: false)
+            print("PAUSED AT #7")
             self.player.pause()
             self.player.seek_to_zero()
         }
@@ -51,6 +64,7 @@ extension PlayerManagerActor {
                 self.currentQueueItem = self.trackQueue.removeFirst()
             }
         } else if (self.sessionHistory.first != nil) {
+            print("PAUSED AT #3")
             await self.pause()
             self.queue_start_over()
             await self.playerForward(userInitiated: userInitiated)

@@ -22,7 +22,7 @@ actor QueueItemActor {
     var formulatedURL: URL? = nil
     
     init(queueID: UUID, Track: any Track, fetchedPlayback: FetchedPlayback?, explicit: Bool, audio_AVPlayer: PlayerEngine?) async {
-        self.queueID = UUID()
+        self.queueID = queueID
         self.Track = Track
         self.fetchedPlayback = fetchedPlayback
         self.explicit = explicit
@@ -36,6 +36,7 @@ actor QueueItemActor {
             }
         }
         self.isVideo = false
+        print("PAUSED AT #8 (reinitialized)")
         self.audio_AVPlayer?.pause()
         self.audio_AVPlayer?.seek_to_zero()
     }

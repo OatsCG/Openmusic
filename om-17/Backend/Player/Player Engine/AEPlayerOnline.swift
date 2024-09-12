@@ -84,7 +84,6 @@ import AudioKit
         return await withCheckedContinuation { continuation in
             parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
                 if player.status == .readyToPlay {
-                    print("STATUS READY STATUS READY")
                     self.status = .readyToPlay
                     parent.statusObservation?.invalidate()
                     player.cancelPendingPrerolls()
@@ -98,7 +97,6 @@ import AudioKit
                         }
                     }
                 } else if player.status == .failed {
-                    print("STATUS FAILED STATUS FAILED")
                     self.status = .failed
                     continuation.resume(returning: false)
                 }

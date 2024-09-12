@@ -40,11 +40,13 @@ extension PlayerManagerActor {
                 self.player.set_volume(to: pow(to, 2))
                 try? await Task.sleep(for: .seconds(0.01))
             }
+            print("PAUSED AT #4")
             self.player.pause()
 
         } else {
 
             self.player.set_volume(to: 0)
+            print("PAUSED AT #5")
             self.player.pause()
         }
     }

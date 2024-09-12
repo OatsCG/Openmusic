@@ -11,8 +11,7 @@ extension PlayerManager {
     func depth_change_detected(close: Bool) {
         Task {
             await self.PMActor.depth_change_detected(close: close)
-            await self.updateUI()
+            self.updateUI()
         }
-
     }
 }

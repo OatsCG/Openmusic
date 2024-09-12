@@ -133,6 +133,7 @@ public class BAPlayer {
                 log.info("Couldn't stop the player: the player is already stopped.")
             } else {
                 self?.playerNode.stop()
+                print("ENGINE STOPPED HERE!!!!!")
                 self?.engine.stop()
             }
         }

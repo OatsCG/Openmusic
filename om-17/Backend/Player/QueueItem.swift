@@ -39,11 +39,11 @@ import SwiftUI
     }
     
     init(from: QueueItem) async {
-        self.queueID = UUID()
+        self.queueID = from.queueID
         self.Track = from.Track
         self.explicit = from.explicit
         self.queueItemActor = await QueueItemActor(queueID: self.queueID, Track: from.Track, fetchedPlayback: from.queueItemActor.fetchedPlayback, explicit: from.explicit, audio_AVPlayer: from.queueItemActor.audio_AVPlayer)
-        await self.updateUI()
+        self.updateUI()
     }
     
     func updateUI() {
@@ -77,7 +77,7 @@ import SwiftUI
         await self.queueItemActor.setCurrentlyPriming(to: false)
         await self.setPrimeStatus(.waiting)
         await self.queueItemActor.clearPlayback()
-        await self.updateUI()
+        self.updateUI()
     }
     
     func userEnjoyedSong() {
@@ -90,7 +90,7 @@ import SwiftUI
         Task {
             if self.isDownloaded == false {
                 await self.setPrimeStatus(.waiting)
-                await self.updateUI()
+                self.updateUI()
             }
             if seek {
                 if let timestamp = await self.queueItemActor.getCurrentTimestamp() {
@@ -107,6 +107,7 @@ import SwiftUI
     func prime_object(playerManagerActor: PlayerManagerActor, continueCurrent: Bool = false, position: Double? = nil) {
         Task.detached { [self] in
             let primeStatus: PrimeStatus = await self.queueItemActor.primeObjectForSwitch(playerManagerActor: playerManagerActor, continueCurrent: continueCurrent, position: position)
+            await playerManagerActor.switchCurrentlyPlaying(queueItem: self)
             await self.updateUI()
             if primeStatus == .success {
                 await self.setPrimeStatus(.success)
@@ -114,33 +115,43 @@ import SwiftUI
                 await self.setPrimeStatus(.failed)
             } else if primeStatus == .loading { // not actually loading; just used to go to this block
                 await playerManagerActor.prime_next_song()
+                await self.updateUI()
+                return
+            } else if primeStatus == .waiting {
+                await self.updateUI()
+                return
             }
             await self.updateUI()
             
             if primeStatus != .failed {
+                print("3456 attempting preroll...")
                 let prerollStatus = await self.queueItemActor.prerollEngine(playerManagerActor: playerManagerActor)
+                await playerManagerActor.switchCurrentlyPlaying(queueItem: self)
+                print("3456: \(prerollStatus == .success)")
                 await self.updateUI()
-                if primeStatus == .success {
+                if prerollStatus == .primed {
                     await self.queueItemActor.seekIfNeeded(playerManagerActor: playerManagerActor)
                     await self.setPrimeStatus(.primed)
                     await self.updateUI()
-                    await playerManagerActor.switchCurrentlyPlaying(queueItem: self)
-                    await self.updateUI()
-                } else if primeStatus == .failed {
+                } else if prerollStatus == .failed {
                     await self.setPrimeStatus(.failed)
                     await self.updateUI()
-                } else if primeStatus == .waiting { // not actually waiting; just used to go to this block
+                } else if prerollStatus == .waiting { // not actually waiting; just used to go to this block
                     await self.updateUI()
                 }
             }
             
             if await playerManagerActor.currentQueueItem?.queueID != self.queueItemActor.queueID {
+                print("PAUSED AT #10")
+                await print(playerManagerActor.currentQueueItem?.queueID)
+                await print(self.queueItemActor.queueID)
                 await self.queueItemActor.audio_AVPlayer?.pause()
                 await self.updateUI()
             }
             await self.queueItemActor.setCurrentlyPriming(to: false)
             await self.updateUI()
             
+            print("1234 wants prime_next_song in prime_object")
             await playerManagerActor.prime_next_song()
             await self.updateUI()
         }
@@ -176,7 +187,7 @@ extension QueueItem {
     func setVideo(to: Bool) {
         Task {
             await self.queueItemActor.setVideo(to: to)
-            await self.updateUI()
+            self.updateUI()
         }
         return
     }
@@ -185,7 +196,7 @@ extension QueueItem {
 //            self.primeStatus = status
 //        }
         await self.queueItemActor.update_prime_status(to)
-        await self.updateUI()
+        self.updateUI()
     }
 }
 
@@ -208,6 +219,7 @@ extension QueueItem {
 // actions on queueItemActor
 extension QueueItem {
     func pauseAVPlayer() async {
+        print("PAUSED AT #9")
         await self.queueItemActor.queueItemPlayer?.pause()
     }
     

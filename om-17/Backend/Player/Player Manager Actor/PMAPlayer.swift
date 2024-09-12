@@ -14,15 +14,22 @@ extension PlayerManagerActor {
     }
     
     func switchCurrentlyPlaying(queueItem: QueueItem) async {
+        print("switchCurrentlyPlaying: start")
         let inputQueueItemPlayer: (any PlayerEngineProtocol)? = await queueItem.getQueueItemPlayer()
         if let currentQueueItem = self.currentQueueItem {
+            print("switchCurrentlyPlaying: 1")
             if (currentQueueItem.queueID == queueItem.queueID) {
+                print("switchCurrentlyPlaying: 2")
                 let currentQueueItemPlayer: (any PlayerEngineProtocol)? = await currentQueueItem.getQueueItemPlayer()
-                if let currentQueueItemPlayer = currentQueueItemPlayer {
+                if currentQueueItemPlayer != nil {
+                    print("switchCurrentlyPlaying: 3")
                     //if current avplayer doesnt equal queueitem avplayer
                     if (inputQueueItemPlayer != nil && !self.player.isEqual(to: inputQueueItemPlayer)) {
+                        print("switchCurrentlyPlaying: 4")
                         if let player = inputQueueItemPlayer {
+                            print("switchCurrentlyPlaying: 5")
                             // NEW SONG SET
+                            print("PAUSED AT #2")
                             self.player.pause()
                             self.player = player
                             self.player.set_volume(to: self.appVolume)

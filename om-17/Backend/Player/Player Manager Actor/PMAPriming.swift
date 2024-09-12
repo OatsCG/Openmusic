@@ -25,7 +25,6 @@ extension PlayerManagerActor {
             }
         }
         
-        
         if let firstDownloaded = firstDownloaded {
             // instantly prime song if downloaded
             await firstDownloaded.prime_object(playerManagerActor: self)
@@ -42,7 +41,27 @@ extension PlayerManagerActor {
     }
     
     func prime_current_song(continueCurrent: Bool = false) async {
+        print("priming current")
         await self.currentQueueItem?.prime_object(playerManagerActor: self, continueCurrent: continueCurrent)
+    }
+    
+    func is_current_item_ready() async -> Bool {
+        if let currentQueueItem = self.currentQueueItem {
+            return await currentQueueItem.isReady
+        } else {
+            return true
+        }
+    }
+    
+    func is_next_item_ready() async -> Bool {
+        if let nextQueueItem = self.trackQueue.first {
+            if await nextQueueItem.isReady == true {
+                return true
+            }
+        } else {
+            return true
+        }
+        return false
     }
     
     func resetEQs() async {
