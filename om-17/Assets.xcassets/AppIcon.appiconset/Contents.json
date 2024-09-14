@@ -1,7 +1,31 @@
 {
   "images" : [
     {
-      "filename" : "appstore.png",
+      "filename" : "omiconNewLight.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "omiconNewDark.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "omiconNewTinted.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
