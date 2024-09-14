@@ -188,7 +188,7 @@ struct BufferLabelLevelTwo: View {
         }
         .onChange(of: playerManager.currentQueueItem?.audio_AVPlayer?.player.status) { oldValue, newValue in
             Task {
-                let onlinePlayer = await playerManager.currentQueueItem?.audio_AVPlayer?.player as? AEPlayerOnline
+                let onlinePlayer = playerManager.currentQueueItem?.audio_AVPlayer?.player as? AEPlayerOnline
                 await MainActor.run {
                     self.onlinePlayer = onlinePlayer
                 }

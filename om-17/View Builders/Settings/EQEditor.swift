@@ -42,7 +42,7 @@ struct EQEditor: View {
                                 self.currentBands = EQManager.decodeCurrentBands(count: self.bandCount + 1)
                                 self.updateStoredBands()
                                 Task {
-                                    await self.playerManager.resetEQs()
+                                    self.playerManager.resetEQs()
                                 }
                             }
                     }
@@ -75,7 +75,7 @@ struct EQEditor: View {
                                                 .onChange(of: currentBands.first?.value) {
                                                     updateStoredBands()
                                                     Task {
-                                                        await playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: -1, value: Double(currentBands.first?.value ?? 0.5))
+                                                        playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: -1, value: Double(currentBands.first?.value ?? 0.5))
                                                     }
                                                 }
                                                 .customFont(fontManager, .caption)
@@ -91,7 +91,7 @@ struct EQEditor: View {
                                                 .onChange(of: band.value) {
                                                     updateStoredBands()
                                                     Task {
-                                                        await playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: band.index, value: band.value)
+                                                        playerManager.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: band.index, value: band.value)
                                                     }
                                                 }
                                         }

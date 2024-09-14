@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 
+@MainActor
 @Observable class AmplitudeFetcher {
     var amplitudes: [Float]?
     var alreadyAttempted: Bool

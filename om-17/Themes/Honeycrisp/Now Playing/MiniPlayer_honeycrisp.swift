@@ -82,7 +82,7 @@ struct MiniPlayer_honeycrisp: View {
             .environment(playerManager)
             .task {
                 Task {
-                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                    playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
                 }
             }
         Spacer()

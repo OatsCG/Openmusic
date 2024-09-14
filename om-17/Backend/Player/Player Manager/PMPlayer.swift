@@ -83,7 +83,7 @@ extension PlayerManager {
         
         self.setAudioSession()
         Task {
-            await self.addSuggestions()
+            self.addSuggestions()
         }
     }
     

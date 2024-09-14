@@ -154,7 +154,7 @@ struct ScrubberBarAmplitudes: View {
         }
         .task {
             Task {
-                self.amplitudeChart = await self.playerManager.currentQueueItem?.audio_AVPlayer?.player.amplitudeChart()
+                self.amplitudeChart = self.playerManager.currentQueueItem?.audio_AVPlayer?.player.amplitudeChart()
             }
         }
     }

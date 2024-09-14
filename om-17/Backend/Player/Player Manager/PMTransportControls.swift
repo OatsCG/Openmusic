@@ -15,7 +15,7 @@ extension PlayerManager {
         if (self.isUpdatingInfoCenter) {
             return
         }
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async {
             self.isUpdatingInfoCenter = true
             if (self.currentQueueItem?.isReady() ?? false && self.durationSeconds > 1) {
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.elapsedTime
@@ -39,7 +39,7 @@ extension PlayerManager {
         // push track data to Media Center
         if (self.currentlyTryingInfoCenterAlbumArtUpdate == false && self.currentQueueItem != nil) {
             self.currentlyTryingInfoCenterAlbumArtUpdate = true
-            Task.detached { [unowned self] in
+            Task.detached {
                 let title = await self.currentQueueItem?.Track.Title
                 let artists = await stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
                 

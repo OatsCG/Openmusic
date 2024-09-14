@@ -129,7 +129,7 @@ struct NPHeaderSegment: View {
 //                }
 //            }
             .task {
-                self.video_AVPlayer = await playerManager.currentQueueItem?.video_AVPlayer
+                self.video_AVPlayer = playerManager.currentQueueItem?.video_AVPlayer
             }
             //.contentTransition(.numericText())
     }

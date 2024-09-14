@@ -11,6 +11,7 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
+@MainActor
 @Observable class PlayerEngine: PlayerEngineProtocol {
     var id: UUID
     

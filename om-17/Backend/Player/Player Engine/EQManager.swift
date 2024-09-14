@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-
 import AVFoundation
 
-import AVFoundation
 
+@MainActor
 class EQManager {
     var eqNode: AVAudioUnitEQ
     var audioEngine: AVAudioEngine?
@@ -228,8 +227,8 @@ class EQManager {
                     if let playerManager = playerManager {
                         //playerManager.pause()
                         Task {
-                            if await playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
-                                await playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                            if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
+                                playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
                             }
                         }
                     }
@@ -282,7 +281,7 @@ struct EQPreset: Hashable {
 
 
 
-func currentFrequencies() -> [Float] {
+@MainActor func currentFrequencies() -> [Float] {
     var frequencies: [Float] = []
     let currentBands: [EQBand] = EQManager.decodeCurrentBands()
     for band in currentBands {

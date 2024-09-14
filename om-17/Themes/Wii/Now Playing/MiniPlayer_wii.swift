@@ -209,7 +209,7 @@ struct wiiMPBackground: View {
             .task {
                 currentTheme = "wii"
                 Task {
-                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                    playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
                 }
             }
         Spacer()

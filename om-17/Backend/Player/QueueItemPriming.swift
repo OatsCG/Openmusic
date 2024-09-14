@@ -29,27 +29,27 @@ extension QueueItem {
         self.currentlyPriming = true
         if self.queueItemPlayer == nil {
             self.update_prime_status(.loading)
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async {
                 let isExplicit: Bool = self.explicit
                 let playback_explicit: String? = self.Track.Playback_Explicit
                 let playback_clean: String? = self.Track.Playback_Clean
-                Task.detached { [unowned self] in
-                    let isDownloaded: Bool = await DownloadManager.shared.is_downloaded(self, explicit: isExplicit)
+                Task.detached {
+                    var isDownloaded: Bool = await DownloadManager.shared.is_downloaded(self, explicit: isExplicit)
                     var playbackData: FetchedPlayback? = nil
                     if (!isDownloaded) {
                         playbackData = try? await fetchPlaybackData(playbackID: isExplicit ? playback_explicit! : playback_clean!)
                     }
                     //getting audio url
-                    DispatchQueue.main.async { [weak self, playbackData] in
+                    DispatchQueue.main.async {
                         var url: URL? = nil
                         var isRemote: Bool = true
-                        if (self?.isVideo == false) {
+                        if (self.isVideo == false) {
                             if isDownloaded {
                                 url = DownloadManager.shared.get_stored_location(PlaybackID: isExplicit ? playback_explicit! : playback_clean!)
                                 isRemote = false
                             } else {
-                                self?.fetchedPlayback = playbackData
-                                url = URL(string: self?.fetchedPlayback?.Playback_Audio_URL ?? "")
+                                self.fetchedPlayback = playbackData
+                                url = URL(string: self.fetchedPlayback?.Playback_Audio_URL ?? "")
                             }
                         }
                         if url != nil {
@@ -101,15 +101,15 @@ extension QueueItem {
                                 }
                             }
                         } else {
-                            self?.update_prime_status(.failed)
+                            self.update_prime_status(.failed)
                             DispatchQueue.main.async { [playerManager] in
                                 playerManager.prime_next_song()
                             }
                         }
-                        if (playerManager.currentQueueItem?.queueID != self?.queueID) {
-                            self?.audio_AVPlayer?.pause()
+                        if (playerManager.currentQueueItem?.queueID != self.queueID) {
+                            self.audio_AVPlayer?.pause()
                         }
-                        self?.currentlyPriming = false
+                        self.currentlyPriming = false
                     }
                 }
             }
@@ -119,7 +119,7 @@ extension QueueItem {
             }
             if position != nil {
                 self.queueItemPlayer!.seek(to: position!)
-                await playerManager.addSuggestions()
+                playerManager.addSuggestions()
             }
             self.queueItemPlayer!.preroll() { success in
                 if success {

@@ -40,7 +40,7 @@ extension PlayerManager {
     func prime_current_song(continueCurrent: Bool = false) {
         if (self.currentQueueItem != nil) {
             Task {
-                await self.currentQueueItem!.prime_object(playerManager: self, continueCurrent: continueCurrent)
+                await self.currentQueueItem?.prime_object(playerManager: self, continueCurrent: continueCurrent)
             }
         }
     }

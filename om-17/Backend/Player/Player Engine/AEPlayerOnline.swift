@@ -11,7 +11,7 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-
+@MainActor
 @Observable class AEPlayerOnline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status

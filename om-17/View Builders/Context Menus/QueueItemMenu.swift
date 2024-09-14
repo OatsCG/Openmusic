@@ -149,7 +149,7 @@ struct QueueItemMenu: View {
             }
             Button(action: {
                 Task {
-                    let copiedQueueItem: QueueItem = await QueueItem(from: queueItem)
+                    let copiedQueueItem: QueueItem = QueueItem(from: queueItem)
                     await MainActor.run {
                         if let track = copiedQueueItem.Track as? ImportedTrack {
                             copiedQueueItem.Track = FetchedTrack(from: track)

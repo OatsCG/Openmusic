@@ -175,7 +175,7 @@ struct ThemePreviews: View {
                 } else if index == 7 {
                     track7 = findRandomTrack()
                     Task {
-                        let item = await QueueItem(from: track7, explicit: nil)
+                        let item = QueueItem(from: track7, explicit: nil)
                         await MainActor.run {
                             pm.currentQueueItem = item
                             pm.update_timer(to: 5)
@@ -222,7 +222,7 @@ struct ThemePreviews: View {
                         } else if index == 7 {
                             track7 = findRandomTrack()
                             Task {
-                                let item = await QueueItem(from: track7, explicit: nil)
+                                let item = QueueItem(from: track7, explicit: nil)
                                 await MainActor.run {
                                     pm.currentQueueItem = item
                                     pm.update_timer(to: 5)

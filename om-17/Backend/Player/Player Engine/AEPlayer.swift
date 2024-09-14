@@ -11,7 +11,7 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-
+@MainActor
 protocol AEPlayer {
     var filehash: UUID { get set }
     var duration: Double { get } // seconds
