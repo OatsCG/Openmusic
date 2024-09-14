@@ -10,6 +10,7 @@ import SwiftUI
 import MediaPlayer
 import Combine
 
+@MainActor
 @Observable class PlayerManager {
     let commandCenter = MPRemoteCommandCenter.shared()
     let audioSession = AVAudioSession.sharedInstance()
@@ -152,7 +153,11 @@ import Combine
             self.syncedTimerInterval = to
             self.syncedTimer?.invalidate()
             self.syncedTimer = Timer.scheduledTimer(withTimeInterval: to, repeats: true) { _ in
-                self.timer_fired()
+                Task {
+                    await MainActor.run {
+                        self.timer_fired()
+                    }
+                }
             }
             self.syncedTimer?.fire()
         }

@@ -7,7 +7,7 @@
 
 import AVFoundation
 import SwiftUI
-import MediaPlayer
+@preconcurrency import MediaPlayer
 
 extension PlayerManager {
     func syncPlayingTimeControls() {
@@ -40,36 +40,42 @@ extension PlayerManager {
         if (self.currentlyTryingInfoCenterAlbumArtUpdate == false && self.currentQueueItem != nil) {
             self.currentlyTryingInfoCenterAlbumArtUpdate = true
             Task.detached { [unowned self] in
-                self.nowPlayingInfo?[MPMediaItemPropertyTitle] = self.currentQueueItem?.Track.Title
-                self.nowPlayingInfo?[MPMediaItemPropertyArtist] = stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
-                self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+                let title = await self.currentQueueItem?.Track.Title
+                let artists = await stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
+                
+                await MainActor.run {
+                    self.nowPlayingInfo?[MPMediaItemPropertyTitle] = title
+                    self.nowPlayingInfo?[MPMediaItemPropertyArtist] = artists
+                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+                }
                 
                 var artworkURL: URL? = nil
-                if ArtworkExists(ArtworkID: self.currentQueueItem?.Track.Album.Artwork) {
-                    if let artwork = self.currentQueueItem?.Track.Album.Artwork {
+                if await ArtworkExists(ArtworkID: self.currentQueueItem?.Track.Album.Artwork) {
+                    if let artwork = await self.currentQueueItem?.Track.Album.Artwork {
                         artworkURL = RetrieveArtwork(ArtworkID: artwork)
                     }
                 } else {
-                    artworkURL = BuildArtworkURL(imgID: self.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
+                    artworkURL = await BuildArtworkURL(imgID: self.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
                 }
                 if let artworkURL = artworkURL {
                     do {
                         let (data, _) = try await URLSession.shared.data(from: artworkURL)
                         if let image = UIImage(data: data) {
-                            self.nowPlayingInfo?[MPMediaItemPropertyArtwork] =
-                            MPMediaItemArtwork(boundsSize: image.size) { size in
+                            let mpMediaArtwork = MPMediaItemArtwork(boundsSize: image.size) { size in
                                 return image
+                            }
+                            await MainActor.run { [mpMediaArtwork] in
+                                self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = mpMediaArtwork
                             }
                         }
                     } catch {
                         print("error pushing to Media Center")
                     }
                 }
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
-
                 
-                DispatchQueue.main.async { [unowned self] in
+                await MainActor.run {
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
                     self.currentlyTryingInfoCenterAlbumArtUpdate = false
                 }
             }
