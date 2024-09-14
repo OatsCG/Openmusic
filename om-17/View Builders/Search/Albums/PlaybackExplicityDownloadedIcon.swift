@@ -39,15 +39,21 @@ struct PlaybackExplicityDownloadedIcon: View {
             }
         }
             .padding([.top, .leading], (track.Playback_Explicit != nil && track.Playback_Clean != nil) ? 4 : 0)
-            .onAppear {
-                Task {
-                    await findDownload()
-                }
+            .task {
+                self.findDownload()
+            }
+            .onChange(of: explicit) {
+                self.findDownload()
             }
     }
     
-    func findDownload() async {
-        self.isFoundDownloaded = await downloadManager.is_downloaded(track, explicit: explicit)
+    func findDownload() {
+        Task {
+            let d: Bool = await downloadManager.is_downloaded(track, explicit: explicit)
+            await MainActor.run {
+                self.isFoundDownloaded = d
+            }
+        }
     }
 }
 

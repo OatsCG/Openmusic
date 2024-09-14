@@ -57,7 +57,7 @@ struct MiniPlayer: View {
                             .navigationTransition(.zoom(sourceID: "NP_TRANSITION_ID", in: namespace))
                     })
                     .fullScreenCover(isPresented: $showingNPCover, content: {
-                        Text("removed cover!")
+                        Text("removed cover! switch to NowPlayingSheet in Options.")
 //                        NowPlayingSheet(showingNPSheet: $showingNPCover, passedNSPath: $passedNSPath)
 //                            .environment(playerManager)
 //                            .environment(playlistImporter)

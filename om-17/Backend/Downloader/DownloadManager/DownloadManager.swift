@@ -147,7 +147,7 @@ extension DownloadManager {
     }
     
     func is_playback_downloaded(PlaybackID: String?) async -> Bool {
-        await downloadActor.isPlaybackDownloaded(playbackID: PlaybackID)
+        return await downloadActor.isPlaybackDownloaded(playbackID: PlaybackID)
     }
     
     func is_downloaded(_ track: any Track, explicit: Bool? = nil) async -> Bool {
@@ -159,7 +159,7 @@ extension DownloadManager {
             }
         } else {
             if explicit == true {
-                return await is_playback_downloaded(PlaybackID: track.Playback_Explicit)
+                return await self.is_playback_downloaded(PlaybackID: track.Playback_Explicit)
             } else {
                 return await is_playback_downloaded(PlaybackID: track.Playback_Clean)
             }

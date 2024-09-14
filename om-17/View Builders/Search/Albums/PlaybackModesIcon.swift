@@ -36,16 +36,7 @@ struct PlaybackModesIcon: View {
         }
             .transition(.blurReplace)
             .task {
-                if (track.Playback_Clean == nil) {
-                    selectedExplicit = true
-                }
-                if (track.Playback_Explicit == nil) {
-                    selectedExplicit = false
-                }
-                if (track.Playback_Clean != nil && track.Playback_Explicit != nil) {
-                    // Favours explicit if both available
-                    selectedExplicit = true
-                }
+                self.initSelectedExplicit()
                 if (omUser.isSongLiked(track: track)) {
                     updateIsLikedInstant()
                 }
@@ -53,6 +44,18 @@ struct PlaybackModesIcon: View {
             .onChange(of: omUser.likedSongs) {
                 updateIsLiked()
             }
+    }
+    private func initSelectedExplicit() {
+        if (track.Playback_Clean == nil) {
+            selectedExplicit = true
+        }
+        if (track.Playback_Explicit == nil) {
+            selectedExplicit = false
+        }
+        if (track.Playback_Clean != nil && track.Playback_Explicit != nil) {
+            // Favours explicit if both available
+            selectedExplicit = true
+        }
     }
     private func updateIsLikedInstant() {
         withAnimation {

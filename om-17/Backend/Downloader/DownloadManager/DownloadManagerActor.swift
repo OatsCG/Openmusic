@@ -84,7 +84,8 @@ actor DownloadManagerActor {
         if let playbackID = playbackID {
             let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
                 .first?.appendingPathComponent("Audio-\(playbackID).mp4")
-            return FileManager().fileExists(atPath: destination?.path ?? "")
+            let doesExist = FileManager().fileExists(atPath: destination?.path ?? "")
+            return doesExist
         } else {
             return false
         }
