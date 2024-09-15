@@ -144,7 +144,8 @@ struct LibraryAlbumMenu: View {
         }
         .onAppear {
             Task {
-                await updateArePlaybacksDownloaded()
+                await self.updateArePlaybacksDownloaded()
+                await self.updateAreTracksStored()
             }
         }
         

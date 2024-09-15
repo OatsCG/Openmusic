@@ -159,6 +159,7 @@ struct SearchAlbumMenu: View {
         }
         .onAppear {
             Task {
+                await self.updateArePlaybacksDownloaded()
                 await self.updateAreTracksStored()
             }
         }
@@ -168,10 +169,12 @@ struct SearchAlbumMenu: View {
             self.album = album
         }
     }
-    func updateArePlaybacksDownloaded(_ arePlaybacksDownloaded: Bool) async {
-        let arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album!.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
-        await MainActor.run {
-            self.arePlaybacksDownloaded = arePlaybacksDownloaded
+    func updateArePlaybacksDownloaded() async {
+        if let album = self.album {
+            let arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
+            await MainActor.run {
+                self.arePlaybacksDownloaded = arePlaybacksDownloaded
+            }
         }
     }
     func updateAreTracksStored() async {

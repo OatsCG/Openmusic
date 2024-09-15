@@ -315,9 +315,11 @@ struct NPMenu: View {
         }
     }
     func updateIsTrackStored() async {
-        let isTrackStored = await database.is_track_stored(TrackID: queueItem!.Track.TrackID)
-        await MainActor.run {
-            self.isTrackStored = isTrackStored
+        if let queueItem = self.queueItem {
+            let isTrackStored = await database.is_track_stored(TrackID: queueItem.Track.TrackID)
+            await MainActor.run {
+                self.isTrackStored = isTrackStored
+            }
         }
     }
 }
