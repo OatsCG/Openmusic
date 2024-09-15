@@ -38,7 +38,7 @@ public class DownloadTask: NSObject {
 }
 
 /// Simple class to handle multiple download requests.
-public class Downloader: NSObject, URLSessionDownloadDelegate {
+public final class Downloader: NSObject, URLSessionDownloadDelegate {
 
     private var sessionConfig: URLSessionConfiguration!
 

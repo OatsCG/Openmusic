@@ -9,6 +9,7 @@ import SwiftUI
 import AVFoundation
 import CoreAudio
 
+@MainActor
 protocol PlayerEngineProtocol: Equatable {
     var id: UUID {get set}
     var isReady: Bool {get set}

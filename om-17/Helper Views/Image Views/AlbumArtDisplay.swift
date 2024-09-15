@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-@Observable final class ArtworkExistsObj: Sendable {
+@MainActor
+@Observable final class ArtworkExistsObj {
     var artworkExists: Bool?
     
     init(artworkExists: Bool? = nil) {

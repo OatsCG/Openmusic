@@ -100,7 +100,7 @@ struct MiniPlayer_honeycrisp: View {
             .task {
                 currentTheme = "honeycrisp"
                 Task {
-                    playerManager.currentQueueItem = await QueueItem(from: FetchedTrack(default: true))
+                    playerManager.currentQueueItem = QueueItem(from: FetchedTrack(default: true))
                 }
             }
         Spacer()

@@ -27,8 +27,8 @@ import AudioKit
 
     init(url: URL? = nil) {
         self.url = url
-        if (url != nil) {
-            let asset = AVAsset(url: url!)
+        if let url = url {
+            let asset = AVURLAsset(url: url)
             let playerItem = AVPlayerItem(asset: asset)
             self.player = AVPlayer(playerItem: playerItem)
         } else {
@@ -84,22 +84,28 @@ import AudioKit
         parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
             if player.status == .readyToPlay {
                 print("STATUS READY STATUS READY")
-                self.status = .readyToPlay
-                parent.statusObservation?.invalidate()
+                DispatchQueue.main.async {
+                    self.status = .readyToPlay
+                    parent.statusObservation?.invalidate()
+                }
                 player.cancelPendingPrerolls()
                 let currentRate: Float = player.rate
                 player.rate = 0
                 player.preroll(atRate: 1.0) { prerollSuccess in
                     player.seek(to: CMTime.zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
                         player.rate = currentRate
-                        parent.isReady = true
-                        completion(true)
+                        DispatchQueue.main.async {
+                            parent.isReady = true
+                            completion(true)
+                        }
                         
                     }
                 }
             } else if player.status == .failed {
                 print("STATUS FAILED STATUS FAILED")
-                self.status = .failed
+                DispatchQueue.main.async {
+                    self.status = .failed
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ struct MiniPlayer_classic: View {
     @Environment(FontManager.self) private var fontManager
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    
     var body: some View {
         HStack {
             AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 20, BlurOpacity: 1, cornerRadius: 10)
@@ -32,7 +33,6 @@ struct MiniPlayer_classic: View {
                         rightFade: 16,
                         startDelay: 3
                     )
-//                    .contentTransition(.)
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Album.Title + (playerManager.currentQueueItem!.Track.Album.Artists.count > 0 ? (" • " + stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists)) : (" • Various Artists")),
                         font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),

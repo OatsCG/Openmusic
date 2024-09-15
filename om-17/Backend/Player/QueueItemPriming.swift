@@ -34,10 +34,12 @@ extension QueueItem {
                 let playback_explicit: String? = self.Track.Playback_Explicit
                 let playback_clean: String? = self.Track.Playback_Clean
                 Task.detached {
-                    var isDownloaded: Bool = await DownloadManager.shared.is_downloaded(self, explicit: isExplicit)
-                    var playbackData: FetchedPlayback? = nil
+                    let isDownloaded: Bool = await DownloadManager.shared.is_downloaded(self, explicit: isExplicit)
+                    let playbackData: FetchedPlayback?
                     if (!isDownloaded) {
                         playbackData = try? await fetchPlaybackData(playbackID: isExplicit ? playback_explicit! : playback_clean!)
+                    } else {
+                        playbackData = nil
                     }
                     //getting audio url
                     DispatchQueue.main.async {
