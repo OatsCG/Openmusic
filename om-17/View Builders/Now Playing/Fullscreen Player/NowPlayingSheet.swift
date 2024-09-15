@@ -20,6 +20,46 @@ struct NowPlayingSheet: View {
     @State var carModeEnabled: Bool = false
     @Binding var passedNSPath: NavigationPath
     @State var currentAlbum: SearchedAlbum? = nil
+    @State var attentionOpacity: Double = 1
+    @State private var timer: Timer? = nil
+    
+    var namespace: Namespace.ID? = nil
+    func onTap() {
+        print("TAP RECOGNISED")
+        timer?.invalidate()
+        withAnimation {
+            self.attentionOpacity = 1
+        }
+        timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false) { _ in
+            DispatchQueue.main.async {
+                withAnimation(.easeInOut(duration: 4)) {
+                    self.attentionOpacity = 0
+                }
+            }
+        }
+    }
+    
+    var body: some View {
+        NowPlayingSheetContent(showingNPSheet: $showingNPSheet, fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath, currentAlbum: $currentAlbum, attentionOpacity: $attentionOpacity)
+            .contentShape(Rectangle())
+            .simultaneousGesture(TapGesture().onEnded({
+                self.onTap()
+            }))
+    }
+}
+
+struct NowPlayingSheetContent: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(PlayerManager.self) var playerManager
+    @Environment(DownloadManager.self) var downloadManager
+    @Environment(FontManager.self) private var fontManager
+    @Binding var showingNPSheet: Bool
+    @Binding var fullscreen: Bool
+    @Binding var carModeEnabled: Bool
+    @Binding var passedNSPath: NavigationPath
+    @Binding var currentAlbum: SearchedAlbum?
+    @Binding var attentionOpacity: Double
     
     var namespace: Namespace.ID? = nil
     
@@ -32,6 +72,8 @@ struct NowPlayingSheet: View {
                     .customFont(fontManager, .title)
                     .foregroundStyle(.tertiary)
                     .opacity(0.7)
+                    .opacity(fullscreen ? attentionOpacity : 1)
+                    .disabled(fullscreen ? (attentionOpacity == 1 ? false : true) : false)
             }
             if fullscreen {
                 if carModeEnabled {
@@ -48,9 +90,11 @@ struct NowPlayingSheet: View {
                             NPInfoSegment(showingNPSheet: $showingNPSheet, fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath)
                             Spacer()
                             NPBottomToolBar(fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
+                                .opacity(fullscreen ? attentionOpacity : 1)
                         }
                     }
                     .persistentSystemOverlays(.hidden)
+                    .statusBarHidden(fullscreen ? (attentionOpacity == 1 ? false : true) : false)
                 } else {
                     // portrait
                     VStack {
@@ -59,7 +103,11 @@ struct NowPlayingSheet: View {
                         NPInfoSegment(showingNPSheet: $showingNPSheet, fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath)
                         Spacer()
                         NPBottomToolBar(fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
+                            .opacity(fullscreen ? attentionOpacity : 1)
+                            .disabled(fullscreen ? (attentionOpacity == 1 ? false : true) : false)
                     }
+                    .persistentSystemOverlays(fullscreen ? (attentionOpacity == 1 ? .automatic : .hidden) : .automatic)
+                    .statusBarHidden(fullscreen ? (attentionOpacity == 1 ? false : true) : false)
                 }
             }
         }
@@ -87,12 +135,26 @@ struct NowPlayingSheet: View {
     }
 }
 
+
 //#Preview {
-//    NowPlayingSheet()
-//        .tint(.white)
+//    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
+//    @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
+//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
+//
+//    let playlist = StoredPlaylist(Title: "Test!")
+//    container.mainContext.insert(playlist)
+//    
+//    return ContentView()
+//        .modelContainer(container)
 //        .environment(PlayerManager())
-////        .task {
-////
-////            PlayerManager.shared.currentQueueItem = QueueItem(from: FetchedTrack())
-////        }
+//        .environment(PlaylistImporter())
+//        .environment(DownloadManager())
+//        .environment(NetworkMonitor())
+//        .environment(FontManager())
+//        .environment(OMUser())
+//        .task {
+//            currentTheme = "classic"
+////            globalIPAddress = "server.openmusic.app"
+//        }
 //}

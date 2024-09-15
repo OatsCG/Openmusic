@@ -28,7 +28,7 @@ struct ArtistPageImageDisplay: View {
                         .cornerRadius(cornerRadius)
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
-                        .drawingGroup()
+                        //.drawingGroup()
                     Image(uiImage: uiImage)
                         .resizable()
                         .frame(height: someheight, alignment: .top)
@@ -66,7 +66,7 @@ struct ArtistPageImageDisplay: View {
                 .cornerRadius(cornerRadius)
                 .blur(radius: Blur)
                 .opacity(BlurOpacity)
-                .drawingGroup()
+                //.drawingGroup()
                 
                 //AsyncImage(url: BuildArtistBannerURL(imgID: self.ArtworkID, size: self.Resolution, aspectRatio: 2), transaction: Transaction(animation: .spring())){ phase in
                 CacheAsyncImage(url: BuildArtistBannerURL(imgID: self.ArtworkID, resolution: self.Resolution, aspectRatio: 2), transaction: Transaction(animation: .spring())){ phase in

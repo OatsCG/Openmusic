@@ -49,12 +49,12 @@ extension PlayerManager {
         self.player = PlayerEngine()
         DispatchQueue.main.async {
             if (self.currentQueueItem != nil) {
-                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
+                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.8)) {
                     self.sessionHistory.append(self.currentQueueItem!)
                 }
             }
             if (self.trackQueue.first != nil) {
-                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
+                withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.8)) {
                     self.currentQueueItem = self.trackQueue.removeFirst()
                 }
             } else if (self.sessionHistory.first != nil) {
@@ -77,7 +77,7 @@ extension PlayerManager {
         self.isCrossfading = false
         self.didAddFromRepeat = false
         DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.4)) {
+            withAnimation(.easeInOut(duration: userInitiated ? 0.2 : 0.8)) {
                 if (self.currentQueueItem != nil) {
                     if ((self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil) {
                         //self.setIsPlaying(to: false)

@@ -132,7 +132,7 @@ func createVerticalGradientImage(size: CGSize) -> CGImage? {
     let startColor = CIColor(color: .clear)
     let endColor = CIColor(color: .black)
 
-    let filter = CIFilter(name: "CILinearGradient")!
+    let filter = CIFilter(name: "CISmoothLinearGradient")!
     filter.setValue(CIVector(x: 0.7, y: size.height), forKey: "inputPoint0")
     filter.setValue(CIVector(x: 0.05, y: 0), forKey: "inputPoint1")
     filter.setValue(startColor, forKey: "inputColor0")

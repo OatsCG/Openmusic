@@ -44,14 +44,6 @@ struct ContentView: View {
     )}
     
     var body: some View {
-//        MainNavigationTabbed(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)
-//            .sheet(isPresented: $onboard) {
-//                onboard = false
-//            } content: {
-//                OnboardSheet(onboard: $onboard)
-//                    .tint(GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme))
-//            }
-
         Group {
             if (horizontalSizeClass == .regular && verticalSizeClass == .regular) {
                 MainNavigationSidebar(exploreNSPath: $exploreNSPath, searchNSPath: $searchNSPath, libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight, selectionBinding: selectionBinding)

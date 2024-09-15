@@ -82,9 +82,6 @@ struct MainNavigationSidebar: View {
                         }
                     }
                 }
-//                let code = components[2]
-//                omUser.updateDiscordCode(to: code)
-//                ToastManager.shared.propose(toast: Toast(artworkID: "", message: "Updated Discord ID", .systemSuccess))
             }
         }
     }
