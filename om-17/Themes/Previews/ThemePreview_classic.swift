@@ -176,9 +176,13 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * selectButtonPos.y)
                 )
                 .onChange(of: geo.frame(in: .scrollView).minX) { oldValue, newValue in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        parallax = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
-                        dot = 0.3 + 0.6 * min(max(1 - abs(parallax), 0), 1)
+                    Task {
+                        let updParallax = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
+                        let updDot = 0.3 + 0.6 * min(max(1 - abs(parallax), 0), 1)
+                        DispatchQueue.main.async {
+                            self.parallax = updParallax
+                            self.dot = updDot
+                        }
                     }
                 }
                 .onAppear {
