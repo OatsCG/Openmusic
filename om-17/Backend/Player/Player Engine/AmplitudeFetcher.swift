@@ -40,7 +40,7 @@ import AVFoundation
 
 
     func getAmplitudes(audioFile: AVAudioFile?, numberOfAmplitudes: Int) {
-        Task { [weak self] in
+        Task.detached { [weak self] in
             guard let file = audioFile, numberOfAmplitudes > 0 else {
                 DispatchQueue.main.async { [weak self] in
                     self?.amplitudes = nil
@@ -87,7 +87,7 @@ import AVFoundation
                     }
                     tempAmplitudes.append(thisAmp / Float(avgRange))
                 }
-                let normalizeAmplitudes = self?.normalizeAmplitudes(tempAmplitudes)
+                let normalizeAmplitudes = await self?.normalizeAmplitudes(tempAmplitudes)
                 DispatchQueue.main.async { [weak self] in
                     self?.amplitudes = normalizeAmplitudes
                 }
