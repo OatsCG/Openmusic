@@ -80,7 +80,7 @@ extension QueueItem {
                                                         }
                                                         playerManager.set_currentlyPlaying(queueItem: qitem)
                                                         if position != nil {
-                                                            self?.queueItemPlayer!.seek(to: position!)
+                                                            self?.queueItemPlayer?.seek(to: position!)
                                                             if (playerManager.isPlaying) {
                                                                 self?.queueItemPlayer?.play()
                                                             }
@@ -118,7 +118,7 @@ extension QueueItem {
                 self.update_prime_status(.success)
             }
             if position != nil {
-                self.queueItemPlayer!.seek(to: position!)
+                self.queueItemPlayer?.seek(to: position!)
                 playerManager.addSuggestions()
             }
             self.queueItemPlayer!.preroll() { success in

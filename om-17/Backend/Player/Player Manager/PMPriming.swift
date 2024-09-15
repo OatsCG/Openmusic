@@ -35,8 +35,6 @@ extension PlayerManager {
         }
     }
     
-    //func
-    
     func prime_current_song(continueCurrent: Bool = false) {
         if (self.currentQueueItem != nil) {
             Task {
@@ -64,6 +62,20 @@ extension PlayerManager {
             }
         }
         return false
+    }
+    
+    func modifyEQs(index: Int, value: Double) {
+        self.currentQueueItem?.audio_AVPlayer?.player.modifyEQ(index: index, value: value)
+        for item in self.sessionHistory {
+            if item.audio_AVPlayer?.isRemote == false {
+                item.audio_AVPlayer?.player.modifyEQ(index: index, value: value)
+            }
+        }
+        for item in self.trackQueue {
+            if item.audio_AVPlayer?.isRemote == false {
+                item.audio_AVPlayer?.player.modifyEQ(index: index, value: value)
+            }
+        }
     }
     
     func resetEQs() {

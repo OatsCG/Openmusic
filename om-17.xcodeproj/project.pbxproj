@@ -533,7 +533,6 @@
 		E5FF24782C8BA61500AFCCE9 /* DefaultDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF24772C8BA61500AFCCE9 /* DefaultDatabase.swift */; };
 		E5FF247A2C8BA70B00AFCCE9 /* SharedDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF24792C8BA70B00AFCCE9 /* SharedDatabase.swift */; };
 		E5FF247C2C8BA75600AFCCE9 /* BackgroundDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF247B2C8BA75600AFCCE9 /* BackgroundDatabase.swift */; };
-		E5FF247E2C8C063000AFCCE9 /* PMUpdates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FF247D2C8C063000AFCCE9 /* PMUpdates.swift */; };
 		E5FFBD562B0A8AD000170496 /* ExploreFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */; };
 		E5FFBD582B0A8F3000170496 /* LoadingExplore_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD572B0A8F3000170496 /* LoadingExplore_component.swift */; };
 		E5FFBD5A2B0A917500170496 /* LoadingExplore_wii.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FFBD592B0A917500170496 /* LoadingExplore_wii.swift */; };
@@ -1094,7 +1093,6 @@
 		E5FF24772C8BA61500AFCCE9 /* DefaultDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDatabase.swift; sourceTree = "<group>"; };
 		E5FF24792C8BA70B00AFCCE9 /* SharedDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDatabase.swift; sourceTree = "<group>"; };
 		E5FF247B2C8BA75600AFCCE9 /* BackgroundDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundDatabase.swift; sourceTree = "<group>"; };
-		E5FF247D2C8C063000AFCCE9 /* PMUpdates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMUpdates.swift; sourceTree = "<group>"; };
 		E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreFetchAPI.swift; sourceTree = "<group>"; };
 		E5FFBD572B0A8F3000170496 /* LoadingExplore_component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingExplore_component.swift; sourceTree = "<group>"; };
 		E5FFBD592B0A917500170496 /* LoadingExplore_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingExplore_wii.swift; sourceTree = "<group>"; };
@@ -1594,7 +1592,6 @@
 			isa = PBXGroup;
 			children = (
 				E5255C142AAB9DB7007F12CE /* PlayerManager.swift */,
-				E5FF247D2C8C063000AFCCE9 /* PMUpdates.swift */,
 				E5255C152AAB9DB7007F12CE /* PMCrossfade.swift */,
 				E5255C162AAB9DB7007F12CE /* PMPriming.swift */,
 				E5255C182AAB9DB7007F12CE /* PMQueue.swift */,
@@ -3101,7 +3098,6 @@
 				E5FFBD562B0A8AD000170496 /* ExploreFetchAPI.swift in Sources */,
 				E58E8FA02BA16BB8009F7E43 /* AlbumMenuPreview_faero.swift in Sources */,
 				E58E8FA72BA16BB8009F7E43 /* NPSkipButton_faero.swift in Sources */,
-				E5FF247E2C8C063000AFCCE9 /* PMUpdates.swift in Sources */,
 				E58E8FA92BA16BB8009F7E43 /* PlaylistContentHeading_faero.swift in Sources */,
 				E5DCFE0C2B45104A0044D9B5 /* NPBackButton_classic.swift in Sources */,
 				E516C3C22A58A0110099CB6E /* LibraryAlbumLink.swift in Sources */,
