@@ -36,18 +36,19 @@ struct AlbumArtDisplay: View {
     var cornerRadius: Double
     @State var albumVideoViewModel: AlbumVideoViewModel = AlbumVideoViewModel()
     var artworkExistsObj: ArtworkExistsObj = ArtworkExistsObj()
+    var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.1))
     var body: some View {
         ZStack {
             if artworkExistsObj.artworkExists == true {
                 if (BlurOpacity > 0) {
-                    BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false)
+                    BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false, customTransaction: customTransaction)
                         .cornerRadius(cornerRadius)
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
                         //.drawingGroup()
                 }
                 ZStack {
-                    BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: true)
+                    BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: true, customTransaction: customTransaction)
                     if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil) {
                         AnimatedAlbumArtDisplay(albumURL: albumVideoViewModel.fetchedAlbumVideo!)
                     }
@@ -55,14 +56,14 @@ struct AlbumArtDisplay: View {
                     .cornerRadius(cornerRadius)
             } else {
                 if (BlurOpacity > 0) {
-                    BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: false)
+                    BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: false, customTransaction: customTransaction)
                         .cornerRadius(cornerRadius)
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
                         //.drawingGroup()
                 }
                 ZStack {
-                    BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: true)
+                    BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: true, customTransaction: customTransaction)
                     if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil) {
                         AnimatedAlbumArtDisplay(albumURL: albumVideoViewModel.fetchedAlbumVideo!)
                     }
@@ -91,11 +92,11 @@ struct AlbumArtBGDisplay: View {
     var Resolution: Resolution
     var body: some View {
         if (ArtworkExists(ArtworkID: self.ArtworkID ?? "")) {
-            BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false)
+            BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false, customTransaction: Transaction(animation: .easeInOut(duration: 0.6)))
                 .aspectRatio(contentMode: .fill)
                 .allowsHitTesting(false)
         } else {
-            BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: .background), animated: false)
+            BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: .background), animated: false, customTransaction: Transaction(animation: .easeInOut(duration: 0.6)))
                     .aspectRatio(contentMode: .fill)
                     .allowsHitTesting(false)
         }
