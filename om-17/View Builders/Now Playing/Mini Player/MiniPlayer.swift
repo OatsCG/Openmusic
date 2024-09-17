@@ -22,7 +22,6 @@ struct MiniPlayer: View {
     //@Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
     @State var playlists: [StoredPlaylist] = []
     @State private var showingNPSheet = false
-    @State private var showingNPCover = false
     @Binding var passedNSPath: NavigationPath
     var minDistance: CGFloat = 30
     
@@ -41,22 +40,9 @@ struct MiniPlayer: View {
                             .environment(fontManager)
                     }
                     .onTapGesture {
-                        if (NowPlayingUsesCover) {
-                            showingNPCover.toggle()
-                        } else {
-                            showingNPSheet.toggle()
-                        }
+                        showingNPSheet.toggle()
                     }
                     .sheet(isPresented: $showingNPSheet, content: {
-                        NowPlayingSheet(showingNPSheet: $showingNPSheet, passedNSPath: $passedNSPath, namespace: namespace)
-                            .environment(playerManager)
-                            .environment(playlistImporter)
-                            .environment(downloadManager)
-                            .environment(networkMonitor)
-                            .environment(omUser)
-                            .navigationTransition(.zoom(sourceID: "NP_TRANSITION_ID", in: namespace))
-                    })
-                    .fullScreenCover(isPresented: $showingNPCover, content: {
                         NowPlayingSheet(showingNPSheet: $showingNPSheet, passedNSPath: $passedNSPath, namespace: namespace)
                             .environment(playerManager)
                             .environment(playlistImporter)
@@ -72,11 +58,7 @@ struct MiniPlayer: View {
                             } else if (value.predictedEndTranslation.width < -200) {
                                 playerManager.player_forward(userInitiated: true)
                             } else if (value.predictedEndTranslation.height < -400) {
-                                if (NowPlayingUsesCover) {
-                                    showingNPCover.toggle()
-                                } else {
-                                    showingNPSheet.toggle()
-                                }
+                                showingNPSheet.toggle()
                             }
                         }
                     )

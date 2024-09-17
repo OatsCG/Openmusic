@@ -46,6 +46,8 @@ struct NPTrackScrubberBar: ProgressViewStyle {
     @State var dragStartElapsed: Double = 0
     @State var isSnapped: Bool = false
     @State var geo_width: CGFloat = 0
+    @State var currentNormal: CGFloat = 0
+    @State var pressedNormal: CGFloat = 0
     var drag: some Gesture {
         DragGesture()
             .onChanged { value in
@@ -101,9 +103,6 @@ struct NPTrackScrubberBar: ProgressViewStyle {
     }
     func makeBody(configuration: Configuration) -> some View {
         return Group {
-            let currentNormal: CGFloat = min(max(playerManager.elapsedNormal, 0), 1) * geo_width
-            let unsnappedWidth: CGFloat = min(max((dragPosition - (dragStartPosition - dragStartElapsed)), 0), geo_width)
-            let pressedNormal: CGFloat = isSnapped ? currentNormal : unsnappedWidth
             ScrubberBar_component(isDragging: $isDragging, width: $geo_width, currentNormal: currentNormal, pressedNormal: pressedNormal)
                 .gesture(drag)
                 .overlay {
@@ -111,6 +110,35 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                     //.border(.red)
                     .offset(y: 20)
                 }
+                .onChange(of: playerManager.elapsedNormal) {
+                    self.updateNormals()
+                }
+                .onChange(of: geo_width) {
+                    self.updateNormals()
+                }
+                .onChange(of: dragPosition) {
+                    self.updateNormals()
+                }
+                .onChange(of: dragStartPosition) {
+                    self.updateNormals()
+                }
+                .onChange(of: dragStartElapsed) {
+                    self.updateNormals()
+                }
+                .onChange(of: isSnapped) {
+                    self.updateNormals()
+                }
+        }
+    }
+    func updateNormals() {
+        Task.detached {
+            let currentNormal: CGFloat = await min(max(playerManager.elapsedNormal, 0), 1) * geo_width
+            let unsnappedWidth: CGFloat = await min(max((dragPosition - (dragStartPosition - dragStartElapsed)), 0), geo_width)
+            let pressedNormal: CGFloat = await isSnapped ? currentNormal : unsnappedWidth
+            DispatchQueue.main.async {
+                self.currentNormal = currentNormal
+                self.pressedNormal = pressedNormal
+            }
         }
     }
 }

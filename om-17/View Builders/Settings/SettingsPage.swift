@@ -50,9 +50,9 @@ struct SettingsPage: View {
                     Text("Notifications")
                 }
                 
-                NavigationLink(destination: NowPlayingOptions()) {
-                    Text("Now Playing")
-                }
+//                NavigationLink(destination: NowPlayingOptions()) {
+//                    Text("Now Playing")
+//                }
                 
                 NavigationLink(destination: QueueOptions()) {
                     Text("Queue")

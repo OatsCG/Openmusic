@@ -54,7 +54,7 @@ struct NPArtwork: View {
                 }
             }
             .onTapGesture {
-                if (fullscreen) {
+                if (true) {
                     if playerManager.isPlaying {
                         playerManager.pause()
                     } else {
