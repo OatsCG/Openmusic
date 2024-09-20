@@ -154,6 +154,7 @@ class EQManager {
     }
     
     func setEngine(audioEngine: AVAudioEngine, playerNode: AVAudioPlayerNode) {
+        print("seek: setting engine...")
         self.audioEngine = audioEngine
         self.playerNode = playerNode
         self.isReady = false

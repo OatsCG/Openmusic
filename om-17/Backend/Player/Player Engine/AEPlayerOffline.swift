@@ -79,20 +79,26 @@ import AudioKit
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if (self.eqManager.isReady) {
             self.player.playerNode.seek(to: TimeInterval(to.seconds))
+            print("seek info 1 for \(to): \(self.duration)")
+            print("successful seek to: \(to)")
             completionHandler(true)
         } else {
+            print("FAILED seek to: \(to)")
             completionHandler(false)
         }
     }
     func has_file() -> Bool {
         return self.player.status != .noSource
     }
-    func preroll(parent: PlayerEngine, completion: @escaping (_ success: Bool) -> Void) {
+    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (_ success: Bool) -> Void) {
+        //self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
         self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
         if parent.isReady {
+            print("seek: parent is ready ready")
             completion(true)
             return
         } else {
+            print("seek: parent is NOT ready")
             if (self.has_file() && self.eqManager.audioEngine == nil) {
                 Task.detached { [weak self] in
                     if let self = self {
@@ -100,11 +106,13 @@ import AudioKit
                         await self.amplitudeFetcher.try_amplitude_fetch(audioFile: self.player.file)
                         DispatchQueue.main.async {
                             parent.isReady = self.has_file()
+                            completion(self.has_file())
                         }
                     }
                 }
+            } else {
+                completion(self.has_file())
             }
-            completion(self.has_file())
         }
     }
     func setVolume(_ to: Float) {

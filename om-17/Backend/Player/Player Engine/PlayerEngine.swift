@@ -100,6 +100,7 @@ import AudioKit
     }
     /// Seeks the player to the specified time in seconds
     func seek(to: Double) {
+        print("SEEKING TO: \(to)")
         self.isSeeking = true
         self.player.seek(to: CMTime(seconds: to, preferredTimescale: 1000), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) {[weak self] _ in
             self?.isSeeking = false
