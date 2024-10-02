@@ -46,7 +46,7 @@ struct TrackLink_classic: View {
             .lineLimit(1)
             .padding([.vertical, .leading], 5)
             .padding(.trailing, 10)
-            .background(.ultraThinMaterial)
+            .background(.primary.opacity(0.04))
             .clipShape(RoundedRectangle(cornerRadius: 11))
             .contentShape(Rectangle())
             .clipped()

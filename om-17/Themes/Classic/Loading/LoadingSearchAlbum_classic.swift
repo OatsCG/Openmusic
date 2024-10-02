@@ -13,17 +13,17 @@ struct LoadingSearchAlbum_classic: View {
     @State var gradientStop: CGFloat = 0
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            RoundedRectangle(cornerRadius: 6).fill(.foreground.opacity(0.05))
+            RoundedRectangle(cornerRadius: 0).fill(.foreground.opacity(0.03))
                 .aspectRatio(1, contentMode: .fill)
             VStack(alignment: .leading, spacing: 5) {
-                RoundedRectangle(cornerRadius: 2).fill(.foreground.opacity(0.1))
+                RoundedRectangle(cornerRadius: 2).fill(.foreground.opacity(0.05))
                     .frame(width: 120)
-                RoundedRectangle(cornerRadius: 2).fill(.foreground.opacity(0.1))
+                RoundedRectangle(cornerRadius: 2).fill(.foreground.opacity(0.03))
                     .frame(width: 90)
             }
+                .padding(.all, 4)
         }
-            .padding(.all, 4)
-            .background(.foreground.opacity(0.1))
+            .background(.foreground.opacity(0.05))
             .overlay {
                 LinearGradient(
                     gradient: Gradient(
@@ -33,7 +33,7 @@ struct LoadingSearchAlbum_classic: View {
                                 location: 0
                             ),
                             Gradient.Stop(
-                                color: .primary.opacity(0.06),
+                                color: .primary.opacity(0.03),
                                 location: 0.5
                             ),
                             Gradient.Stop(
@@ -57,13 +57,37 @@ struct LoadingSearchAlbum_classic: View {
 }
 
 #Preview {
+    @Previewable @State var playerManager = PlayerManager()
+    @Previewable @State var playlistImporter = PlaylistImporter()
+    @Previewable @State var downloadManager = DownloadManager.shared
+    @Previewable @State var networkMonitor = NetworkMonitor()
+    @Previewable @State var fontManager = FontManager.shared
+    @Previewable @State var omUser = OMUser()
     ScrollView {
         ScrollView(.horizontal) {
-            HStack {
-                SearchAlbumLink_classic(album: SearchedAlbum())
-                LoadingSearchAlbum_classic()
+            HStackWrapped(rows: 2) {
+                ForEach(1...10, id: \.self) { track in
+                    LoadingSearchAlbum_classic()
+                }
             }
         }
+        ScrollView(.horizontal) {
+            HStackWrapped(rows: 2) {
+                ForEach(1...10, id: \.self) { track in
+                    SearchAlbumLink_classic(album: SearchedAlbum())
+                }
+            }
+        }
+    }
+    .padding(10)
+    .environment(playerManager)
+    .environment(playlistImporter)
+    .environment(downloadManager)
+    .environment(networkMonitor)
+    .environment(fontManager)
+    .environment(omUser)
+    .background {
+        GlobalBackground_classic()
     }
 }
 

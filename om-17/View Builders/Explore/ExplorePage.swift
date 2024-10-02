@@ -79,7 +79,7 @@ struct ExplorePage: View {
                 }
                 .frame(width: UIScreen.main.bounds.width)
                 .refreshable {
-                    viewModel.runSearch()
+                    await viewModel.refresh()
                 }
                 .navigationTitle("Explore")
 //                .toolbar {

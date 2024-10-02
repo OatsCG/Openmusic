@@ -77,6 +77,28 @@ actor ExploreViewActor {
             }
         }
     }
+    func refresh() async {
+        do {
+            try await viewActor.runSearch()
+            
+            let results = await viewActor.getExploreResults()
+            let searching = await viewActor.getIsSearching()
+            
+            await MainActor.run {
+                withAnimation {
+                    self.exploreResults = results
+                    self.isSearching = searching
+                }
+            }
+        } catch {
+            await MainActor.run {
+                withAnimation {
+                    self.isSearching = false
+                }
+            }
+            print("Error: \(error)")
+        }
+    }
 }
 
 

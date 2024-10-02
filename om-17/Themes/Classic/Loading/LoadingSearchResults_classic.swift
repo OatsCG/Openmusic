@@ -13,7 +13,7 @@ struct LoadingSearchResults_classic: View {
     var body: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.04))
+                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.03))
                     .frame(width: 130, height: 30)
                     .padding(.leading, 15)
                 ScrollView(.horizontal) {
@@ -30,7 +30,7 @@ struct LoadingSearchResults_classic: View {
             }
             Divider()
             VStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.04))
+                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.03))
                     .frame(width: 130, height: 30)
                     .padding(.leading, 15)
                 ScrollView(.horizontal) {
@@ -54,5 +54,8 @@ struct LoadingSearchResults_classic: View {
     ScrollView {
         LoadingSearchResults_classic()
             .opacity(0.8)
+    }
+    .background {
+        GlobalBackground_classic()
     }
 }

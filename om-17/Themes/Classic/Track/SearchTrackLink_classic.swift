@@ -28,7 +28,7 @@ struct SearchTrackLink_classic: View {
                 .padding(5)
             Spacer()
         }
-            .background(.ultraThinMaterial)
+            .background(.primary.opacity(0.04))
             .cornerRadius(11)
             //.aspectRatio(3.0 / 1.0, contentMode: .fit)
     }

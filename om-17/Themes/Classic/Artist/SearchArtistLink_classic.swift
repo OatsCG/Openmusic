@@ -23,7 +23,7 @@ struct SearchArtistLink_classic: View {
             .multilineTextAlignment(.leading)
             .lineLimit(1)
             .padding(.all, 5)
-            .background(.thinMaterial)
+            .background(.primary.opacity(0.05))
             .cornerRadius(12)
     }
 }

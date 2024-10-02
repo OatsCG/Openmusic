@@ -13,18 +13,18 @@ struct LoadingSearchTrack_classic: View {
     @State var gradientStop: CGFloat = 0
     var body: some View {
         HStack {
-            RoundedRectangle(cornerRadius: 8).fill(.foreground.opacity(0.05))
+            RoundedRectangle(cornerRadius: 8).fill(.foreground.opacity(0.03))
                 .aspectRatio(1, contentMode: .fit)
                 .padding([.top, .bottom, .leading], 5)
             VStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.1))
-                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.1))
+                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.05))
+                RoundedRectangle(cornerRadius: 5).fill(.foreground.opacity(0.03))
             }
                 .padding(.horizontal, 5)
                 .padding(.vertical, 10)
             Spacer()
         }
-            .background(.foreground.opacity(0.1))
+            .background(.foreground.opacity(0.05))
             .overlay {
                 LinearGradient(
                     gradient: Gradient(
@@ -34,7 +34,7 @@ struct LoadingSearchTrack_classic: View {
                                 location: 0
                             ),
                             Gradient.Stop(
-                                color: .primary.opacity(0.06),
+                                color: .primary.opacity(0.03),
                                 location: 0.5
                             ),
                             Gradient.Stop(
@@ -60,5 +60,18 @@ struct LoadingSearchTrack_classic: View {
     VStack {
         SearchTrackLink_component(track: FetchedTrack())
         LoadingSearchTrack_classic()
+    }
+    .background {
+        GlobalBackground_classic()
+    }
+}
+
+#Preview {
+    ScrollView {
+        LoadingSearchResults_classic()
+            .opacity(0.8)
+    }
+    .background {
+        GlobalBackground_classic()
     }
 }

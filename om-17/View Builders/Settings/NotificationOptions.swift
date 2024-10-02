@@ -10,6 +10,7 @@ import SwiftUI
 struct NotificationOptions: View {
     @Environment(PlayerManager.self) var playerManager
     @AppStorage("SkipNotifyEnabled") var SkipNotifyEnabled: Bool = false
+    @AppStorage("AlertHapticsDisabled") var AlertHapticsDisabled: Bool = false
     var body: some View {
         NavigationStack {
             Form {
@@ -32,6 +33,12 @@ struct NotificationOptions: View {
                     Text("NOTIFICATIONS")
                 }, footer: {
                     Text("Push a \"Now Playing\" notification when you skip a song. Customize lock screen persistence in Settings>Notifications")
+                })
+                Section(content: {
+                    Toggle("Disable Alert Haptics", isOn: $AlertHapticsDisabled)
+                        .tint(.green)
+                }, header: {
+                    Text("ALERTS")
                 })
             }
                 .scrollContentBackground(.hidden)

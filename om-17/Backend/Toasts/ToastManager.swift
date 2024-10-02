@@ -18,19 +18,19 @@ import SwiftUI
             var popTime: Double = 2
             switch toast.type {
             case .download:
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
                 popTime = 3
             case .queuedOne:
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
             case .queuedMany:
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
                 popTime = 4
             case .saved:
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
             case .systemSuccess:
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
             case .systemError:
-                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.warning) }
                 popTime = 5
             case .systemNeutral:
                 break

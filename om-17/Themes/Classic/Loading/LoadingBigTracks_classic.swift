@@ -16,24 +16,24 @@ struct LoadingBigTracks_classic: View {
             VStack(spacing: 5) {
                 ForEach(1...20, id: \.self) { _ in
                     HStack {
-                        RoundedRectangle(cornerRadius: 8).fill(.foreground.opacity(0.05))
+                        RoundedRectangle(cornerRadius: 8).fill(.foreground.opacity(0.03))
                             .aspectRatio(1, contentMode: .fit)
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.2))
+                            RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.05))
                                 .frame(width: 150, height: 16)
-                            RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.1))
+                            RoundedRectangle(cornerRadius: 2).fill(.primary.opacity(0.03))
                                 .frame(width: 60, height: 14)
                         }
                         Spacer()
-                        RoundedRectangle(cornerRadius: 4).fill(.primary.opacity(0.1))
+                        RoundedRectangle(cornerRadius: 4).fill(.primary.opacity(0.04))
                             .frame(width: 40, height: 16)
                     }
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .padding([.vertical, .leading], 5)
                         .padding(.trailing, 10)
-                        .background(.foreground.opacity(0.1))
+                        .background(.foreground.opacity(0.05))
                         .overlay {
                             LinearGradient(
                                 gradient: Gradient(
@@ -43,7 +43,7 @@ struct LoadingBigTracks_classic: View {
                                             location: 0
                                         ),
                                         Gradient.Stop(
-                                            color: .primary.opacity(0.06),
+                                            color: .primary.opacity(0.03),
                                             location: 0.5
                                         ),
                                         Gradient.Stop(

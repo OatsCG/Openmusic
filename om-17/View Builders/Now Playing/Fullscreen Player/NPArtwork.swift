@@ -75,7 +75,7 @@ struct NPArtwork: View {
                         
                         if value.translation.width < -(maxDistance) {
                             if shouldSkip == false {
-                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                             }
                             shouldSkip = true
                         } else {
@@ -83,7 +83,7 @@ struct NPArtwork: View {
                         }
                         if value.translation.width > (maxDistance) {
                             if shouldPrevious == false {
-                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                             }
                             shouldPrevious = true
                         } else {
@@ -94,12 +94,12 @@ struct NPArtwork: View {
                 .onEnded({ value in
                     if value.translation.width < -maxDistance || value.predictedEndTranslation.width < -maxThrowDistance {
                         if shouldSkip == false {
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                         }
                         shouldSkip = true
                     } else if value.translation.width > maxDistance || value.predictedEndTranslation.width > maxThrowDistance {
                         if shouldPrevious == false {
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                         }
                         shouldPrevious = true
                     }

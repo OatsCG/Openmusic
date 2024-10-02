@@ -17,7 +17,7 @@ struct AlbumBackground_classic: View {
             } else {
                 Color(.white)
             }
-            AlbumBackground(ArtworkID: artwork, blur: 60, light_opacity: 0.15, dark_opacity: 0.15, spin: false, material: false)
+            AlbumBackground(ArtworkID: artwork, blur: 60, light_opacity: 0.15, dark_opacity: 0.07, spin: false, material: false)
         }
             .ignoresSafeArea()
     }

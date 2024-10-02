@@ -74,6 +74,7 @@ actor StatusViewActor {
     var fetchHash: UUID = UUID()
     
     func runCheck(with ipAddress: String? = nil) {
+        self.serverStatus = nil
         Task {
             do {
                 try await viewActor.runCheck(with: ipAddress)
