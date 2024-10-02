@@ -52,11 +52,13 @@ public final class BackgroundDatabase: Database {
       }
     
     public func delete(where predicate: Predicate<some PersistentModel>?) async throws {
-        return try await self.database.delete(where: predicate)
+        try await self.database.delete(where: predicate)
+        try self.save()
       }
     
     public func delete<T>(_ model: T) async where T : PersistentModel {
-        return await self.database.delete(model)
+        await self.database.delete(model)
+        try? self.save()
     }
 
     public func fetch<T>(_ descriptor: FetchDescriptor<T>) async throws -> [T] where T: PersistentModel {
@@ -64,7 +66,8 @@ public final class BackgroundDatabase: Database {
     }
 
     public func insert(_ model: some PersistentModel) async {
-        return await self.database.insert(model)
+        await self.database.insert(model)
+        try? self.save()
     }
 
     public func save() throws {
