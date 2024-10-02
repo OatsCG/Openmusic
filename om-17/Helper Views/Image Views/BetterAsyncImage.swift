@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct BetterAsyncImage: View {
     var url: URL?
@@ -14,30 +15,45 @@ struct BetterAsyncImage: View {
     var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.1))
 
     var body: some View {
-        CacheAsyncImage(url: url, transaction: customTransaction) { phase in
-            switch phase {
-            case .empty:
-                if url == nil {
-                    DefaultArtwork_component(animated: animated)
-                } else if let image = currentImage {
-                    image
-                        .resizable()
-                } else {
-                    LoadingArtwork_component(animated: animated)
-                }
-            case .success(let image):
+        LazyImage(url: url, transaction: customTransaction) { state in
+            if let image = state.image {
                 image
                     .resizable()
                     .onAppear {
                         currentImage = image // Update the currently displayed image
                     }
-            case .failure(_):
+            } else if state.error != nil {
                 DefaultArtwork_component(animated: animated)
-            @unknown default:
+            } else {
                 DefaultArtwork_component(animated: animated)
             }
         }
         .clipped()
+        
+//        CacheAsyncImage(url: url, transaction: customTransaction) { phase in
+//            switch phase {
+//            case .empty:
+//                if url == nil {
+//                    DefaultArtwork_component(animated: animated)
+//                } else if let image = currentImage {
+//                    image
+//                        .resizable()
+//                } else {
+//                    LoadingArtwork_component(animated: animated)
+//                }
+//            case .success(let image):
+//                image
+//                    .resizable()
+//                    .onAppear {
+//                        currentImage = image // Update the currently displayed image
+//                    }
+//            case .failure(_):
+//                DefaultArtwork_component(animated: animated)
+//            @unknown default:
+//                DefaultArtwork_component(animated: animated)
+//            }
+//        }
+//        .clipped()
     }
 }
 

@@ -15,6 +15,7 @@ struct TVStaticBackground: View {
             TVStaticFuzz()
         }
             .opacity(0.8)
+            .drawingGroup()
     }
 }
 

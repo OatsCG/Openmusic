@@ -36,6 +36,7 @@ struct GlobalBackground_wii: View {
                     }
             })
         }
+        .drawingGroup()
     }
 }
 

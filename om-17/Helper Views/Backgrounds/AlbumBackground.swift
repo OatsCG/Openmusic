@@ -33,7 +33,7 @@ struct AlbumBackground: View {
                                 .frame(width: g.size.width, height: g.size.height)
                                 .contentShape(Rectangle())
                                 .clipped()
-                                //.drawingGroup()
+                                .drawingGroup()
                                 .onAppear {
                                     if spin {
                                         withAnimation(.linear(duration: 33)
@@ -58,7 +58,7 @@ struct AlbumBackground: View {
                             .scaleEffect(1.4)
                             .rotationEffect(.degrees(isRotating))
                             .allowsHitTesting(false)
-                            //.drawingGroup()
+                            .drawingGroup()
                             .onAppear {
                                 if spin {
                                     withAnimation(.linear(duration: 33)

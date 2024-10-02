@@ -37,6 +37,7 @@ struct AlbumBackground_wii: View {
                     }
             })
         }
+        .drawingGroup()
     }
 }
 
