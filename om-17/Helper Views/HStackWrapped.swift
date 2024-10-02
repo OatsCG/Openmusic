@@ -11,6 +11,7 @@ struct HStackWrapped<Content: View>: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     let rows: Int
+    let lazy: Bool = true
     let content: Content
     
     init(rows: Int, @ViewBuilder content: () -> Content) {
@@ -19,10 +20,18 @@ struct HStackWrapped<Content: View>: View {
     }
     
     var body: some View {
-        HStack(alignment: .top) {
-            LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
-                content
-             }
+        if lazy {
+            HStack(alignment: .top) {
+                LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
+                    content
+                }
+            }
+        } else {
+            HStack(alignment: .top) {
+                LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
+                    content
+                }
+            }
         }
     }
 }

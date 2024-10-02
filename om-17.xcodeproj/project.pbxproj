@@ -243,6 +243,10 @@
 		E57A784D2C09FD59006D7908 /* LoadingArtwork_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57A784C2C09FD59006D7908 /* LoadingArtwork_component.swift */; };
 		E57CC5732B5996C000537031 /* calibri.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E57CC5722B5996C000537031 /* calibri.ttf */; };
 		E57CC5752B5996C700537031 /* calibrib.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E57CC5742B5996C700537031 /* calibrib.ttf */; };
+		E57EFADB2CADA834002BFADE /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = E57EFADA2CADA834002BFADE /* Nuke */; };
+		E57EFADD2CADA834002BFADE /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = E57EFADC2CADA834002BFADE /* NukeExtensions */; };
+		E57EFADF2CADA834002BFADE /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = E57EFADE2CADA834002BFADE /* NukeUI */; };
+		E57EFAE12CADA834002BFADE /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = E57EFAE02CADA834002BFADE /* NukeVideo */; };
 		E57F7F992B86B0A600AEAD97 /* AddServerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57F7F982B86B0A600AEAD97 /* AddServerSheet.swift */; };
 		E582E1B92A74210300B2C8B7 /* LiveDownloadStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E582E1B82A74210300B2C8B7 /* LiveDownloadStatus.swift */; };
 		E582E1BB2A772A8400B2C8B7 /* PlaylistTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E582E1BA2A772A8400B2C8B7 /* PlaylistTypes.swift */; };
@@ -1108,12 +1112,16 @@
 				E5062DED2C15240300B00AB4 /* OAuthSwift in Frameworks */,
 				E5F43D932B0B2D4B00864502 /* RxMusicPlayer in Frameworks */,
 				E5F43D512B0AFB8600864502 /* SwiftAudioPlayer in Frameworks */,
+				E57EFADF2CADA834002BFADE /* NukeUI in Frameworks */,
+				E57EFAE12CADA834002BFADE /* NukeVideo in Frameworks */,
+				E57EFADD2CADA834002BFADE /* NukeExtensions in Frameworks */,
 				E52CFF752B46385600DF5EBF /* YouTubePlayerKit in Frameworks */,
 				E52BA2D42B7DF8F200A11C30 /* SwipeActions in Frameworks */,
 				E5255BF32AAAB68F007F12CE /* AudioKit in Frameworks */,
 				E59E30B12A41310B007B7874 /* MarqueeText in Frameworks */,
 				E5255BFA2AAB6FA4007F12CE /* AudioStreaming in Frameworks */,
 				E5062DF22C1560DE00B00AB4 /* Starscream in Frameworks */,
+				E57EFADB2CADA834002BFADE /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2855,6 +2863,10 @@
 				E52BA2D32B7DF8F200A11C30 /* SwipeActions */,
 				E5062DEC2C15240300B00AB4 /* OAuthSwift */,
 				E5062DF12C1560DE00B00AB4 /* Starscream */,
+				E57EFADA2CADA834002BFADE /* Nuke */,
+				E57EFADC2CADA834002BFADE /* NukeExtensions */,
+				E57EFADE2CADA834002BFADE /* NukeUI */,
+				E57EFAE02CADA834002BFADE /* NukeVideo */,
 			);
 			productName = "om-17";
 			productReference = E5C9E94B2A2E98FC0056E45F /* om-17.app */;
@@ -2939,6 +2951,7 @@
 				E5DD1D1E2BC65FBA007A1858 /* XCRemoteSwiftPackageReference "Glur" */,
 				E5F2CA0D2C15211000241B8E /* XCRemoteSwiftPackageReference "OAuthSwift" */,
 				E5062DF02C1560B900B00AB4 /* XCRemoteSwiftPackageReference "Starscream" */,
+				E57EFAD92CADA834002BFADE /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = E5C9E94C2A2E98FC0056E45F /* Products */;
 			projectDirPath = "";
@@ -3947,6 +3960,14 @@
 				minimumVersion = 1.5.4;
 			};
 		};
+		E57EFAD92CADA834002BFADE /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
 		E59E30AF2A41310B007B7874 /* XCRemoteSwiftPackageReference "MarqueeText" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/joekndy/MarqueeText";
@@ -4019,6 +4040,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E52CFF732B46385600DF5EBF /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */;
 			productName = YouTubePlayerKit;
+		};
+		E57EFADA2CADA834002BFADE /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E57EFAD92CADA834002BFADE /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		E57EFADC2CADA834002BFADE /* NukeExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E57EFAD92CADA834002BFADE /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeExtensions;
+		};
+		E57EFADE2CADA834002BFADE /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E57EFAD92CADA834002BFADE /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
+		};
+		E57EFAE02CADA834002BFADE /* NukeVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E57EFAD92CADA834002BFADE /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeVideo;
 		};
 		E59E30B02A41310B007B7874 /* MarqueeText */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,5 +1,5 @@
 {
-  "originHash" : "42e44bd0a348bff0b556a20fb7952dbcdc515eaeb1343526eedc85c0c21bbd5e",
+  "originHash" : "8298c8d261f4e8d7430660746a7544664a4cf499212c475aba25ba6d40a472ea",
   "pins" : [
     {
       "identity" : "audiokit",
@@ -71,6 +71,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "e18d514455563ad00581e0d825146c6f15b1c6c4"
+      }
+    },
+    {
+      "identity" : "nuke",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Nuke",
+      "state" : {
+        "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
+        "version" : "12.8.0"
       }
     },
     {
