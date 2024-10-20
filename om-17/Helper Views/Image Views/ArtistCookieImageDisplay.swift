@@ -22,7 +22,7 @@ struct ArtistCookieImageDisplay: View {
                     .contentShape(Circle())
                     .clipShape(Circle())
                     .blur(radius: Blur)
-                    .drawingGroup()
+//                    .drawingGroup()
                 Image(colorScheme == .light ? "defaultalbumartlight" : "defaultalbumartdark")
                     .resizable()
                     .contentShape(Circle())
@@ -34,7 +34,7 @@ struct ArtistCookieImageDisplay: View {
                     .clipShape(Circle())
                     .blur(radius: Blur)
                     .opacity(BlurOpacity)
-                    .drawingGroup()
+//                    .drawingGroup()
                 
                 //CachedAsyncImage(url: URL(string: imgURL), transaction: Transaction(animation: .spring())){ phase in
                 BetterAsyncImage(url: imgURL)

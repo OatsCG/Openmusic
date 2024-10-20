@@ -56,10 +56,10 @@ struct ImportPlaylistSheet: View {
                 }
             }
             Button(action: {
-                if (infoViewModel.fetchedPlaylistInfo != nil) {
+                if let playlistID = infoViewModel.fetchedPlaylistInfo?.playlistID {
                     isFetchingTracks = true
                     print("FETCH TRACKLIST AND CREATE PLAYLIST")
-                    tracksNaiveViewModel.runSearch(playlistID: infoViewModel.fetchedPlaylistInfo!.playlistID, platform: recognizePlaylist(url: playlistURL).platform)
+                    tracksNaiveViewModel.runSearch(playlistID: playlistID, platform: recognizePlaylist(url: playlistURL).platform)
                 }
             }) {
                 if (recognizePlaylist(url: playlistURL).platform == .unknown) {
@@ -96,8 +96,8 @@ struct ImportPlaylistSheet: View {
                 .padding(.top, 10)
                 .disabled(isFetchingTracks)
                 .onChange(of: tracksNaiveViewModel.fetchedPlaylistInfoTracks) {
-                    if (tracksNaiveViewModel.fetchedPlaylistInfoTracks != nil) {
-                        let newPlaylist: ImportedPlaylist = ImportedPlaylist(fetchedInfoTracks: tracksNaiveViewModel.fetchedPlaylistInfoTracks!, importURL: playlistURL, platform: recognizePlaylist(url: playlistURL).platform)
+                    if let fetchedPlaylistInfoTracks = tracksNaiveViewModel.fetchedPlaylistInfoTracks {
+                        let newPlaylist: ImportedPlaylist = ImportedPlaylist(fetchedInfoTracks: fetchedPlaylistInfoTracks, importURL: playlistURL, platform: recognizePlaylist(url: playlistURL).platform)
                         playlistImporter.addPlaylist(playlist: newPlaylist, database: database)
                         isShowingSheet = false
                     }

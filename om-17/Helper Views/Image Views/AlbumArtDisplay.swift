@@ -43,9 +43,10 @@ struct AlbumArtDisplay: View {
                 if (BlurOpacity > 0) {
                     BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false, customTransaction: customTransaction)
                         .cornerRadius(cornerRadius)
+                        .drawingGroup()
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
-                        .drawingGroup()
+//                        .drawingGroup()
                 }
                 ZStack {
                     BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: true, customTransaction: customTransaction)
@@ -58,9 +59,10 @@ struct AlbumArtDisplay: View {
                 if (BlurOpacity > 0) {
                     BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: false, customTransaction: customTransaction)
                         .cornerRadius(cornerRadius)
+                        .drawingGroup()
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
-                        .drawingGroup()
+//                        .drawingGroup()
                 }
                 ZStack {
                     BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: true, customTransaction: customTransaction)
