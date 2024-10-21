@@ -26,6 +26,14 @@ struct MiniPlayer_honeycrisp: View {
                             .customFont(fontManager, .callout)
                         Spacer()
                     }
+                    if playerManager.trackQueue.count > 0 {
+                        HStack {
+                            Text("\(playerManager.trackQueue.count) Song\(playerManager.trackQueue.count != 1 ? "s" : "") Queued")
+                                .customFont(fontManager, .subheadline)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                    }
                 } else {
                     MarqueeText(
                         text: playerManager.currentQueueItem!.Track.Title,

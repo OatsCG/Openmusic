@@ -11,6 +11,7 @@ struct NotificationOptions: View {
     @Environment(PlayerManager.self) var playerManager
     @AppStorage("SkipNotifyEnabled") var SkipNotifyEnabled: Bool = false
     @AppStorage("AlertHapticsDisabled") var AlertHapticsDisabled: Bool = false
+    @AppStorage("SuggestionHapticsDisabled") var SuggestionHapticsDisabled: Bool = false
     var body: some View {
         NavigationStack {
             Form {
@@ -35,7 +36,9 @@ struct NotificationOptions: View {
                     Text("Push a \"Now Playing\" notification when you skip a song. Customize lock screen persistence in Settings>Notifications")
                 })
                 Section(content: {
-                    Toggle("Disable Alert Haptics", isOn: $AlertHapticsDisabled)
+                    Toggle("Disable Suggestion Haptics", isOn: $SuggestionHapticsDisabled)
+                        .tint(.green)
+                    Toggle("Disable All Alert Haptics", isOn: $AlertHapticsDisabled)
                         .tint(.green)
                 }, header: {
                     Text("ALERTS")

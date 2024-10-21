@@ -18,19 +18,35 @@ import SwiftUI
             var popTime: Double = 2
             switch toast.type {
             case .download:
-                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                }
                 popTime = 3
             case .queuedOne:
-                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") {
+                    if !toast.isSuggestion || !UserDefaults.standard.bool(forKey: "SuggestionHapticsDisabled") {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }
+                }
             case .queuedMany:
-                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") {
+                    if !toast.isSuggestion || !UserDefaults.standard.bool(forKey: "SuggestionHapticsDisabled") {
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    }
+                }
                 popTime = 4
             case .saved:
-                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                }
             case .systemSuccess:
-                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.success) }
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                }
             case .systemError:
-                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UINotificationFeedbackGenerator().notificationOccurred(.warning) }
+                if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") {
+                    UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                }
                 popTime = 5
             case .systemNeutral:
                 break
