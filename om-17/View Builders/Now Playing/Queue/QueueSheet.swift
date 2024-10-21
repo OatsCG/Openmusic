@@ -49,6 +49,9 @@ struct QueueSheet: View {
             }
             QSNPRow()
             if selectedPick == .queue {
+                if let vibe = playerManager.currentVibe {
+                    VibeView(vibe: vibe)
+                }
                 Divider()
                 QSUpNext(passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
             }

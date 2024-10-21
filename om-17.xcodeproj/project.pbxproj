@@ -56,6 +56,8 @@
 		E52070142B0F3FE80074252D /* AlbumContentHeadingBig_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52070132B0F3FE80074252D /* AlbumContentHeadingBig_classic.swift */; };
 		E52070162B0F3FFE0074252D /* AlbumContentHeadingBig_honeycrisp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52070152B0F3FFE0074252D /* AlbumContentHeadingBig_honeycrisp.swift */; };
 		E52070182B0F401B0074252D /* AlbumContentHeadingBig_wii.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52070172B0F401B0074252D /* AlbumContentHeadingBig_wii.swift */; };
+		E52088602CC6B0F2002771C9 /* VibesFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520885F2CC6B0F2002771C9 /* VibesFetchAPI.swift */; };
+		E52088622CC6CBAA002771C9 /* RefreshVibesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52088612CC6CBAA002771C9 /* RefreshVibesView.swift */; };
 		E520B2892A5A58960031C73D /* TrackMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520B2882A5A58960031C73D /* TrackMenu.swift */; };
 		E520B28B2A5B2EF10031C73D /* LibraryArtistLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520B28A2A5B2EF10031C73D /* LibraryArtistLink.swift */; };
 		E520B28E2A5B74390031C73D /* GatherArtists.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520B28D2A5B74390031C73D /* GatherArtists.swift */; };
@@ -367,6 +369,8 @@
 		E599E8412BCC8CE400F778CA /* PlayerDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E599E8402BCC8CE400F778CA /* PlayerDebugger.swift */; };
 		E599E8432BCC8DCA00F778CA /* PlayerDebuggerSimple.swift in Sources */ = {isa = PBXBuildFile; fileRef = E599E8422BCC8DCA00F778CA /* PlayerDebuggerSimple.swift */; };
 		E59A42E22A8ECD3400B4742F /* QueueItemMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59A42E12A8ECD3400B4742F /* QueueItemMenu.swift */; };
+		E59B3A232CC59D0B001D419A /* ExploreVibesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59B3A222CC59D0B001D419A /* ExploreVibesView.swift */; };
+		E59B3A272CC59E56001D419A /* VibeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59B3A262CC59E56001D419A /* VibeView.swift */; };
 		E59CA73F2A4E022F006A34F5 /* TrackTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59CA73E2A4E022F006A34F5 /* TrackTypes.swift */; };
 		E59E30B12A41310B007B7874 /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E59E30B02A41310B007B7874 /* MarqueeText */; };
 		E59E30B32A4138A4007B7874 /* MiniArtistCookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59E30B22A4138A4007B7874 /* MiniArtistCookies.swift */; };
@@ -622,6 +626,8 @@
 		E52070132B0F3FE80074252D /* AlbumContentHeadingBig_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumContentHeadingBig_classic.swift; sourceTree = "<group>"; };
 		E52070152B0F3FFE0074252D /* AlbumContentHeadingBig_honeycrisp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumContentHeadingBig_honeycrisp.swift; sourceTree = "<group>"; };
 		E52070172B0F401B0074252D /* AlbumContentHeadingBig_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumContentHeadingBig_wii.swift; sourceTree = "<group>"; };
+		E520885F2CC6B0F2002771C9 /* VibesFetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibesFetchAPI.swift; sourceTree = "<group>"; };
+		E52088612CC6CBAA002771C9 /* RefreshVibesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshVibesView.swift; sourceTree = "<group>"; };
 		E520B2882A5A58960031C73D /* TrackMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackMenu.swift; sourceTree = "<group>"; };
 		E520B28A2A5B2EF10031C73D /* LibraryArtistLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryArtistLink.swift; sourceTree = "<group>"; };
 		E520B28D2A5B74390031C73D /* GatherArtists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatherArtists.swift; sourceTree = "<group>"; };
@@ -925,6 +931,8 @@
 		E599E8402BCC8CE400F778CA /* PlayerDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDebugger.swift; sourceTree = "<group>"; };
 		E599E8422BCC8DCA00F778CA /* PlayerDebuggerSimple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDebuggerSimple.swift; sourceTree = "<group>"; };
 		E59A42E12A8ECD3400B4742F /* QueueItemMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItemMenu.swift; sourceTree = "<group>"; };
+		E59B3A222CC59D0B001D419A /* ExploreVibesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreVibesView.swift; sourceTree = "<group>"; };
+		E59B3A262CC59E56001D419A /* VibeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeView.swift; sourceTree = "<group>"; };
 		E59CA73E2A4E022F006A34F5 /* TrackTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackTypes.swift; sourceTree = "<group>"; };
 		E59E30B22A4138A4007B7874 /* MiniArtistCookies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniArtistCookies.swift; sourceTree = "<group>"; };
 		E59E30B62A415ECA007B7874 /* NowPlayingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingSheet.swift; sourceTree = "<group>"; };
@@ -2249,6 +2257,16 @@
 			path = Backgrounds;
 			sourceTree = "<group>";
 		};
+		E59B3A252CC59DE2001D419A /* Vibes */ = {
+			isa = PBXGroup;
+			children = (
+				E59B3A222CC59D0B001D419A /* ExploreVibesView.swift */,
+				E52088612CC6CBAA002771C9 /* RefreshVibesView.swift */,
+				E59B3A262CC59E56001D419A /* VibeView.swift */,
+			);
+			path = Vibes;
+			sourceTree = "<group>";
+		};
 		E59CA73B2A4DF444006A34F5 /* Downloader */ = {
 			isa = PBXGroup;
 			children = (
@@ -2465,6 +2483,7 @@
 			isa = PBXGroup;
 			children = (
 				E5C2DD512A2FDD0E00E6BB97 /* ExplorePage.swift */,
+				E59B3A252CC59DE2001D419A /* Vibes */,
 				E51E65B32C17C56800E31B9E /* NoServerAddedComponent.swift */,
 				E5C2DD592A2FE6E700E6BB97 /* ExploreShelfView.swift */,
 				E56F82BE2B6B7D99002A1FA4 /* ExploreShelfBigView.swift */,
@@ -2650,6 +2669,7 @@
 				E5F2CA0A2C1520AA00241B8E /* Discord RPC */,
 				E59600932B3B7963009E5858 /* StatusFetchAPI.swift */,
 				E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */,
+				E520885F2CC6B0F2002771C9 /* VibesFetchAPI.swift */,
 				E5D493342A305BA20091ED01 /* SearchFetchAPI.swift */,
 				E5A534FF2B03128D00F48935 /* QuickFetchAPI.swift */,
 				E5A928E22A31354A000E52C5 /* AlbumFetchAPI.swift */,
@@ -3261,6 +3281,7 @@
 				E5FF24782C8BA61500AFCCE9 /* DefaultDatabase.swift in Sources */,
 				E5018BD22A917C9400143967 /* SearchArtistExtendedTracks.swift in Sources */,
 				E5A65A042A41279F00072966 /* MiniPlayer.swift in Sources */,
+				E52088622CC6CBAA002771C9 /* RefreshVibesView.swift in Sources */,
 				E5B9138B2ABCE03B00E0C53C /* MiniToasts.swift in Sources */,
 				E526F9042ABA41C30024F134 /* PMHardwareControls.swift in Sources */,
 				E5FF24742C8BA16000AFCCE9 /* ModelActor.swift in Sources */,
@@ -3278,6 +3299,7 @@
 				E5D493442A3063460091ED01 /* MakeImageURL.swift in Sources */,
 				E5E6A1C32A7DBBA500880E6B /* SearchAlbumLink_component.swift in Sources */,
 				E5C2DD562A2FE4AE00E6BB97 /* LibraryPage.swift in Sources */,
+				E59B3A272CC59E56001D419A /* VibeView.swift in Sources */,
 				E5DCFE042B450F5C0044D9B5 /* NPPlayButton_classic.swift in Sources */,
 				E56E1D4B2BC9BD0A00C4DB42 /* SettingsTab.swift in Sources */,
 				E58E8F902BA16BB8009F7E43 /* AlbumContentHeadingBig_faero.swift in Sources */,
@@ -3461,12 +3483,14 @@
 				E5CC539F2B59B00C004D50A3 /* PlaylistBackground_feco.swift in Sources */,
 				E58E8FD82BA172AF009F7E43 /* Logging.swift in Sources */,
 				E5FFBD5A2B0A917500170496 /* LoadingExplore_wii.swift in Sources */,
+				E52088602CC6B0F2002771C9 /* VibesFetchAPI.swift in Sources */,
 				E58E8FAC2BA16BB8009F7E43 /* QPPlaylistLink_faero.swift in Sources */,
 				E599E8412BCC8CE400F778CA /* PlayerDebugger.swift in Sources */,
 				E5D4933C2A3062450091ED01 /* SearchAlbumLink.swift in Sources */,
 				E59E30B72A415ECA007B7874 /* NowPlayingSheet.swift in Sources */,
 				E58E8F9B2BA16BB8009F7E43 /* NPBackground_faero.swift in Sources */,
 				E5C2DD6C2A30398400E6BB97 /* ipAddress.swift in Sources */,
+				E59B3A232CC59D0B001D419A /* ExploreVibesView.swift in Sources */,
 				E5018BCB2A9130D300143967 /* StoredChecks.swift in Sources */,
 				E58CA2452B9D466E00BCBD7B /* ImportFileTrack.swift in Sources */,
 				E58E8F942BA16BB8009F7E43 /* FetchedArtistContentHeader_faero.swift in Sources */,

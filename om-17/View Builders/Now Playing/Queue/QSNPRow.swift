@@ -41,6 +41,7 @@ struct QSNPRow: View {
                         rightFade: 10,
                         startDelay: 3
                     )
+                    .foregroundStyle(.secondary)
                 }
             }
             Spacer()

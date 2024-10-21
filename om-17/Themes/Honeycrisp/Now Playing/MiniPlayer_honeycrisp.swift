@@ -22,7 +22,7 @@ struct MiniPlayer_honeycrisp: View {
             VStack(alignment: .leading, spacing: 0) {
                 if (playerManager.currentQueueItem == nil) {
                     HStack {
-                        Text("Not Playing")
+                        Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
                             .customFont(fontManager, .callout)
                         Spacer()
                     }

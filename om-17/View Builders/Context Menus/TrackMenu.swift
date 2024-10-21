@@ -44,6 +44,7 @@ struct TrackMenu: View {
                     ForEach(playlists, id: \.PlaylistID) { playlist in
                         Button(action: {
                             playlist.add_track(track: track)
+                            try? database.save()
                         }) {
                             Label(playlist.Title, systemImage: itemInPlaylist(playlist: playlist, track: track) ? "checkmark" : "")
                         }

@@ -51,6 +51,7 @@ struct QSQueueRow: View {
                         rightFade: 10,
                         startDelay: 3
                     )
+                    .foregroundStyle(.secondary)
                 }
                 Spacer()
                 if (queueItem.primeStatus == .loading) {

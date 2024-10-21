@@ -53,6 +53,9 @@ import Combine
     var shouldSuggestPlaylistCreation: Bool = false
     var hasSuggestedPlaylistCreation: Bool = false
     
+    // vibes
+    var currentVibe: VibeObject? = nil
+    
     // controls
     var lastVolume: (Float, Float, Double, Bool)? = nil // (old, new, time, valid start)
     var volumeSkipEnabled: Bool

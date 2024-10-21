@@ -23,7 +23,7 @@ struct NPMenu: View {
     var body: some View {
         Group {
             if (queueItem == nil) {
-                Text("Not Playing")
+                Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
             } else {
                 Section {
                     if isTrackStored == true {
@@ -48,8 +48,8 @@ struct NPMenu: View {
                         Menu {
                             ForEach(playlists, id: \.PlaylistID) { playlist in
                                 Button(action: {
-                                    
                                     playlist.add_track(queueItem: queueItem!)
+                                    try? database.save()
                                 }) {
                                     Label(playlist.Title, systemImage: itemInPlaylist(playlist: playlist, track: queueItem!.Track) ? "checkmark" : "")
                                 }

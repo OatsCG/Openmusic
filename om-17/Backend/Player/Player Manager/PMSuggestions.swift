@@ -10,6 +10,19 @@ import SwiftUI
 // @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
 
 extension PlayerManager {
+    func setCurrentVibe(vibe: VibeObject) {
+        withAnimation {
+            self.currentVibe = vibe
+        }
+        self.addSuggestions()
+    }
+    
+    func clearVibe() {
+        withAnimation {
+            self.currentVibe = nil
+        }
+    }
+    
     @MainActor func addSuggestions() {
         guard self.trackQueue.count < 10 else {
             return
@@ -18,9 +31,13 @@ extension PlayerManager {
             return
         }
         
-        if self.currentQueueItem != nil {
-            let songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
-            self.fetchSuggestionsModel.runSearch(songs: songs, playerManager: self)
+        if let vibe = self.currentVibe {
+            self.fetchSuggestionsModel.runSearch(vibe: vibe, playerManager: self)
+        } else {
+            if self.currentQueueItem != nil {
+                let songs: [NaiveTrack] = self.getEnjoyedSongsNaive(limit: 5)
+                self.fetchSuggestionsModel.runSearch(songs: songs, playerManager: self)
+            }
         }
     }
     

@@ -1,15 +1,16 @@
 //
-//  ExploreFetchAPI.swift
+//  VibesFetchAPI.swift
 //  om-17
 //
-//  Created by Charlie Giannis on 2023-11-19.
+//  Created by Charlie Giannis on 2024-10-21.
 //
 
 import SwiftUI
 
 // Function to fetch explore results
-func fetchExploreResults() async throws -> ExploreResults {
-    let urlString = "\(globalIPAddress())/explore"
+func fetchVibeResults() async throws -> VibeShelf {
+    let urlString = "\(globalIPAddress())/vibes"
+    print(urlString)
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
@@ -17,12 +18,12 @@ func fetchExploreResults() async throws -> ExploreResults {
     
     let (data, _) = try await URLSession.shared.data(from: url)
     let decoder = JSONDecoder()
-    return try decoder.decode(ExploreResults.self, from: data)
+    return try decoder.decode(VibeShelf.self, from: data)
 }
 
 // Actor to manage explore data
-actor ExploreViewActor {
-    private var exploreResults: ExploreResults? = nil
+actor VibesViewActor {
+    private var vibeResults: VibeShelf? = nil
     private var isSearching: Bool = false
     
     func runSearch() async throws {
@@ -31,12 +32,12 @@ actor ExploreViewActor {
         
         defer { isSearching = false }
         
-        let results = try await fetchExploreResults()
-        self.exploreResults = results
+        let results = try await fetchVibeResults()
+        self.vibeResults = results
     }
     
-    func getExploreResults() -> ExploreResults? {
-        return exploreResults
+    func getVibeResults() -> VibeShelf? {
+        return vibeResults
     }
     
     func getIsSearching() -> Bool {
@@ -46,23 +47,25 @@ actor ExploreViewActor {
 
 // ViewModel to manage view updates
 @MainActor
-@Observable class ExploreViewModel {
-    private let viewActor = ExploreViewActor()
+@Observable class VibesViewModel {
+    private let viewActor = VibesViewActor()
     
-    var exploreResults: ExploreResults? = nil
+    var vibeResults: VibeShelf? = nil
     var isSearching: Bool = false
     
     func runSearch() {
         Task {
             do {
+                print("fetching...")
                 try await viewActor.runSearch()
-                
-                let results = await viewActor.getExploreResults()
+                print("got!")
+                let results = await viewActor.getVibeResults()
+                print(results)
                 let searching = await viewActor.getIsSearching()
                 
                 await MainActor.run {
                     withAnimation {
-                        self.exploreResults = results
+                        self.vibeResults = results
                         self.isSearching = searching
                     }
                 }
@@ -80,12 +83,12 @@ actor ExploreViewActor {
         do {
             try await viewActor.runSearch()
             
-            let results = await viewActor.getExploreResults()
+            let results = await viewActor.getVibeResults()
             let searching = await viewActor.getIsSearching()
             
             await MainActor.run {
                 withAnimation {
-                    self.exploreResults = results
+                    self.vibeResults = results
                     self.isSearching = searching
                 }
             }
@@ -101,28 +104,28 @@ actor ExploreViewActor {
 }
 
 
-
-struct ExploreResults: Codable, Hashable {
-    var Shelves: [ExploreShelf]
+struct VibeShelf: Codable, Hashable {
+    var vibes: [VibeObject]
     
     private enum CodingKeys: String, CodingKey {
-        case Shelves
+        case vibes
     }
 }
 
-struct ExploreCabinet: Codable, Hashable {
-    var Shelves: [ExploreShelf]
+struct VibeObject: Codable, Hashable {
+    let title: String
+    let genre: String
+    let acousticness: Float
+    let danceability: Float
+    let energy: Float
+    let instrumentalness: Float
+    let liveness: Float
+    let mode: Int
+    let speechiness: Float
+    let valence: Float
+    let hue: Float
     
     private enum CodingKeys: String, CodingKey {
-        case Shelves
-    }
-}
-
-struct ExploreShelf: Codable, Hashable {
-    var Title: String
-    var Albums: [SearchedAlbum]
-    
-    private enum CodingKeys: String, CodingKey {
-        case Title, Albums
+        case title, genre, acousticness, danceability, energy, instrumentalness, liveness, mode, speechiness, valence, hue
     }
 }

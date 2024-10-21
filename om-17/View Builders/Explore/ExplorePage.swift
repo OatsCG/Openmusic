@@ -13,6 +13,7 @@ struct ExplorePage: View {
     @Environment(NetworkMonitor.self) var networkMonitor
     @Environment(OMUser.self) var omUser
     @State var viewModel: ExploreViewModel = ExploreViewModel()
+    @State var vibesViewModel: VibesViewModel = VibesViewModel()
     @Binding var exploreNSPath: NavigationPath
     @State var hasFirstLoaded: Bool = false
     @State var showingServerSheet: Bool = false
@@ -45,6 +46,7 @@ struct ExplorePage: View {
                                     LoadingExplore_component()
                                         .onAppear {
                                             viewModel.runSearch()
+                                            vibesViewModel.runSearch()
                                             withAnimation {
                                                 self.hasFirstLoaded = true
                                             }
@@ -54,18 +56,22 @@ struct ExplorePage: View {
                         }
                             .onAppear {
                                 viewModel.runSearch()
+                                vibesViewModel.runSearch()
                                 withAnimation {
                                     self.hasFirstLoaded = true
                                 }
                             }
                             .onChange(of: showingServerSheet) {
                                 viewModel.runSearch()
+                                vibesViewModel.runSearch()
                                 withAnimation {
                                     self.hasFirstLoaded = true
                                 }
                             }
                     } else {
                         VStack(spacing: 20) {
+                            ExploreVibesView(vibesViewModel: $vibesViewModel)
+                            Divider()
                             ExploreShelfBigView(exploreShelf: viewModel.exploreResults!.Shelves.first!)
                             Divider()
                                 .padding(.bottom, 15)
@@ -80,6 +86,7 @@ struct ExplorePage: View {
                 .frame(width: UIScreen.main.bounds.width)
                 .refreshable {
                     await viewModel.refresh()
+                    await vibesViewModel.refresh()
                 }
                 .navigationTitle("Explore")
 //                .toolbar {

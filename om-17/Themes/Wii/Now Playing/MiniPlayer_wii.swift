@@ -32,7 +32,7 @@ struct MiniPlayer_wii: View {
             Spacer()
             VStack(alignment: .leading) {
                 if (playerManager.currentQueueItem == nil) {
-                    Text("Not Playing")
+                    Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
                         .customFont(fontManager, .callout, bold: true)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)

@@ -23,7 +23,7 @@ struct NPTitles: View {
             if (playerManager.currentQueueItem == nil) {
                 VStack(alignment: .leading, spacing: 30) {
                     MarqueeText(
-                        text: "Not Playing",
+                        text: playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing",
                         font: FontManager.shared.currentThemeUIFont(fontManager, .title, bold: true),
                         leftFade: 10,
                         rightFade: 10,
