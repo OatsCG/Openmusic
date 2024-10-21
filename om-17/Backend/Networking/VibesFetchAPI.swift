@@ -10,7 +10,6 @@ import SwiftUI
 // Function to fetch explore results
 func fetchVibeResults() async throws -> VibeShelf {
     let urlString = "\(globalIPAddress())/vibes"
-    print(urlString)
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
@@ -56,11 +55,8 @@ actor VibesViewActor {
     func runSearch() {
         Task {
             do {
-                print("fetching...")
                 try await viewActor.runSearch()
-                print("got!")
                 let results = await viewActor.getVibeResults()
-                print(results)
                 let searching = await viewActor.getIsSearching()
                 
                 await MainActor.run {

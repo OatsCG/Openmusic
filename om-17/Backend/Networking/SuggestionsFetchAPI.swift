@@ -31,7 +31,6 @@ func fetchSuggestionsData(songs: [NaiveTrack]) async throws -> ImportedTracks {
 
 func fetchSuggestionsData(vibe: VibeObject) async throws -> ImportedTracks {
     let urlString = "\(globalIPAddress())/suggestVibe?genre=\(vibe.genre)&acousticness=\(vibe.acousticness)&danceability=\(vibe.danceability)&energy=\(vibe.energy)&instrumentalness=\(vibe.instrumentalness)&liveness=\(vibe.liveness)&mode=\(vibe.mode)&speechiness=\(vibe.speechiness)&valence=\(vibe.valence)"
-    print(urlString)
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

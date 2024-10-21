@@ -139,7 +139,6 @@ struct VibeBackground: View {
                 )
             )
             .onChange(of: tapping) { old, new in
-                print(old, new)
                 if new == .start {
                     withAnimation(.interactiveSpring(duration: 0.25, extraBounce: 0.06)) {
 //                        leftPosY = self.leftPosYStatic
