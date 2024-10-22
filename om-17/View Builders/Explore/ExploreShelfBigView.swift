@@ -31,7 +31,7 @@ struct ExploreShelfBigView: View {
                 }
                     .scrollTargetLayout()
             }
-                .scrollTargetBehavior(.viewAligned)
+            .scrollTargetBehavior(.viewAligned)
                 .safeAreaPadding(.horizontal, 10)
                 .scrollIndicators(.hidden)
         }

@@ -127,14 +127,14 @@ extension DownloadManager {
         return toReturn.sorted(by: { $0.Views < $1.Views })
     }
     
-    func filter_downloaded(_ tracks: [any Track]) async -> [any Track] {
-        var downloadedTracks: [any Track] = []
+    func filter_downloaded<T: Track>(_ tracks: [T]) async -> [T] {
+        var downloadedTracks: [T] = []
         for track in tracks {
             if await self.is_downloaded(track) {
                 downloadedTracks.append(track)
             }
         }
-        return(downloadedTracks)
+        return downloadedTracks
     }
     func filter_downloaded(_ tracks: [PlaylistItem]) async -> [PlaylistItem] {
         var downloadedTracks: [PlaylistItem] = []

@@ -14,8 +14,10 @@ struct LibraryAlbumsList: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     @Binding var tracks: [StoredTrack]
+    @Binding var sortType: LibrarySortType
+    @Binding var filterOnlyDownloaded: Bool
     @State var albumsTracks: Array<[StoredTrack]>? = nil
     var body: some View {
         Group {
@@ -94,10 +96,25 @@ struct LibraryAlbumsList: View {
         .onChange(of: self.tracks) {
             self.updateAlbumTracks()
         }
+        .onChange(of: self.sortType) {
+            self.updateAlbumTracks()
+        }
+        .onChange(of: self.filterOnlyDownloaded) {
+            self.updateAlbumTracks()
+        }
     }
     private func updateAlbumTracks() {
         Task {
-            let albums: Dictionary<String, [StoredTrack]> = Dictionary(grouping: tracks, by: { $0.Album.AlbumID })
+            self.albumsTracks = nil
+            
+            let downloadedRespectedTracks: [StoredTrack]
+            if self.filterOnlyDownloaded {
+                downloadedRespectedTracks = await self.downloadManager.filter_downloaded(self.tracks)
+            } else {
+                downloadedRespectedTracks = self.tracks
+            }
+            
+            let albums: Dictionary<String, [StoredTrack]> = Dictionary(grouping: downloadedRespectedTracks, by: { $0.Album.AlbumID })
             let albumTracks: Dictionary<String, [StoredTrack]>.Values = albums.values
             let albumTracksArr: Array<[StoredTrack]> = Array(albumTracks)
             
@@ -107,7 +124,17 @@ struct LibraryAlbumsList: View {
                 albumTracksSorted.append(album.sorted{$0.dateAdded > $1.dateAdded})
             }
             
-            let albumsSorted: Array<[StoredTrack]> = albumTracksSorted.sorted{ $0[0].dateAdded > $1[0].dateAdded }
+            let albumsSorted: Array<[StoredTrack]>
+            switch self.sortType {
+            case .date_up:
+                albumsSorted = albumTracksSorted.sorted{ $0[0].dateAdded > $1[0].dateAdded }
+            case .date_down:
+                albumsSorted = albumTracksSorted.sorted{ $0[0].dateAdded < $1[0].dateAdded }
+            case .title_up:
+                albumsSorted = albumTracksSorted.sorted{ $0[0].Album.Title < $1[0].Album.Title }
+            case .title_down:
+                albumsSorted = albumTracksSorted.sorted{ $0[0].Album.Title > $1[0].Album.Title }
+            }
             
             await MainActor.run {
                 self.albumsTracks = albumsSorted

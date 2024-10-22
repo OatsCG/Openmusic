@@ -20,18 +20,10 @@ struct HStackWrapped<Content: View>: View {
     }
     
     var body: some View {
-        if lazy {
-            HStack(alignment: .top) {
-                LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
-                    content
-                }
-            }
-        } else {
-            HStack(alignment: .top) {
-                LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
-                    content
-                }
-            }
+        HStack(alignment: .top) {
+//            LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
+                content
+//            }
         }
     }
 }

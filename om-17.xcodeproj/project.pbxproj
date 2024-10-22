@@ -58,6 +58,7 @@
 		E52070182B0F401B0074252D /* AlbumContentHeadingBig_wii.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52070172B0F401B0074252D /* AlbumContentHeadingBig_wii.swift */; };
 		E52088602CC6B0F2002771C9 /* VibesFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520885F2CC6B0F2002771C9 /* VibesFetchAPI.swift */; };
 		E52088622CC6CBAA002771C9 /* RefreshVibesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52088612CC6CBAA002771C9 /* RefreshVibesView.swift */; };
+		E52088642CC7290E002771C9 /* FilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52088632CC7290E002771C9 /* FilterMenu.swift */; };
 		E520B2892A5A58960031C73D /* TrackMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520B2882A5A58960031C73D /* TrackMenu.swift */; };
 		E520B28B2A5B2EF10031C73D /* LibraryArtistLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520B28A2A5B2EF10031C73D /* LibraryArtistLink.swift */; };
 		E520B28E2A5B74390031C73D /* GatherArtists.swift in Sources */ = {isa = PBXBuildFile; fileRef = E520B28D2A5B74390031C73D /* GatherArtists.swift */; };
@@ -627,6 +628,7 @@
 		E52070172B0F401B0074252D /* AlbumContentHeadingBig_wii.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumContentHeadingBig_wii.swift; sourceTree = "<group>"; };
 		E520885F2CC6B0F2002771C9 /* VibesFetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibesFetchAPI.swift; sourceTree = "<group>"; };
 		E52088612CC6CBAA002771C9 /* RefreshVibesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshVibesView.swift; sourceTree = "<group>"; };
+		E52088632CC7290E002771C9 /* FilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMenu.swift; sourceTree = "<group>"; };
 		E520B2882A5A58960031C73D /* TrackMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackMenu.swift; sourceTree = "<group>"; };
 		E520B28A2A5B2EF10031C73D /* LibraryArtistLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryArtistLink.swift; sourceTree = "<group>"; };
 		E520B28D2A5B74390031C73D /* GatherArtists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatherArtists.swift; sourceTree = "<group>"; };
@@ -1209,6 +1211,7 @@
 			isa = PBXGroup;
 			children = (
 				E52C20632A93BDDD00E2995C /* LibraryMusicPicker.swift */,
+				E52088632CC7290E002771C9 /* FilterMenu.swift */,
 			);
 			path = Music;
 			sourceTree = "<group>";
@@ -3339,6 +3342,7 @@
 				E54A3FFC2ACBB1AA007B1444 /* GlobalBackground_classic.swift in Sources */,
 				E5E6A1C12A7DBADE00880E6B /* SearchAlbumLink_classic.swift in Sources */,
 				E5A00A472B016147001C59DB /* DepthConverter.swift in Sources */,
+				E52088642CC7290E002771C9 /* FilterMenu.swift in Sources */,
 				E579DE4D2B3E7A0F009324C1 /* LoadingTracklist_spotty.swift in Sources */,
 				E58E8FD42BA172AF009F7E43 /* AVAudioFile+Extensions.swift in Sources */,
 				E5A928E72A3145D3000E52C5 /* PlaybackModesIcon.swift in Sources */,
