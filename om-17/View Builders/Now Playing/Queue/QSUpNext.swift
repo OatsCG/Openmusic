@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct QSUpNext: View {
+    @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
     @Environment(PlayerManager.self) var playerManager
     @Environment(FontManager.self) private var fontManager
     @Binding var passedNSPath: NavigationPath
@@ -28,6 +29,14 @@ struct QSUpNext: View {
                     Text("Nothing Up Next")
                         .customFont(fontManager, .title2)
                         .foregroundStyle(.secondary)
+                    if !DisableQueuingSuggestions {
+                        Button(action: {
+                            playerManager.addSuggestions()
+                        }) {
+                            AlbumWideButton_component(text: "Queue Suggestions", ArtworkID: "")
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
                 Spacer()
             }

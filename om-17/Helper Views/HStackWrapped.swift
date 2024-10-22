@@ -21,9 +21,9 @@ struct HStackWrapped<Content: View>: View {
     
     var body: some View {
         HStack(alignment: .top) {
-//            LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
+            LazyHGrid(rows: Array(repeating: GridItem(.flexible()), count: rows)) {
                 content
-//            }
+            }
         }
     }
 }
