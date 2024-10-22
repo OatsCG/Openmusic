@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ThemePreview_classic: View {
     @Environment(PlayerManager.self) var playerManager
-    @Environment(FontManager.self) var fontManager
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @AppStorage("currentTheme") var currentTheme: String = "classic"
+    var fontManager: FontManager
     @State var parallax: CGFloat = 0
     // input tracks
     @Binding var track1: FetchedTrack
@@ -24,7 +24,7 @@ struct ThemePreview_classic: View {
     @Binding var track6: FetchedTrack
     @Binding var track7: FetchedTrack
     @Binding var dot: CGFloat
-    // Positions
+    // Static Positions
     var songLinkPos: CGPoint = CGPointMake(0.65, 0.1)
     var playButtonPos: CGPoint = CGPointMake(0.2, 0.11)
     var backButtonPos: CGPoint = CGPointMake(0.85, 0.2)
@@ -126,7 +126,6 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * recentAlbumPos.y)
                 )
             
-            
             HStackWrapped(rows: 1) {
                 SearchAlbumLink_classic(album: track6.Album)
                     .frame(width: SearchAlbumLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).width, height: 210)
@@ -176,18 +175,20 @@ struct ThemePreview_classic: View {
                     y: (geo.size.height * selectButtonPos.y)
                 )
                 .onChange(of: geo.frame(in: .scrollView).minX) { oldValue, newValue in
-                    Task {
-                        let updParallax = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
-                        let updDot = 0.3 + 0.6 * min(max(1 - abs(parallax), 0), 1)
-                        DispatchQueue.main.async {
-                            self.parallax = updParallax
+                    let sminx = newValue
+                    let gsw = geo.size.width
+                    Task.detached {
+                        let updParallax = ((sminx - 30) / gsw)
+                        let updDot = 0.3 + 0.6 * min(max(1 - abs(updParallax), 0), 1)
+                        await MainActor.run {
+                            self.parallax = 0
                             self.dot = updDot
                         }
                     }
                 }
                 .onAppear {
-                    parallax = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
-                    dot = 0.3 + 0.6 * min(max(1 - abs(parallax), 0), 1)
+                    let p = ((geo.frame(in: .scrollView).minX - 30) / geo.size.width)
+                    dot = 0.3 + 0.6 * min(max(1 - abs(p), 0), 1)
                 }
         }
     }

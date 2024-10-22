@@ -68,27 +68,23 @@ struct ThemePreviews: View {
                         ForEach(1...6, id: \.self) { i in
                             Group {
                                 if i == 1 {
-                                    ThemePreview_classic(track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot1)
+                                    ThemePreview_classic(fontManager: FontManager(currentlyChosenTheme: .classic), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot1)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
-                                        .environment(FontManager(currentlyChosenTheme: .classic))
                                 } else if i == 2 {
-                                    ThemePreview_honeycrisp(track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot2)
+                                    ThemePreview_honeycrisp(fontManager: FontManager(currentlyChosenTheme: .honeycrisp), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot2)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
-                                        .environment(FontManager(currentlyChosenTheme: .honeycrisp))
                                 } else if i == 3 {
-                                    ThemePreview_wii(track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot3)
+                                    ThemePreview_wii(fontManager: FontManager(currentlyChosenTheme: .wii), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot3)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
-                                        .environment(FontManager(currentlyChosenTheme: .wii))
                                 } else if i == 4 {
-                                    ThemePreview_spotty(track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot4)
-                                        .environment(\.colorScheme, .dark)
-                                        .environment(FontManager(currentlyChosenTheme: .spotty))
+                                    ThemePreview_spotty(fontManager: FontManager(currentlyChosenTheme: .spotty), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot4)
+                                        .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
                                 } else if i == 5 {
-                                    ThemePreview_faero(track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot5)
+                                    ThemePreview_faero(fontManager: FontManager(currentlyChosenTheme: .faero), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot5)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
                                         .environment(FontManager(currentlyChosenTheme: .faero))
                                 } else if i == 6 {
-                                    ThemePreview_feco(track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot6)
+                                    ThemePreview_feco(fontManager: FontManager(currentlyChosenTheme: .feco), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot6)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
                                         .environment(FontManager(currentlyChosenTheme: .feco))
                                 }
@@ -174,8 +170,8 @@ struct ThemePreviews: View {
                     track6 = findRandomTrack()
                 } else if index == 7 {
                     track7 = findRandomTrack()
-                    Task {
-                        let item = QueueItem(from: track7, explicit: nil)
+                    Task.detached {
+                        let item = await QueueItem(from: track7, explicit: nil)
                         await MainActor.run {
                             pm.currentQueueItem = item
                             pm.update_timer(to: 5)
@@ -189,7 +185,7 @@ struct ThemePreviews: View {
     func updateTrackTimer() {
         self.timer?.invalidate()
         self.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { _ in
-            Task {
+            Task.detached {
                 await MainActor.run {
                     runUpdateTracks()
                 }
@@ -204,7 +200,7 @@ struct ThemePreviews: View {
     
     func updateTrack(index: Int) {
         self.timer = Timer.scheduledTimer(withTimeInterval: Double.random(in: 0.0...2.0), repeats: false) { _ in
-            Task {
+            Task.detached {
                 await MainActor.run {
                     withAnimation {
                         if index == 1 {
@@ -221,8 +217,8 @@ struct ThemePreviews: View {
                             track6 = findRandomTrack()
                         } else if index == 7 {
                             track7 = findRandomTrack()
-                            Task {
-                                let item = QueueItem(from: track7, explicit: nil)
+                            Task.detached {
+                                let item = await QueueItem(from: track7, explicit: nil)
                                 await MainActor.run {
                                     pm.currentQueueItem = item
                                     pm.update_timer(to: 5)

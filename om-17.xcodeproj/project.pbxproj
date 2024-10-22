@@ -524,7 +524,6 @@
 		E5E6A1E42A8066EF00880E6B /* TabBarSearchLabel_component.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E6A1E32A8066EF00880E6B /* TabBarSearchLabel_component.swift */; };
 		E5E6A1E62A80670200880E6B /* TabBarSearchLabel_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E6A1E52A80670200880E6B /* TabBarSearchLabel_classic.swift */; };
 		E5E785E32B6CB929004F4D51 /* Credits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E785E22B6CB929004F4D51 /* Credits.swift */; };
-		E5EA87852B966C5F002CE2C2 /* VibePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EA87842B966C5F002CE2C2 /* VibePage.swift */; };
 		E5ECC7F52A378934009ABD7F /* QueueSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ECC7F42A378934009ABD7F /* QueueSheet.swift */; };
 		E5EF91D72A6EBE400035B689 /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EF91D62A6EBE400035B689 /* SettingsPage.swift */; };
 		E5F2CA0C2C1520E500241B8E /* OAuthPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F2CA0B2C1520E500241B8E /* OAuthPipeline.swift */; };
@@ -1090,7 +1089,6 @@
 		E5E6A1E52A80670200880E6B /* TabBarSearchLabel_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarSearchLabel_classic.swift; sourceTree = "<group>"; };
 		E5E6DCE02A574D1C004B655E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E5E785E22B6CB929004F4D51 /* Credits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credits.swift; sourceTree = "<group>"; };
-		E5EA87842B966C5F002CE2C2 /* VibePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibePage.swift; sourceTree = "<group>"; };
 		E5ECC7F42A378934009ABD7F /* QueueSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueSheet.swift; sourceTree = "<group>"; };
 		E5EF91D62A6EBE400035B689 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		E5F2CA0B2C1520E500241B8E /* OAuthPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthPipeline.swift; sourceTree = "<group>"; };
@@ -2186,7 +2184,6 @@
 			children = (
 				E5C2DD502A2FDCB600E6BB97 /* Explore */,
 				E583D7C92B96725F001335EC /* User View */,
-				E5EA87812B966A21002CE2C2 /* Vibes */,
 				E5C2DD542A2FE49A00E6BB97 /* Search */,
 				E5C2DD532A2FE48F00E6BB97 /* Library */,
 				E5EF91D52A6EBE2E0035B689 /* Settings */,
@@ -2796,14 +2793,6 @@
 			path = Tracks;
 			sourceTree = "<group>";
 		};
-		E5EA87812B966A21002CE2C2 /* Vibes */ = {
-			isa = PBXGroup;
-			children = (
-				E5EA87842B966C5F002CE2C2 /* VibePage.swift */,
-			);
-			path = Vibes;
-			sourceTree = "<group>";
-		};
 		E5ECC7F32A378923009ABD7F /* Now Playing */ = {
 			isa = PBXGroup;
 			children = (
@@ -3192,7 +3181,6 @@
 				E579DE562B3E7A0F009324C1 /* AlbumBackground_spotty.swift in Sources */,
 				E5A534F02B02C15F00F48935 /* LoadingTracklist_wii.swift in Sources */,
 				E52C20702A93D39D00E2995C /* QPPlaylistTracks.swift in Sources */,
-				E5EA87852B966C5F002CE2C2 /* VibePage.swift in Sources */,
 				E5E6A1E62A80670200880E6B /* TabBarSearchLabel_classic.swift in Sources */,
 				E59A42E22A8ECD3400B4742F /* QueueItemMenu.swift in Sources */,
 				E599E7042B69B9ED00E5E14F /* PlaybackOptions.swift in Sources */,
