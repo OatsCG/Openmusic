@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 @Observable class OMUser {
     // main
     var userID: String
