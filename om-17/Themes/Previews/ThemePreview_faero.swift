@@ -188,7 +188,7 @@ struct ThemePreview_faero: View {
                         let updParallax = ((sminx - 30) / gsw)
                         let updDot = 0.3 + 0.6 * min(max(1 - abs(updParallax), 0), 1)
                         await MainActor.run {
-                            self.parallax = updParallax
+                            self.parallax = 0
                             self.dot = updDot
                         }
                     }

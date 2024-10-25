@@ -57,7 +57,7 @@ struct PlaylistItemLink: View {
                             .customFont(fontManager, .callout)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)
-                        Text(secondsToText(seconds: item.track.Length) + ((item.track.Features.count > 0) ? (" • " + stringArtists(artistlist: item.track.Features)) : ""))
+                        Text(secondsToText(seconds: item.track.Length) + ((item.track.Features.count > 0) ? (" • " + stringArtists(artistlist: item.track.Features)) : "") + ((item.track.Album.Artists.count > 0) ? (" • " + stringArtists(artistlist: item.track.Album.Artists, exclude: item.track.Features)) : ""))
                             .foregroundColor(.secondary)
                             .customFont(fontManager, .caption)
                             .multilineTextAlignment(.leading)

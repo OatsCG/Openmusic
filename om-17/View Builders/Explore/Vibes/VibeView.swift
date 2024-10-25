@@ -98,7 +98,6 @@ struct VibeBackground: View {
     @State var saturationAdditive: Double
     init(mainHue: Double, tapping: Binding<VibeTap>) {
         self.seed = UUID()
-        print("RUNNING HERE")
         self._tapping = tapping
         let r = Random(seed)
         self.mainHue = mainHue

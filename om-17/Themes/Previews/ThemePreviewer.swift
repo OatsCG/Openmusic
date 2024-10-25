@@ -78,7 +78,7 @@ struct ThemePreviews: View {
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
                                 } else if i == 4 {
                                     ThemePreview_spotty(fontManager: FontManager(currentlyChosenTheme: .spotty), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot4)
-                                        .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
+                                        .environment(\.colorScheme, .dark)
                                 } else if i == 5 {
                                     ThemePreview_faero(fontManager: FontManager(currentlyChosenTheme: .faero), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot5)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))

@@ -23,14 +23,13 @@ extension PlayerManager {
         }
     }
     
-    @MainActor func addSuggestions() {
+    @MainActor func addSuggestions(noQuestionsAsked: Bool = false) {
         guard self.trackQueue.count < 10 else {
             return
         }
         guard UserDefaults.standard.bool(forKey: "DisableQueuingSuggestions") == false else {
             return
         }
-        
         if let vibe = self.currentVibe {
             self.fetchSuggestionsModel.runSearch(vibe: vibe, playerManager: self)
         } else {

@@ -29,9 +29,9 @@ struct QSUpNext: View {
                     Text("Nothing Up Next")
                         .customFont(fontManager, .title2)
                         .foregroundStyle(.secondary)
-                    if !DisableQueuingSuggestions {
+                    if !DisableQueuingSuggestions && playerManager.currentVibe != nil {
                         Button(action: {
-                            playerManager.addSuggestions()
+                            playerManager.addSuggestions(noQuestionsAsked: true)
                         }) {
                             AlbumWideButton_component(text: "Queue Suggestions", ArtworkID: "")
                         }
