@@ -14,11 +14,11 @@ struct NPMenu: View {
     @Environment(OMUser.self) var omUser
     @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var queueItem: QueueItem?
-    @State var playlists: [StoredPlaylist]
+    @Binding var playlists: [StoredPlaylist]
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
-    @State var isDownloadedExp: Bool = false
-    @State var isDownloadedClean: Bool = false
+    @State var isDownloadedExp: Bool? = nil
+    @State var isDownloadedClean: Bool? = nil
     @State var isTrackStored: Bool? = nil
     var body: some View {
         Group {
@@ -26,23 +26,27 @@ struct NPMenu: View {
                 Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
             } else {
                 Section {
-                    if isTrackStored == true {
-                        Button(role: .destructive, action: {
-                            Task {
-                                if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem!.Track.TrackID) {
-                                    await database.delete(fetchedTrack)
-                                    try? database.save()
+                    if let isTrackStored {
+                        if isTrackStored == true {
+                            Button(role: .destructive, action: {
+                                Task {
+                                    if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem!.Track.TrackID) {
+                                        await database.delete(fetchedTrack)
+                                        try? database.save()
+                                    }
                                 }
+                            }) {
+                                Label("Remove from Library", systemImage: "minus.circle")
                             }
-                        }) {
-                            Label("Remove from Library", systemImage: "minus.circle")
+                        } else {
+                            Button(action: {
+                                database.store_track(queueItem!)
+                            }) {
+                                Label("Add to Library", systemImage: "plus.circle")
+                            }
                         }
                     } else {
-                        Button(action: {
-                            database.store_track(queueItem!)
-                        }) {
-                            Label("Add to Library", systemImage: "plus.circle")
-                        }
+                        Label("Add to Library...", systemImage: "circle.dashed")
                     }
                     if playlists.count > 0 {
                         Menu {
@@ -112,21 +116,25 @@ struct NPMenu: View {
                     if queueItem!.Track.Playback_Clean != nil && queueItem!.Track.Playback_Explicit != nil {
                         Menu {
                             Section {
-                                if isDownloadedClean {
-                                    Button(role: .destructive) {
-                                        //print("REMOVE DOWNLOAD \(queueItem!.Playback_Clean!)")
-                                        downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Clean!)
-                                    } label: {
-                                        Label("Remove Download", systemImage: "trash")
-                                            .symbolRenderingMode(.multicolor)
+                                if let isDownloadedClean {
+                                    if isDownloadedClean {
+                                        Button(role: .destructive) {
+                                            //print("REMOVE DOWNLOAD \(queueItem!.Playback_Clean!)")
+                                            downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Clean!)
+                                        } label: {
+                                            Label("Remove Download", systemImage: "trash")
+                                                .symbolRenderingMode(.multicolor)
+                                        }
+                                    } else {
+                                        Button {
+                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: false)
+                                        } label: {
+                                            Label("Download", systemImage: "square.and.arrow.down")
+                                                .symbolRenderingMode(.hierarchical)
+                                        }
                                     }
                                 } else {
-                                    Button {
-                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: false)
-                                    } label: {
-                                        Label("Download", systemImage: "square.and.arrow.down")
-                                            .symbolRenderingMode(.hierarchical)
-                                    }
+                                    Label("Download...", systemImage: "circle.dashed")
                                 }
                             }
                             Section {
@@ -151,27 +159,31 @@ struct NPMenu: View {
                             }
                         } label: {
                             Label("Clean", systemImage: "c.square")
-                            if isDownloadedClean {
+                            if let isDownloadedClean, isDownloadedClean {
                                 Text("Downloaded")
                             }
                         }
                         Menu {
                             Section {
-                                if isDownloadedExp {
-                                    Button(role: .destructive) {
-                                        downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Explicit!)
-                                        //print("REMOVE DOWNLOAD \(queueItem!.Playback_Explicit!)")
-                                    } label: {
-                                        Label("Remove Download", systemImage: "trash")
-                                            .symbolRenderingMode(.multicolor)
+                                if let isDownloadedExp {
+                                    if isDownloadedExp {
+                                        Button(role: .destructive) {
+                                            downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Explicit!)
+                                            //print("REMOVE DOWNLOAD \(queueItem!.Playback_Explicit!)")
+                                        } label: {
+                                            Label("Remove Download", systemImage: "trash")
+                                                .symbolRenderingMode(.multicolor)
+                                        }
+                                    } else {
+                                        Button {
+                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: true)
+                                        } label: {
+                                            Label("Download", systemImage: "square.and.arrow.down")
+                                                .symbolRenderingMode(.hierarchical)
+                                        }
                                     }
                                 } else {
-                                    Button {
-                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: true)
-                                    } label: {
-                                        Label("Download", systemImage: "square.and.arrow.down")
-                                            .symbolRenderingMode(.hierarchical)
-                                    }
+                                    Label("Download...", systemImage: "circle.dashed")
                                 }
                             }
                             Section {
@@ -196,7 +208,7 @@ struct NPMenu: View {
                             }
                         } label: {
                             Label("Explicit", systemImage: "e.square")
-                            if isDownloadedExp {
+                            if let isDownloadedExp, isDownloadedExp {
                                 Text("Downloaded")
                             }
                         }
@@ -208,22 +220,31 @@ struct NPMenu: View {
                         }
                     } else if queueItem!.Track.Playback_Clean != nil {
                         Section {
-                            if isDownloadedClean {
-                                Button(role: .destructive) {
-                                    //print("REMOVE DOWNLOAD \(track!.Playback_Clean!)")
-                                    downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Clean!)
-                                } label: {
-                                    Label("Remove Download", systemImage: "trash")
-                                        .symbolRenderingMode(.multicolor)
+                            if let isDownloadedClean {
+                                if isDownloadedClean {
+                                    Button(role: .destructive) {
+                                        //print("REMOVE DOWNLOAD \(track!.Playback_Clean!)")
+                                        downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Clean!)
+                                    } label: {
+                                        Label("Remove Download", systemImage: "trash")
+                                            .symbolRenderingMode(.multicolor)
+                                        Text("Clean")
+                                    }
+                                } else {
+                                    Button {
+                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: false)
+                                    } label: {
+                                        Label("Download", systemImage: "square.and.arrow.down")
+                                            .symbolRenderingMode(.hierarchical)
+                                        Text("Clean")
+                                    }
                                 }
                             } else {
-                                Button {
-                                    downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: false)
-                                } label: {
-                                    Label("Download", systemImage: "square.and.arrow.down")
-                                        .symbolRenderingMode(.hierarchical)
+                                Button {} label: {
+                                    Label("Download...", systemImage: "circle.dashed")
                                     Text("Clean")
                                 }
+                                .disabled(true)
                             }
                         }
                         Section {
@@ -248,21 +269,30 @@ struct NPMenu: View {
                         }
                     } else if queueItem!.Track.Playback_Explicit != nil {
                         Section {
-                            if isDownloadedExp {
-                                Button(role: .destructive) {
-                                    downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Explicit!)
-                                    //print("REMOVE DOWNLOAD \(track!.Playback_Explicit!)")
-                                } label: {
-                                    Label("Remove Download", systemImage: "trash")
-                                        .symbolRenderingMode(.multicolor)
+                            if let isDownloadedExp {
+                                if isDownloadedExp {
+                                    Button(role: .destructive) {
+                                        downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Explicit!)
+                                        //print("REMOVE DOWNLOAD \(track!.Playback_Explicit!)")
+                                    } label: {
+                                        Label("Remove Download", systemImage: "trash")
+                                            .symbolRenderingMode(.multicolor)
+                                        Text("Explicit")
+                                    }
+                                } else {
+                                    Button {
+                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: true)
+                                    } label: {
+                                        Label("Download", systemImage: "square.and.arrow.down")
+                                        Text("Explicit")
+                                    }
                                 }
                             } else {
-                                Button {
-                                    downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: true)
-                                } label: {
-                                    Label("Download", systemImage: "square.and.arrow.down")
+                                Button {} label: {
+                                    Label("Download...", systemImage: "circle.dashed")
                                     Text("Explicit")
                                 }
+                                .disabled(true)
                             }
                         }
                         Section {

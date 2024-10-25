@@ -92,7 +92,7 @@ struct NPTitles: View {
                         Spacer()
                         if !fullscreen {
                             Menu {
-                                NPMenu(queueItem: playerManager.currentQueueItem, playlists: playlists, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
+                                NPMenu(queueItem: playerManager.currentQueueItem, playlists: $playlists, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
                             } label: {
                                 Image(systemName: "ellipsis.circle.fill")
                                     .symbolRenderingMode(.hierarchical)

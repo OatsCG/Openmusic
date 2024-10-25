@@ -17,27 +17,31 @@ struct QueueItemMenu: View {
     var queueItem: QueueItem
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
-    @State var isDownloaded: Bool = false
+    @State var isDownloaded: Bool? = nil
     @State var isTrackStored: Bool? = nil
     var body: some View {
         Section {
-            if isTrackStored == true {
-                Button(role: .destructive, action: {
-                    Task {
-                        if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem.Track.TrackID) {
-                            await database.delete(fetchedTrack)
-                            try? database.save()
+            if let isTrackStored {
+                if isTrackStored == true {
+                    Button(role: .destructive, action: {
+                        Task {
+                            if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem.Track.TrackID) {
+                                await database.delete(fetchedTrack)
+                                try? database.save()
+                            }
                         }
+                    }) {
+                        Label("Remove from Library", systemImage: "minus.circle")
                     }
-                }) {
-                    Label("Remove from Library", systemImage: "minus.circle")
+                } else {
+                    Button(action: {
+                        database.store_track(queueItem)
+                    }) {
+                        Label("Add to Library", systemImage: "plus.circle")
+                    }
                 }
             } else {
-                Button(action: {
-                    database.store_track(queueItem)
-                }) {
-                    Label("Add to Library", systemImage: "plus.circle")
-                }
+                Label("Add to Library...", systemImage: "circle.dashed")
             }
             if playlists.count > 0 {
                 Menu {
@@ -114,21 +118,30 @@ struct QueueItemMenu: View {
                     //square.on.square.dashed
                 }
             }
-            if isDownloaded {
-                Button(role: .destructive) {
-                    downloadManager.delete_playback(PlaybackID: queueItem.explicit ? queueItem.Track.Playback_Explicit! : queueItem.Track.Playback_Clean!)
-                } label: {
-                    Label("Remove Download", systemImage: "trash")
-                        .symbolRenderingMode(.multicolor)
+            if let isDownloaded {
+                if isDownloaded {
+                    Button(role: .destructive) {
+                        downloadManager.delete_playback(PlaybackID: queueItem.explicit ? queueItem.Track.Playback_Explicit! : queueItem.Track.Playback_Clean!)
+                    } label: {
+                        Label("Remove Download", systemImage: "trash")
+                            .symbolRenderingMode(.multicolor)
+                        Text(queueItem.explicit ? "Explicit" : "Clean")
+                    }
+                } else {
+                    Button {
+                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
+                    } label: {
+                        Label("Download", systemImage: "square.and.arrow.down")
+                            .symbolRenderingMode(.hierarchical)
+                        Text(queueItem.explicit ? "Explicit" : "Clean")
+                    }
                 }
             } else {
-                Button {
-                    downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
-                } label: {
-                    Label("Download", systemImage: "square.and.arrow.down")
-                        .symbolRenderingMode(.hierarchical)
+                Button {} label: {
+                    Label("Download...", systemImage: "circle.dashed")
                     Text(queueItem.explicit ? "Explicit" : "Clean")
                 }
+                .disabled(true)
             }
         }
         Section {

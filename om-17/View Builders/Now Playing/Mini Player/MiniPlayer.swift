@@ -36,7 +36,7 @@ struct MiniPlayer: View {
                 MiniPlayer_component(namespace: namespace)
                     
                     .contextMenu {
-                        NPMenu(queueItem: playerManager.currentQueueItem, playlists: playlists, passedNSPath: $passedNSPath, showingNPSheet: .constant(true))
+                        NPMenu(queueItem: playerManager.currentQueueItem, playlists: $playlists, passedNSPath: $passedNSPath, showingNPSheet: .constant(true))
                             .environment(fontManager)
                     }
                     .onTapGesture {

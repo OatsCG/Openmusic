@@ -11,7 +11,7 @@ import SwiftData
 struct PlaylistMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
-    var playlist: StoredPlaylist
+    var playlist: StoredPlaylist // dont have to "loading" this
     var body: some View {
         Section {
             if (playlist.pinned == false) {

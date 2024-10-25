@@ -14,7 +14,7 @@ struct SearchAlbumMenu: View {
     @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var searchedAlbum: SearchedAlbum
     @State var album: FetchedAlbum? = nil
-    @State var arePlaybacksDownloaded: Bool = false
+    @State var arePlaybacksDownloaded: Bool = false // dont have to make this optional
     @State var areTracksStored: Bool? = nil
     var body: some View {
         Group {

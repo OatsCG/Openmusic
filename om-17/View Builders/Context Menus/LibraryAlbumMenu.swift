@@ -14,48 +14,39 @@ struct LibraryAlbumMenu: View {
     @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
     var album: StoredAlbum
     @State var arePlaybacksDownloaded: Bool = false
-    @State var areTracksStored: Bool? = nil
     var body: some View {
-        if areTracksStored == true {
+        Button(role: .destructive, action: {
+            Task {
+                for track in album.Tracks {
+                    if let fetchedTrack = await database.fetch_persistent_track(TrackID: track.TrackID) {
+                        await database.delete(fetchedTrack)
+                        try? database.save()
+                    }
+                }
+            }
+        }) {
+            Label("Remove from Library", systemImage: "minus.circle")
+        }
+        if arePlaybacksDownloaded {
             Button(role: .destructive, action: {
-                Task {
-                    for track in album.Tracks {
-                        if let fetchedTrack = await database.fetch_persistent_track(TrackID: track.TrackID) {
-                            await database.delete(fetchedTrack)
-                            try? database.save()
-                        }
+                for track in album.Tracks {
+                    if track.Playback_Clean != nil {
+                        downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
+                    }
+                    if track.Playback_Explicit != nil {
+                        downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
                     }
                 }
             }) {
-                Label("Remove from Library", systemImage: "minus.circle")
-            }
-            if arePlaybacksDownloaded {
-                Button(role: .destructive, action: {
-                    for track in album.Tracks {
-                        if track.Playback_Clean != nil {
-                            downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
-                        }
-                        if track.Playback_Explicit != nil {
-                            downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
-                        }
-                    }
-                }) {
-                    Label("Remove Downloads", systemImage: "trash")
-                }
-            } else {
-                Button(action: {
-                    for track in album.Tracks {
-                        downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
-                    }
-                }) {
-                    Label("Download Album", systemImage: "square.and.arrow.down")
-                }
+                Label("Remove Downloads", systemImage: "trash")
             }
         } else {
             Button(action: {
-                database.store_tracks(album.Tracks)
+                for track in album.Tracks {
+                    downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
+                }
             }) {
-                Label("Add to Library", systemImage: "plus.circle")
+                Label("Download Album", systemImage: "square.and.arrow.down")
             }
         }
         
@@ -145,22 +136,13 @@ struct LibraryAlbumMenu: View {
         .onAppear {
             Task {
                 await self.updateArePlaybacksDownloaded()
-                await self.updateAreTracksStored()
             }
         }
-        
-
     }
     func updateArePlaybacksDownloaded() async {
         let arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
         await MainActor.run {
             self.arePlaybacksDownloaded = arePlaybacksDownloaded
-        }
-    }
-    func updateAreTracksStored() async {
-        let areTracksStored = await database.are_tracks_stored(tracks: album.Tracks)
-        await MainActor.run {
-            self.areTracksStored = areTracksStored
         }
     }
 }
