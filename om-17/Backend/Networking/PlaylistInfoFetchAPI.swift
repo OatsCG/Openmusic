@@ -23,10 +23,15 @@ func fetchPlaylistInfoData(playlistID: String, type: Platform) async throws -> F
 // Actor to manage playlist info data
 actor PlaylistInfoViewActor {
     private var fetchedPlaylistInfo: FetchedPlaylistInfo? = nil
+    var fetchID: UUID = UUID()
     
     func runSearch(playlistID: String, type: Platform) async throws {
+        let thisFetchID: UUID = UUID()
+        self.fetchID = thisFetchID
         let playlistInfo = try await fetchPlaylistInfoData(playlistID: playlistID, type: type)
-        self.fetchedPlaylistInfo = playlistInfo
+        if self.fetchID == thisFetchID {
+            self.fetchedPlaylistInfo = playlistInfo
+        }
     }
     
     func getFetchedPlaylistInfo() -> FetchedPlaylistInfo? {
@@ -39,6 +44,7 @@ actor PlaylistInfoViewActor {
 @Observable class PlaylistInfoViewModel {
     private let viewActor = PlaylistInfoViewActor()
     
+    var isFetching: Bool = false
     var fetchedPlaylistInfo: FetchedPlaylistInfo? = nil
     
     func runSearch(playlistURL: String) {
@@ -51,14 +57,23 @@ actor PlaylistInfoViewActor {
             
             do {
                 // Fetch playlist info
+                await MainActor.run {
+                    self.isFetching = true
+                }
                 try await viewActor.runSearch(playlistID: naivePlaylistInfo.id, type: naivePlaylistInfo.platform)
                 
                 let playlistInfo = await viewActor.getFetchedPlaylistInfo()
                 
                 await MainActor.run {
-                    self.fetchedPlaylistInfo = playlistInfo
+                    self.isFetching = false
+                    withAnimation {
+                        self.fetchedPlaylistInfo = playlistInfo
+                    }
                 }
             } catch {
+                await MainActor.run {
+                    self.isFetching = false
+                }
                 print("Error: \(error)")
             }
         }

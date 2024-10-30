@@ -13,7 +13,7 @@ struct LibraryPlaylistsList: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     //@Query(sort: \StoredPlaylist.dateCreated, order: .reverse) private var playlists: [StoredPlaylist]
     @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
-    @State var playlists: [StoredPlaylist]? = nil
+    @Binding var playlists: [StoredPlaylist]?
     @Binding var libraryNSPath: NavigationPath
     //var playlists: [Playlist]
     var body: some View {

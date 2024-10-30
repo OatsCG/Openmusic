@@ -14,6 +14,7 @@ struct LibraryPage: View {
     @State var selectedPick: LibraryPicks = .recents
     @Binding var libraryNSPath: NavigationPath
     @State var tracks: [StoredTrack] = []
+    @State var playlists: [StoredPlaylist]? = nil
     var body: some View {
         ZStack {
             NavigationStack(path: $libraryNSPath) {
@@ -21,12 +22,12 @@ struct LibraryPage: View {
                     VStack {
                         LibraryPicker(selectedPick: $selectedPick)
                         LiveDownloadsList()
-                        LiveImportingList()
+                        LiveImportingList(playlists: $playlists)
                         switch selectedPick {
                             case .music:
                                 LibraryMusicPicker(tracks: $tracks)
                             case .playlists:
-                                LibraryPlaylistsList(libraryNSPath: $libraryNSPath)
+                                LibraryPlaylistsList(playlists: $playlists, libraryNSPath: $libraryNSPath)
                             case .recents:
                                 LibraryRecentsList(tracks: $tracks)
                         }

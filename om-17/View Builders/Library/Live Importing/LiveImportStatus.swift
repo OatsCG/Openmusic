@@ -10,6 +10,7 @@ import SwiftUI
 struct LiveImportStatus: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     var playlist: ImportedPlaylist
+    @State var importProgress: Double = 0
     var body: some View {
         Group {
             if playlist.is_importing_successful() {
@@ -21,8 +22,13 @@ struct LiveImportStatus: View {
                     .imageScale(.large)
             } else {
                 if let plist = playlistImporter.get_playlist(playlistID: playlist.PlaylistID) {
-                    CircularProgressView(progress: plist.import_progress())
+                    CircularProgressView(progress: importProgress)
                 }
+            }
+        }
+        .onChange(of: playlist.import_progress()) { oldValue, newValue in
+            withAnimation {
+                importProgress = newValue
             }
         }
     }

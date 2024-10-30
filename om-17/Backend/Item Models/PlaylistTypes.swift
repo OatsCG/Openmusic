@@ -296,11 +296,6 @@ struct PlaylistItem: Codable, Hashable {
         } else {
             return false
         }
-//        if self.items.contains(where: { $0.importData.status == .hold || $0.importData.status == .importing }) {
-//            return false
-//        } else {
-//            return true
-//        }
     }
     
     func import_progress() -> Double {

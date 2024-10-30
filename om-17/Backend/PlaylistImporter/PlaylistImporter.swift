@@ -82,7 +82,7 @@ import SwiftData
                 let storedPlaylist = await StoredPlaylist(from: playlist)
                 await self.currentContext?.insert(storedPlaylist)
                 try? self.currentContext?.save()
-                self.newPlaylists.remove(at: finishedPlaylistIndex)
+                self.newPlaylists.removeAll(where: {$0.PlaylistID == playlist.PlaylistID})
             }
         }
     }
