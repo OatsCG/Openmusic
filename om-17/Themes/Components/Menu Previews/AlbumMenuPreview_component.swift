@@ -24,6 +24,8 @@ struct AlbumMenuPreview_component: View {
             AlbumMenuPreview_faero(album: album)
         case "feco":
             AlbumMenuPreview_faero(album: album)
+        case "linen":
+            AlbumMenuPreview_linen(album: album)
         default:
             AlbumMenuPreview_classic(album: album)
         }

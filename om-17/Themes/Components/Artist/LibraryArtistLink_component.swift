@@ -24,6 +24,8 @@ struct LibraryArtistLink_component: View {
             LibraryArtistLink_faero(artist: artist)
         case "feco":
             LibraryArtistLink_faero(artist: artist)
+        case "linen":
+            LibraryArtistLink_linen(artist: artist)
         default:
             LibraryArtistLink_classic(artist: artist)
         }

@@ -28,6 +28,8 @@ struct AlbumContentHeading_component: View {
                 AlbumContentHeadingBig_faero(album: album, tracks: tracks)
             case "feco":
                 AlbumContentHeadingBig_faero(album: album, tracks: tracks)
+            case "linen":
+                AlbumContentHeadingBig_linen(album: album, tracks: tracks)
             default:
                 AlbumContentHeadingBig_classic(album: album, tracks: tracks)
             }
@@ -45,6 +47,8 @@ struct AlbumContentHeading_component: View {
                 AlbumContentHeading_faero(album: album, tracks: tracks)
             case "feco":
                 AlbumContentHeading_faero(album: album, tracks: tracks)
+            case "linen":
+                AlbumContentHeading_linen(album: album, tracks: tracks)
             default:
                 AlbumContentHeading_classic(album: album, tracks: tracks)
             }

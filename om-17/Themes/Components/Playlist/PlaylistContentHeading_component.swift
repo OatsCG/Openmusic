@@ -27,6 +27,8 @@ struct PlaylistContentHeading_component: View {
                 PlaylistContentHeadingBig_faero(playlist: playlist)
             case "feco":
                 PlaylistContentHeadingBig_faero(playlist: playlist)
+            case "linen":
+                PlaylistContentHeadingBig_linen(playlist: playlist)
             default:
                 PlaylistContentHeadingBig_classic(playlist: playlist)
             }
@@ -44,6 +46,8 @@ struct PlaylistContentHeading_component: View {
                 PlaylistContentHeading_faero(playlist: playlist)
             case "feco":
                 PlaylistContentHeading_faero(playlist: playlist)
+            case "linen":
+                PlaylistContentHeading_linen(playlist: playlist)
             default:
                 PlaylistContentHeading_classic(playlist: playlist)
             }

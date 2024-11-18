@@ -24,6 +24,8 @@ struct TabBarSearchLabel_component: View {
             TabBarSearchLabel_faero()
         case "feco":
             TabBarSearchLabel_faero()
+        case "linen":
+            TabBarSearchLabel_linen()
         default:
             TabBarSearchLabel_classic()
         }

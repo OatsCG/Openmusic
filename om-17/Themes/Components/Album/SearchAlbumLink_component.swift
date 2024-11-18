@@ -28,6 +28,8 @@ struct SearchAlbumLink_component: View {
                 SearchAlbumLink_faero(album: album)
             case "feco":
                 SearchAlbumLink_faero(album: album)
+            case "linen":
+                SearchAlbumLink_linen(album: album)
             default:
                 SearchAlbumLink_classic(album: album)
             }
@@ -56,6 +58,8 @@ struct SearchAlbumLinkBig_component: View {
                 SearchAlbumLink_faero(album: album)
             case "feco":
                 SearchAlbumLink_faero(album: album)
+            case "linen":
+                SearchAlbumLink_linen(album: album)
             default:
                 SearchAlbumLink_classic(album: album)
             }

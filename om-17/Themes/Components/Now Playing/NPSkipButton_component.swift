@@ -23,6 +23,8 @@ struct NPSkipButton_component: View {
             NPSkipButton_faero()
         case "feco":
             NPSkipButton_faero()
+        case "linen":
+            NPSkipButton_linen()
         default:
             NPSkipButton_classic()
         }

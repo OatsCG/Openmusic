@@ -24,6 +24,8 @@ struct ArtistBackground_component: View {
             AlbumBackground_faero(artwork: artwork)
         case "feco":
             AlbumBackground_feco(artwork: artwork)
+        case "linen":
+            AlbumBackground_linen(artwork: artwork)
         default:
             AlbumBackground_classic(artwork: artwork)
         }

@@ -23,6 +23,8 @@ struct LoadingBigTracks_component: View {
             LoadingBigTracks_classic()
         case "feco":
             LoadingBigTracks_classic()
+        case "linen":
+            LoadingBigTracks_classic()
         default:
             LoadingBigTracks_classic()
         }

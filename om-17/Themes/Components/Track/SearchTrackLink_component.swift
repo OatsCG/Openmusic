@@ -27,6 +27,8 @@ struct SearchTrackLink_component: View {
                 SearchTrackLink_faero(track: track)
             case "feco":
                 SearchTrackLink_faero(track: track)
+            case "linen":
+                SearchTrackLink_linen(track: track)
             default:
                 SearchTrackLink_classic(track: track)
             }

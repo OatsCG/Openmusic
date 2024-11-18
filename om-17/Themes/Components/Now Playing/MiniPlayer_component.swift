@@ -34,6 +34,8 @@ struct MiniPlayer_component: View {
                         MiniPlayer_faero()
                     case "feco":
                         MiniPlayer_faero()
+                    case "linen":
+                        MiniPlayer_linen()
                     default:
                         MiniPlayer_classic()
                     }
@@ -56,6 +58,8 @@ struct MiniPlayer_component: View {
                         MiniPlayer_faero()
                     case "feco":
                         MiniPlayer_faero()
+                    case "linen":
+                        MiniPlayer_linen()
                     default:
                         MiniPlayer_classic()
                     }

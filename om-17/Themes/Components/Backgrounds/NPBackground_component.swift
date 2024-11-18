@@ -25,6 +25,8 @@ struct NPBackground_component: View {
             NPBackground_faero(album: album, fullscreen: $fullscreen)
         case "feco":
             NPBackground_feco(album: album, fullscreen: $fullscreen)
+        case "linen":
+            NPBackground_linen(album: album, fullscreen: $fullscreen)
         default:
             NPBackground_classic(album: album, fullscreen: $fullscreen)
         }

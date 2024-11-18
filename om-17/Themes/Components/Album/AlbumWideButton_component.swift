@@ -26,6 +26,8 @@ struct AlbumWideButton_component: View {
             AlbumWideButton_faero(text: text, ArtworkID: ArtworkID)
         case "feco":
             AlbumWideButton_faero(text: text, ArtworkID: ArtworkID)
+        case "linen":
+            AlbumWideButton_linen(text: text, ArtworkID: ArtworkID)
         default:
             AlbumWideButton_classic(text: text, ArtworkID: ArtworkID)
         }

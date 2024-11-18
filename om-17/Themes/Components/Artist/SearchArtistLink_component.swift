@@ -27,6 +27,8 @@ struct SearchArtistLink_component: View {
                 SearchArtistLink_faero(artist: artist)
             case "feco":
                 SearchArtistLink_faero(artist: artist)
+            case "linen":
+                SearchArtistLink_linen(artist: artist)
             default:
                 SearchArtistLink_classic(artist: artist)
             }

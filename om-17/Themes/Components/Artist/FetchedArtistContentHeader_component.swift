@@ -24,6 +24,8 @@ struct FetchedArtistContentHeader_component: View {
             FetchedArtistContentHeader_faero(artist: artist)
         case "feco":
             FetchedArtistContentHeader_faero(artist: artist)
+        case "linen":
+            FetchedArtistContentHeader_linen(artist: artist)
         default:
             FetchedArtistContentHeader_classic(artist: artist)
         }

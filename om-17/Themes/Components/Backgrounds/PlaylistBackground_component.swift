@@ -24,6 +24,8 @@ struct PlaylistBackground_component: View {
             PlaylistBackground_faero(playlist: playlist)
         case "feco":
             PlaylistBackground_feco(playlist: playlist)
+        case "linen":
+            PlaylistBackground_linen(playlist: playlist)
         default:
             PlaylistBackground_classic(playlist: playlist)
         }

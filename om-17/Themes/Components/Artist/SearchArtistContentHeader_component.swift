@@ -24,6 +24,8 @@ struct SearchArtistContentHeader_component: View {
             SearchArtistContentHeader_faero(artist: artist)
         case "feco":
             SearchArtistContentHeader_faero(artist: artist)
+        case "linen":
+            SearchArtistContentHeader_linen(artist: artist)
         default:
             SearchArtistContentHeader_classic(artist: artist)
         }

@@ -24,6 +24,8 @@ struct PlaylistContentHeadingEditing_component: View {
             PlaylistContentHeadingEditing_faero(playlist: playlist)
         case "feco":
             PlaylistContentHeadingEditing_faero(playlist: playlist)
+        case "linen":
+            PlaylistContentHeadingEditing_linen(playlist: playlist)
         default:
             PlaylistContentHeadingEditing_classic(playlist: playlist)
         }

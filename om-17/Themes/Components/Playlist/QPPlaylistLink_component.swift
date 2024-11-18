@@ -27,6 +27,8 @@ struct QPPlaylistLink_component: View {
                 QPPlaylistLink_faero(playlist: playlist)
             case "feco":
                 QPPlaylistLink_faero(playlist: playlist)
+            case "linen":
+                QPPlaylistLink_linen(playlist: playlist)
             default:
                 QPPlaylistLink_classic(playlist: playlist)
             }

@@ -23,6 +23,8 @@ struct LoadingSearchResults_component: View {
             LoadingSearchResults_faero()
         case "feco":
             LoadingSearchResults_faero()
+        case "linen":
+            LoadingSearchResults_linen()
         default:
             LoadingSearchResults_classic()
         }

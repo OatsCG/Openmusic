@@ -24,6 +24,8 @@ struct TabBarLibraryLabel_component: View {
             TabBarLibraryLabel_faero()
         case "feco":
             TabBarLibraryLabel_faero()
+        case "linen":
+            TabBarLibraryLabel_linen()
         default:
             TabBarLibraryLabel_classic()
         }

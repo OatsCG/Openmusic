@@ -24,6 +24,8 @@ struct QPMultipleLink_component: View {
             QPMultipleLink_faero(tracks: tracks)
         case "feco":
             QPMultipleLink_faero(tracks: tracks)
+        case "linen":
+            QPMultipleLink_linen(tracks: tracks)
         default:
             QPMultipleLink_classic(tracks: tracks)
         }

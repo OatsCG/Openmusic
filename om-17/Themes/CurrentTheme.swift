@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Theme: String, Identifiable, CaseIterable {
-    case classic, honeycrisp, wii, spotty, faero, feco
+    case classic, honeycrisp, wii, spotty, faero, feco, linen
     var id: Self { self }
 }
 
@@ -31,6 +31,8 @@ func availableAppearances(theme: Theme) -> [Appearance] {
         return [.auto, .light, .dark]
     case .feco:
         return [.auto, .light, .dark]
+    case .linen:
+        return [.auto, .light, .dark]
     }
 }
 
@@ -48,6 +50,8 @@ func themeName(theme: Theme) -> String {
         return "Frutiger Aero"
     case .feco:
         return "Frutiger Eco"
+    case .linen:
+        return "Linen"
     }
 }
 
@@ -65,6 +69,8 @@ func themeName(theme: String) -> String {
         return "Frutiger Aero"
     case "feco":
         return "Frutiger Eco"
+    case "linen":
+        return "Linen"
     default:
         return "None"
     }

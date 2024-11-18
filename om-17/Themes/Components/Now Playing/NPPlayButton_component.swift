@@ -23,6 +23,8 @@ struct NPPlayButton_component: View {
             NPPlayButton_faero()
         case "feco":
             NPPlayButton_faero()
+        case "linen":
+            NPPlayButton_linen()
         default:
             NPPlayButton_classic()
         }

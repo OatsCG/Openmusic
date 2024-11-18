@@ -148,7 +148,7 @@ struct ThemePreview_linen: View {
                     y: (geo.size.height * miniplayerPos.y)
                 )
             
-            Text("Honeycrisp")
+            Text("Linen")
                 .foregroundStyle(.pink)
                 .customFont(fontManager, .largeTitle, bold: true)
                 .scaleEffect(titleSize)
@@ -160,14 +160,14 @@ struct ThemePreview_linen: View {
             
             Button(action: {
                 withAnimation {
-                    currentTheme = "honeycrisp"
-                    FontManager.shared.currentlyChosenTheme = .honeycrisp
+                    currentTheme = "linen"
+                    FontManager.shared.currentlyChosenTheme = .linen
                 }
             }) {
-                AlbumWideButton_linen(text: currentTheme == "honeycrisp" ? "Selected" : "Select", ArtworkID: "")
+                AlbumWideButton_linen(text: currentTheme == "linen" ? "Selected" : "Select", ArtworkID: "")
                     .frame(width: 200)
             }
-                .foregroundStyle(currentTheme == "honeycrisp" ? .secondary : .primary)
+                .foregroundStyle(currentTheme == "linen" ? .secondary : .primary)
                 .buttonStyle(.plain)
                 .position(
                     x: (geo.size.width * selectButtonPos.x) + (selectButtonParallax * parallax),

@@ -27,6 +27,8 @@ struct ScrubberBar_component: View {
             ScrubberBar_faero(isDragging: $isDragging, width: $width, currentNormal: currentNormal, pressedNormal: pressedNormal)
         case "feco":
             ScrubberBar_faero(isDragging: $isDragging, width: $width, currentNormal: currentNormal, pressedNormal: pressedNormal)
+        case "linen":
+            ScrubberBar_linen(isDragging: $isDragging, width: $width, currentNormal: currentNormal, pressedNormal: pressedNormal)
         default:
             ScrubberBar_classic(isDragging: $isDragging, width: $width, currentNormal: currentNormal, pressedNormal: pressedNormal)
         }

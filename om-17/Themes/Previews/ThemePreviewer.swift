@@ -89,9 +89,9 @@ struct ThemePreviews: View {
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
                                         .environment(FontManager(currentlyChosenTheme: .feco))
                                 } else if i == 7 {
-                                    ThemePreview_linen(fontManager: FontManager(currentlyChosenTheme: .classic), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot7)
+                                    ThemePreview_linen(fontManager: FontManager(currentlyChosenTheme: .linen), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot7)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
-                                        .environment(FontManager(currentlyChosenTheme: .classic))
+                                        .environment(FontManager(currentlyChosenTheme: .linen))
                                 }
                             }
                             .frame(width: max(geo.size.width - 60, 0))

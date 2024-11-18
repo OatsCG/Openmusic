@@ -28,6 +28,8 @@ struct LibraryAlbumLink_component: View {
                 LibraryAlbumLink_faero(tracks: tracks)
             case "feco":
                 LibraryAlbumLink_faero(tracks: tracks)
+            case "linen":
+                LibraryAlbumLink_linen(tracks: tracks)
             default:
                 LibraryAlbumLink_classic(tracks: tracks)
             }

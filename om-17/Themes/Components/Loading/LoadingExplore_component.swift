@@ -23,6 +23,8 @@ struct LoadingExplore_component: View {
             LoadingExplore_classic()
         case "feco":
             LoadingExplore_classic()
+        case "linen":
+            LoadingExplore_classic()
         default:
             LoadingExplore_classic()
         }

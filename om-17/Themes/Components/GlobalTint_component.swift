@@ -26,6 +26,8 @@ func GlobalTint_component(currentTheme: String, colorScheme: ColorScheme) -> Col
         return .blue
     case "feco":
         return .green
+    case "linen":
+        return .blue
     default:
         return .primary
     }

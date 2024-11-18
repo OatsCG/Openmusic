@@ -23,6 +23,8 @@ struct LoadingTracklist_component: View {
             LoadingTracklist_faero()
         case "feco":
             LoadingTracklist_faero()
+        case "linen":
+            LoadingTracklist_linen()
         default:
             LoadingTracklist_classic()
         }

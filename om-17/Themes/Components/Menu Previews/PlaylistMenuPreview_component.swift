@@ -24,6 +24,8 @@ struct PlaylistMenuPreview_component: View {
             PlaylistMenuPreview_faero(playlist: playlist)
         case "feco":
             PlaylistMenuPreview_faero(playlist: playlist)
+        case "linen":
+            PlaylistMenuPreview_linen(playlist: playlist)
         default:
             PlaylistMenuPreview_classic(playlist: playlist)
         }

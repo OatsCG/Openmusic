@@ -24,6 +24,8 @@ struct TrackMenuPreview_component: View {
             TrackMenuPreview_faero(track: track)
         case "feco":
             TrackMenuPreview_faero(track: track)
+        case "linen":
+            TrackMenuPreview_linen(track: track)
         default:
             TrackMenuPreview_classic(track: track)
         }

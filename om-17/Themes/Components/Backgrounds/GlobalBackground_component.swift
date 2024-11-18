@@ -23,6 +23,8 @@ struct GlobalBackground_component: View {
             GlobalBackground_faero()
         case "feco":
             GlobalBackground_feco()
+        case "linen":
+            GlobalBackground_linen()
         default:
             GlobalBackground_classic()
         }

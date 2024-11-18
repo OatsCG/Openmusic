@@ -23,6 +23,8 @@ struct NPBackButton_component: View {
             NPBackButton_faero()
         case "feco":
             NPBackButton_faero()
+        case "linen":
+            NPBackButton_linen()
         default:
             NPBackButton_classic()
         }

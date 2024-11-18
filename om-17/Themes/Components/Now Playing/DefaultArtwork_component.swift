@@ -24,6 +24,8 @@ struct DefaultArtwork_component: View {
             DefaultArtwork_faero(animated: animated)
         case "feco":
             DefaultArtwork_faero(animated: animated)
+        case "linen":
+            DefaultArtwork_linen(animated: animated)
         default:
             DefaultArtwork_classic(animated: animated)
         }

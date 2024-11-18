@@ -24,6 +24,8 @@ struct TabbarBackground_component: View {
             TabbarBackground_faero(tabbarHeight: $tabbarHeight)
         case "feco":
             TabbarBackground_faero(tabbarHeight: $tabbarHeight)
+        case "linen":
+            TabbarBackground_linen(tabbarHeight: $tabbarHeight)
         default:
             TabbarBackground_classic(tabbarHeight: $tabbarHeight)
         }

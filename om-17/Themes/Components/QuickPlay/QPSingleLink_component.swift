@@ -24,6 +24,8 @@ struct QPSingleLink_component: View {
             QPSingleLink_faero(track: track)
         case "feco":
             QPSingleLink_faero(track: track)
+        case "linen":
+            QPSingleLink_linen(track: track)
         default:
             QPSingleLink_classic(track: track)
         }
