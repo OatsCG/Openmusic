@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlaylistItemList: View {
     @Environment(PlayerManager.self) var playerManager
+    @Environment(BackgroundDatabase.self) private var database
     var playlist: StoredPlaylist
     var body: some View {
         if playlist.items.isEmpty {
@@ -54,10 +55,12 @@ struct PlaylistItemList: View {
     }
     private func move(from source: IndexSet, to destination: Int) {
         playlist.performMove(source: source, destination: destination)
+        try? database.save()
     }
     func delete(at offsets: IndexSet) {
         withAnimation {
             playlist.items.remove(atOffsets: offsets)
         }
+        try? database.save()
     }
 }

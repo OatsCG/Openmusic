@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PlaylistMenu: View {
+    @Environment(BackgroundDatabase.self) private var database
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     var playlist: StoredPlaylist // dont have to "loading" this
@@ -17,6 +18,7 @@ struct PlaylistMenu: View {
             if (playlist.pinned == false) {
                 Button {
                     self.playlist.pin()
+                    try? database.save()
                 } label: {
                     Label("Pin Playlist", systemImage: "pin")
                         .symbolRenderingMode(.hierarchical)
@@ -24,6 +26,7 @@ struct PlaylistMenu: View {
             } else {
                 Button {
                     self.playlist.unpin()
+                    try? database.save()
                 } label: {
                     Label("Unpin Playlist", systemImage: "pin.slash")
                         .symbolRenderingMode(.hierarchical)

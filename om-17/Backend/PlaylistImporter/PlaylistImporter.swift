@@ -12,6 +12,7 @@ import SwiftData
 @Observable class PlaylistImporter {
     var newPlaylists: [ImportedPlaylist] = []
     var currentContext: BackgroundDatabase? = nil
+    var isCheckingEnd: Bool = false
     
     //let config = URLSessionConfiguration.background(withIdentifier: "om17ImportSession")
     //let backgroundSession: URLSession
@@ -22,7 +23,9 @@ import SwiftData
     
     func addPlaylist(playlist: ImportedPlaylist, database: BackgroundDatabase) {
         self.currentContext = database
-        self.newPlaylists.append(playlist)
+        withAnimation {
+            self.newPlaylists.append(playlist)
+        }
         self.attempt_next_fetch()
     }
     
@@ -75,6 +78,8 @@ import SwiftData
     }
     
     func check_playlist_end() async {
+        guard !isCheckingEnd else { return }
+        self.isCheckingEnd = true
         let successfulPlaylists: [ImportedPlaylist] = self.newPlaylists.filter({$0.is_importing_successful()})
         for playlist in successfulPlaylists {
             let finishedPlaylistIndex: Int? = self.newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID})
@@ -82,9 +87,12 @@ import SwiftData
                 let storedPlaylist = await StoredPlaylist(from: playlist)
                 await self.currentContext?.insert(storedPlaylist)
                 try? self.currentContext?.save()
-                self.newPlaylists.removeAll(where: {$0.PlaylistID == playlist.PlaylistID})
+                withAnimation {
+                    self.newPlaylists.removeAll(where: {$0.PlaylistID == playlist.PlaylistID})
+                }
             }
         }
+        self.isCheckingEnd = false
     }
     
     func publish_status(playlistImport: PlaylistImport, status: ImportStatus) {

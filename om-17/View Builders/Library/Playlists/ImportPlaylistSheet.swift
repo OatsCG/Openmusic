@@ -102,7 +102,7 @@ struct ImportPlaylistSheet: View {
                         isShowingSheet = false
                     }
                 }
-            if (infoViewModel.isFetching) {
+            if (isFetchingTracks) {
                 ProgressView()
             }
         }

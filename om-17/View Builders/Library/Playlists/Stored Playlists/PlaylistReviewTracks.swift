@@ -41,6 +41,7 @@ struct PlaylistReviewTracks: View {
 
 struct ImportToReview: View {
     @Environment(FontManager.self) private var fontManager
+    @Environment(BackgroundDatabase.self) private var database
     @Binding var playlist: StoredPlaylist
     @State var playlistItem: PlaylistItem
     var body: some View {
@@ -79,6 +80,7 @@ struct ImportToReview: View {
                     withAnimation {
                         playlist.items.removeAll(where: { $0.id == playlistItem.id })
                     }
+                    try? database.save()
                 } label: {
                     Label("Disregard", systemImage: "minus.circle")
                 }
@@ -86,7 +88,7 @@ struct ImportToReview: View {
             }
             Divider()
             HStack {
-                Text("Options:")
+                Text("Choices:")
                     .customFont(fontManager, .caption, bold: true)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -110,6 +112,7 @@ struct ImportToReview: View {
 struct TrackToReview: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(FontManager.self) private var fontManager
+    @Environment(BackgroundDatabase.self) private var database
     @Binding var playlist: StoredPlaylist
     @Binding var playlistItem: PlaylistItem
     @State var importedTrack: ImportedTrack
@@ -121,6 +124,7 @@ struct TrackToReview: View {
                 newPlaylistItem.explicit = newPlaylistItem.track.Playback_Explicit != nil
                 newPlaylistItem.importData.status = .success
                 playlist.mutate_item(item: newPlaylistItem)
+                try? database.save()
                 //playlistImporter.publish_successful_track(playlistImport: playlistItem, track: importedTrack)
             }
         }) {

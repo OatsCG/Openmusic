@@ -41,27 +41,23 @@ extension PlayerManager {
     }
     
     func getEnjoyedSongs(limit: Int) -> [QueueItem] {
-        // get last 5 songs in queue.
-        // if no songs in queue, get most recent 4 enjoyed songs in history plus current song
-        // if no songs in history, use current song
+        // Try to get the last 5 songs from the queue
+        var songs = Array(self.trackQueue.suffix(5))
         
-        var lastInQueue: [QueueItem] = self.trackQueue.suffix(5)
-        if lastInQueue.count > 0 {
-            if lastInQueue.count == 5 {
-                return lastInQueue
-            } else if let currentQueueItem = self.currentQueueItem {
-                lastInQueue.insert(currentQueueItem, at: 0)
-                return lastInQueue
-            } else {
-                return []
-            }
-        } else {
-            var recentInHistory: [QueueItem] = self.sessionHistory.suffix(4)
+        if songs.count < 5 {
+            // If there are fewer than 5 songs in the queue, check for the current song
             if let currentQueueItem = self.currentQueueItem {
-                recentInHistory.append(currentQueueItem)
+                songs.insert(currentQueueItem, at: 0)
+                // If the queue is empty and we need more songs, add up to 4 recent songs from history
+                if songs.count == 1 {
+                    songs = Array(self.sessionHistory.filter({ $0.wasSongEnjoyed }).suffix(4))
+                    if let currentQueueItem = self.currentQueueItem {
+                        songs.append(currentQueueItem)
+                    }
+                }
             }
-            return recentInHistory
         }
+        return songs
     }
     
     func getEnjoyedSongsNaive(limit: Int) -> [NaiveTrack] {
