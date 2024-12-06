@@ -12,6 +12,9 @@ struct GlobalBackground_linen: View {
     var body: some View {
         ZStack {
             Image(.linenbg)
+                .resizable()
+                .scaledToFill()
+                .opacity(0.6)
         }
             .ignoresSafeArea()
     }

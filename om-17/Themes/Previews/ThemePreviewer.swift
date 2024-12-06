@@ -59,7 +59,6 @@ struct ThemePreviews: View {
     @State var dot4: CGFloat = 0.3
     @State var dot5: CGFloat = 0.3
     @State var dot6: CGFloat = 0.3
-    @State var dot7: CGFloat = 0.3
     @State var timer: Timer? = nil
     var body: some View {
         GeometryReader { geo in
@@ -88,10 +87,6 @@ struct ThemePreviews: View {
                                     ThemePreview_feco(fontManager: FontManager(currentlyChosenTheme: .feco), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot6)
                                         .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
                                         .environment(FontManager(currentlyChosenTheme: .feco))
-                                } else if i == 7 {
-                                    ThemePreview_linen(fontManager: FontManager(currentlyChosenTheme: .linen), track1: $track1, track2: $track2, track3: $track3, track4: $track4, track5: $track5, track6: $track6, track7: $track7, dot: $dot7)
-                                        .environment(\.colorScheme, preferredAppearance == "dark" ? .dark : (preferredAppearance == "light" ? .light : colorScheme))
-                                        .environment(FontManager(currentlyChosenTheme: .linen))
                                 }
                             }
                             .frame(width: max(geo.size.width - 60, 0))
@@ -123,8 +118,6 @@ struct ThemePreviews: View {
                         proxy.scrollTo(5, anchor: .leading)
                     case "feco":
                         proxy.scrollTo(6, anchor: .leading)
-                    case "linen":
-                        proxy.scrollTo(7, anchor: .leading)
                     default:
                         proxy.scrollTo(1, anchor: .leading)
                     }
@@ -152,9 +145,6 @@ struct ThemePreviews: View {
                         } else if i == 6 {
                             Circle().fill(.primary)
                                 .opacity(dot6)
-                        } else if i == 7 {
-                            Circle().fill(.primary)
-                                .opacity(dot7)
                         }
                     }
                         .frame(width: 8, height: 8)

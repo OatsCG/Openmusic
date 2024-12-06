@@ -13,6 +13,8 @@ struct PlaylistBackground_linen: View {
     var body: some View {
         ZStack {
             Image(.linenbg)
+                .resizable()
+                .scaledToFill()
         }
             .ignoresSafeArea()
     }

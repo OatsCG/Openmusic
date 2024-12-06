@@ -43,6 +43,8 @@ import SwiftUI
             return bold ? "Calibri-Bold" : "Calibri"
         case .feco:
             return bold ? "Calibri-Bold" : "Calibri"
+        case .linen:
+            return ""
         }
     }
     
@@ -60,6 +62,8 @@ import SwiftUI
             return bold ? "Calibri-Bold" : "Calibri"
         case .feco:
             return bold ? "Calibri-Bold" : "Calibri"
+        case .linen:
+            return ""
         }
     }
     
@@ -102,6 +106,8 @@ import SwiftUI
             return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "Calibri-Bold" : "Calibri", size: FontManager.customFontSize(font))!)
         case .feco:
             return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: UIFont(name: bold ? "Calibri-Bold" : "Calibri", size: FontManager.customFontSize(font))!)
+        case .linen:
+            return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: FontManager.customFontSize(font), weight: bold ? .bold : .regular))
         }
     }
     

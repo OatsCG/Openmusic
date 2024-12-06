@@ -12,37 +12,24 @@ struct SearchAlbumLink_linen: View {
     var album: SearchedAlbum
     var body: some View {
         VStack(alignment: .leading) {
-            AlbumArtDisplay(ArtworkID: album.Artwork, Resolution: .tile, Blur: 80, BlurOpacity: 0.0, cornerRadius: 0.0)
-                .scaledToFill()
-//                .overlay {
-//                    Rectangle()
-//                        .fill(LinearGradient(
-//                            stops: [
-//                                .init(color: .white.opacity(0.1), location: 0.0),
-//                                .init(color: .clear, location: 0.1),
-//                            ],
-//                            startPoint: .top,
-//                            endPoint: .bottom
-//                        ))
-//                }
-            VStack(alignment: .leading) {
-                Text(album.Title)
-                    .foregroundColor(.primary)
-                    .customFont(fontManager, .callout)
-                Text(stringArtists(artistlist: album.Artists))
-                    .foregroundColor(.secondary)
-                    .customFont(fontManager, .caption)
-            }
-            .padding(.horizontal, 5)
-            .padding(.bottom, 8)
-            //Spacer()
+            AlbumArtDisplay(ArtworkID: album.Artwork, Resolution: .tile, Blur: 0, BlurOpacity: 0, cornerRadius: 2.0)
+                .shadow(radius: 4, x: 0, y: 4)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 2.0)
+                        .stroke(.white.opacity(0.2), lineWidth: 1)
+                        .fill(.linearGradient(Gradient(stops: [.init(color: .white.opacity(0.18), location: 0.499), .init(color: .clear, location: 0.50)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                }
+            Text(album.Title)
+                .foregroundColor(.primary)
+                .customFont(fontManager, .callout)
+            Text(stringArtists(artistlist: album.Artists))
+                .foregroundColor(.secondary)
+                .customFont(fontManager, .caption)
         }
             .multilineTextAlignment(.leading)
             .lineLimit(1)
-            .background {
-                AlbumBackground(ArtworkID: album.Artwork, blur: 40, light_opacity: 0.05, dark_opacity: 0.5, spin: false)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .padding(.all, 2)
+            .cornerRadius(10)
     }
 }
 
