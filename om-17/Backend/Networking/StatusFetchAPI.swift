@@ -71,25 +71,47 @@ actor StatusViewActor {
     private let viewActor = StatusViewActor()
     
     var serverStatus: ServerStatus? = nil
+    private var tempIPAddress: String? = ""
+    var finalIPAddress: String = ""
     var fetchHash: UUID = UUID()
+    var activeFetchingTask: Task<Void, Never>? = nil
     
-    func runCheck(with ipAddress: String? = nil) {
+    func runCheck(with ipAddress: String? = nil, isExhaustive: Bool = false) {
+        activeFetchingTask?.cancel()
         self.serverStatus = nil
-        Task {
-            do {
-                try await viewActor.runCheck(with: ipAddress)
-                
-                let status = await viewActor.getServerStatus()
-                let currentHash = await viewActor.getFetchHash()
-                
-                await MainActor.run {
-                    withAnimation {
-                        self.serverStatus = status
-                        self.fetchHash = currentHash
+        self.tempIPAddress = ipAddress
+        if isExhaustive, let ipAddress = ipAddress {
+            self.tempIPAddress = "https://\(ipAddress)"
+        }
+        self.activeFetchingTask = Task {
+            try? await viewActor.runCheck(with: tempIPAddress)
+            if isExhaustive {
+                if await !(viewActor.getServerStatus()?.online ?? false) {
+                    await MainActor.run {
+                        self.tempIPAddress = "\(ipAddress ?? "")"
                     }
+                    try? await viewActor.runCheck(with: tempIPAddress)
                 }
-            } catch {
-                print("Error: \(error)")
+                if await !(viewActor.getServerStatus()?.online ?? false) {
+                    await MainActor.run {
+                        self.tempIPAddress = "http://\(ipAddress ?? "")"
+                    }
+                    try? await viewActor.runCheck(with: tempIPAddress)
+                }
+            }
+            let status = await viewActor.getServerStatus()
+            let currentHash = await viewActor.getFetchHash()
+            
+            await MainActor.run {
+                withAnimation {
+                    self.serverStatus = status
+                    if self.tempIPAddress == "http://" {
+                        self.finalIPAddress = ""
+                    } else {
+                        self.finalIPAddress = self.tempIPAddress ?? ""
+                    }
+                    self.fetchHash = currentHash
+                }
             }
         }
     }

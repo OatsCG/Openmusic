@@ -11,7 +11,7 @@ struct AddServerSheet: View {
     @Environment(FontManager.self) private var fontManager
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @Binding var showingServerSheet: Bool
-    @State var tempIPAddress: String = ""
+    @State var inputIPAddress: String = ""
     @State var viewModel: StatusViewModel = StatusViewModel()
     var body: some View {
         ScrollView {
@@ -25,20 +25,19 @@ struct AddServerSheet: View {
                     .padding(.bottom, 5)
                 VStack {
                     HStack {
-                        TextField("Server URL...", text: $tempIPAddress)
+                        TextField("Server URL...", text: $inputIPAddress)
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.never)
                             .keyboardType(.URL)
                             .multilineTextAlignment(.leading)
-                            .onChange(of: tempIPAddress) {
-                                //updateGlobalIPAddress(with: globalIPAddress)
-                                self.viewModel.runCheck(with: tempIPAddress)
+                            .onChange(of: inputIPAddress) {
+                                self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
                             }
                             .onAppear {
-                                self.viewModel.runCheck(with: tempIPAddress)
+                                self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
                             }
                         Divider()
-                        Button(action: {self.viewModel.runCheck(with: tempIPAddress)}) {
+                        Button(action: {self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)}) {
                             HStack {
                                 if (viewModel.serverStatus == nil) {
                                     Image(systemName: "circle.fill")
@@ -85,7 +84,7 @@ struct AddServerSheet: View {
                                 ((viewModel.serverStatus?.footer ?? "") != "")) {
                                 Divider()
                                 HStack {
-                                    Text("From: \(tempIPAddress)/status")
+                                    Text("From: \(viewModel.finalIPAddress)/status")
                                         .customFont(fontManager, .caption)
                                         .foregroundStyle(.quaternary)
                                     Spacer()
@@ -128,10 +127,10 @@ struct AddServerSheet: View {
                     .background(.quinary)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 if viewModel.serverStatus?.online == true {
-                    Text("By clicking **Add Server**, you are stating that the server “\(tempIPAddress)” and all of its content (audio files, images, titles, etc) are owned by you.\n\nYou are also giving permission for the Openmusic app to display and play your content, as well as to use your server’s endpoints for suggestions and discovery features.")
+                    Text("By clicking **Add Server**, you are stating that the server “\(viewModel.finalIPAddress)” and all of its content (audio files, images, titles, etc) are owned by you.\n\nYou are also giving permission for the Openmusic app to display and play your content, as well as to use your server’s endpoints for suggestions and discovery features.")
                 }
                 Button(action: {
-                    updateGlobalIPAddress(with: tempIPAddress)
+                    updateGlobalIPAddress(with: viewModel.finalIPAddress)
                     showingServerSheet = false
                 }) {
                     HStack {
