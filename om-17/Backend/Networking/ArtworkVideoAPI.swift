@@ -62,6 +62,7 @@ actor AlbumVideoViewActor {
     private let viewActor = AlbumVideoViewActor()
     
     var fetchedAlbumVideo: URL? = nil
+    var vAlbumID: String = ""
     var currentSessionID: UUID = UUID()
     
     func runSearch(albumID: String) {
@@ -75,6 +76,7 @@ actor AlbumVideoViewActor {
                 await MainActor.run {
                     withAnimation(.linear(duration: 1).delay(2)) {
                         self.fetchedAlbumVideo = albumVideo
+                        self.vAlbumID = albumID
                         self.currentSessionID = sessionID
                     }
                 }

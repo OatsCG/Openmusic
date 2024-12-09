@@ -201,9 +201,9 @@ extension DownloadManager {
         let destinationUrl = docsUrl?.appendingPathComponent("Audio-\(PlaybackID).mp4")
         
         if let destinationUrl = destinationUrl {
-            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+            guard FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
             do {
-                try FileManager().removeItem(atPath: destinationUrl.path)
+                try FileManager.default.removeItem(atPath: destinationUrl.path)
                 print("File deleted successfully")
             } catch let error {
                 print("Error while deleting audio file: ", error)
@@ -216,9 +216,9 @@ extension DownloadManager {
         let destinationUrl = docsUrl?.appendingPathComponent(url)
         
         if let destinationUrl = destinationUrl {
-            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+            guard FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
             do {
-                try FileManager().removeItem(atPath: destinationUrl.path)
+                try FileManager.default.removeItem(atPath: destinationUrl.path)
                 print("File deleted successfully")
             } catch let error {
                 print("Error while deleting audio file: ", error)
@@ -231,9 +231,9 @@ extension DownloadManager {
         let destinationUrl = docsUrl?.appendingPathComponent(url)
         
         if let destinationUrl = destinationUrl {
-            guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
+            guard FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
             do {
-                try FileManager().removeItem(atPath: destinationUrl.path)
+                try FileManager.default.removeItem(atPath: destinationUrl.path)
                 print("File deleted successfully")
             } catch let error {
                 print("Error while deleting audio file: ", error)

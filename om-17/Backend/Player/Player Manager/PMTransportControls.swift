@@ -46,22 +46,27 @@ extension PlayerManager {
                 await MainActor.run {
                     self.nowPlayingInfo?[MPMediaItemPropertyTitle] = title
                     self.nowPlayingInfo?[MPMediaItemPropertyArtist] = artists
-                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
+//                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = nil
                     MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
                 }
                 
                 var artworkURL: URL? = nil
+                print("NPAW: beginning with \(await self.currentQueueItem?.Track.Album.Artwork)")
                 if await ArtworkExists(ArtworkID: self.currentQueueItem?.Track.Album.Artwork) {
                     if let artwork = await self.currentQueueItem?.Track.Album.Artwork {
                         artworkURL = RetrieveArtwork(ArtworkID: artwork)
+                        print("NPAW: artwork exists, set to \(artworkURL)")
                     }
                 } else {
                     artworkURL = await BuildArtworkURL(imgID: self.currentQueueItem?.Track.Album.Artwork, resolution: .hd)
+                    print("NPAW: artwork doesnt exist, set to \(artworkURL)")
                 }
                 if let artworkURL = artworkURL {
+                    print("NPAW: wants to fetch from \(artworkURL)")
                     do {
                         let (data, _) = try await URLSession.shared.data(from: artworkURL)
                         if let image = UIImage(data: data) {
+                            print("NPAW: got image")
                             let mpMediaArtwork = MPMediaItemArtwork(boundsSize: image.size) { size in
                                 return image
                             }
@@ -70,7 +75,7 @@ extension PlayerManager {
                             }
                         }
                     } catch {
-                        print("error pushing to Media Center")
+                        print("NPAW: error pushing to Media Center")
                     }
                 }
                 

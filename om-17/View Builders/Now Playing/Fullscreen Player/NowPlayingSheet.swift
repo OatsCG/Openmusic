@@ -114,7 +114,7 @@ struct NowPlayingSheetContent: View {
             .safeAreaPadding(20)
             .tint(.primary)
             .background {
-                NPBackground_component(album: currentAlbum, fullscreen: $fullscreen)
+                NPBackground_component(album: $currentAlbum, fullscreen: $fullscreen)
             }
             .onAppear {
                 Task { [self] in

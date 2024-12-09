@@ -12,42 +12,58 @@ import AVKit
 
 
 struct AnimatedAlbumArtDisplay: View {
+    @Environment(\.scenePhase) private var scenePhase
     var albumURL: URL
-    @State var isShowing: Bool = true
+    @State private var isShowing: Bool = true  // State to track visibility
+
     var body: some View {
-        PlayerView(url: albumURL)
+        PlayerView(url: albumURL, isShowing: $isShowing)  // Pass binding
             .aspectRatio(1, contentMode: .fill)
-            .opacity(isShowing ? 1 : 0)
+            .onChange(of: scenePhase) { newPhase in
+                switch newPhase {
+                case .active:
+                    isShowing = true
+                case .inactive, .background:
+                    isShowing = false
+                @unknown default:
+                    isShowing = false
+                }
+            }
     }
 }
 
 struct PlayerView: UIViewRepresentable {
     var url: URL
-    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<PlayerView>) {
+    @Binding var isShowing: Bool  // Binding to control playback
+
+    func makeUIView(context: Context) -> PlayerUIView {
+        let view = PlayerUIView(frame: .zero, url: url)
+        return view
     }
 
-    func makeUIView(context: Context) -> UIView {
-        return PlayerUIView(frame: .zero, url: url)
+    func updateUIView(_ uiView: PlayerUIView, context: Context) {
+        if isShowing {
+            uiView.queuePlayer?.play()
+        } else {
+            uiView.queuePlayer?.pause()
+        }
     }
 }
 
 class PlayerUIView: UIView {
     private let playerLayer = AVPlayerLayer()
     var queuePlayer: AVQueuePlayer?
-    var playerLooper: NSObject?
-    var statusObservation: NSKeyValueObservation?
+    var playerLooper: AVPlayerLooper?
 
     init(frame: CGRect, url: URL) {
         super.init(frame: frame)
-        let playerItem: AVPlayerItem = AVPlayerItem(url: url)
+        let playerItem = AVPlayerItem(url: url)
         self.queuePlayer = AVQueuePlayer(playerItem: playerItem)
         self.playerLooper = AVPlayerLooper(player: queuePlayer!, templateItem: playerItem)
-        //queuePlayer.play()
         self.queuePlayer?.playImmediately(atRate: 1.0)
         self.queuePlayer?.isMuted = true
-        
         self.playerLayer.player = self.queuePlayer
-        self.layer.addSublayer(self.playerLayer)
+        self.layer.addSublayer(playerLayer)
     }
 
     required init?(coder: NSCoder) {

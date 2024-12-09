@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NPBackground_faero: View {
     @Environment(\.colorScheme) private var colorScheme
-    var album: SearchedAlbum?
+    @Binding var album: SearchedAlbum?
     @Binding var fullscreen: Bool
     var body: some View {
         ZStack {

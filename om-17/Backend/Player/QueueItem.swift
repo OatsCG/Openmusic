@@ -30,6 +30,11 @@ import SwiftUI
         self.explicit = (explicit != nil ? explicit! : (from.Playback_Explicit != nil))
         self.update_download_status()
         self.setVideo(to: false)
+//        Task {
+//            if await SharedDatabase.shared.database.is_track_stored(TrackID: Track.TrackID) {
+//                await downloadAlbumArt(artworkID: self.Track.Album.Artwork)
+//            }
+//        }
     }
     
     init(from: QueueItem) {

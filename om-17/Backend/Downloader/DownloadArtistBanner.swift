@@ -24,7 +24,7 @@ func downloadArtistBanner(ArtworkID: String, aspectRatio: Double) async {
     let downloadURL: String = "https://lh3.googleusercontent.com/\(ArtworkID)=w\(1080 * aspectRatio)-h\(1080)-l90-rj"
     let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Banner-\(ArtworkID).jpg")
     if let destinationURL = destinationURL {
-        if FileManager().fileExists(atPath: destinationURL.path) {
+        if FileManager.default.fileExists(atPath: destinationURL.path) {
         } else {
             let urlRequest = URLRequest(url: URL(string: downloadURL)!)
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
@@ -51,7 +51,7 @@ func downloadArtistBanner(ArtworkID: String, aspectRatio: Double) async {
 
 func ArtistBannerExists(ArtworkID: String) -> Bool {
     let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Banner-\(ArtworkID).jpg")
-    if FileManager().fileExists(atPath: destination!.path) {
+    if FileManager.default.fileExists(atPath: destination!.path) {
         return(true)
     }
     return(false)

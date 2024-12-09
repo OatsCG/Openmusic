@@ -55,7 +55,7 @@ func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) {
     
     let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Playlist-\(playlistID.uuidString).jpg")
     if let destinationURL = destinationURL {
-        if FileManager().fileExists(atPath: destinationURL.path) {
+        if FileManager.default.fileExists(atPath: destinationURL.path) {
         } else {
             let urlRequest = URLRequest(url: downloadURL!)
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
@@ -83,13 +83,15 @@ func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) {
 func ArtworkExists(ArtworkID: String?) -> Bool {
     if let ArtworkID = ArtworkID {
         let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
-        if FileManager().fileExists(atPath: destination!.path) {
-            return true
+        if let path = destination?.path {
+            let doesFileExist: Bool = FileManager.default.fileExists(atPath: path)
+            if doesFileExist {
+                return true
+            }
         }
-        return false
-    } else {
-        return false
+        
     }
+    return false
 }
 
 func RetrieveArtwork(ArtworkID: String) -> URL {
@@ -106,7 +108,7 @@ func RetrieveArtwork(url: String) -> URL {
 
 func PlaylistArtworkExists(playlistID: UUID) -> Bool {
     let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Playlist-\(playlistID.uuidString).jpg")
-    if FileManager().fileExists(atPath: destination!.path) {
+    if FileManager.default.fileExists(atPath: destination!.path) {
         return(true)
     }
     return(false)

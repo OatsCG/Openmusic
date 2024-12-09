@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NPBackground_wii: View {
-    var album: SearchedAlbum?
+    @Binding var album: SearchedAlbum?
     @Binding var fullscreen: Bool
     var body: some View {
         Image(.wiibutton)

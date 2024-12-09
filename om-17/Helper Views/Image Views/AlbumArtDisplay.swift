@@ -36,12 +36,13 @@ struct AlbumArtDisplay: View {
     var cornerRadius: Double
     @State var albumVideoViewModel: AlbumVideoViewModel = AlbumVideoViewModel()
     var artworkExistsObj: ArtworkExistsObj = ArtworkExistsObj()
-    var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.1))
+    var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.3))
+    @State private var ArtworkURL: URL?
     var body: some View {
         ZStack {
             if artworkExistsObj.artworkExists == true {
                 if (BlurOpacity > 0) {
-                    BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false, customTransaction: customTransaction)
+                    BetterAsyncImage(url: ArtworkURL, animated: false, customTransaction: customTransaction)
                         .cornerRadius(cornerRadius)
                         .drawingGroup()
                         .blur(radius: Blur)
@@ -49,8 +50,8 @@ struct AlbumArtDisplay: View {
 //                        .drawingGroup()
                 }
                 ZStack {
-                    BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: true, customTransaction: customTransaction)
-                    if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil) {
+                    BetterAsyncImage(url: ArtworkURL, animated: true, customTransaction: customTransaction)
+                    if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil && AlbumID == albumVideoViewModel.vAlbumID) {
                         AnimatedAlbumArtDisplay(albumURL: albumVideoViewModel.fetchedAlbumVideo!)
                     }
                 }
@@ -66,7 +67,7 @@ struct AlbumArtDisplay: View {
                 }
                 ZStack {
                     BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: true, customTransaction: customTransaction)
-                    if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil) {
+                    if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil && AlbumID == albumVideoViewModel.vAlbumID) {
                         AnimatedAlbumArtDisplay(albumURL: albumVideoViewModel.fetchedAlbumVideo!)
                     }
                 }
@@ -74,15 +75,23 @@ struct AlbumArtDisplay: View {
             }
         }
         .scaledToFit()
+        .onAppear {
+            if let ArtworkID {
+                self.ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)
+            }
+        }
         .onChange(of: ArtworkID) {
-            if (AlbumID != nil) {
-                albumVideoViewModel.runSearch(albumID: AlbumID!)
+            if let AlbumID {
+                albumVideoViewModel.runSearch(albumID: AlbumID)
+            }
+            if let ArtworkID {
+                self.ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)
             }
         }
         .task {
             self.artworkExistsObj.update(ArtworkID: self.ArtworkID ?? "")
-            if (AlbumID != nil) {
-                albumVideoViewModel.runSearch(albumID: AlbumID!)
+            if let AlbumID {
+                albumVideoViewModel.runSearch(albumID: AlbumID)
             }
         }
     }
