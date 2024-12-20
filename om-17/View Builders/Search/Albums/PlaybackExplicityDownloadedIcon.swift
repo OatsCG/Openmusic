@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlaybackExplicityDownloadedIcon: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(DownloadManager.self) var downloadManager
     @Environment(PlayerManager.self) var playerManager
     var track: any Track
@@ -25,10 +26,10 @@ struct PlaybackExplicityDownloadedIcon: View {
                     Image(systemName: "square.fill")
                 }
                     .compositingGroup()
-                    .opacity(0.24)
+                    .opacity(colorScheme == .dark ? 0.24 : 0.45)
                 Image(systemName: explicit ? "e.square" : "c.square")
                     .symbolRenderingMode(.palette)
-                    .foregroundStyle(.primary, .clear)
+                    .foregroundStyle(.white, .clear)
             }
             if let isDownloaded = isDownloaded, isDownloaded == true {
                 Image(systemName: "chevron.compact.down")

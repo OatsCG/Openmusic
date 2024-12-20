@@ -36,7 +36,7 @@ struct AlbumArtDisplay: View {
     var cornerRadius: Double
     @State var albumVideoViewModel: AlbumVideoViewModel = AlbumVideoViewModel()
     var artworkExistsObj: ArtworkExistsObj = ArtworkExistsObj()
-    var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.3))
+    var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.31))
     @State private var ArtworkURL: URL?
     var body: some View {
         ZStack {

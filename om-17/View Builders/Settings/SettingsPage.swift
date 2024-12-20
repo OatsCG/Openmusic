@@ -66,32 +66,40 @@ struct SettingsPage: View {
                     
                 } footer: {
                     VStack(alignment: .leading, spacing: 15) {
+                        Link(destination: URL(string: "https://ko-fi.com/charliegiannis")!) {
+                            HStack {
+                                Image(systemName: "cup.and.saucer")
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    .padding(.trailing, 4)
+                                    .bold()
+                                Text("Support Me!")
+                                    .multilineTextAlignment(.leading)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    .opacity(colorScheme == .dark ? 0.9 : 0.73)
+                                    .customFont(fontManager, .body)
+                            }
+//                            .bold()
+                            .padding(.leading, 8)
+                            .padding(.trailing, 18)
+                            .padding(.vertical, 8)
+                            .background {
+                                DonateBG()
+                            }
+                        }
+                            .padding(.bottom, 4)
                         HStack(alignment: .center) {
                             VStack(alignment: .leading) {
                                 Text("openmusic inc.")
                                 Text("2024 Charlie Giannis")
                                     .customFont(fontManager, .caption2)
                             }
-//                            NavigationLink(destination: Credits()) {
-//                                HStack(spacing: 5) {
-//                                    Text("Made with")
-                                    Text("💜")
-                                        .hueRotation(.degrees(heartHue))
-                                        .onAppear {
-                                            withAnimation(.linear(duration: 12).repeatForever(autoreverses: false)) {
-                                                heartHue = 360
-                                            }
-                                        }
-//                                    Image(systemName: "chevron.right.circle.fill")
-//                                        .font(.headline)
-//                                        .symbolRenderingMode(.hierarchical)
-//                                }
-//                                    .padding(.horizontal, 10)
-//                                    .padding(.vertical, 4)
-//                                    .background(.ultraThinMaterial)
-//                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-//                            }
-//                                .buttonStyle(.plain)
+                            Text("💜")
+                                .hueRotation(.degrees(heartHue))
+                                .onAppear {
+                                    withAnimation(.linear(duration: 12).repeatForever(autoreverses: false)) {
+                                        heartHue = 360
+                                    }
+                                }
                         }
                         Text("To report a bug or suggest a feature, email [help@openmusic.app](mailto:help@openmusic.app).")
                     }
@@ -102,6 +110,36 @@ struct SettingsPage: View {
             .navigationBarTitleDisplayMode(.inline)
             .background {
                 GlobalBackground_component()
+            }
+        }
+    }
+}
+
+struct DonateBG: View {
+    @Environment(\.colorScheme) private var colorScheme
+    @State var buttonHue: Double = 0
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            colorScheme == .dark ? Color(red: 200 / 255, green: 255 / 255, blue: 220 / 255) : Color(red: 185 / 255, green: 255 / 255, blue: 200 / 255),
+                            colorScheme == .dark ? Color(red: 200 / 255, green: 220 / 255, blue: 255 / 255) : Color(red: 185 / 255, green: 200 / 255, blue: 255 / 255)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .hueRotation(.degrees(buttonHue))
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(LinearGradient(colors: colorScheme == .dark ? [.black.opacity(0.3), .black.opacity(0.7)] : [.white.opacity(0.7), .white.opacity(0.4)], startPoint: .top, endPoint: .bottom))
+                .stroke(Color(red: 255 / 255, green: 210 / 255, blue: 230 / 255).opacity(0.8), lineWidth: 1)
+                .hueRotation(.degrees(buttonHue))
+        }
+        .onAppear {
+            withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
+                buttonHue = 360
             }
         }
     }

@@ -17,7 +17,7 @@ struct LibraryMusicPicker: View {
     var body: some View {
         VStack {
             HStack {
-                Picker("Music", selection: $selectedPickMusic) {
+                Picker("All Music", selection: $selectedPickMusic) {
                     ForEach(MusicPicks.allCases) { option in
                         Label(option.rawValue.capitalized, systemImage: musicPickSymbol(pick: option))
                     }
