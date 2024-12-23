@@ -80,7 +80,7 @@ extension PlayerManager {
     
     func resetEQs() {
         let wasPlaying: Bool = self.isPlaying
-        print("reseting. wasPlaying: \(wasPlaying)")
+        print("resetting. wasPlaying: \(wasPlaying)")
         self.currentQueueItem?.audio_AVPlayer?.player.resetEQ(playerManager: self)
         for item in self.sessionHistory {
             if item.audio_AVPlayer?.isRemote == false {
