@@ -19,7 +19,7 @@ struct AnimatedAlbumArtDisplay: View {
     var body: some View {
         PlayerView(url: albumURL, isShowing: $isShowing)  // Pass binding
             .aspectRatio(1, contentMode: .fill)
-            .onChange(of: scenePhase) { newPhase in
+            .onChange(of: scenePhase) { oldPhase, newPhase in
                 switch newPhase {
                 case .active:
                     isShowing = true

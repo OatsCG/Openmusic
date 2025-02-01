@@ -21,7 +21,7 @@ struct LiveImportStatus: View {
                 Image(systemName: "circle.dashed")
                     .imageScale(.large)
             } else {
-                if let plist = playlistImporter.get_playlist(playlistID: playlist.PlaylistID) {
+                if playlistImporter.get_playlist(playlistID: playlist.PlaylistID) != nil {
                     CircularProgressView(progress: importProgress)
                 }
             }
