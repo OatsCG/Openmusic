@@ -2,8 +2,9 @@
 
 # Openmusic - Stream, Download, and Discover Music for Free
 ## Official repository for the Openmusic app
+### Get Openmusic on the App Store: https://apps.apple.com/ca/app/openmusic/id6474526827
 
-### Download the Openmusic app for free from the App Store: https://apps.apple.com/ca/app/openmusic/id6474526827
+
 #### Access Openmusic-Compatible servers in a beautiful UI. Stream, Download, and Discover music from databases created by the community!
 
 Features:
