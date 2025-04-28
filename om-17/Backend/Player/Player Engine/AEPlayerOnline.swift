@@ -18,7 +18,7 @@ import AudioKit
     var volume: Float { return self.player.volume }
     var player: AVPlayer
     var duration: Double {
-        return (player.currentItem?.duration.seconds ?? Double.nan) / 2
+        return (player.currentItem?.duration.seconds ?? Double.nan)
     }
     var currentTime: Double {
         return player.currentTime().seconds
