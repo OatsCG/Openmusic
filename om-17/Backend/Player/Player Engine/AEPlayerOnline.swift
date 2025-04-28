@@ -68,8 +68,13 @@ import AudioKit
         self.player.pause()
     }
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        let wasPlaying: Bool = self.player.rate == 1
         self.player.seek(to: to, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) {_ in
+            if wasPlaying {
+                self.play()
+            }
             completionHandler(true)
+            print(self.player.rate)
         }
     }
     func has_file() -> Bool {
