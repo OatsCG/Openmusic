@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 func fetchAlbumData(albumID: String) async throws -> FetchedAlbum {
-    let url = "\(globalIPAddress())/album?id=\(albumID)"
+    let url = NetworkManager.shared.networkService.getEndpointURL(.album(id: albumID))
     guard let url = URL(string: url) else {
         throw URLError(.badURL)
     }

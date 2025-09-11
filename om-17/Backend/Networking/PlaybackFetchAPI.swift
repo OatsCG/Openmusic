@@ -9,8 +9,7 @@
 import Foundation
 
 func fetchPlaybackData(playbackID: String) async throws -> FetchedPlayback {
-    let urlString = "\(globalIPAddress())/playback?id=\(playbackID)"
-    
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.playback(id: playbackID))
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }

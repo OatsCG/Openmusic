@@ -136,6 +136,8 @@
 		E53B3C012A93040600C5063B /* LibraryArtistExtendedAlbums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53B3C002A93040600C5063B /* LibraryArtistExtendedAlbums.swift */; };
 		E53ED7DA2BAA497D00ECC3CE /* EQBandSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53ED7D92BAA497D00ECC3CE /* EQBandSlider.swift */; };
 		E53ED7DC2BAA856900ECC3CE /* EQPresetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53ED7DB2BAA856900ECC3CE /* EQPresetRow.swift */; };
+		E54053082E73186100863014 /* ServerInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54053072E73186100863014 /* ServerInput.swift */; };
+		E540530A2E7318DB00863014 /* ServerStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54053092E7318DB00863014 /* ServerStatusIndicator.swift */; };
 		E54245C02BD057DC00418B64 /* MainNavigationTabbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */; };
 		E54245C22BD057E400418B64 /* MainNavigationSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */; };
 		E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */; };
@@ -747,6 +749,8 @@
 		E53B3C002A93040600C5063B /* LibraryArtistExtendedAlbums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryArtistExtendedAlbums.swift; sourceTree = "<group>"; };
 		E53ED7D92BAA497D00ECC3CE /* EQBandSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQBandSlider.swift; sourceTree = "<group>"; };
 		E53ED7DB2BAA856900ECC3CE /* EQPresetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQPresetRow.swift; sourceTree = "<group>"; };
+		E54053072E73186100863014 /* ServerInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInput.swift; sourceTree = "<group>"; };
+		E54053092E7318DB00863014 /* ServerStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusIndicator.swift; sourceTree = "<group>"; };
 		E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationTabbed.swift; sourceTree = "<group>"; };
 		E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationSidebar.swift; sourceTree = "<group>"; };
 		E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewer.swift; sourceTree = "<group>"; };
@@ -1368,6 +1372,16 @@
 				E56DDA032B2BEDD4006222A8 /* TVStaticLines.swift */,
 			);
 			path = "Theme Assets";
+			sourceTree = "<group>";
+		};
+		E54053062E73183400863014 /* ServerSheet */ = {
+			isa = PBXGroup;
+			children = (
+				E57F7F982B86B0A600AEAD97 /* AddServerSheet.swift */,
+				E54053072E73186100863014 /* ServerInput.swift */,
+				E54053092E7318DB00863014 /* ServerStatusIndicator.swift */,
+			);
+			path = ServerSheet;
 			sourceTree = "<group>";
 		};
 		E54525A22B8ADA3A00C2961D /* Previews */ = {
@@ -2272,6 +2286,7 @@
 		E5974D6B2A6C8F6F009286E2 /* View Builders */ = {
 			isa = PBXGroup;
 			children = (
+				E54053062E73183400863014 /* ServerSheet */,
 				E5C2DD502A2FDCB600E6BB97 /* Explore */,
 				E583D7C92B96725F001335EC /* User View */,
 				E5C2DD542A2FE49A00E6BB97 /* Search */,
@@ -2290,7 +2305,6 @@
 				E54BA4002B8A76BA00FAF0F4 /* OMUser */,
 				E58FB6372B2E13F90002E5DB /* Fonts */,
 				E58E8FCC2BA172AF009F7E43 /* BasicAudioPlayer */,
-				E5C2DD6A2A30396000E6BB97 /* Environment */,
 				E5D493332A305B980091ED01 /* Networking */,
 				E5C2DD5F2A3033FC00E6BB97 /* Item Models */,
 				E59CA73B2A4DF444006A34F5 /* Downloader */,
@@ -2575,7 +2589,6 @@
 				E51E65B32C17C56800E31B9E /* NoServerAddedComponent.swift */,
 				E5C2DD592A2FE6E700E6BB97 /* ExploreShelfView.swift */,
 				E56F82BE2B6B7D99002A1FA4 /* ExploreShelfBigView.swift */,
-				E57F7F982B86B0A600AEAD97 /* AddServerSheet.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -2629,14 +2642,6 @@
 				E56E3C692B6813BD0088FA50 /* RecentlyPlayedManager.swift */,
 			);
 			path = "Item Models";
-			sourceTree = "<group>";
-		};
-		E5C2DD6A2A30396000E6BB97 /* Environment */ = {
-			isa = PBXGroup;
-			children = (
-				E5C2DD6B2A30398400E6BB97 /* ipAddress.swift */,
-			);
-			path = Environment;
 			sourceTree = "<group>";
 		};
 		E5C7D47E2AF9D1D6003A7BAB /* PlaylistImporter */ = {
@@ -2754,6 +2759,7 @@
 		E5D493332A305B980091ED01 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				E5C2DD6B2A30398400E6BB97 /* ipAddress.swift */,
 				E5F2CA0A2C1520AA00241B8E /* Discord RPC */,
 				E59600932B3B7963009E5858 /* StatusFetchAPI.swift */,
 				E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */,
@@ -3342,6 +3348,7 @@
 				E58E8F9E2BA16BB8009F7E43 /* LoadingSearchResults_faero.swift in Sources */,
 				E52D58A72A36701600270019 /* PlaybackFetchAPI.swift in Sources */,
 				E58B67332ACFB2B0002FA7A2 /* TabBarLibraryLabel_wii.swift in Sources */,
+				E540530A2E7318DB00863014 /* ServerStatusIndicator.swift in Sources */,
 				E51375F12B44B7060005F2D7 /* NPBackground_classic.swift in Sources */,
 				E51375FF2B44C4270005F2D7 /* ScrubberBar_honeycrisp.swift in Sources */,
 				E58B672F2ACFB2B0002FA7A2 /* PlaylistContentHeading_wii.swift in Sources */,
@@ -3664,6 +3671,7 @@
 				E575D6C22BC250C8005554A3 /* ThemePreview_faero.swift in Sources */,
 				E5E6A1D02A7DC77400880E6B /* LibraryAlbumLink_classic.swift in Sources */,
 				E532D4E52B42074500D7CC25 /* PlaylistMenuPreview_component.swift in Sources */,
+				E54053082E73186100863014 /* ServerInput.swift in Sources */,
 				E5E6A1CC2A7DC45E00880E6B /* SearchArtistLink_classic.swift in Sources */,
 				E5DCFE0A2B450F800044D9B5 /* NPPlayButton_spotty.swift in Sources */,
 				E5C114152AF1B24900E2F879 /* PlaylistEditMenu.swift in Sources */,

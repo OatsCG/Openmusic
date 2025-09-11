@@ -10,7 +10,7 @@ import SwiftUI
 
 // Function to fetch search results
 func fetchSearchResults(query: String) async throws -> SearchResults {
-    let urlString = "\(globalIPAddress())/search?q=\(query)"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.search(q: query))
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

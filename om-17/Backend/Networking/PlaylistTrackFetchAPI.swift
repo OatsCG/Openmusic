@@ -12,8 +12,7 @@ func fetchPlaylistTracksFetchData(importData: ImportData) async throws -> Import
     let album = importData.from.album?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
     let artist = importData.from.artist?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
     
-    let urlString = "\(globalIPAddress())/exact?song=\(title)&album=\(album)&artist=\(artist)"
-    
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.exact(song: title, album: album, artist: artist))
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }

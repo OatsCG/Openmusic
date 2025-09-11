@@ -18,8 +18,7 @@ func fetchSuggestionsData(songs: [NaiveTrack]) async throws -> ImportedTracks {
     
     let songsJoined = songsAsStrings.joined(separator: "OMSEPNEWSONG")
     
-    let urlString = "\(globalIPAddress())/suggest?songs=\(songsJoined)"
-    
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.suggest(songs: songsJoined))
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
@@ -30,7 +29,7 @@ func fetchSuggestionsData(songs: [NaiveTrack]) async throws -> ImportedTracks {
 }
 
 func fetchSuggestionsData(vibe: VibeObject) async throws -> ImportedTracks {
-    let urlString = "\(globalIPAddress())/suggestVibe?genre=\(vibe.genre)&acousticness=\(vibe.acousticness)&danceability=\(vibe.danceability)&energy=\(vibe.energy)&instrumentalness=\(vibe.instrumentalness)&liveness=\(vibe.liveness)&mode=\(vibe.mode)&speechiness=\(vibe.speechiness)&valence=\(vibe.valence)"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.suggestVibe(genre: vibe.genre, acousticness: vibe.acousticness, danceability: vibe.danceability, energy: vibe.energy, instrumentalness: vibe.instrumentalness, liveness: vibe.liveness, mode: vibe.mode, speechiness: vibe.speechiness, valence: vibe.valence))
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

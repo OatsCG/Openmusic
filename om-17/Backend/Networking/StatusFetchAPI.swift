@@ -10,7 +10,7 @@ import SwiftUI
 
 // Function to fetch server status
 func fetchServerStatus(with tempIPAddress: String? = nil) async throws -> ServerStatus {
-    var urlString = "\(globalIPAddress())/status"
+    var urlString = NetworkManager.shared.networkService.getEndpointURL(.status)
     if let tempIPAddress = tempIPAddress {
         urlString = "\(tempIPAddress)/status"
     }
@@ -46,7 +46,7 @@ actor StatusViewActor {
             }
         } catch {
             if self.fetchHash == newFetchHash {
-                self.serverStatus = ServerStatus(online: false, om_verify: "")
+                self.serverStatus = ServerStatus(online: false, om_verify: "", type: .openmusic)
             }
             throw error
         }
@@ -76,43 +76,59 @@ actor StatusViewActor {
     var fetchHash: UUID = UUID()
     var activeFetchingTask: Task<Void, Never>? = nil
     
-    func runCheck(with ipAddress: String? = nil, isExhaustive: Bool = false) {
+    // navidrome
+    var askForCreds: Bool = false
+    var username: String = ""
+    var password: String = ""
+    
+    func clearPastChecks() {
         activeFetchingTask?.cancel()
-        self.serverStatus = nil
-        self.tempIPAddress = ipAddress
+        serverStatus = nil
+        askForCreds = false
+    }
+    
+    func runCheck(with ipAddress: String? = nil, isExhaustive: Bool = false) {
+        clearPastChecks()
+        tempIPAddress = ipAddress
         if isExhaustive, let ipAddress = ipAddress {
-            self.tempIPAddress = "https://\(ipAddress)"
+            tempIPAddress = "https://\(ipAddress)"
         }
-        self.activeFetchingTask = Task {
+        activeFetchingTask = Task {
             try? await viewActor.runCheck(with: tempIPAddress)
             if isExhaustive {
                 if await !(viewActor.getServerStatus()?.online ?? false) {
                     await MainActor.run {
-                        self.tempIPAddress = "\(ipAddress ?? "")"
+                        tempIPAddress = "\(ipAddress ?? "")"
                     }
                     try? await viewActor.runCheck(with: tempIPAddress)
                 }
                 if await !(viewActor.getServerStatus()?.online ?? false) {
-                    await MainActor.run {
-                        self.tempIPAddress = "http://\(ipAddress ?? "")"
-                    }
+                    updateTempIPAddress(with: "http://\(ipAddress ?? "")")
                     try? await viewActor.runCheck(with: tempIPAddress)
                 }
             }
             let status = await viewActor.getServerStatus()
             let currentHash = await viewActor.getFetchHash()
             
-            await MainActor.run {
-                withAnimation {
-                    self.serverStatus = status
-                    if self.tempIPAddress == "http://" {
-                        self.finalIPAddress = ""
-                    } else {
-                        self.finalIPAddress = self.tempIPAddress ?? ""
-                    }
-                    self.fetchHash = currentHash
-                }
+            updateIPCreds(status: status, hash: currentHash)
+        }
+    }
+    
+    @MainActor
+    func updateTempIPAddress(with: String) {
+        tempIPAddress = with
+    }
+    
+    @MainActor
+    func updateIPCreds(status: ServerStatus?, hash: UUID) {
+        withAnimation {
+            serverStatus = status
+            if tempIPAddress == "http://" {
+                finalIPAddress = ""
+            } else {
+                finalIPAddress = tempIPAddress ?? ""
             }
+            fetchHash = hash
         }
     }
 }
@@ -125,16 +141,18 @@ struct ServerStatus: Codable, Hashable {
     var body: String
     var footer: String
     var om_verify: String
+    var type: ServerType
     
-    init(online: Bool, om_verify: String) {
+    init(online: Bool, om_verify: String, type: ServerType) {
         self.online = online
         self.title = ""
         self.body = ""
         self.footer = ""
         self.om_verify = om_verify
+        self.type = type
     }
     
     private enum CodingKeys: String, CodingKey {
-        case online, title, body, footer, om_verify
+        case online, title, body, footer, om_verify, type
     }
 }

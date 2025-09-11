@@ -14,7 +14,7 @@ func fetchAlbumVideoData(albumID: String) async throws -> String {
         throw NSError(domain: "com.yourapp.error", code: 1, userInfo: [NSLocalizedDescriptionKey: "Artwork video animations are disabled."])
     }
     
-    let urlString = "\(globalIPAddress())/ampVideo?id=\(albumID)"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.ampVideo(id: albumID))
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

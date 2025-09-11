@@ -24,58 +24,7 @@ struct AddServerSheet: View {
                     .customFont(fontManager, .subheadline)
                     .padding(.bottom, 5)
                 VStack {
-                    HStack {
-                        TextField("Server URL...", text: $inputIPAddress)
-                            .autocorrectionDisabled()
-                            .textInputAutocapitalization(.never)
-                            .keyboardType(.URL)
-                            .multilineTextAlignment(.leading)
-                            .onChange(of: inputIPAddress) {
-                                self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
-                            }
-                            .onAppear {
-                                self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
-                            }
-                        Divider()
-                        Button(action: {self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)}) {
-                            HStack {
-                                if (viewModel.serverStatus == nil) {
-                                    Image(systemName: "circle.fill")
-                                        .customFont(fontManager, .caption2)
-                                        .foregroundStyle(.gray)
-                                    Text("Fetching")
-                                } else {
-                                    if (viewModel.serverStatus!.online) {
-                                        if (viewModel.serverStatus!.om_verify == "topsecretpassword") {
-                                            Image(systemName: "circle.fill")
-                                                .customFont(fontManager, .caption2)
-                                                .foregroundStyle(.cyan)
-                                            VStack {
-                                                Text("Verified")
-                                            }
-                                        } else {
-                                            Image(systemName: "circle.fill")
-                                                .customFont(fontManager, .caption2)
-                                                .foregroundStyle(.green)
-                                            Text("Online")
-                                        }
-                                    } else {
-                                        Image(systemName: "circle.fill")
-                                            .customFont(fontManager, .caption2)
-                                            .foregroundStyle(.red)
-                                        Text("Offline")
-                                    }
-                                }
-                                
-                            }
-                                .foregroundStyle(.secondary)
-                                .padding(.vertical, 5)
-                                .padding(.horizontal, 7)
-                                .background(.quinary.opacity(0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                        }
-                            .buttonStyle(.plain)
-                    }
+                    ServerInput(inputIPAddress: $inputIPAddress, viewModel: $viewModel)
                     VStack {
                         if (viewModel.serverStatus?.online ?? false) {
                             if (
@@ -130,7 +79,7 @@ struct AddServerSheet: View {
                     Text("By clicking **Add Server**, you are stating that the server “\(viewModel.finalIPAddress)” and all of its content (audio files, images, titles, etc) are owned by you.\n\nYou are also giving permission for the Openmusic app to display and play your content, as well as to use your server’s endpoints for suggestions and discovery features.")
                 }
                 Button(action: {
-                    updateGlobalIPAddress(with: viewModel.finalIPAddress)
+                    NetworkManager.shared.updateGlobalIPAddress(with: viewModel.finalIPAddress, type: viewModel.serverStatus?.type ?? .openmusic)
                     showingServerSheet = false
                 }) {
                     HStack {

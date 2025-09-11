@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch explore results
 func fetchVibeResults() async throws -> VibeShelf {
-    let urlString = "\(globalIPAddress())/vibes"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.vibes)
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch artist data
 func fetchArtistData(artistID: String) async throws -> FetchedArtist {
-    let urlString = "\(globalIPAddress())/artist?id=\(artistID)"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.artist(id: artistID))
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

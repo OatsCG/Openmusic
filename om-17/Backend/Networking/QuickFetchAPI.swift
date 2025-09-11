@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch quick search results
 func fetchQuickSearchResults(query: String) async throws -> FetchedTracks {
-    let urlString = "\(globalIPAddress())/quick?q=\(query)"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.quick(q: query))
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 func playRandomSongs() async throws -> RandomTracks {
-    let urlString = "\(globalIPAddress())/random"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.random)
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

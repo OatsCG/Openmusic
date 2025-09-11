@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch playlist info data
 func fetchPlaylistInfoData(playlistID: String, type: Platform) async throws -> FetchedPlaylistInfo {
-    let urlString = "\(globalIPAddress())/playlistinfo?platform=\(type.rawValue)&id=\(playlistID)"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.playlistinfo(platform: type.rawValue, id: playlistID))
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)

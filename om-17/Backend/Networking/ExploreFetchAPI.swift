@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch explore results
 func fetchExploreResults() async throws -> ExploreResults {
-    let urlString = "\(globalIPAddress())/explore"
+    let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore)
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
