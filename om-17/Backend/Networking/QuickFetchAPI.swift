@@ -16,8 +16,7 @@ func fetchQuickSearchResults(query: String) async throws -> FetchedTracks {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(FetchedTracks.self, from: data)
+    return try NetworkManager.shared.networkService.decodeFetchedTracks(data)
 }
 
 // Actor to manage quick search data

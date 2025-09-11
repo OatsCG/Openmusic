@@ -26,7 +26,7 @@ struct ExplorePage: View {
                             if (viewModel.isSearching == true) {
                                 LoadingExplore_component()
                             } else {
-                                if (globalIPAddress() == "") {
+                                if (NetworkManager.globalIPAddress() == "") {
                                     NoServerAddedComponent(showingServerSheet: $showingServerSheet)
                                 } else if networkMonitor.isConnected == false {
                                     VStack {

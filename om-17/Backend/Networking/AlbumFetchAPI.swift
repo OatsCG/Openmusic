@@ -15,7 +15,7 @@ func fetchAlbumData(albumID: String) async throws -> FetchedAlbum {
     }
     let (data, _) = try await URLSession.shared.data(from: url)
     let decoder = JSONDecoder()
-    return try decoder.decode(FetchedAlbum.self, from: data)
+    return try NetworkManager.shared.networkService.decodeFetchedAlbum(data)
 }
 
 

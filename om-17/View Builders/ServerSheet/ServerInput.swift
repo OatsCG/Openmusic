@@ -12,20 +12,25 @@ struct ServerInput: View {
     @Binding var inputIPAddress: String
     @Binding var viewModel: StatusViewModel
     var body: some View {
-        HStack {
-            TextField("Server URL...", text: $inputIPAddress)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .keyboardType(.URL)
-                .multilineTextAlignment(.leading)
-                .onChange(of: inputIPAddress) {
-                    self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
-                }
-                .onAppear {
-                    self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
-                }
-            Divider()
-            ServerStatusIndicator(inputIPAddress: $inputIPAddress, viewModel: $viewModel)
+        VStack {
+            HStack {
+                TextField("Server URL...", text: $inputIPAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.URL)
+                    .multilineTextAlignment(.leading)
+                    .onChange(of: inputIPAddress) {
+                        self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
+                    }
+                    .onAppear {
+                        self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
+                    }
+                Divider()
+                ServerStatusIndicator(inputIPAddress: $inputIPAddress, viewModel: $viewModel)
+            }
+            if viewModel.serverStatus?.type == .navidrome {
+                ServerCredentialsInput(inputIPAddress: $inputIPAddress, viewModel: $viewModel)
+            }
         }
     }
 }

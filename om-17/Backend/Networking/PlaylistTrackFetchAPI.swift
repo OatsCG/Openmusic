@@ -18,7 +18,6 @@ func fetchPlaylistTracksFetchData(importData: ImportData) async throws -> Import
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(ImportedTracks.self, from: data)
+    return try NetworkManager.shared.networkService.decodeImportedTracks(data)
 }
 

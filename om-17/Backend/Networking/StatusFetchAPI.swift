@@ -8,11 +8,75 @@
 import Foundation
 import SwiftUI
 
+func getIPAddressType(_ ip: String) async throws -> ServerType {
+    let isNavidrome: Bool? = try? await isNavidrome(ip)
+    if isNavidrome == true {
+        return .navidrome
+    } else {
+        return .openmusic
+    }
+}
+
+struct NavidromeServerStatus: Codable {
+    var subsonicresponse: SubsonicResponse
+    
+    enum CodingKeys: String, CodingKey {
+        case subsonicresponse = "subsonic-response"
+    }
+}
+
+struct SubsonicResponse: Codable {
+    var status: String
+    var version: String
+    var type: String
+    var serverVersion: String
+    var openSubsonic: Bool
+    var error: SubsonicError?
+}
+
+struct SubsonicError: Codable {
+    var code: Int
+    var message: String
+}
+
+
+func isNavidrome(_ ip: String) async throws -> Bool {
+    guard let url = URL(string: "\(ip)/rest/ping?f=json") else {
+        return false
+    }
+    
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    let navidromeServerStatus = try? decoder.decode(NavidromeServerStatus.self, from: data)
+    return navidromeServerStatus != nil
+}
+
 // Function to fetch server status
-func fetchServerStatus(with tempIPAddress: String? = nil) async throws -> ServerStatus {
+func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) async throws -> ServerStatus {
     var urlString = NetworkManager.shared.networkService.getEndpointURL(.status)
     if let tempIPAddress = tempIPAddress {
-        urlString = "\(tempIPAddress)/status"
+        let serverType = try await getIPAddressType(tempIPAddress)
+        switch serverType {
+        case .openmusic:
+            urlString = "\(tempIPAddress)/status"
+        case .navidrome:
+            let statusURL = NavidromeNetworkService(u: u, p: p).getEndpointURL(.status, ip: tempIPAddress)
+            guard let url = URL(string: statusURL) else {
+                throw URLError(.badURL)
+            }
+            
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoder = JSONDecoder()
+            let navidromeServerStatus = try decoder.decode(NavidromeServerStatus.self, from: data)
+            var serverStatus = ServerStatus(online: true, title: "Navidrome Server", body: "version \(navidromeServerStatus.subsonicresponse.serverVersion)", footer: "", om_verify: "", type: .navidrome)
+            
+            if let error = navidromeServerStatus.subsonicresponse.error {
+                serverStatus.body = error.message
+                serverStatus.footer = "Error code \(error.code)"
+                serverStatus.om_verify = "bad"
+            }
+            return serverStatus
+        }
     }
     
     guard let url = URL(string: urlString) else {
@@ -20,8 +84,7 @@ func fetchServerStatus(with tempIPAddress: String? = nil) async throws -> Server
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(ServerStatus.self, from: data)
+    return try NetworkManager.shared.networkService.decodeServerStatus(data)
 }
 
 // Actor to manage server status data
@@ -30,7 +93,7 @@ actor StatusViewActor {
     private var fetchHash: UUID = UUID()
     private var isFetching: Bool = false
     
-    func runCheck(with ipAddress: String? = nil) async throws {
+    func runCheck(with ipAddress: String? = nil, u: String, p: String) async throws {
         guard !isFetching else { return }
         isFetching = true
         
@@ -40,7 +103,7 @@ actor StatusViewActor {
         self.fetchHash = newFetchHash
         
         do {
-            let status = try await fetchServerStatus(with: ipAddress)
+            let status = try await fetchServerStatus(with: ipAddress, u: u, p: p)
             if self.fetchHash == newFetchHash {
                 self.serverStatus = status
             }
@@ -76,7 +139,7 @@ actor StatusViewActor {
     var fetchHash: UUID = UUID()
     var activeFetchingTask: Task<Void, Never>? = nil
     
-    // navidrome
+    // alternative server
     var askForCreds: Bool = false
     var username: String = ""
     var password: String = ""
@@ -94,23 +157,19 @@ actor StatusViewActor {
             tempIPAddress = "https://\(ipAddress)"
         }
         activeFetchingTask = Task {
-            try? await viewActor.runCheck(with: tempIPAddress)
+            try? await viewActor.runCheck(with: tempIPAddress, u: username, p: password)
             if isExhaustive {
                 if await !(viewActor.getServerStatus()?.online ?? false) {
-                    await MainActor.run {
-                        tempIPAddress = "\(ipAddress ?? "")"
-                    }
-                    try? await viewActor.runCheck(with: tempIPAddress)
+                    updateTempIPAddress(with: "\(ipAddress ?? "")")
+                    try? await viewActor.runCheck(with: tempIPAddress, u: username, p: password)
                 }
                 if await !(viewActor.getServerStatus()?.online ?? false) {
                     updateTempIPAddress(with: "http://\(ipAddress ?? "")")
-                    try? await viewActor.runCheck(with: tempIPAddress)
+                    try? await viewActor.runCheck(with: tempIPAddress, u: username, p: password)
                 }
             }
-            let status = await viewActor.getServerStatus()
-            let currentHash = await viewActor.getFetchHash()
             
-            updateIPCreds(status: status, hash: currentHash)
+            updateIPCreds(status: await viewActor.getServerStatus(), hash: await viewActor.getFetchHash())
         }
     }
     
@@ -148,6 +207,15 @@ struct ServerStatus: Codable, Hashable {
         self.title = ""
         self.body = ""
         self.footer = ""
+        self.om_verify = om_verify
+        self.type = type
+    }
+    
+    init(online: Bool, title: String, body: String, footer: String, om_verify: String, type: ServerType) {
+        self.online = online
+        self.title = title
+        self.body = body
+        self.footer = footer
         self.om_verify = om_verify
         self.type = type
     }

@@ -119,7 +119,7 @@ final class StoredTrack: Hashable, Track {
         self.Album = from.Album
         self.Features = from.Features
         self.dateAdded = Date()
-        self.originServer = globalIPAddress()
+        self.originServer = NetworkManager.globalIPAddress()
         Task.detached {
             await downloadAlbumArt(artworkID: from.Album.Artwork)
         }
@@ -136,7 +136,7 @@ final class StoredTrack: Hashable, Track {
         self.Album = from.Track.Album
         self.Features = from.Track.Features
         self.dateAdded = Date()
-        self.originServer = globalIPAddress()
+        self.originServer = NetworkManager.globalIPAddress()
         Task.detached {
             await downloadAlbumArt(artworkID: from.Track.Album.Artwork)
         }

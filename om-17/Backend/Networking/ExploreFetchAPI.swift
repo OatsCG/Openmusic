@@ -16,8 +16,7 @@ func fetchExploreResults() async throws -> ExploreResults {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(ExploreResults.self, from: data)
+    return try NetworkManager.shared.networkService.decodeExploreResults(data)
 }
 
 // Actor to manage explore data

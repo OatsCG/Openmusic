@@ -25,9 +25,11 @@ class NetworkManager {
         }
     }
     
-    func updateGlobalIPAddress(with newValue: String, type: ServerType) {
+    func updateGlobalIPAddress(with newValue: String, type: ServerType, u: String, p: String) {
         UserDefaults.standard.set(newValue, forKey: "globalIPAddress")
         UserDefaults.standard.set(type.rawValue, forKey: "ServerType")
+        UserDefaults.standard.set(u, forKey: "ServerUsername")
+        UserDefaults.standard.set(p, forKey: "ServerPassword")
         switch type {
         case .navidrome:
             self.networkService = NavidromeNetworkService()
@@ -50,10 +52,25 @@ class NetworkManager {
 protocol NetworkService {
     func baseURL() -> String
     func getEndpointURL(_ endpoint: Endpoint) -> String
+    
+    func decodeServerStatus(_ data: Data) throws -> ServerStatus
+    func decodeExploreResults(_ data: Data) throws -> ExploreResults
+    func decodeVibeShelf(_ data: Data) throws -> VibeShelf
+    func decodeSearchResults(_ data: Data) throws -> SearchResults
+    func decodeFetchedTracks(_ data: Data) throws -> FetchedTracks
+    func decodeFetchedAlbum(_ data: Data) throws -> FetchedAlbum
+    func decodeFetchedArtist(_ data: Data) throws -> FetchedArtist
+    func decodeRandomTracks(_ data: Data) throws -> RandomTracks
+    func decodeFetchedPlaylistInfo(_ data: Data) throws -> FetchedPlaylistInfo
+    func decodeFetchedPlaylistInfoTracks(_ data: Data) throws -> FetchedPlaylistInfoTracks
+    func decodeImportedTracks(_ data: Data) throws -> ImportedTracks
+    func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback
 }
 
 
 class OpenmusicNetworkService: NetworkService {
+    let decoder = JSONDecoder()
+    
     func baseURL() -> String {
         return NetworkManager.globalIPAddress()
     }
@@ -95,20 +112,95 @@ class OpenmusicNetworkService: NetworkService {
         }
     }
     
-    func decode(data: Data, to: Decodable.Type) {
-        
+    func decodeServerStatus(_ data: Data) throws -> ServerStatus {
+        return try decoder.decode(ServerStatus.self, from: data)
+    }
+    
+    func decodeExploreResults(_ data: Data) throws -> ExploreResults {
+        return try decoder.decode(ExploreResults.self, from: data)
+    }
+    
+    func decodeVibeShelf(_ data: Data) throws -> VibeShelf {
+        return try decoder.decode(VibeShelf.self, from: data)
+    }
+    
+    func decodeSearchResults(_ data: Data) throws -> SearchResults {
+        return try decoder.decode(SearchResults.self, from: data)
+    }
+    
+    func decodeFetchedTracks(_ data: Data) throws -> FetchedTracks {
+        return try decoder.decode(FetchedTracks.self, from: data)
+    }
+    
+    func decodeFetchedAlbum(_ data: Data) throws -> FetchedAlbum {
+        return try decoder.decode(FetchedAlbum.self, from: data)
+    }
+    
+    func decodeFetchedArtist(_ data: Data) throws -> FetchedArtist {
+        return try decoder.decode(FetchedArtist.self, from: data)
+    }
+    
+    func decodeRandomTracks(_ data: Data) throws -> RandomTracks {
+        return try decoder.decode(RandomTracks.self, from: data)
+    }
+    
+    func decodeFetchedPlaylistInfo(_ data: Data) throws -> FetchedPlaylistInfo {
+        return try decoder.decode(FetchedPlaylistInfo.self, from: data)
+    }
+    
+    func decodeFetchedPlaylistInfoTracks(_ data: Data) throws -> FetchedPlaylistInfoTracks {
+        return try decoder.decode(FetchedPlaylistInfoTracks.self, from: data)
+    }
+    
+    func decodeImportedTracks(_ data: Data) throws -> ImportedTracks {
+        return try decoder.decode(ImportedTracks.self, from: data)
+    }
+    
+    func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
+        return try decoder.decode(FetchedPlayback.self, from: data)
     }
 }
 
 class NavidromeNetworkService: NetworkService {
+    var u: String
+    var p: String
+    let params: String = "f=json&v=1.8.0&c=openmusic"
+    
+    init(u: String, p: String) {
+        self.u = u
+        self.p = p
+    }
+    
+    init() {
+        self.u = ""
+        self.p = ""
+    }
+    
     func baseURL() -> String {
-        return ""
+        return NetworkManager.globalIPAddress()
+    }
+    
+    func getEndpointURL(_ endpoint: Endpoint, ip: String) -> String {
+        return switch endpoint {
+        case .status:
+            "\(ip)/rest/ping?\(params)&u=\(u)&p=\(p)"
+        default:
+            "\(ip)/rest/ping?\(params)&u=\(u)&p=\(p)"
+        }
     }
     
     func getEndpointURL(_ endpoint: Endpoint) -> String {
-        return ""
+        return switch endpoint {
+        case .status:
+            "\(baseURL())/rest/ping"
+        default:
+            "\(baseURL())/rest/ping"
+        }
     }
     
+    static func decodeStatus(data: Data) {
+        
+    }
     
 }
 

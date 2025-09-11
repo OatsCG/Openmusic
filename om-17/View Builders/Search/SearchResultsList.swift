@@ -33,7 +33,7 @@ struct SearchResultsView: View {
                         LoadingSearchResults_component()
                     } else if viewModel.searchResults == nil {
                         Spacer()
-                        if (globalIPAddress() != "") {
+                        if (NetworkManager.globalIPAddress() != "") {
                             ContentUnavailableView {
                                 Label("No connection", systemImage: "wifi.exclamationmark")
                             } description: {

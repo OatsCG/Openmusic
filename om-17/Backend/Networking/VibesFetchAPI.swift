@@ -16,8 +16,7 @@ func fetchVibeResults() async throws -> VibeShelf {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(VibeShelf.self, from: data)
+    return try NetworkManager.shared.networkService.decodeVibeShelf(data)
 }
 
 // Actor to manage explore data

@@ -16,8 +16,7 @@ func fetchArtistData(artistID: String) async throws -> FetchedArtist {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(FetchedArtist.self, from: data)
+    return try NetworkManager.shared.networkService.decodeFetchedArtist(data)
 }
 
 // Actor to manage artist data

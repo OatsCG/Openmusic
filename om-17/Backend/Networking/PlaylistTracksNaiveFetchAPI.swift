@@ -15,8 +15,7 @@ func fetchPlaylistTracksNaiveData(playlistID: String, type: Platform) async thro
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(FetchedPlaylistInfoTracks.self, from: data)
+    return try NetworkManager.shared.networkService.decodeFetchedPlaylistInfoTracks(data)
 }
 
 // Actor to manage playlist tracks data

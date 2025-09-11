@@ -15,6 +15,5 @@ func fetchPlaybackData(playbackID: String) async throws -> FetchedPlayback {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(FetchedPlayback.self, from: data)
+    return try NetworkManager.shared.networkService.decodeFetchedPlayback(data)
 }

@@ -15,8 +15,7 @@ func playRandomSongs() async throws -> RandomTracks {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(RandomTracks.self, from: data)
+    return try NetworkManager.shared.networkService.decodeRandomTracks(data)
 }
 
 

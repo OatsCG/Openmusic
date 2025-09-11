@@ -16,8 +16,7 @@ func fetchPlaylistInfoData(playlistID: String, type: Platform) async throws -> F
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(FetchedPlaylistInfo.self, from: data)
+    return try NetworkManager.shared.networkService.decodeFetchedPlaylistInfo(data)
 }
 
 // Actor to manage playlist info data

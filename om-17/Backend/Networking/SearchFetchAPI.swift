@@ -17,8 +17,7 @@ func fetchSearchResults(query: String) async throws -> SearchResults {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(SearchResults.self, from: data)
+    return try NetworkManager.shared.networkService.decodeSearchResults(data)
 }
 
 // Actor to manage search data

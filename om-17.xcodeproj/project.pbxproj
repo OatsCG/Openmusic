@@ -138,6 +138,9 @@
 		E53ED7DC2BAA856900ECC3CE /* EQPresetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53ED7DB2BAA856900ECC3CE /* EQPresetRow.swift */; };
 		E54053082E73186100863014 /* ServerInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54053072E73186100863014 /* ServerInput.swift */; };
 		E540530A2E7318DB00863014 /* ServerStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54053092E7318DB00863014 /* ServerStatusIndicator.swift */; };
+		E540530C2E7319A200863014 /* AddServerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540530B2E7319A200863014 /* AddServerButton.swift */; };
+		E540530E2E731A1800863014 /* ServerDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540530D2E731A1800863014 /* ServerDescription.swift */; };
+		E54053102E731AA300863014 /* ServerCredentialsInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540530F2E731AA300863014 /* ServerCredentialsInput.swift */; };
 		E54245C02BD057DC00418B64 /* MainNavigationTabbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */; };
 		E54245C22BD057E400418B64 /* MainNavigationSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */; };
 		E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */; };
@@ -751,6 +754,9 @@
 		E53ED7DB2BAA856900ECC3CE /* EQPresetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EQPresetRow.swift; sourceTree = "<group>"; };
 		E54053072E73186100863014 /* ServerInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInput.swift; sourceTree = "<group>"; };
 		E54053092E7318DB00863014 /* ServerStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusIndicator.swift; sourceTree = "<group>"; };
+		E540530B2E7319A200863014 /* AddServerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerButton.swift; sourceTree = "<group>"; };
+		E540530D2E731A1800863014 /* ServerDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDescription.swift; sourceTree = "<group>"; };
+		E540530F2E731AA300863014 /* ServerCredentialsInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCredentialsInput.swift; sourceTree = "<group>"; };
 		E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationTabbed.swift; sourceTree = "<group>"; };
 		E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationSidebar.swift; sourceTree = "<group>"; };
 		E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewer.swift; sourceTree = "<group>"; };
@@ -1380,6 +1386,9 @@
 				E57F7F982B86B0A600AEAD97 /* AddServerSheet.swift */,
 				E54053072E73186100863014 /* ServerInput.swift */,
 				E54053092E7318DB00863014 /* ServerStatusIndicator.swift */,
+				E540530B2E7319A200863014 /* AddServerButton.swift */,
+				E540530D2E731A1800863014 /* ServerDescription.swift */,
+				E540530F2E731AA300863014 /* ServerCredentialsInput.swift */,
 			);
 			path = ServerSheet;
 			sourceTree = "<group>";
@@ -3391,6 +3400,7 @@
 				E54A40062ACCB019007B1444 /* AlbumBackground_honeycrisp.swift in Sources */,
 				E5F39D092B8FF31800DF1952 /* AnimatedAlbumArtDisplay.swift in Sources */,
 				E5E6A1DE2A80656400880E6B /* GlobalTint_component.swift in Sources */,
+				E54053102E731AA300863014 /* ServerCredentialsInput.swift in Sources */,
 				E54A400A2ACCB330007B1444 /* ArtistBackground_honeycrisp.swift in Sources */,
 				E5705DBE2A80935E0087A43F /* SearchTrackLink_honeycrisp.swift in Sources */,
 				E5DCFE002B450ED00044D9B5 /* NPBackButton_component.swift in Sources */,
@@ -3595,6 +3605,7 @@
 				E52D2EDE2A4CC9A1004BFAA4 /* LibraryArtistsList.swift in Sources */,
 				E58E8FA22BA16BB8009F7E43 /* TrackMenuPreview_faero.swift in Sources */,
 				E58B673A2ACFB2B0002FA7A2 /* AlbumMenuPreview_wii.swift in Sources */,
+				E540530C2E7319A200863014 /* AddServerButton.swift in Sources */,
 				E58E8FCF2BA172AF009F7E43 /* AudioPlayerNodeDelegate.swift in Sources */,
 				E58E8FB92BA16F5D009F7E43 /* BufferProgressLabel.swift in Sources */,
 				E5B7D1192AA81FD300EAB1A7 /* PlaylistContentHeading_component.swift in Sources */,
@@ -3779,6 +3790,7 @@
 				E5705DC72A8164490087A43F /* MiniPlayer_component.swift in Sources */,
 				E579DE632B3E9EA1009324C1 /* SearchAlbumHeader.swift in Sources */,
 				E58B67342ACFB2B0002FA7A2 /* TabBarSearchLabel_wii.swift in Sources */,
+				E540530E2E731A1800863014 /* ServerDescription.swift in Sources */,
 				E58B67412ACFB2B0002FA7A2 /* SearchArtistLink_wii.swift in Sources */,
 				E52D2EDA2A4CC985004BFAA4 /* LibraryAlbumsList.swift in Sources */,
 				E5705DD32A8177DB0087A43F /* AlbumWideButton_honeycrisp.swift in Sources */,
