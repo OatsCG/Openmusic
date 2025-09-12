@@ -39,11 +39,10 @@ class RecentlyPlayedManager {
     static func decodeRecentTracks(tracks: String) -> [FetchedTrack] {
         var trackObjects: [FetchedTrack] = []
         let trackStrings: [String] = tracks.components(separatedBy: "<FETCHEDTRACKSTRINGSEP>")
-        let decoder = JSONDecoder()
         for trackString in trackStrings {
             if let jsonData = trackString.data(using: .utf8) {
                 do {
-                    let trackObject: FetchedTrack = try decoder.decode(FetchedTrack.self, from: jsonData)
+                    let trackObject: FetchedTrack = try NetworkManager.shared.networkService.decodeFetchedTrack(jsonData)
                     trackObjects.append(trackObject)
                 } catch {
                     continue

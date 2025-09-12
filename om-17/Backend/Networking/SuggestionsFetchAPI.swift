@@ -35,8 +35,7 @@ func fetchSuggestionsData(vibe: VibeObject) async throws -> ImportedTracks {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try decoder.decode(ImportedTracks.self, from: data)
+    return try NetworkManager.shared.networkService.decodeImportedTracks(data)
 }
 
 // Actor to manage suggestions data fetching

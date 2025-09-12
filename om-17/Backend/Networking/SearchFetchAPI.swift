@@ -15,7 +15,7 @@ func fetchSearchResults(query: String) async throws -> SearchResults {
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
-    
+    print("ND: \(url)")
     let (data, _) = try await URLSession.shared.data(from: url)
     return try NetworkManager.shared.networkService.decodeSearchResults(data)
 }

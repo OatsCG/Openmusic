@@ -8,14 +8,14 @@
 import Foundation
 import SwiftUI
 
-func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
-    if imgID == nil {
+func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {    
+    if let imgID = imgID {
+        let url = URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
+        return url ?? nil
+    } else {
         return nil
 //        let url = URL(string: "")
 //        return url ?? nil
-    } else {
-        let url = URL(string: "https://lh3.googleusercontent.com/\(imgID!)=w\(resolution.rawValue)-h\(resolution.rawValue)-l90-rj")
-        return url ?? nil
     }
 }
 

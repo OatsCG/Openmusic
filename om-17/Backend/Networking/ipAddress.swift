@@ -16,7 +16,7 @@ class NetworkManager {
         if let type = ServerType(rawValue: serverType) {
             switch type {
             case .navidrome:
-                self.networkService = NavidromeNetworkService()
+                self.networkService = NavidromeNetworkService(u: UserDefaults.standard.string(forKey: "ServerUsername") ?? "", p: UserDefaults.standard.string(forKey: "ServerPassword") ?? "")
             case .openmusic:
                 self.networkService = OpenmusicNetworkService()
             }
@@ -65,6 +65,8 @@ protocol NetworkService {
     func decodeFetchedPlaylistInfoTracks(_ data: Data) throws -> FetchedPlaylistInfoTracks
     func decodeImportedTracks(_ data: Data) throws -> ImportedTracks
     func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback
+    func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum
+    func decodeFetchedTrack(_ data: Data) throws -> FetchedTrack
 }
 
 
@@ -159,12 +161,21 @@ class OpenmusicNetworkService: NetworkService {
     func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
         return try decoder.decode(FetchedPlayback.self, from: data)
     }
+    
+    func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum {
+        return try decoder.decode(SearchedAlbum.self, from: data)
+    }
+    
+    func decodeFetchedTrack(_ data: Data) throws -> FetchedTrack {
+        return try decoder.decode(FetchedTrack.self, from: data)
+    }
 }
 
 class NavidromeNetworkService: NetworkService {
     var u: String
     var p: String
     let params: String = "f=json&v=1.8.0&c=openmusic"
+    let decoder = JSONDecoder()
     
     init(u: String, p: String) {
         self.u = u
@@ -192,14 +203,126 @@ class NavidromeNetworkService: NetworkService {
     func getEndpointURL(_ endpoint: Endpoint) -> String {
         return switch endpoint {
         case .status:
-            "\(baseURL())/rest/ping"
-        default:
-            "\(baseURL())/rest/ping"
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .explore:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .vibes:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .search(q: let q):
+            "\(baseURL())/rest/search2?\(params)&u=\(u)&p=\(p)&any=\(q)"
+        case .quick(q: let q):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .album(id: let id):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .artist(id: let id):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .random:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .playlistinfo(platform: let platform, id: let id):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .ampVideo(id: let id):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .playlisttracks(platform: let platform, id: let id):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .exact(song: let song, album: let album, artist: let artist):
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .suggest:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .suggestVibe:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .playback(id: let id):
+            "\(baseURL())/rest/getSong?\(params)&u=\(u)&p=\(p)&id=\(id)"
+        case .image(id: let id, w: let w, h: let h):
+            "\(baseURL())/rest/getCoverArt?\(params)&u=\(u)&p=\(p)&id=\(id)&size=\(h)"
         }
     }
     
-    static func decodeStatus(data: Data) {
+    func decodeServerStatus(_ data: Data) throws -> ServerStatus {
+        let d = try decoder.decode(NavidromeServerStatus.self, from: data)
+        return ServerStatus(online: d.subsonicresponse.error == nil, title: "", body: "", footer: "", om_verify: "ok", type: .navidrome)
+    }
+    
+    func decodeExploreResults(_ data: Data) throws -> ExploreResults {
+        return ExploreResults(Shelves: [])
+    }
+    
+    func decodeVibeShelf(_ data: Data) throws -> VibeShelf {
+        return VibeShelf(vibes: [])
+    }
+    
+    func decodeSearchResults(_ data: Data) throws -> SearchResults {
+        let d = try decoder.decode(NavidromeSearch.self, from: data)
         
+        var tracks: [FetchedTrack] = []
+        var albums: [SearchedAlbum] = []
+        var artists: [SearchedArtist] = []
+        
+        for t in d.subsonicresponse.searchResult2.song {
+            var albumArtists: [SearchedArtist] = []
+            for artist in t.albumArtists {
+                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: "", Subscribers: 0))
+            }
+            
+            let album = SearchedAlbum(AlbumID: t.albumId, Title: t.album, Artwork: t.coverArt, AlbumType: "Album", Year: t.year, Artists: albumArtists)
+            var features: [SearchedArtist] = []
+            for artist in t.artists {
+                features.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: "", Subscribers: 0))
+            }
+            
+            tracks.append(FetchedTrack(TrackID: t.id, Title: t.title, Playback_Clean: t.id, Playback_Explicit: nil, Length: t.duration, Index: t.track, Views: 0, Album: album, Features: features))
+        }
+        
+        for album in d.subsonicresponse.searchResult2.album {
+//            albums.append
+        }
+        
+        for artist in d.subsonicresponse.searchResult2.artist {
+            
+        }
+        
+        return SearchResults(Tracks: tracks, Albums: albums, Singles: [], Artists: artists)
+    }
+    
+    func decodeFetchedTracks(_ data: Data) throws -> FetchedTracks {
+        return FetchedTracks(Tracks: [])
+    }
+    
+    func decodeFetchedAlbum(_ data: Data) throws -> FetchedAlbum {
+        return FetchedAlbum(from: [FetchedTrack()])
+    }
+    
+    func decodeFetchedArtist(_ data: Data) throws -> FetchedArtist {
+        return FetchedArtist()
+    }
+    
+    func decodeRandomTracks(_ data: Data) throws -> RandomTracks {
+        return RandomTracks(Tracks: [])
+    }
+    
+    func decodeFetchedPlaylistInfo(_ data: Data) throws -> FetchedPlaylistInfo {
+        return FetchedPlaylistInfo()
+    }
+    
+    func decodeFetchedPlaylistInfoTracks(_ data: Data) throws -> FetchedPlaylistInfoTracks {
+        return FetchedPlaylistInfoTracks()
+    }
+    
+    func decodeImportedTracks(_ data: Data) throws -> ImportedTracks {
+        return ImportedTracks(Tracks: [])
+    }
+    
+    func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
+        let d = try decoder.decode(NavidromeSong.self, from: data)
+        print("ND: GOT PLAYBACK \("\(baseURL())/rest/stream?\(params)&u=\(u)&p=\(p)&id=\(d.subsonicresponse.song.id)")")
+        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&u=\(u)&p=\(p)&id=\(d.subsonicresponse.song.id)")
+    }
+    
+    func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum {
+        return SearchedAlbum()
+    }
+    
+    func decodeFetchedTrack(_ data: Data) throws -> FetchedTrack {
+        return FetchedTrack()
     }
     
 }

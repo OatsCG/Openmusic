@@ -17,28 +17,6 @@ func getIPAddressType(_ ip: String) async throws -> ServerType {
     }
 }
 
-struct NavidromeServerStatus: Codable {
-    var subsonicresponse: SubsonicResponse
-    
-    enum CodingKeys: String, CodingKey {
-        case subsonicresponse = "subsonic-response"
-    }
-}
-
-struct SubsonicResponse: Codable {
-    var status: String
-    var version: String
-    var type: String
-    var serverVersion: String
-    var openSubsonic: Bool
-    var error: SubsonicError?
-}
-
-struct SubsonicError: Codable {
-    var code: Int
-    var message: String
-}
-
 
 func isNavidrome(_ ip: String) async throws -> Bool {
     guard let url = URL(string: "\(ip)/rest/ping?f=json") else {

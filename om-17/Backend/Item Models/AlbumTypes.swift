@@ -25,6 +25,15 @@ struct SearchedAlbum: Codable, Hashable, Album {
     var Year: Int
     var Artists: [SearchedArtist] = []
     
+    init(AlbumID: String, Title: String, Artwork: String, AlbumType: String, Year: Int, Artists: [SearchedArtist]) {
+        self.AlbumID = AlbumID
+        self.Title = Title
+        self.Artwork = Artwork
+        self.AlbumType = AlbumType
+        self.Year = Year
+        self.Artists = Artists
+    }
+    
     init() {
         self.AlbumID = UUID().uuidString
         self.Title = ""

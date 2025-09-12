@@ -9,7 +9,7 @@ import Foundation
 
 
 func BuildArtistCookieImageURL(imgID: String, resolution: Resolution) -> URL? {
-    let url = URL(string:NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
+    let url = URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
     return url ?? nil
 }
 

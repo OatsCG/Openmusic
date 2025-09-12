@@ -141,6 +141,7 @@
 		E540530C2E7319A200863014 /* AddServerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540530B2E7319A200863014 /* AddServerButton.swift */; };
 		E540530E2E731A1800863014 /* ServerDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540530D2E731A1800863014 /* ServerDescription.swift */; };
 		E54053102E731AA300863014 /* ServerCredentialsInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E540530F2E731AA300863014 /* ServerCredentialsInput.swift */; };
+		E54053132E73C57E00863014 /* NavidromeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54053122E73C57E00863014 /* NavidromeTypes.swift */; };
 		E54245C02BD057DC00418B64 /* MainNavigationTabbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */; };
 		E54245C22BD057E400418B64 /* MainNavigationSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */; };
 		E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */; };
@@ -757,6 +758,7 @@
 		E540530B2E7319A200863014 /* AddServerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerButton.swift; sourceTree = "<group>"; };
 		E540530D2E731A1800863014 /* ServerDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDescription.swift; sourceTree = "<group>"; };
 		E540530F2E731AA300863014 /* ServerCredentialsInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCredentialsInput.swift; sourceTree = "<group>"; };
+		E54053122E73C57E00863014 /* NavidromeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavidromeTypes.swift; sourceTree = "<group>"; };
 		E54245BF2BD057DC00418B64 /* MainNavigationTabbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationTabbed.swift; sourceTree = "<group>"; };
 		E54245C12BD057E400418B64 /* MainNavigationSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationSidebar.swift; sourceTree = "<group>"; };
 		E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewer.swift; sourceTree = "<group>"; };
@@ -2769,6 +2771,7 @@
 			isa = PBXGroup;
 			children = (
 				E5C2DD6B2A30398400E6BB97 /* ipAddress.swift */,
+				E54053122E73C57E00863014 /* NavidromeTypes.swift */,
 				E5F2CA0A2C1520AA00241B8E /* Discord RPC */,
 				E59600932B3B7963009E5858 /* StatusFetchAPI.swift */,
 				E5FFBD552B0A8AD000170496 /* ExploreFetchAPI.swift */,
@@ -3280,6 +3283,7 @@
 				E52D5B832B51BDE700E1E8DC /* EQManager.swift in Sources */,
 				E529CD412AAED587001B3EA3 /* PlaylistArtDisplay.swift in Sources */,
 				E5974D722A6C90D5009286E2 /* CurrentTheme.swift in Sources */,
+				E54053132E73C57E00863014 /* NavidromeTypes.swift in Sources */,
 				E579DE612B3E7A0F009324C1 /* FetchedArtistContentHeader_spotty.swift in Sources */,
 				E58B67382ACFB2B0002FA7A2 /* AlbumBackground_wii.swift in Sources */,
 				E5CC53A12B59B016004D50A3 /* NPBackground_feco.swift in Sources */,

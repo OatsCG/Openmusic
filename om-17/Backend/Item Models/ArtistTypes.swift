@@ -13,6 +13,13 @@ struct SearchedArtist: Codable, Hashable {
     var Profile_Photo: String
     var Subscribers: Int
     
+    init(ArtistID: String, Name: String, Profile_Photo: String, Subscribers: Int) {
+        self.ArtistID = ArtistID
+        self.Name = Name
+        self.Profile_Photo = Profile_Photo
+        self.Subscribers = Subscribers
+    }
+    
     init() {
         self.ArtistID = UUID().uuidString
         self.Name = ""

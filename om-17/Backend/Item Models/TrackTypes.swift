@@ -31,6 +31,18 @@ struct FetchedTrack: Codable, Hashable, Track {
     var Album: SearchedAlbum
     var Features: [SearchedArtist]
     
+    init(TrackID: String, Title: String, Playback_Clean: String?, Playback_Explicit: String?, Length: Int, Index: Int, Views: Int, Album: SearchedAlbum, Features: [SearchedArtist]) {
+        self.TrackID = TrackID
+        self.Title = Title
+        self.Playback_Clean = Playback_Clean
+        self.Playback_Explicit = Playback_Explicit
+        self.Length = Length
+        self.Index = Index
+        self.Views = Views
+        self.Album = Album
+        self.Features = Features
+    }
+    
     init() {
         self.TrackID = UUID().uuidString
         self.Title = ""

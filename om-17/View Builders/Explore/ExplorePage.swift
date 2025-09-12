@@ -72,13 +72,17 @@ struct ExplorePage: View {
                         VStack(spacing: 20) {
                             ExploreVibesView(vibesViewModel: $vibesViewModel)
                             Divider()
-                            ExploreShelfBigView(exploreShelf: viewModel.exploreResults!.Shelves.first!)
+                            if let firstShelf = viewModel.exploreResults?.Shelves.first {
+                                ExploreShelfBigView(exploreShelf: firstShelf)
+                            }
                             Divider()
                                 .padding(.bottom, 15)
-                            ForEach(viewModel.exploreResults!.Shelves.dropFirst(), id: \.self) { shelf in
-                                ExploreShelfView(exploreShelf: shelf)
-                                Divider()
-                                    .padding(.bottom, 15)
+                            if let results = viewModel.exploreResults {
+                                ForEach(results.Shelves.dropFirst(), id: \.self) { shelf in
+                                    ExploreShelfView(exploreShelf: shelf)
+                                    Divider()
+                                        .padding(.bottom, 15)
+                                }
                             }
                         }
                     }

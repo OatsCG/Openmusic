@@ -20,7 +20,7 @@ func decodeURLSafeStringToAlbum(encodedString: String) -> SearchedAlbum? {
     if let decodedString = encodedString.removingPercentEncoding,
        let jsonData = decodedString.data(using: .utf8) {
         let decoder = JSONDecoder()
-        return try? decoder.decode(SearchedAlbum.self, from: jsonData)
+        return try? NetworkManager.shared.networkService.decodeSearchedAlbum(jsonData)
     }
     return nil
 }
