@@ -12,12 +12,6 @@ func fetchPlaylistTracksFetchData(importData: ImportData) async throws -> Import
     let album = importData.from.album?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
     let artist = importData.from.artist?.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
     
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.exact(song: title, album: album, artist: artist))
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeImportedTracks(data)
+    return try await NetworkManager.shared.fetch(endpoint: .exact(song: title, album: album, artist: artist), type: ImportedTracks.self)
 }
 

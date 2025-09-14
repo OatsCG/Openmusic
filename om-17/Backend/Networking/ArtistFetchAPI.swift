@@ -9,14 +9,7 @@ import SwiftUI
 
 // Function to fetch artist data
 func fetchArtistData(artistID: String) async throws -> FetchedArtist {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.artist(id: artistID))
-    
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeFetchedArtist(data)
+    return try await NetworkManager.shared.fetch(endpoint: .artist(id: artistID), type: FetchedArtist.self)
 }
 
 // Actor to manage artist data

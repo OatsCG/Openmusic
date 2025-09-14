@@ -8,14 +8,7 @@
 import SwiftUI
 
 func playRandomSongs() async throws -> RandomTracks {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.random)
-    
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeRandomTracks(data)
+    return try await NetworkManager.shared.fetch(endpoint: .random, type: RandomTracks.self)
 }
 
 

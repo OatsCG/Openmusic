@@ -39,11 +39,34 @@ import AudioKit
         self.player.automaticallyWaitsToMinimizeStalling = false
         self.player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
     }
+    
+    @objc func handleAccessLogEntry(_ notification: Notification) {
+        guard let playerItem = notification.object as? AVPlayerItem,
+              let lastEvent = playerItem.accessLog()?.events.last else {
+            print("AVLOG: couldnt init. \(notification.object)")
+            return
+        }
+
+        let indicatedBitrate = lastEvent.indicatedBitrate // Advertised bitrate
+        let averageVideoBitrate = lastEvent.averageVideoBitrate // Average video bitrate
+        let averageAudioBitrate = lastEvent.averageAudioBitrate // Average audio bitrate
+        let datetime = Date().timeIntervalSince1970
+        // Process the bitrate information as needed
+        print("AVLOG: Indicated Bitrate: \(indicatedBitrate) bps. Time logged: \(datetime)")
+        print("AVLOG: Average Video Bitrate: \(averageVideoBitrate) bps. Time logged: \(datetime)")
+        print("AVLOG: Average Audio Bitrate: \(averageAudioBitrate) bps. Time logged: \(datetime)")
+    }
+    
     init(playerItem: AVPlayerItem) {
+//        playerItem.preferredPeakBitRate = 1
         self.player = AVPlayer(playerItem: playerItem)
         //self.duration = playerItem.duration.seconds
         self.filehash = UUID()
         self.status = .unknown
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleAccessLogEntry(_:)),
+                                               name: .AVPlayerItemNewAccessLogEntry,
+                                               object: self.player.currentItem)
         self.player.automaticallyWaitsToMinimizeStalling = false
         self.player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
     }
@@ -63,6 +86,7 @@ import AudioKit
     func play() {
         //self.player.play()
         self.player.playImmediately(atRate: 1.0)
+//        self.player.currentItem?.preferredPeakBitRate = 1
     }
     func pause() {
         self.player.pause()
@@ -118,8 +142,6 @@ import AudioKit
         self.player.volume = min(max(to, 0), 1)
     }
 }
-
-
 
 
 func fetchContentLength(myURL: URL?, callback: @escaping (Double?) -> Void) {

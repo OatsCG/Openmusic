@@ -9,14 +9,7 @@ import SwiftUI
 
 // Function to fetch quick search results
 func fetchQuickSearchResults(query: String) async throws -> FetchedTracks {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.quick(q: query))
-    
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeFetchedTracks(data)
+    return try await NetworkManager.shared.fetch(endpoint: .quick(q: query), type: FetchedTracks.self)
 }
 
 // Actor to manage quick search data

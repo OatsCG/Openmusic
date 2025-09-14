@@ -10,14 +10,7 @@ import SwiftUI
 
 // Function to fetch search results
 func fetchSearchResults(query: String) async throws -> SearchResults {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.search(q: query))
-    
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    print("ND: \(url)")
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeSearchResults(data)
+    return try await NetworkManager.shared.fetch(endpoint: .search(q: query), type: SearchResults.self)
 }
 
 // Actor to manage search data

@@ -9,14 +9,7 @@ import SwiftUI
 
 // Function to fetch playlist info data
 func fetchPlaylistInfoData(playlistID: String, type: Platform) async throws -> FetchedPlaylistInfo {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.playlistinfo(platform: type.rawValue, id: playlistID))
-    
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeFetchedPlaylistInfo(data)
+    return try await NetworkManager.shared.fetch(endpoint: .playlistinfo(platform: type.rawValue, id: playlistID), type: FetchedPlaylistInfo.self)
 }
 
 // Actor to manage playlist info data

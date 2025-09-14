@@ -9,13 +9,7 @@ import SwiftUI
 
 // Function to fetch playlist tracks naive data
 func fetchPlaylistTracksNaiveData(playlistID: String, type: Platform) async throws -> FetchedPlaylistInfoTracks {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.playlisttracks(platform: type.rawValue, id: playlistID))
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeFetchedPlaylistInfoTracks(data)
+    return try await NetworkManager.shared.fetch(endpoint: .playlisttracks(platform: type.rawValue, id: playlistID), type: FetchedPlaylistInfoTracks.self)
 }
 
 // Actor to manage playlist tracks data

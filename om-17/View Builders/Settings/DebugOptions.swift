@@ -16,9 +16,14 @@ struct DebugOptions: View {
                     Toggle("Enable Player Debugger", isOn: $playerDebugger)
                         .tint(.green)
                 } header: {
-                    Text("DEBUG")
+                    Text("PLAYER")
                 } footer: {
                     Text("Enables a label in the Now Playing view that shows the current playback status of the player.")
+                }
+                Section {
+                    NavigationLink("Network Debugger", destination: NetworkDebugger())
+                } header: {
+                    Text("NETWORKING")
                 }
             }
                 .scrollContentBackground(.hidden)

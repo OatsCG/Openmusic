@@ -10,13 +10,24 @@ import SwiftUI
 // Function to fetch explore results
 func fetchExploreResults() async throws -> ExploreResults {
     let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore)
+    let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString)
+    var didSucceed = false
+    defer {
+        if didSucceed {
+            NetworkManager.shared.updateLogStatus(id: logID, to: .success)
+        } else {
+            NetworkManager.shared.updateLogStatus(id: logID, to: .failed)
+        }
+    }
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeExploreResults(data)
+    let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
+    didSucceed = true
+    return decoded
 }
 
 // Actor to manage explore data

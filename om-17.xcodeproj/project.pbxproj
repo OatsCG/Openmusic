@@ -418,6 +418,7 @@
 		E5A534FE2B02EF5900F48935 /* RecentSearchesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A534FD2B02EF5900F48935 /* RecentSearchesList.swift */; };
 		E5A535002B03128D00F48935 /* QuickFetchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A534FF2B03128D00F48935 /* QuickFetchAPI.swift */; };
 		E5A65A042A41279F00072966 /* MiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A65A032A41279F00072966 /* MiniPlayer.swift */; };
+		E5A7CD072E773799001F4622 /* NetworkDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A7CD062E773799001F4622 /* NetworkDebugger.swift */; };
 		E5A928D22A310472000E52C5 /* SearchShelfTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A928D12A310472000E52C5 /* SearchShelfTracks.swift */; };
 		E5A928D52A310483000E52C5 /* SearchShelfAlbums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A928D42A310483000E52C5 /* SearchShelfAlbums.swift */; };
 		E5A928D72A31048C000E52C5 /* SearchShelfSingles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A928D62A31048C000E52C5 /* SearchShelfSingles.swift */; };
@@ -1028,6 +1029,7 @@
 		E5A534FD2B02EF5900F48935 /* RecentSearchesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchesList.swift; sourceTree = "<group>"; };
 		E5A534FF2B03128D00F48935 /* QuickFetchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFetchAPI.swift; sourceTree = "<group>"; };
 		E5A65A032A41279F00072966 /* MiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayer.swift; sourceTree = "<group>"; };
+		E5A7CD062E773799001F4622 /* NetworkDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDebugger.swift; sourceTree = "<group>"; };
 		E5A928D12A310472000E52C5 /* SearchShelfTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchShelfTracks.swift; sourceTree = "<group>"; };
 		E5A928D42A310483000E52C5 /* SearchShelfAlbums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchShelfAlbums.swift; sourceTree = "<group>"; };
 		E5A928D62A31048C000E52C5 /* SearchShelfSingles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchShelfSingles.swift; sourceTree = "<group>"; };
@@ -3060,6 +3062,7 @@
 				E5A4373E2B827F24007680AF /* NowPlayingOptions.swift */,
 				E5299E912BB08BDA003494FB /* QueueOptions.swift */,
 				E58E8FDA2BA17558009F7E43 /* DebugOptions.swift */,
+				E5A7CD062E773799001F4622 /* NetworkDebugger.swift */,
 				E59600912B3B76D5009E5858 /* CustomServerInput.swift */,
 				E5E785E22B6CB929004F4D51 /* Credits.swift */,
 				E5F43D4B2B0AE52F00864502 /* EQEditor.swift */,
@@ -3582,6 +3585,7 @@
 				E59B3A272CC59E56001D419A /* VibeView.swift in Sources */,
 				E5DCFE042B450F5C0044D9B5 /* NPPlayButton_classic.swift in Sources */,
 				E56E1D4B2BC9BD0A00C4DB42 /* SettingsTab.swift in Sources */,
+				E5A7CD072E773799001F4622 /* NetworkDebugger.swift in Sources */,
 				E58E8F902BA16BB8009F7E43 /* AlbumContentHeadingBig_faero.swift in Sources */,
 				E520B2892A5A58960031C73D /* TrackMenu.swift in Sources */,
 				E58E8F9D2BA16BB8009F7E43 /* LoadingExplore_faero.swift in Sources */,

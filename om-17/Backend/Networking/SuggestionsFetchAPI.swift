@@ -18,13 +18,7 @@ func fetchSuggestionsData(songs: [NaiveTrack]) async throws -> ImportedTracks {
     
     let songsJoined = songsAsStrings.joined(separator: "OMSEPNEWSONG")
     
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.suggest(songs: songsJoined))
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeImportedTracks(data)
+    return try await NetworkManager.shared.fetch(endpoint: .suggest(songs: songsJoined), type: ImportedTracks.self)
 }
 
 func fetchSuggestionsData(vibe: VibeObject) async throws -> ImportedTracks {

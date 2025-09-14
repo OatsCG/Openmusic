@@ -9,11 +9,5 @@
 import Foundation
 
 func fetchPlaybackData(playbackID: String) async throws -> FetchedPlayback {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.playback(id: playbackID))
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeFetchedPlayback(data)
+    return try await NetworkManager.shared.fetch(endpoint: .playback(id: playbackID), type: FetchedPlayback.self)
 }

@@ -9,13 +9,7 @@ import Foundation
 import SwiftUI
 
 func fetchAlbumData(albumID: String) async throws -> FetchedAlbum {
-    let url = NetworkManager.shared.networkService.getEndpointURL(.album(id: albumID))
-    guard let url = URL(string: url) else {
-        throw URLError(.badURL)
-    }
-    let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    return try NetworkManager.shared.networkService.decodeFetchedAlbum(data)
+    return try await NetworkManager.shared.fetch(endpoint: .album(id: albumID), type: FetchedAlbum.self)
 }
 
 
