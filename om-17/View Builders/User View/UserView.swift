@@ -14,6 +14,7 @@ struct UserView: View {
     @State var username: String = ""
     @State var showingDisconnectDiscordAlert: Bool = false
 //    @State var discordRPC: DiscordRPC?
+    
     var body: some View {
         Form {
             Section(header: Text("USER ID")) {

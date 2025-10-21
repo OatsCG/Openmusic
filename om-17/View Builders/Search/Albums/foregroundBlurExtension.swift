@@ -53,9 +53,6 @@ extension View {
     }
 }
 
-
-
-
 #Preview {
     @Previewable @Environment(FontManager.self) var fontManager
     return VStack {

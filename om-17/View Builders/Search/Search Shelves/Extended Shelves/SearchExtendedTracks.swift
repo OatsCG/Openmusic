@@ -12,17 +12,16 @@ struct SearchExtendedTracks: View {
     @Environment(FontManager.self) private var fontManager
     var tracks: [FetchedTrack]?
     var shouldQueueAll: Bool
+    
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 5) {
-                if tracks == nil {
-                    LoadingBigTracks_component()
-                } else {
-                    ForEach(Array(tracks!.enumerated()), id: \.offset) { index, track in
+                if let tracks {
+                    ForEach(Array(tracks.enumerated()), id: \.offset) { index, track in
                         Button(action: {
                             playerManager.fresh_play(track: track)
-                            if (shouldQueueAll) {
-                                playerManager.queue_songs(tracks: Array(tracks!.suffix(from: index + 1)))
+                            if shouldQueueAll {
+                                playerManager.queue_songs(tracks: Array(tracks.suffix(from: index + 1)))
                             }
                         }) {
                             TrackLink_component(track: track)
@@ -36,6 +35,8 @@ struct SearchExtendedTracks: View {
                                     .environment(fontManager)
                             }
                     }
+                } else {
+                    LoadingBigTracks_component()
                 }
             }
                 .safeAreaPadding()

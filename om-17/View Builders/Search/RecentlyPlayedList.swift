@@ -11,6 +11,7 @@ struct RecentlyPlayedList: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(FontManager.self) private var fontManager
     @AppStorage("recentlyPlayed") var recentlyPlayed: String = ""
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {

@@ -12,6 +12,7 @@ struct LibraryTab: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Binding var libraryNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
+    
     var body: some View {
         ZStack {
             LibraryPage(libraryNSPath: $libraryNSPath)

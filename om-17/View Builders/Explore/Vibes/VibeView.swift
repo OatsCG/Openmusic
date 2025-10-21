@@ -13,6 +13,7 @@ struct VibeView: View {
     var vibe: VibeObject
     @State var tapping: VibeTap = .cancel
     @State var didClick: Int = 0
+    
     var body: some View {
         Button(action: {
             tapping = .stop
@@ -65,11 +66,6 @@ struct VibeView: View {
                     }
                 }
         )
-//        .buttonStyle(CustomButtonStyle(onPressed: {
-//            tapping = .start
-//        }, onReleased: {
-//            tapping = .cancel
-//        }))
     }
 }
 
@@ -78,7 +74,6 @@ struct CustomButtonStyle: ButtonStyle {
         configuration.label
     }
 }
-
 
 struct VibeBackground: View {
     @Environment(\.colorScheme) var colorScheme
@@ -96,25 +91,27 @@ struct VibeBackground: View {
     @State var mHueDiff: Double
     @State var nHueDiff: Double
     @State var saturationAdditive: Double
+    
     init(mainHue: Double, tapping: Binding<VibeTap>) {
-        self.seed = UUID()
-        self._tapping = tapping
+        seed = UUID()
+        _tapping = tapping
         let r = Random(seed)
         self.mainHue = mainHue
         let lefty: Float = Float(r.next()) * 0.9
-        self.leftPosY = lefty
-        self.leftPosYStatic = lefty
-        self.leftPosYAlt = Float(mod(Double(lefty) + 0.5, 1))
+        leftPosY = lefty
+        leftPosYStatic = lefty
+        leftPosYAlt = Float(mod(Double(lefty) + 0.5, 1))
         let righty: Float = Float(r.next()) * 0.9
-        self.rightPosY = righty
-        self.rightPosYStatic = righty
-        self.rightPosYAlt = Float(mod(Double(righty) + 0.5, 1))
-        self.kHueDiff = (r.next() * 0.1) - 0.05
-        self.jHueDiff = (r.next() * 0.1) - 0.05
-        self.mHueDiff = (r.next() * 0.2) - 0.1
-        self.nHueDiff = (r.next() * 0.2) - 0.1
-        self.saturationAdditive = 0
+        rightPosY = righty
+        rightPosYStatic = righty
+        rightPosYAlt = Float(mod(Double(righty) + 0.5, 1))
+        kHueDiff = (r.next() * 0.1) - 0.05
+        jHueDiff = (r.next() * 0.1) - 0.05
+        mHueDiff = (r.next() * 0.2) - 0.1
+        nHueDiff = (r.next() * 0.2) - 0.1
+        saturationAdditive = 0
     }
+    
     var body: some View {
         let k: Color = Color(hue: mainHue + kHueDiff, saturation: 0.5 + saturationAdditive, brightness: colorScheme == .dark ? 0.7 : 0.85)
         let j: Color = Color(hue: mainHue + jHueDiff, saturation: 0.8 + saturationAdditive, brightness: colorScheme == .dark ? 0.7 : 0.85)
@@ -140,8 +137,6 @@ struct VibeBackground: View {
             .onChange(of: tapping) { old, new in
                 if new == .start {
                     withAnimation(.interactiveSpring(duration: 0.25, extraBounce: 0.06)) {
-//                        leftPosY = self.leftPosYStatic
-//                        rightPosY = self.rightPosYStatic
                         saturationAdditive = 0.2
                     }
                 } else if new == .stop {
@@ -152,8 +147,6 @@ struct VibeBackground: View {
                     }
                 } else {
                     withAnimation(.interactiveSpring(duration: 0.9)) {
-//                        leftPosY = self.leftPosYStatic
-//                        rightPosY = self.rightPosYStatic
                         saturationAdditive = 0
                     }
                 }
@@ -164,16 +157,3 @@ struct VibeBackground: View {
 enum VibeTap {
     case start, stop, cancel
 }
-
-
-
-//#Preview {
-//    ScrollView(.horizontal) {
-//        HStack {
-//            ForEach(0..<6) { i in
-//                VibeView(vibe: VibeObject())
-//            }
-//        }
-//        .safeAreaPadding()
-//    }
-//}

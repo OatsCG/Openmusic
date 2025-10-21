@@ -12,16 +12,15 @@ struct SearchArtistExtendedTracks: View {
     @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]?
     var artistName: String
+    
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 5) {
-                if tracks == nil {
-                    LoadingBigTracks_component()
-                } else {
-                    ForEach(Array(tracks!.enumerated()), id: \.offset) { index, track in
+                if let tracks {
+                    ForEach(Array(tracks.enumerated()), id: \.offset) { index, track in
                         Button(action: {
                             playerManager.fresh_play(track: track)
-                            playerManager.queue_songs(tracks: Array(tracks!.suffix(from: index + 1)))
+                            playerManager.queue_songs(tracks: Array(tracks.suffix(from: index + 1)))
                         }) {
                             TrackLink_component(track: track)
                         }
@@ -34,6 +33,8 @@ struct SearchArtistExtendedTracks: View {
                                 .environment(fontManager)
                         }
                     }
+                } else {
+                    LoadingBigTracks_component()
                 }
             }
                 .safeAreaPadding()

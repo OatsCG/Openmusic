@@ -10,12 +10,12 @@ import SwiftData
 
 struct VideoAvailableIcon: View {
     var track: FetchedTrack
+    
     var body: some View {
         HStack {
-            if (track.Playback_Clean != nil) {
+            if track.Playback_Clean != nil {
                 Image(systemName: "c.square")
             }
         }
     }
 }
-

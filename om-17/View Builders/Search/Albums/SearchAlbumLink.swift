@@ -11,6 +11,7 @@ struct SearchAlbumLink: View {
     @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
     var fill: Bool = false
+    
     var body: some View {
         NavigationLink(value: SearchAlbumContentNPM(album: album)) {
             SearchAlbumLink_component(album: album, fill: fill)
@@ -29,6 +30,7 @@ struct SearchAlbumLink: View {
 struct SearchAlbumLinkBig: View {
     @Environment(FontManager.self) private var fontManager
     var album: SearchedAlbum
+    
     var body: some View {
         NavigationLink(value: SearchAlbumContentNPM(album: album)) {
             SearchAlbumLinkBig_component(album: album)

@@ -100,7 +100,8 @@ struct VibeShelf: Codable, Hashable {
     }
 }
 
-struct VibeObject: Codable, Hashable {
+struct VibeObject: Codable, Hashable, Identifiable {
+    let id = UUID()
     let title: String
     let genre: String
     let acousticness: Float

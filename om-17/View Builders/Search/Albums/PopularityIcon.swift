@@ -17,16 +17,18 @@ struct PopularityIcon: View {
     var chartHeightMin: Double = 3
     var chartHeightMax: Double = 10
     var normalViews: Double = 0
+    
     init(views: Int, min: Int?, max: Int?) {
         self.views = views
         self.min = min
         self.max = max
-        if (min != nil && max != nil) {
-            self.normalViews = normalizedViews(views: views, min: min!, max: max!)
+        if let min, let max {
+            normalViews = normalizedViews(views: views, min: min, max: max)
         }
     }
+    
     var body: some View {
-        if (min != nil && max != nil) {
+        if min != nil && max != nil {
             HStack(alignment: .bottom, spacing: 0) {
                 Image(systemName: "person.fill")
                     .customFont(fontManager, .caption2)
@@ -51,7 +53,6 @@ func normalizedViews(views: Int, min: Int, max: Int) -> Double {
     let linear: Double = (Double(views - min) / Double(max - min))
     return pow(linear, 1/3)
 }
-
 
 #Preview {
     PopularityIcon(views: 905, min: 100, max: 1000)

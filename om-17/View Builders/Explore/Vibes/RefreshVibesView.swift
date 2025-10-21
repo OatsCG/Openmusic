@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RefreshVibesView: View {
     @Binding var refreshAnimateCount: Int
+    
     var body: some View {
         VStack {
             Image(systemName: "arrow.clockwise")

@@ -11,6 +11,7 @@ struct ServerCredentialsInput: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var inputIPAddress: String
     @Binding var viewModel: StatusViewModel
+    
     var body: some View {
         VStack {
             Divider()
@@ -26,7 +27,7 @@ struct ServerCredentialsInput: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
+                    viewModel.runCheck(with: inputIPAddress, isExhaustive: true)
                 }) {
                     Text(viewModel.serverStatus?.om_verify == "bad" ? "Login" : "Logged In")
                         .foregroundStyle(.blue)

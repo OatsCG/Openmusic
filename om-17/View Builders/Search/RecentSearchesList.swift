@@ -12,6 +12,7 @@ struct RecentSearchesList: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var viewModel: SearchViewModel
     @Binding var searchField: String
+    
     var body: some View {
         if recentSearches == "" {
             ContentUnavailableView {
@@ -62,8 +63,3 @@ struct RecentSearchesList: View {
         }
     }
 }
-
-//
-//#Preview {
-//    RecentSearchesList()
-//}

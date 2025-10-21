@@ -12,6 +12,7 @@ struct SearchTab: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Binding var searchNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
+    
     var body: some View {
         ZStack {
             SearchPage(searchNSPath: $searchNSPath)

@@ -17,6 +17,7 @@ struct om_17App: App {
     @State var fontManager = FontManager.shared
     @State var omUser = OMUser()
     @State var sharedDatabase = SharedDatabase.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -26,8 +27,7 @@ struct om_17App: App {
                 .environment(networkMonitor)
                 .environment(fontManager)
                 .environment(omUser)
-                .environment(sharedDatabase.database) // type BackgroundDatabase
+                .environment(sharedDatabase.database)
         }
-        //.modelContainer(for: [StoredTrack.self, StoredPlaylist.self])
     }
 }

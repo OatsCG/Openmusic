@@ -13,6 +13,7 @@ struct SearchAlbumContent: View {
     @State var toastManager: ToastManager = ToastManager.shared
     var album: SearchedAlbum
     @State var albumModel = AlbumViewModel()
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -32,7 +33,7 @@ struct SearchAlbumContent: View {
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaPadding(.bottom, 160)
             .onAppear {
-                if (albumModel.fetchedAlbum == nil) {
+                if albumModel.fetchedAlbum == nil {
                     albumModel.runSearch(albumID: album.AlbumID, database: database)
                     Task {
                         try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -40,15 +41,11 @@ struct SearchAlbumContent: View {
                     }
                 }
             }
-            
-            
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 2) {
                         // Add to library
-                        if albumModel.fetchedAlbum != nil && albumModel.areTracksStored == true {
-                            
-                        } else {
+                        if albumModel.fetchedAlbum == nil || albumModel.areTracksStored == false {
                             Button (action: {
                                 database.store_tracks((albumModel.fetchedAlbum?.Tracks ?? []))
                             }) {
@@ -88,8 +85,6 @@ struct SearchAlbumContent: View {
     }
 }
 
-
-
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
@@ -105,7 +100,6 @@ struct SearchAlbumContent: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

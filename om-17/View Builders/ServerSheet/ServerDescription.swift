@@ -10,9 +10,10 @@ import SwiftUI
 struct ServerDescription: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var viewModel: StatusViewModel
+    
     var body: some View {
         VStack {
-            if (viewModel.serverStatus?.online ?? false) {
+            if viewModel.serverStatus?.online ?? false {
                 if (
                     ((viewModel.serverStatus?.title ?? "") != "") ||
                     ((viewModel.serverStatus?.body ?? "") != "") ||
@@ -27,7 +28,7 @@ struct ServerDescription: View {
                     .padding(.bottom, 5)
                 }
                 VStack {
-                    if ((viewModel.serverStatus?.title ?? "") != "") {
+                    if (viewModel.serverStatus?.title ?? "") != "" {
                         HStack {
                             Text(viewModel.serverStatus?.title ?? "")
                                 .customFont(fontManager, .subheadline, bold: true)
@@ -35,7 +36,7 @@ struct ServerDescription: View {
                             Spacer()
                         }
                     }
-                    if ((viewModel.serverStatus?.body ?? "") != "") {
+                    if (viewModel.serverStatus?.body ?? "") != "" {
                         HStack {
                             Text(viewModel.serverStatus?.body ?? "")
                                 .customFont(fontManager, .caption)
@@ -43,7 +44,7 @@ struct ServerDescription: View {
                             Spacer()
                         }
                     }
-                    if ((viewModel.serverStatus?.footer ?? "") != "") {
+                    if (viewModel.serverStatus?.footer ?? "") != "" {
                         HStack {
                             Text(viewModel.serverStatus?.footer ?? "")
                                 .customFont(fontManager, .footnote)
@@ -55,7 +56,6 @@ struct ServerDescription: View {
                     .lineLimit(20)
             }
         }
-            //.padding([.horizontal], 30)
             .multilineTextAlignment(.leading)
     }
 }

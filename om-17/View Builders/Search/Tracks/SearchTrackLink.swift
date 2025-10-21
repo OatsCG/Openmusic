@@ -11,6 +11,7 @@ struct SearchTrackLink: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(FontManager.self) private var fontManager
     var track: any Track
+    
     var body: some View {
         Button(action: {
             playerManager.fresh_play(track: track)
@@ -33,7 +34,6 @@ struct SearchTrackLink: View {
         .environment(PlayerManager())
 }
 
-
 #Preview {
     ScrollView(.horizontal) {
         HStack {
@@ -44,5 +44,3 @@ struct SearchTrackLink: View {
     }
         .environment(PlayerManager())
 }
-
-

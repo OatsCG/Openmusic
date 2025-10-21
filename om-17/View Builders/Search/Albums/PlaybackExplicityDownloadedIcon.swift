@@ -15,11 +15,12 @@ struct PlaybackExplicityDownloadedIcon: View {
     var explicit: Bool = false
     var isDownloaded: Bool? = nil
     @State var isFoundDownloaded: Bool = false
+    
     var body: some View {
         VStack {
             ZStack {
                 ZStack {
-                    if (track.Playback_Explicit != nil && track.Playback_Clean != nil) {
+                    if track.Playback_Explicit != nil && track.Playback_Clean != nil {
                         Image(systemName: "square")
                             .offset(x: -4, y: -4)
                     }
@@ -31,20 +32,17 @@ struct PlaybackExplicityDownloadedIcon: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.white, .clear)
             }
-            if let isDownloaded = isDownloaded, isDownloaded == true {
-                Image(systemName: "chevron.compact.down")
-                    .foregroundStyle(.tertiary)
-            } else if isFoundDownloaded {
+            if isDownloaded == true || isFoundDownloaded {
                 Image(systemName: "chevron.compact.down")
                     .foregroundStyle(.tertiary)
             }
         }
             .padding([.top, .leading], (track.Playback_Explicit != nil && track.Playback_Clean != nil) ? 4 : 0)
             .task {
-                self.findDownload()
+                findDownload()
             }
             .onChange(of: explicit) {
-                self.findDownload()
+                findDownload()
             }
     }
     
@@ -52,7 +50,7 @@ struct PlaybackExplicityDownloadedIcon: View {
         Task {
             let d: Bool = await downloadManager.is_downloaded(track, explicit: explicit)
             await MainActor.run {
-                self.isFoundDownloaded = d
+                isFoundDownloaded = d
             }
         }
     }
@@ -61,6 +59,5 @@ struct PlaybackExplicityDownloadedIcon: View {
 #Preview {
     VStack {
         PlaybackExplicityDownloadedIcon(track: FetchedTrack(), explicit: true)
-        //PlaybackExplicityDownloadedIcon(track: FetchedTrack_default(), explicit: false)
     }
 }

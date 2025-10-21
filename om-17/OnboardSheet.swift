@@ -9,14 +9,13 @@ import SwiftUI
 
 struct OnboardSheet: View {
     @Binding var onboard: Bool
+    
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
             Spacer()
             VStack {
                 Text("Welcome to Openmusic")
                     .font(.largeTitle .bold())
-//                Text("Start playing music for free. No ads, no accounts.")
-//                    .font(.title2)
             }
             .multilineTextAlignment(.center)
             VStack(alignment: .leading, spacing: 20) {
@@ -113,6 +112,7 @@ struct OnboardSheet: View {
 
 #Preview {
     @Previewable @State var pres: Bool = true
+    
     return Text("hi!")
         .sheet(isPresented: $pres) {
             OnboardSheet(onboard: $pres)

@@ -21,27 +21,20 @@ struct MainNavigationSidebar: View {
     @Binding var libraryNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
     @Binding var selectionBinding: Int
+    
     var body: some View {
         TabView(selection: $selectionBinding) {
             ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
-                .tabItem {
-                    Label("Home", systemImage: "globe")
-                }
+                .tabItem { Label("Home", systemImage: "globe") }
                 .tag(0)
             SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
+                .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(1)
             LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)
-                .tabItem {
-                    Label("Library", systemImage: "music.note.list")
-                }
+                .tabItem { Label("Library", systemImage: "music.note.list") }
                 .tag(2)
             SettingsTab()
-                .tabItem {
-                    Label("Options", systemImage: "gear")
-                }
+                .tabItem { Label("Options", systemImage: "gear") }
                 .tag(3)
             
         }
@@ -101,4 +94,3 @@ struct splitviewModel {
         MenuItem(name: "Options", image: "gear")
     ]
 }
-

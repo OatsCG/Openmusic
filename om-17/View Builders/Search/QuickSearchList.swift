@@ -13,24 +13,13 @@ struct QuickSearchList: View {
     @Binding var viewModel: SearchViewModel
     @Binding var quickViewModel: QuickSearchViewModel
     @Binding var searchField: String
+    
     var body: some View {
         VStack {
-            //Divider()
-//            if quickViewModel.attenptingSearch {
-//                LoadingTracklist_component()
-//            }
             if quickViewModel.fetchedTracks == nil && quickViewModel.searchInitialized {
                 LoadingBigTracks_component()
                     .safeAreaPadding(.horizontal, 10)
-                //LoadingTracklist_component()
-//                Spacer()
-//                ContentUnavailableView {
-//                    Label("No connection to server", systemImage: "wifi.exclamationmark")
-//                } description: {
-//                    Text("Check your connection and try again.")
-//                }
-//                Spacer()
-            } else if (quickViewModel.fetchedTracks?.Tracks.count == 0) {
+            } else if quickViewModel.fetchedTracks?.Tracks.isEmpty == true {
                 Spacer()
                 ContentUnavailableView {
                     Label("", systemImage: "magnifyingglass")
@@ -43,7 +32,7 @@ struct QuickSearchList: View {
                     Button(action: {
                         add_recent()
                         viewModel.runSearch(query: searchField)
-                        self.hideKeyboard()
+                        hideKeyboard()
                     }) {
                         AlbumWideButton_component(text: "More Results...", ArtworkID: "")
                         .padding(.horizontal, 100)
@@ -53,18 +42,17 @@ struct QuickSearchList: View {
             }
         }
     }
+    
     func add_recent() {
-        self.recentSearches = add_to_recents(base: recentSearches, add: searchField)
+        recentSearches = add_to_recents(base: recentSearches, add: searchField)
     }
 }
-
 
 #Preview {
     @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

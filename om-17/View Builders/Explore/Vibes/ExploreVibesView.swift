@@ -11,6 +11,7 @@ struct ExploreVibesView: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var vibesViewModel: VibesViewModel
     @State var refreshAnimateCount: Int = 0
+    
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
@@ -26,7 +27,7 @@ struct ExploreVibesView: View {
                     if vibesViewModel.isSearching {
                         ProgressView()
                     } else {
-                        Text("I have nothing!")
+                        Text("No Vibes to show.")
                     }
                 }
                 .onAppear {
@@ -39,7 +40,7 @@ struct ExploreVibesView: View {
                             VibeView(vibe: vibe)
                         }
                         Button(action: {
-                            self.refreshAnimateCount += 1
+                            refreshAnimateCount += 1
                             Task.detached {
                                 await vibesViewModel.refresh()
                             }
@@ -61,6 +62,7 @@ struct ExploreVibesView: View {
 #Preview {
     @Previewable @State var vibesViewModel: VibesViewModel = VibesViewModel()
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = "https://server.openmusic.app"
+    
     ExploreVibesView(vibesViewModel: $vibesViewModel)
         .environment(PlayerManager())
 }

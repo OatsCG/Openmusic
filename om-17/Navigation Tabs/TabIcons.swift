@@ -14,6 +14,7 @@ struct TabIcons: View {
     @Binding var selectionBinding: Int
     @Binding var tabbarHeight: CGFloat
     @State var homebarMin: CGFloat = 10
+    
     var body: some View {
         VStack {
             Spacer()
@@ -31,11 +32,9 @@ struct TabIcons: View {
                 .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 0 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
-                //.blendMode(selectionBinding == 0 ? .overlay : .normal)
                 Spacer()
                 Spacer()
                 Button(action: {selectionBinding = 1}) {
-                    //TabBarSearchLabel_component(selectionBinding: $selectionBinding)
                     VStack(alignment: .center, spacing: 3) {
                         Image(systemName: "magnifyingglass")
                             .fontWeight(.medium)
@@ -47,11 +46,9 @@ struct TabIcons: View {
                 .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 1 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
-                //.blendMode(selectionBinding == 0 ? .overlay : .normal)
                 Spacer()
                 Spacer()
                 Button(action: {selectionBinding = 2}) {
-                    //TabBarLibraryLabel_component(selectionBinding: $selectionBinding)
                     VStack(alignment: .center, spacing: 3) {
                         Image(systemName: "music.note.list")
                             .fontWeight(.medium)
@@ -63,7 +60,6 @@ struct TabIcons: View {
                 .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 2 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
-                //.blendMode(selectionBinding == 0 ? .colorDodge : .normal)
                 Spacer()
                 Spacer()
                 Button(action: {selectionBinding = 3}) {
@@ -78,7 +74,6 @@ struct TabIcons: View {
                 .allowsHitTesting(false)
                 .buttonStyle(.plain)
                 .foregroundColor(selectionBinding == 3 ? GlobalTint_component(currentTheme: currentTheme, colorScheme: colorScheme) : Color.secondary)
-                //.blendMode(selectionBinding == 0 ? .softLight : .normal)
                 Spacer()
             }
                 .frame(height: max(tabbarHeight - max(homebarMin - 5, 0), 0))
@@ -102,5 +97,3 @@ struct TabIcons: View {
         }
     }
 }
-
-

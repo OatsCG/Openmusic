@@ -11,6 +11,7 @@ import SwiftData
 struct SearchShelfSingles: View {
     @Environment(FontManager.self) private var fontManager
     var viewModel: SearchViewModel
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedAlbumsNPM(albums: viewModel.searchResults?.Singles)) {

@@ -17,6 +17,7 @@ struct SearchPage: View {
     @State private var qsTimer: Timer?
     @State private var rsTimer: Timer?
     @Binding var searchNSPath: NavigationPath
+    
     var body: some View {
         ZStack {
             NavigationStack(path: $searchNSPath) {
@@ -26,11 +27,9 @@ struct SearchPage: View {
                         viewModel.runLastSearch()
                     }
                     .safeAreaPadding(.top, 30)
-                    
                     .navigationBarTitle("Search")
                     .scrollDismissesKeyboard(.immediately)
                     .autocorrectionDisabled()
-                    
                     .onChange(of: searchField, {
                         resetTimers()
                         if viewModel.fullSearchSubmitted {
@@ -45,9 +44,6 @@ struct SearchPage: View {
                         add_recent()
                         viewModel.runSearch(query: searchField)
                     })
-                    .task {
-                        //viewModel.runSearch(query: "travis")
-                    }
                     .background {
                         GlobalBackground_component()
                     }
@@ -90,6 +86,7 @@ struct SearchPage: View {
             }
         }
     }
+    
     private func resetTimers() {
         qsTimer?.invalidate()
         rsTimer?.invalidate()
@@ -104,14 +101,16 @@ struct SearchPage: View {
             }
         }
     }
+    
     func runQuickSearch() {
-        if (searchField.count > 3 && viewModel.lastSearch != searchField) {
+        if searchField.count > 3 && viewModel.lastSearch != searchField {
             quickViewModel.runSearch(query: searchField)
             withAnimation {
-                self.viewModel.searchHasChanged = true
+                viewModel.searchHasChanged = true
             }
         }
     }
+    
     func add_recent() {
         self.recentSearches = add_to_recents(base: recentSearches, add: searchField)
     }
@@ -119,7 +118,6 @@ struct SearchPage: View {
 
 extension View {
     func hideKeyboard() {
-        //UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true)
         let scenes = UIApplication.shared.connectedScenes
         let windowScene = scenes.first(where: { $0 is UIWindowScene }) as? UIWindowScene
         windowScene?.windows.first(where: { $0.isKeyWindow })?.endEditing(true)
@@ -127,24 +125,24 @@ extension View {
 }
 
 func add_to_recents(base: String, add: String) -> String {
-    if (base == "") {
+    if base == "" {
         return add
-    } else if (add == "") {
+    } else if add == "" {
         return base
-    }else {
-        var recents: [String] = parse_recents(recents: base)
-        remove_from_recents(recents: &recents, toRemove: add)
-        let newbase: String = recents.suffix(4).joined(separator: "<!SPLITRECENTS!>")
-        if newbase == "" {
-            return add
-        }
-        return "\(newbase)<!SPLITRECENTS!>\(add)"
     }
+    var recents: [String] = parse_recents(recents: base)
+    remove_from_recents(recents: &recents, toRemove: add)
+    let newbase: String = recents.suffix(4).joined(separator: "<!SPLITRECENTS!>")
+    if newbase == "" {
+        return add
+    }
+    return "\(newbase)<!SPLITRECENTS!>\(add)"
 }
+
 func parse_recents(recents: String) -> [String] {
     return recents.components(separatedBy: "<!SPLITRECENTS!>")
 }
+
 func remove_from_recents(recents: inout [String], toRemove: String) {
     recents.removeAll(where: {$0 == toRemove})
 }
-

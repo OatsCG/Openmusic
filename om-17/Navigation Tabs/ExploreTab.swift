@@ -41,4 +41,3 @@ struct ExploreTab: View {
             .toolbarBackground(.hidden, for: .tabBar)
     }
 }
-

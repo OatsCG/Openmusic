@@ -17,18 +17,19 @@ struct ExplorePage: View {
     @Binding var exploreNSPath: NavigationPath
     @State var hasFirstLoaded: Bool = false
     @State var showingServerSheet: Bool = false
+    
     var body: some View {
         ZStack {
             NavigationStack(path: $exploreNSPath) {
                 ScrollView {
                     if viewModel.exploreResults == nil {
                         Group {
-                            if (viewModel.isSearching == true) {
+                            if viewModel.isSearching {
                                 LoadingExplore_component()
                             } else {
-                                if (NetworkManager.globalIPAddress() == "") {
+                                if NetworkManager.globalIPAddress() == "" {
                                     NoServerAddedComponent(showingServerSheet: $showingServerSheet)
-                                } else if networkMonitor.isConnected == false {
+                                } else if !networkMonitor.isConnected {
                                     VStack {
                                         Spacer()
                                         HStack {
@@ -48,7 +49,7 @@ struct ExplorePage: View {
                                             viewModel.runSearch()
                                             vibesViewModel.runSearch()
                                             withAnimation {
-                                                self.hasFirstLoaded = true
+                                                hasFirstLoaded = true
                                             }
                                         }
                                 }
@@ -58,14 +59,14 @@ struct ExplorePage: View {
                                 viewModel.runSearch()
                                 vibesViewModel.runSearch()
                                 withAnimation {
-                                    self.hasFirstLoaded = true
+                                    hasFirstLoaded = true
                                 }
                             }
                             .onChange(of: showingServerSheet) {
                                 viewModel.runSearch()
                                 vibesViewModel.runSearch()
                                 withAnimation {
-                                    self.hasFirstLoaded = true
+                                    hasFirstLoaded = true
                                 }
                             }
                     } else {
@@ -170,7 +171,6 @@ struct ExplorePage: View {
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     
@@ -185,4 +185,3 @@ struct ExplorePage: View {
 //            globalIPAddress = "server.openmusic.app"
         }
 }
-

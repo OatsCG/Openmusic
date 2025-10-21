@@ -15,10 +15,11 @@ struct SearchResultsView: View {
     @Binding var quickViewModel: QuickSearchViewModel
     @Binding var searchField: String
     @State var showingServerSheet: Bool = false
+    
     var body: some View {
         ScrollView {
             Group {
-                if (searchField == "") {
+                if searchField == "" {
                     VStack(alignment: .leading, spacing: 20) {
                         RecentSearchesList(viewModel: $viewModel, searchField: $searchField)
                         if (recentlyPlayed != "") {
@@ -26,14 +27,30 @@ struct SearchResultsView: View {
                                 .padding(.top, 10)
                         }
                     }
-                } else if (viewModel.fullSearchSubmitted == false) {
+                } else if !viewModel.fullSearchSubmitted {
                     QuickSearchList(viewModel: $viewModel, quickViewModel: $quickViewModel, searchField: $searchField)
                 } else { // after a submit
                     if viewModel.attemptingSearch {
                         LoadingSearchResults_component()
-                    } else if viewModel.searchResults == nil {
+                    } else if let searchResults = viewModel.searchResults {
+                        if searchResults.Tracks.isEmpty && searchResults.Albums.isEmpty && searchResults.Singles.isEmpty && searchResults.Artists.isEmpty {
+                            Spacer()
+                            ContentUnavailableView.search(text: viewModel.lastSearch)
+                            Spacer()
+                        } else {
+                            VStack(spacing: 20) {
+                                SearchShelfTracks(tracks: viewModel.searchResults?.Tracks)
+                                Divider()
+                                SearchShelfAlbums(viewModel: viewModel)
+                                Divider()
+                                SearchShelfSingles(viewModel: viewModel)
+                                Divider()
+                                SearchShelfArtists(viewModel: viewModel)
+                            }
+                        }
+                    } else {
                         Spacer()
-                        if (NetworkManager.globalIPAddress() != "") {
+                        if NetworkManager.globalIPAddress() != "" {
                             ContentUnavailableView {
                                 Label("No connection", systemImage: "wifi.exclamationmark")
                             } description: {
@@ -65,20 +82,6 @@ struct SearchResultsView: View {
                             }
                         }
                         Spacer()
-                    } else if ((viewModel.searchResults!.Tracks.count + viewModel.searchResults!.Albums.count + viewModel.searchResults!.Singles.count + viewModel.searchResults!.Artists.count) == 0) {
-                        Spacer()
-                        ContentUnavailableView.search(text: viewModel.lastSearch)
-                        Spacer()
-                    } else {
-                        VStack(spacing: 20) {
-                            SearchShelfTracks(tracks: viewModel.searchResults?.Tracks)
-                            Divider()
-                            SearchShelfAlbums(viewModel: viewModel)
-                            Divider()
-                            SearchShelfSingles(viewModel: viewModel)
-                            Divider()
-                            SearchShelfArtists(viewModel: viewModel)
-                        }
                     }
                 }
             }
@@ -94,9 +97,6 @@ struct SearchResultsView: View {
     }
 }
 
-
 #Preview {
     ExplorePage(exploreNSPath: .constant(NavigationPath()))
 }
-
-

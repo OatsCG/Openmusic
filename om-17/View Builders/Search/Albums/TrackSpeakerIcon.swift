@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct TrackSpeakerIcon: View {
-    //@AppStorage("themeAnimations") var themeAnimations: Bool = false
     @State var rotation: CGFloat = 0
+    
     var body: some View {
         Image(systemName: "speaker.wave.2")
             .font(.callout .bold() .monospaced())
@@ -31,10 +31,8 @@ struct TrackSpeakerIcon: View {
                     .font(.callout .bold() .monospaced())
             }
             .onAppear {
-                if (true) {
-                    withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
-                        rotation = 360
-                    }
+                withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
+                    rotation = 360
                 }
             }
         

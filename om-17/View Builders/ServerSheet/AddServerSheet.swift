@@ -13,6 +13,7 @@ struct AddServerSheet: View {
     @Binding var showingServerSheet: Bool
     @State var inputIPAddress: String = ""
     @State var viewModel: StatusViewModel = StatusViewModel()
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -43,7 +44,6 @@ struct AddServerSheet: View {
             .multilineTextAlignment(.center)
     }
 }
-
 
 #Preview {
     AddServerSheet(showingServerSheet: .constant(true))

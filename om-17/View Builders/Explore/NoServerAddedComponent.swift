@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NoServerAddedComponent: View {
     @Binding var showingServerSheet: Bool
+    
     var body: some View {
         VStack {
             Spacer()

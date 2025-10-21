@@ -10,6 +10,7 @@ import SwiftUI
 struct SearchArtistLink: View {
     @Environment(FontManager.self) private var fontManager
     var artist: SearchedArtist
+    
     var body: some View {
         NavigationLink(value: SearchArtistContentNPM(artist: artist)) {
             SearchArtistLink_component(artist: artist)

@@ -14,19 +14,10 @@ struct PlaybackModesIcon: View {
     @State private var selectedExplicit: Bool = true
     @State var isLiked: Bool = false
     var track: any Track
+    
     var body: some View {
-//        Button(action: {
-//            if (selectedExplicit == false && track.Playback_Explicit != nil) {
-//                selectedExplicit = true
-//            } else if (selectedExplicit == true && track.Playback_Clean != nil) {
-//                selectedExplicit = false
-//            }
-//        }) {
-//            //LiveDownloadStatus(download: download)
-//            PlaybackExplicityDownloadedIcon(track: track, explicit: selectedExplicit)
-//        }
         HStack {
-            if (isLiked) {
+            if isLiked {
                 Image(systemName: "heart.fill")
                     .symbolRenderingMode(.multicolor)
             } else {
@@ -45,37 +36,24 @@ struct PlaybackModesIcon: View {
                 updateIsLiked()
             }
     }
+    
     private func initSelectedExplicit() {
-        if (track.Playback_Clean == nil) {
+        if track.Playback_Explicit != nil {
             selectedExplicit = true
         }
-        if (track.Playback_Explicit == nil) {
-            selectedExplicit = false
-        }
-        if (track.Playback_Clean != nil && track.Playback_Explicit != nil) {
-            // Favours explicit if both available
-            selectedExplicit = true
-        }
+        selectedExplicit = false
     }
+    
     private func updateIsLikedInstant() {
         withAnimation {
-            if (omUser.isSongLiked(track: track)) {
-                self.isLiked = true
-            } else {
-                self.isLiked = false
-            }
+            isLiked = omUser.isSongLiked(track: track)
         }
     }
+    
     private func updateIsLiked() {
         Timer.scheduledTimer(withTimeInterval: 0.9, repeats: false) { _ in
             DispatchQueue.main.async {
-                withAnimation {
-                    if (omUser.isSongLiked(track: track)) {
-                        self.isLiked = true
-                    } else {
-                        self.isLiked = false
-                    }
-                }
+                updateIsLikedInstant()
             }
         }
     }
@@ -84,7 +62,3 @@ struct PlaybackModesIcon: View {
 #Preview {
     PlaybackModesIcon(track: FetchedTrack())
 }
-
-
-
-

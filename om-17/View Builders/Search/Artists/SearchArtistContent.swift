@@ -11,26 +11,27 @@ import SwiftData
 struct SearchArtistContent: View {
     var artist: SearchedArtist
     @State var artistModel = ArtistViewModel()
+    
     var body: some View {
         ScrollView {
             VStack {
-                if artistModel.fetchedArtist == nil {
+                if let fetchedArtist = artistModel.fetchedArtist {
+                    FetchedArtistContentHeader_component(artist: fetchedArtist)
+                    Spacer()
+                    VStack(spacing: 20) {
+                        SearchArtistShelfTracks(tracks: fetchedArtist.Tracks, artistName: fetchedArtist.Name)
+                        Divider()
+                        SearchArtistShelfAlbums(albums: fetchedArtist.Albums, artistName: fetchedArtist.Name)
+                        Divider()
+                        SearchArtistShelfSingles(albums: fetchedArtist.Singles, artistName: fetchedArtist.Name)
+                    }
+                } else {
                     SearchArtistContentHeader_component(artist: artist)
                     Spacer()
                     LoadingSearchResults_component()
                         .task {
                             artistModel.runSearch(artistID: artist.ArtistID)
                         }
-                } else {
-                    FetchedArtistContentHeader_component(artist: artistModel.fetchedArtist!)
-                    Spacer()
-                    VStack(spacing: 20) {
-                        SearchArtistShelfTracks(tracks: artistModel.fetchedArtist!.Tracks, artistName: artistModel.fetchedArtist!.Name)
-                        Divider()
-                        SearchArtistShelfAlbums(albums: artistModel.fetchedArtist!.Albums, artistName: artistModel.fetchedArtist!.Name)
-                        Divider()
-                        SearchArtistShelfSingles(albums: artistModel.fetchedArtist!.Singles, artistName: artistModel.fetchedArtist!.Name)
-                    }
                 }
             }
             .padding(.top, 1)

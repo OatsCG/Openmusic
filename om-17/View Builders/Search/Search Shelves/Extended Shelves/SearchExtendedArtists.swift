@@ -11,18 +11,19 @@ struct SearchExtendedArtists: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var artists: [SearchedArtist]?
+    
     var body: some View {
         ScrollView {
-            if artists == nil {
-                ProgressView()
-            } else {
+            if let artists {
                 VStackWrapped(columns: albumGridColumns_sizing(h: horizontalSizeClass, v: verticalSizeClass)) {
-                    ForEach(artists!, id: \.ArtistID) { artist in
+                    ForEach(artists, id: \.ArtistID) { artist in
                         SearchArtistLink(artist: artist)
                     }
                 }
                 .safeAreaPadding()
                 .padding(.top, 1)
+            } else {
+                ProgressView()
             }
         }
             .background {

@@ -11,17 +11,13 @@ struct ServerStatusIndicator: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var inputIPAddress: String
     @Binding var viewModel: StatusViewModel
+    
     var body: some View {
-        Button(action: {self.viewModel.runCheck(with: inputIPAddress, isExhaustive: true)}) {
+        Button(action: {viewModel.runCheck(with: inputIPAddress, isExhaustive: true)}) {
             HStack {
-                if (viewModel.serverStatus == nil) {
-                    Image(systemName: "circle.fill")
-                        .customFont(fontManager, .caption2)
-                        .foregroundStyle(.gray)
-                    Text("Fetching")
-                } else {
-                    if (viewModel.serverStatus!.online) {
-                        if (viewModel.serverStatus!.om_verify == "topsecretpassword") {
+                if let serverStatus = viewModel.serverStatus {
+                    if serverStatus.online {
+                        if serverStatus.om_verify == "topsecretpassword" {
                             Image(systemName: "circle.fill")
                                 .customFont(fontManager, .caption2)
                                 .foregroundStyle(.cyan)
@@ -40,8 +36,12 @@ struct ServerStatusIndicator: View {
                             .foregroundStyle(.red)
                         Text("Offline")
                     }
+                } else {
+                    Image(systemName: "circle.fill")
+                        .customFont(fontManager, .caption2)
+                        .foregroundStyle(.gray)
+                    Text("Fetching")
                 }
-                
             }
                 .foregroundStyle(.secondary)
                 .padding(.vertical, 5)

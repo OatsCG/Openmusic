@@ -11,6 +11,7 @@ struct SearchArtistShelfTracks: View {
     @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]
     var artistName: String
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchArtistExtendedTracksNPM(tracks: tracks, artistName: artistName)) {

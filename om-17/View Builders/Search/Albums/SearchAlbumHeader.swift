@@ -14,6 +14,7 @@ struct SearchAlbumHeader: View {
     @Environment(PlayerManager.self) var playerManager
     @State var album: SearchedAlbum
     @Binding var albumModel: AlbumViewModel
+    
     var body: some View {
         VStack {
             AlbumContentHeading_component(album: album, tracks: albumModel.fetchedAlbum?.Tracks)
@@ -25,7 +26,6 @@ struct SearchAlbumHeader: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

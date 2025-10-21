@@ -21,6 +21,7 @@ struct MainNavigationTabbed: View {
     @Binding var libraryNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
     @Binding var selectionBinding: Int
+    
     var body: some View {
         ZStack {
             TabView(selection: $selectionBinding) {
@@ -34,7 +35,6 @@ struct MainNavigationTabbed: View {
                     .tag(3)
                 
             }
-                //.safeAreaPadding(.bottom, 130)
             TabIcons(selectionBinding: $selectionBinding, tabbarHeight: $tabbarHeight)
                 .ignoresSafeArea(.keyboard, edges: .bottom)
         }
@@ -48,7 +48,6 @@ struct MainNavigationTabbed: View {
             //   components = ["/", "album", encodedAlbum]
             //   openmusicapp://open/discord?code=<CODE>
             //   components = ["/", "discord", CODE]
-            print(components)
             let type = components[1]
             if type == "album" {
                 let encodedAlbum = components[2]
@@ -63,7 +62,6 @@ struct MainNavigationTabbed: View {
                     ToastManager.shared.propose(toast: Toast.linkopenfailed())
                 }
             } else if type == "discord" {
-                print(url)
                 if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false) {
                     if let queryItems = comps.queryItems {
                         if let codeItem = queryItems.first(where: { $0.name == "code" }) {

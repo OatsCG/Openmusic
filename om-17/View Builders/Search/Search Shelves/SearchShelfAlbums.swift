@@ -11,6 +11,7 @@ import SwiftData
 struct SearchShelfAlbums: View {
     @Environment(FontManager.self) private var fontManager
     var viewModel: SearchViewModel
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedAlbumsNPM(albums: viewModel.searchResults?.Albums)) {
@@ -28,7 +29,6 @@ struct SearchShelfAlbums: View {
                 HStackWrapped(rows: viewModel.searchResults?.Albums.count ?? 0 >= 2 ? 2 : 1) {
                     ForEach(viewModel.searchResults?.Albums.prefix(18) ?? [], id: \.self) {album in
                         SearchAlbumLink(album: album, fill: false)
-                            //.frame(height: 300)
                     }
                 }
                     .scrollTargetLayout()
@@ -50,6 +50,7 @@ struct SearchShelfAlbums: View {
 
 #Preview {
     let view = SearchViewModel()
+    
     return NavigationStack {
         ScrollView {
             VStack {

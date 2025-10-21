@@ -11,6 +11,7 @@ struct AddServerButton: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var showingServerSheet: Bool
     @Binding var viewModel: StatusViewModel
+    
     var body: some View {
         Button(action: {
             NetworkManager.shared.updateGlobalIPAddress(with: viewModel.finalIPAddress, type: viewModel.serverStatus?.type ?? .openmusic, u: viewModel.username, p: viewModel.password)
@@ -20,7 +21,7 @@ struct AddServerButton: View {
                 Text("Add Server")
                 Image(systemName: "network")
             }
-            .foregroundStyle((viewModel.serverStatus?.online ?? false) ? ((viewModel.serverStatus!.om_verify == "topsecretpassword") ? .cyan : .green) : .gray)
+            .foregroundStyle((viewModel.serverStatus?.online ?? false) ? ((viewModel.serverStatus?.om_verify == "topsecretpassword") ? .cyan : .green) : .gray)
                 .customFont(fontManager, .title3)
                 .padding(EdgeInsets(top: 6, leading: 26, bottom: 6, trailing: 26))
                 .background(.quinary)

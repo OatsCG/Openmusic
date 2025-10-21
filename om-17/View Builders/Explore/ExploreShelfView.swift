@@ -11,6 +11,7 @@ import SwiftData
 struct ExploreShelfView: View {
     @Environment(FontManager.self) private var fontManager
     var exploreShelf: ExploreShelf
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedAlbumsNPM(albums: exploreShelf.Albums)) {

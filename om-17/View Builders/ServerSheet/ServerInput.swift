@@ -11,6 +11,7 @@ struct ServerInput: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var inputIPAddress: String
     @Binding var viewModel: StatusViewModel
+    
     var body: some View {
         VStack {
             HStack {
@@ -34,4 +35,3 @@ struct ServerInput: View {
         }
     }
 }
-

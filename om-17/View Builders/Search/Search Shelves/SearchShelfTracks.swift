@@ -11,6 +11,7 @@ import SwiftData
 struct SearchShelfTracks: View {
     @Environment(FontManager.self) private var fontManager
     var tracks: [FetchedTrack]?
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: SearchExtendedTracksNPM(tracks: tracks, shouldQueueAll: false)) {
