@@ -13,14 +13,14 @@ struct PlaylistContent: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
+    
     var body: some View {
         List {
             VStack {
                 PlaylistContentHeading_component(playlist: playlist)
-                    //.safeAreaPadding(.top, 80)
                 HStack(spacing: 10) {
                     Button (action: {
-                        if (!networkMonitor.isConnected) {
+                        if !networkMonitor.isConnected {
                             Task {
                                 await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
                             }
@@ -33,7 +33,7 @@ struct PlaylistContent: View {
                     .buttonStyle(.plain)
                     
                     Button (action: {
-                        if (!networkMonitor.isConnected) {
+                        if !networkMonitor.isConnected {
                             Task {
                                 await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
                             }
@@ -174,7 +174,6 @@ struct PlaylistContent: View {
                     }
 
                 }
-                    //.buttonStyle(.plain)
                     .foregroundStyle(.primary)
                 Divider()
             }
@@ -209,8 +208,8 @@ struct PlaylistContent: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
+    
     return NavigationStack {
         PlaylistContent(playlist: playlist)
     }

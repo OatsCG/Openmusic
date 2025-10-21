@@ -14,11 +14,11 @@ struct ThemingOptions: View {
     @AppStorage("customFonts") var customFonts: Bool = false
     @AppStorage("themeAnimations") var themeAnimations: Bool = false
     @AppStorage("artworkVideoAnimations") var artworkVideoAnimations: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    
                     NavigationLink(destination: ThemeSelection()) {
                         VStack(alignment: .leading) {
                             Text("Select Theme")
@@ -27,41 +27,6 @@ struct ThemingOptions: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-//                    Picker(
-//                        selection: $currentTheme,
-//                        label: Text("Current theme")
-//                    ) {
-//                        ForEach(Theme.allCases, id: \.self) {
-//                            switch $0 {
-//                            case .classic:
-//                                Text("Classic").tag($0.rawValue)
-//                                    .tint(GlobalTint_component(currentTheme: $0.rawValue, colorScheme: colorScheme))
-//                            case .honeycrisp:
-//                                Text("Honeycrisp").tag($0.rawValue)
-//                                    .tint(GlobalTint_component(currentTheme: $0.rawValue, colorScheme: colorScheme))
-//                            case .wii:
-//                                Text("Wii").tag($0.rawValue)
-//                                    .tint(GlobalTint_component(currentTheme: $0.rawValue, colorScheme: colorScheme))
-//                            case .spotty:
-//                                Text("Spotty").tag($0.rawValue)
-//                                    .tint(GlobalTint_component(currentTheme: $0.rawValue, colorScheme: colorScheme))
-//                            case .faero:
-//                                Text("Frutiger Aero").tag($0.rawValue)
-//                                    .tint(GlobalTint_component(currentTheme: $0.rawValue, colorScheme: colorScheme))
-//                            case .feco:
-//                                Text("Frutiger Eco").tag($0.rawValue)
-//                                    .tint(GlobalTint_component(currentTheme: $0.rawValue, colorScheme: colorScheme))
-//                                
-//                            }
-//                        }
-//                    }
-//                    Picker("Appearance", selection: $preferredAppearance) {
-//                        ForEach(Appearance.allCases, id: \.self) { option in
-//                            if availableAppearances(theme: Theme(rawValue: currentTheme) ?? .classic).contains(option) {
-//                                Text(option.rawValue.capitalized).tag(option.rawValue)
-//                            }
-//                        }
-//                    }
                     Toggle("Custom Fonts", isOn: $customFonts)
                         .tint(.green)
                     Toggle("Animations", isOn: $themeAnimations)

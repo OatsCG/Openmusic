@@ -16,10 +16,11 @@ struct LibrarySongsList: View {
     @Binding var sortType: LibrarySortType
     @Binding var filterOnlyDownloaded: Bool
     @State var perceivedTracks: [StoredTrack] = []
+    
     var body: some View {
         Group {
-            if perceivedTracks.count == 0 {
-                if tracks.count == 0 {
+            if perceivedTracks.isEmpty {
+                if tracks.isEmpty {
                     ContentUnavailableView {
                         Label("No Music in Library", systemImage: "music.note")
                     } description: {
@@ -33,7 +34,7 @@ struct LibrarySongsList: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            if (!networkMonitor.isConnected) {
+                            if !networkMonitor.isConnected {
                                 Task {
                                     await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(perceivedTracks))
                                 }
@@ -56,7 +57,7 @@ struct LibrarySongsList: View {
                                 }
                             }
                         Button(action: {
-                            if (!networkMonitor.isConnected) {
+                            if !networkMonitor.isConnected {
                                 Task {
                                     await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(perceivedTracks.shuffled()))
                                 }
@@ -89,27 +90,27 @@ struct LibrarySongsList: View {
             }
         }
         .onAppear {
-            self.updatePerceivedTracks()
+            updatePerceivedTracks()
         }
-        .onChange(of: self.tracks) {
-            self.updatePerceivedTracks()
+        .onChange(of: tracks) {
+            updatePerceivedTracks()
         }
-        .onChange(of: self.sortType) {
-            self.updatePerceivedTracks()
+        .onChange(of: sortType) {
+            updatePerceivedTracks()
         }
-        .onChange(of: self.filterOnlyDownloaded) {
-            self.updatePerceivedTracks()
+        .onChange(of: filterOnlyDownloaded) {
+            updatePerceivedTracks()
         }
     }
     
     func updatePerceivedTracks() {
-        self.perceivedTracks = []
+        perceivedTracks = []
         Task {
             let tracks: [StoredTrack] = self.tracks
-            let downloadedRespectedTracks: [StoredTrack] = await self.filterOnlyDownloaded ? self.downloadManager.filter_downloaded(tracks) : tracks
+            let downloadedRespectedTracks: [StoredTrack] = await filterOnlyDownloaded ? downloadManager.filter_downloaded(tracks) : tracks
             
             let songsSorted: [StoredTrack]
-            switch self.sortType {
+            switch sortType {
             case .date_up:
                 songsSorted = downloadedRespectedTracks.sorted{ $0.dateAdded > $1.dateAdded }
             case .date_down:
@@ -121,7 +122,7 @@ struct LibrarySongsList: View {
             }
             
             await MainActor.run {
-                self.perceivedTracks = songsSorted
+                perceivedTracks = songsSorted
             }
         }
     }

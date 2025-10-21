@@ -13,18 +13,17 @@ struct ImportFileTrack: View {
     @Binding var track: FetchedTrack
     @State var isDownloadingTrack: Bool = false
     @Binding var rawFileURL: URL
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
+    
     var body: some View {
         NavigationStack {
             Form {
                 Section("Track ID") {
                     TextField("Unique Track ID...", text: $track.TrackID)
                 }
-                
                 Section("Track Title") {
                     TextField("Track Title...", text: $track.Title)
                 }
-                
                 Section("Features") {
                     List {
                         ForEach($track.Features, id: \.self, editActions: .delete) { $artist in
@@ -93,7 +92,6 @@ struct ImportFileTrack: View {
                         }
                     }) {
                         Text(isDownloadingTrack ? "Saving..." : "Save to Library")
-                            //.foregroundStyle(isDownloadingTrack ? .secondary : .primary)
                     }
                         .disabled(isDownloadingTrack)
                 }
@@ -105,13 +103,3 @@ struct ImportFileTrack: View {
         }
     }
 }
-
-
-func saveImageFromLocalURLToFileManager(fileURL: URL) {
-}
-
-
-
-//#Preview {
-//    ImportTrackFile()
-//}

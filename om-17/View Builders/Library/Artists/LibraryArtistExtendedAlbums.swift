@@ -12,6 +12,7 @@ struct LibraryArtistExtendedAlbums: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     var albums: [FetchedAlbum]
     var artistName: String
+    
     var body: some View {
         ScrollView {
             VStackWrapped(columns: albumGridColumns_sizing(h: horizontalSizeClass, v: verticalSizeClass)) {

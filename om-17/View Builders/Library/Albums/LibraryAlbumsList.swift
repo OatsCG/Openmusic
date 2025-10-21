@@ -18,11 +18,12 @@ struct LibraryAlbumsList: View {
     @Binding var tracks: [StoredTrack]
     @Binding var sortType: LibrarySortType
     @Binding var filterOnlyDownloaded: Bool
-    @State var albumsTracks: Array<[StoredTrack]>? = nil
+    @State var albumsTracks: Array<[StoredTrack]>?
+    
     var body: some View {
         Group {
-            if let albumsTracks = albumsTracks {
-                if albumsTracks.count == 0 {
+            if let albumsTracks {
+                if albumsTracks.isEmpty {
                     ContentUnavailableView {
                         Label("No Music in Library", systemImage: "play.square.stack")
                     } description: {
@@ -32,7 +33,7 @@ struct LibraryAlbumsList: View {
                     VStack {
                         HStack {
                             Button(action: {
-                                if (!networkMonitor.isConnected) {
+                                if !networkMonitor.isConnected {
                                     Task {
                                         await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.reversed()))
                                     }
@@ -55,7 +56,7 @@ struct LibraryAlbumsList: View {
                                 }
                             }
                             Button(action: {
-                                if (!networkMonitor.isConnected) {
+                                if !networkMonitor.isConnected {
                                     Task {
                                         await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
                                     }
@@ -91,27 +92,27 @@ struct LibraryAlbumsList: View {
             }
         }
         .onAppear {
-            self.updateAlbumTracks()
+            updateAlbumTracks()
         }
-        .onChange(of: self.tracks) {
-            self.updateAlbumTracks()
+        .onChange(of: tracks) {
+            updateAlbumTracks()
         }
-        .onChange(of: self.sortType) {
-            self.updateAlbumTracks()
+        .onChange(of: sortType) {
+            updateAlbumTracks()
         }
-        .onChange(of: self.filterOnlyDownloaded) {
-            self.updateAlbumTracks()
+        .onChange(of: filterOnlyDownloaded) {
+            updateAlbumTracks()
         }
     }
     private func updateAlbumTracks() {
         Task {
-            self.albumsTracks = nil
+            albumsTracks = nil
             
             let downloadedRespectedTracks: [StoredTrack]
-            if self.filterOnlyDownloaded {
-                downloadedRespectedTracks = await self.downloadManager.filter_downloaded(self.tracks)
+            if filterOnlyDownloaded {
+                downloadedRespectedTracks = await downloadManager.filter_downloaded(tracks)
             } else {
-                downloadedRespectedTracks = self.tracks
+                downloadedRespectedTracks = tracks
             }
             
             let albums: Dictionary<String, [StoredTrack]> = Dictionary(grouping: downloadedRespectedTracks, by: { $0.Album.AlbumID })
@@ -125,7 +126,7 @@ struct LibraryAlbumsList: View {
             }
             
             let albumsSorted: Array<[StoredTrack]>
-            switch self.sortType {
+            switch sortType {
             case .date_up:
                 albumsSorted = albumTracksSorted.sorted{ $0[0].dateAdded > $1[0].dateAdded }
             case .date_down:
@@ -137,9 +138,8 @@ struct LibraryAlbumsList: View {
             }
             
             await MainActor.run {
-                self.albumsTracks = albumsSorted
+                albumsTracks = albumsSorted
             }
         }
     }
 }
-

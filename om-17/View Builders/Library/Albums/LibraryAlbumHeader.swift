@@ -12,6 +12,7 @@ struct LibraryAlbumHeader: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
     @State var album: StoredAlbum
+    
     var body: some View {
         VStack {
             AlbumContentHeading_component(album: SearchedAlbum(from: album), tracks: album.Tracks)

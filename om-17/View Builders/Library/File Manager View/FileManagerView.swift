@@ -14,6 +14,7 @@ struct FileManagerView: View {
     @State private var presentImporter = false
     @State private var fileTrack: FetchedTrack = FetchedTrack()
     @State private var rawFileURL: URL = .applicationDirectory
+    
     var body: some View {
         Form {
             Section("Manage Downloads") {
@@ -24,7 +25,6 @@ struct FileManagerView: View {
                     Text("Images")
                 }
             }
-            
             Button(action: {
                 presentFiles = true
             }) {
@@ -33,24 +33,19 @@ struct FileManagerView: View {
             .fileImporter(isPresented: $presentFiles, allowedContentTypes: [.audiovisualContent]) { result in
                 switch result {
                 case .success(let url):
-                    guard url.startAccessingSecurityScopedResource() else {
-                        print("no permissions!!")
-                        return
-                    }
-                    print(url)
+                    guard url.startAccessingSecurityScopedResource() else { return }
                     rawFileURL = url
-                    //self.fileURLToImport = url
                     let asset = AVURLAsset(url: url)
                     Task {
-                        self.fileTrack = await get_metadata(asset: asset)
-                        self.presentImporter = true
+                        fileTrack = await get_metadata(asset: asset)
+                        presentImporter = true
                     }
                 case .failure(let error):
                     print(error)
                 }
             }
             .sheet(isPresented: $presentImporter, content: {
-                ImportFileTrack(presentImporter: $presentImporter, track: self.$fileTrack, rawFileURL: $rawFileURL)
+                ImportFileTrack(presentImporter: $presentImporter, track: $fileTrack, rawFileURL: $rawFileURL)
             })
         }
         .navigationTitle("File Manager")
@@ -115,7 +110,6 @@ func get_metadata(asset: AVAsset) async -> FetchedTrack {
     return track
 }
 
-
 #Preview {
     FileManagerView()
 }
@@ -123,8 +117,8 @@ func get_metadata(asset: AVAsset) async -> FetchedTrack {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     //let playlist = StoredPlaylist(Title: "Test!")
+    
     return LibraryPage(libraryNSPath: .constant(NavigationPath()))
         .environment(PlayerManager())
         .environment(PlaylistImporter())

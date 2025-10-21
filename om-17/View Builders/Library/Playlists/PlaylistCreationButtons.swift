@@ -12,8 +12,9 @@ struct PlaylistCreationButtons: View {
     @State private var showingImportPlaylistSheet: Bool = false
     @State private var addPlaylistName: String = ""
     @State private var importPlaylistURL: String = ""
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     @Binding var libraryNSPath: NavigationPath
+    
     var body: some View {
         HStack {
             Button(action: {
@@ -49,4 +50,3 @@ struct PlaylistCreationButtons: View {
         }
     }
 }
-

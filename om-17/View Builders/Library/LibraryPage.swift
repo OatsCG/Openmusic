@@ -10,11 +10,12 @@ import SwiftData
 
 struct LibraryPage: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     @State var selectedPick: LibraryPicks = .recents
     @Binding var libraryNSPath: NavigationPath
     @State var tracks: [StoredTrack] = []
     @State var playlists: [StoredPlaylist]? = nil
+    
     var body: some View {
         ZStack {
             NavigationStack(path: $libraryNSPath) {
@@ -105,18 +106,19 @@ struct LibraryPage: View {
             self.updateTracks()
         }
     }
+    
     private func updateTracks() {
         Task {
             let predicate = #Predicate<StoredTrack> { _ in true }
             let sortDescriptors = [SortDescriptor(\StoredTrack.dateAdded)]
-            let tracks = try? await database.fetch(predicate, sortBy: sortDescriptors)
-            if let tracks = tracks {
+            let fetchedtracks = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let fetchedtracks {
                 await MainActor.run {
-                    self.tracks = tracks
+                    tracks = fetchedtracks
                 }
             } else {
                 await MainActor.run {
-                    self.tracks = []
+                    tracks = []
                 }
             }
         }
@@ -126,6 +128,7 @@ struct LibraryPage: View {
 struct LibraryPicker: View {
     @Binding var selectedPick: LibraryPicks
     @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         Picker("Category", selection: $selectedPick) {
             ForEach(LibraryPicks.allCases) { option in
@@ -139,13 +142,11 @@ struct LibraryPicker: View {
     }
 }
 
-
-
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     //let playlist = StoredPlaylist(Title: "Test!")
+    
     return LibraryPage(libraryNSPath: .constant(NavigationPath()))
         .environment(PlayerManager())
         .environment(PlaylistImporter())
@@ -153,9 +154,3 @@ struct LibraryPicker: View {
         .environment(NetworkMonitor())
         .modelContainer(container)
 }
-
-
-
-
-
-

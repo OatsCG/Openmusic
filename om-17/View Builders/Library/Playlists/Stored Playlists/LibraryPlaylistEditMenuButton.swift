@@ -9,9 +9,10 @@ import SwiftUI
 
 struct LibraryPlaylistEditMenuButton: View {
     var playlist: StoredPlaylist
+    
     var body: some View {
         NavigationLink(value: PlaylistEditMenuNPM(playlist: playlist)) {
-            if (getItemsMatching(items: playlist.items, status: [.uncertain]).count > 0) {
+            if !getItemsMatching(items: playlist.items, status: [.uncertain]).isEmpty {
                 Image(systemName: "gear")
                     .font(.title3)
                     .overlay(Badge())
@@ -22,7 +23,6 @@ struct LibraryPlaylistEditMenuButton: View {
         }
     }
 }
-
 
 struct Badge: View {
     var body: some View {
@@ -40,4 +40,3 @@ struct Badge: View {
         }
     }
 }
-

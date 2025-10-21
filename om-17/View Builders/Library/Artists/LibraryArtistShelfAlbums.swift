@@ -11,6 +11,7 @@ struct LibraryArtistShelfAlbums: View {
     @Environment(FontManager.self) private var fontManager
     var albums: [FetchedAlbum]
     var artistName: String
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink(value: LibraryArtistExtendedAlbumsNPM(albums: albums, artistName: artistName)) {

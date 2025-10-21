@@ -10,6 +10,7 @@ import SwiftUI
 struct LiveDownloadRow: View {
     @Environment(FontManager.self) private var fontManager
     var download: DownloadData
+    
     var body: some View {
         HStack {
             AlbumArtDisplay(ArtworkID: download.parent.Album.Artwork, Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 4)
@@ -30,15 +31,14 @@ struct LiveDownloadRow: View {
             LiveDownloadStatus(download: download)
                 
         }
-            //.aspectRatio(8 / 1, contentMode: .fit)
             .frame(height: 51)
             .listRowBackground(Color.clear)
     }
 }
 
-
 struct CircularProgressView: View {
     var progress: Double
+    
     var body: some View {
         ZStack {
             Circle()

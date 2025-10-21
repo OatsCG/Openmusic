@@ -11,16 +11,17 @@ struct LibraryAlbumDownloadButton: View {
     @Environment(DownloadManager.self) var downloadManager
     var album: StoredAlbum
     @State var arePlaybacksDownloaded: Bool = false
+    
     var body: some View {
         if arePlaybacksDownloaded {
             Menu {
                 Button(role: .destructive, action: {
                     for track in album.Tracks {
-                        if track.Playback_Clean != nil {
-                            downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
+                        if let Playback_Clean = track.Playback_Clean {
+                            downloadManager.delete_playback(PlaybackID: Playback_Clean)
                         }
-                        if track.Playback_Explicit != nil {
-                            downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
+                        if let Playback_Explicit = track.Playback_Explicit {
+                            downloadManager.delete_playback(PlaybackID: Playback_Explicit)
                         }
                     }
                 }) {
@@ -32,7 +33,7 @@ struct LibraryAlbumDownloadButton: View {
             }
         } else {
             Button (action: {
-                for track in (album.Tracks) {
+                for track in album.Tracks {
                     downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
                 }
             }) {
@@ -45,11 +46,8 @@ struct LibraryAlbumDownloadButton: View {
             }
         }
     }
+    
     func updatePlaybacksDownloaded() async {
         arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
     }
 }
-
-//#Preview {
-//    //LibraryAlbumDownloadButton()
-//}

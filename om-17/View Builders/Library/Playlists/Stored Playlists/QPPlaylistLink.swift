@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QPPlaylistLink: View {
     var playlist: StoredPlaylist
+    
     var body: some View {
         QPPlaylistLink_component(playlist: playlist)
     }

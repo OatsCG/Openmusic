@@ -11,6 +11,7 @@ struct LibraryAlbumLink: View {
     @Environment(FontManager.self) private var fontManager
     var tracks: [StoredTrack]
     var fill: Bool = true
+    
     var body: some View {
         NavigationLink(value: LibraryAlbumContentNPM(album: StoredAlbum(from: tracks))) {
             LibraryAlbumLink_component(tracks: tracks, fill: fill)

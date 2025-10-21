@@ -11,6 +11,7 @@ import MarqueeText
 struct PlaylistReviewTracks: View {
     @Environment(FontManager.self) private var fontManager
     @State var playlist: StoredPlaylist
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -35,15 +36,12 @@ struct PlaylistReviewTracks: View {
     }
 }
 
-//#Preview {
-//    PlaylistReviewTracks()
-//}
-
 struct ImportToReview: View {
     @Environment(FontManager.self) private var fontManager
     @Environment(BackgroundDatabase.self) private var database
     @Binding var playlist: StoredPlaylist
     @State var playlistItem: PlaylistItem
+    
     var body: some View {
         VStack(alignment: .center) {
             HStack {
@@ -75,7 +73,6 @@ struct ImportToReview: View {
                 }
                     .lineLimit(1)
                 Spacer()
-                
                 Button(role: .destructive) {
                     withAnimation {
                         playlist.items.removeAll(where: { $0.id == playlistItem.id })
@@ -97,7 +94,6 @@ struct ImportToReview: View {
                 HStack {
                     ForEach(playlistItem.importData.possibleImports, id: \.self) {importedTrack in
                         TrackToReview(playlist: $playlist, playlistItem: $playlistItem, importedTrack: importedTrack)
-                        //Spacer()
                     }
                 }
             }
@@ -108,7 +104,6 @@ struct ImportToReview: View {
     }
 }
 
-
 struct TrackToReview: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(FontManager.self) private var fontManager
@@ -116,6 +111,7 @@ struct TrackToReview: View {
     @Binding var playlist: StoredPlaylist
     @Binding var playlistItem: PlaylistItem
     @State var importedTrack: ImportedTrack
+    
     var body: some View {
         Button(action: {
             var newPlaylistItem = playlistItem
@@ -125,7 +121,6 @@ struct TrackToReview: View {
                 newPlaylistItem.importData.status = .success
                 playlist.mutate_item(item: newPlaylistItem)
                 try? database.save()
-                //playlistImporter.publish_successful_track(playlistImport: playlistItem, track: importedTrack)
             }
         }) {
             VStack(alignment: .leading, spacing: 2) {

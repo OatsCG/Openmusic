@@ -17,16 +17,17 @@ struct PlaylistItemLink: View {
     var playlist: StoredPlaylist
     var index: Int
     @State var subtext: String = ""
+    
     var body: some View {
         Button(action: {
             let nextItems: [PlaylistItem] = Array(playlist.items.suffix(from: index)).filter({ $0.importData.status == .success })
             playerManager.fresh_play_multiple(tracks: nextItems)
         }) {
             HStack {
-                if (item.importData.status != .success) {
-                    if (item.importData.status == .hold) {
+                if item.importData.status != .success {
+                    if item.importData.status == .hold {
                         Image(systemName: "circle.dashed")
-                    } else if (item.importData.status == .importing) {
+                    } else if item.importData.status == .importing {
                         ProgressView()
                     } else {
                         Image(systemName: "exclamationmark.circle")
@@ -48,7 +49,7 @@ struct PlaylistItemLink: View {
                             .foregroundStyle(.secondary)
                     }
                 } else {
-                    if (playerManager.currentQueueItem?.Track.TrackID == item.track.TrackID) {
+                    if playerManager.currentQueueItem?.Track.TrackID == item.track.TrackID {
                         TrackSpeakerIcon()
                     }
                     AlbumArtDisplay(ArtworkID: item.track.Album.Artwork, Resolution: .cookie, Blur: 40, BlurOpacity: 0.4, cornerRadius: 4)
@@ -81,13 +82,12 @@ struct PlaylistItemLink: View {
             }
             .padding(0)
             .aspectRatio(CGFloat(TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).count / TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).span), contentMode: .fit)
-            //.aspectRatio(11 / 2, contentMode: .fit)
-            //.aspectRatio(CGFloat(TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).count / TrackLink_sizing(h: horizontalSizeClass, v: verticalSizeClass).span), contentMode: .fit)
             .disabled(item.importData.status != .success)
             .onAppear {
                 updateSubtext()
             }
     }
+    
     func updateSubtext() {
         Task {
             let time: String = secondsToText(seconds: item.track.Length)
@@ -105,4 +105,3 @@ struct PlaylistItemLink: View {
         }
     }
 }
-

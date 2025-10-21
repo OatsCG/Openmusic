@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-// 142.189.12.151
 
 struct SettingsPage: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -78,7 +77,6 @@ struct SettingsPage: View {
                                     .opacity(colorScheme == .dark ? 0.9 : 0.73)
                                     .customFont(fontManager, .body)
                             }
-//                            .bold()
                             .padding(.leading, 8)
                             .padding(.trailing, 18)
                             .padding(.vertical, 8)
@@ -118,6 +116,7 @@ struct SettingsPage: View {
 struct DonateBG: View {
     @Environment(\.colorScheme) private var colorScheme
     @State var buttonHue: Double = 0
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8, style: .continuous)

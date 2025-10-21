@@ -11,12 +11,13 @@ import SwiftData
 struct LiveDownloadsList: View {
     @Environment(DownloadManager.self) var downloadManager
     @State var expanded: Bool = false
+    
     var body: some View {
-        if (downloadManager.tracksDownloading.count > 0) {
+        if !downloadManager.tracksDownloading.isEmpty {
             VStack {
                 Button(action: {
                     withAnimation {
-                        self.expanded = !self.expanded
+                        expanded.toggle()
                     }
                 }) {
                     HStack {
@@ -30,7 +31,6 @@ struct LiveDownloadsList: View {
                         .padding(10)
                 }
                     .foregroundStyle(.primary)
-                    //.padding(.all, 10)
                     .background(.thinMaterial)
                 List {
                     ForEach(downloadManager.tracksDownloading, id: \.id) { download in

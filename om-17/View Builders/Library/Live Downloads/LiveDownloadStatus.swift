@@ -10,6 +10,7 @@ import SwiftUI
 struct LiveDownloadStatus: View {
     @Environment(DownloadManager.self) var downloadManager
     var download: DownloadData
+    
     var body: some View {
         Group {
             switch download.state {

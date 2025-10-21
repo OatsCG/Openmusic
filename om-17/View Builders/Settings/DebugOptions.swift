@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DebugOptions: View {
     @AppStorage("playerDebugger") var playerDebugger: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {

@@ -8,9 +8,9 @@
 import SwiftUI
 import AVFoundation
 
-
 struct ManageAudios: View {
     @Environment(DownloadManager.self) var downloadManager
+    
     var body: some View {
         List {
             ForEach(downloadManager.gather_downloaded_audios(), id: \.hashValue) { track in

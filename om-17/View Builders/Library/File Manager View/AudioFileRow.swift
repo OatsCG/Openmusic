@@ -12,6 +12,7 @@ struct AudioFileRow: View {
     @Environment(FontManager.self) private var fontManager
     @State var tempPlayer: AVAudioPlayer? = nil
     var track: FetchedTrack
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
@@ -22,7 +23,7 @@ struct AudioFileRow: View {
             }
             Spacer()
             Button(action: {
-                if (tempPlayer?.isPlaying == true) {
+                if tempPlayer?.isPlaying == true {
                     tempPlayer?.stop()
                     tempPlayer = nil
                 } else {
@@ -33,8 +34,7 @@ struct AudioFileRow: View {
                     }
                 }
             }) {
-                
-                if (tempPlayer?.isPlaying == true) {
+                if tempPlayer?.isPlaying == true {
                     Image(systemName: "pause.fill")
                             .font(.headline)
                 } else {

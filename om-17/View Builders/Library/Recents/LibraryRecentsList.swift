@@ -12,11 +12,11 @@ struct LibraryRecentsList: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(NetworkMonitor.self) var networkMonitor
-    //@Query(sort: \StoredTrack.dateAdded) private var tracks: [StoredTrack]
     @Binding var tracks: [StoredTrack]
     @State var albumsTracks: Array<[StoredTrack]> = []
+    
     var body: some View {
-        if tracks.count == 0 {
+        if tracks.isEmpty {
             ContentUnavailableView {
                 Label("No Music in Library", systemImage: "bookmark")
             } description: {
@@ -26,7 +26,7 @@ struct LibraryRecentsList: View {
             LazyVStack {
                 HStack {
                     Button(action: {
-                        if (!networkMonitor.isConnected) {
+                        if !networkMonitor.isConnected {
                             Task {
                                 await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks))
                             }
@@ -49,7 +49,7 @@ struct LibraryRecentsList: View {
                             }
                         }
                     Button(action: {
-                        if (!networkMonitor.isConnected) {
+                        if !networkMonitor.isConnected {
                             Task {
                                 await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
                             }
@@ -84,6 +84,7 @@ struct LibraryRecentsList: View {
             }
         }
     }
+    
     private func updateAlbumTracks(tracks: [StoredTrack]) {
         Task { [tracks] in
             let albums: Dictionary<String, [StoredTrack]> = Dictionary(grouping: tracks, by: { $0.Album.AlbumID })

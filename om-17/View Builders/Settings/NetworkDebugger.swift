@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NetworkDebugger: View {
     @AppStorage("networkDebuggerEnabled") var networkDebuggerEnabled: Bool = false
+    
     var body: some View {
         Form {
             Section {
@@ -51,6 +52,7 @@ struct NetworkDebugger: View {
 
 struct NetworkLogView: View {
     var networkLog: NetworkLog
+    
     var body: some View {
         HStack {
             Text(networkLog.time.formatted(date: .omitted, time: .shortened))

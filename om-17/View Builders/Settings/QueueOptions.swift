@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QueueOptions: View {
     @AppStorage("DisableQueuingSuggestions") var DisableQueuingSuggestions: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {

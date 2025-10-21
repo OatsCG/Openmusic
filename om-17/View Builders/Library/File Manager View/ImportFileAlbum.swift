@@ -11,6 +11,7 @@ import PhotosUI
 struct ImportFileAlbum: View {
     @Binding var track: FetchedTrack
     @State var artworkItem: PhotosPickerItem? = nil
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -91,7 +92,3 @@ struct ImportFileAlbum: View {
         }
     }
 }
-
-//#Preview {
-//    ImportFileAlbum()
-//}

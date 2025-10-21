@@ -14,6 +14,7 @@ struct LibraryMusicPicker: View {
     @State var songSortType: LibrarySortType = .date_up
     @State var artistSortType: LibrarySortType = .date_up
     @State var filterDownloaded: Bool = false
+    
     var body: some View {
         VStack {
             HStack {

@@ -16,11 +16,12 @@ struct EQPresetRow: View {
     @State var showingTitleCustomizer: Bool = false
     @State var customizedTitle: String = ""
     @State var customizingID: String = ""
+    
     var body: some View {
         Button(action: {
             EQBandsCurrent = EQManager.encodeBands(bands: eqPreset.bands)
-            self.updateLocalBands()
-            self.updateStoredBands()
+            updateLocalBands()
+            updateStoredBands()
         }) {
             HStack {
                 VStack(alignment: .leading) {
@@ -35,21 +36,9 @@ struct EQPresetRow: View {
                         ForEach($eqPreset.bands, id: \.index) { $band in
                             if (band.index == 0) {
                                 EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)
-//                                    .clipShape(UnevenRoundedRectangle(
-//                                        topLeadingRadius: 2,
-//                                        bottomLeadingRadius: 2,
-//                                        bottomTrailingRadius: 0,
-//                                        topTrailingRadius: 0
-//                                    ))
                                     .padding(.trailing, 0)
                             } else if (band.index < 0) {
                                 EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)
-//                                    .clipShape(UnevenRoundedRectangle(
-//                                        topLeadingRadius: 0,
-//                                        bottomLeadingRadius: 0,
-//                                        bottomTrailingRadius: 2,
-//                                        topTrailingRadius: 2
-//                                    ))
                                     .padding(.trailing, 2)
                             } else {
                                 EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq), canEdit: false)
@@ -64,9 +53,9 @@ struct EQPresetRow: View {
                 }
                 Spacer()
                 Button(action: {
-                    self.customizedTitle = eqPreset.name
-                    self.customizingID = eqPreset.id
-                    self.showingTitleCustomizer = true
+                    customizedTitle = eqPreset.name
+                    customizingID = eqPreset.id
+                    showingTitleCustomizer = true
                 }) {
                     Image(systemName: "pencil.circle.fill")
                         .symbolRenderingMode(.hierarchical)
@@ -76,9 +65,9 @@ struct EQPresetRow: View {
                     TextField("Preset Name", text: $customizedTitle)
                         .autocorrectionDisabled()
                     Button(action: {
-                        EQManager.editPresetTitle(presetID: self.customizingID, title: self.customizedTitle)
-                        self.updateLocalPresets()
-                        self.updateLocalBands()
+                        EQManager.editPresetTitle(presetID: customizingID, title: customizedTitle)
+                        updateLocalPresets()
+                        updateLocalBands()
                     }) {
                         Text("Save")
                     }
@@ -88,8 +77,8 @@ struct EQPresetRow: View {
                 
                 Button(action: {
                     EQManager.deletePreset(preset: eqPreset)
-                    self.updateLocalPresets()
-                    self.updateLocalBands()
+                    updateLocalPresets()
+                    updateLocalBands()
                 }) {
                     Image(systemName: "minus.circle.fill")
                         .symbolRenderingMode(.hierarchical)
@@ -105,20 +94,19 @@ struct EQPresetRow: View {
     
     private func updateLocalBands() {
         withAnimation {
-            self.currentBands = []
-            self.currentBands = EQManager.decodeCurrentBands()
-            self.bandCount = self.currentBands.count - 1
+            currentBands = []
+            currentBands = EQManager.decodeCurrentBands()
+            bandCount = currentBands.count - 1
         }
     }
     
     private func updateLocalPresets() {
         withAnimation {
-            self.currentPresets = EQManager.decodePresets()
+            currentPresets = EQManager.decodePresets()
         }
     }
     
     private func updateStoredBands() {
-        EQManager.encodeBandsToCurrent(bands: self.currentBands)
+        EQManager.encodeBandsToCurrent(bands: currentBands)
     }
 }
-

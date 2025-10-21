@@ -14,6 +14,7 @@ struct EQBandSlider: View {
     @State var isSliding: Bool = false
     @State var initialValue: Double = 0
     var stepCount: Int = 36 // 6 sections * 6
+    
     var body: some View {
         VStack {
             GeometryReader { geo in
@@ -24,42 +25,39 @@ struct EQBandSlider: View {
                 }
                 .gesture(DragGesture(minimumDistance: 0)
                     .onChanged { value in
-                        if canEdit == false {
-                            return
-                        }
-                        if self.isSliding == false {
+                        guard canEdit else { return }
+                        if !isSliding {
                             withAnimation {
-                                self.isSliding = true
+                                isSliding = true
                             }
-                            self.initialValue = self.toModify
+                            initialValue = toModify
                         }
                         let normalizedValue: CGFloat = -value.translation.height / geo.size.height
-                        let toPush: Double = normalizedValue + Double(self.initialValue)
+                        let toPush: Double = normalizedValue + Double(initialValue)
                         let steppedPush: Double = ceil(toPush * Double(stepCount) - 0.5) / CGFloat(stepCount)
                         let clampedPush: Double = min(max(steppedPush, 0), 1)
                         
                         withAnimation(.default.speed(2.5)) {
-                            self.toModify = Double(clampedPush)
+                            toModify = Double(clampedPush)
                         }
                     }
                     .onEnded { value in
-                        if canEdit == false {
-                            return
+                        if canEdit {
+                            withAnimation {
+                                isSliding = false
+                            }
                         }
-                        withAnimation {
-                            self.isSliding = false
-                        }
+                        
                     }
                 )
             }
-            //Text(title)
-                //.customFont(fontManager, .caption)
         }
     }
 }
 
 struct eqprev: View {
     @State var toModify: Double = 0.75
+    
     var body: some View {
         EQBandSlider(toModify: $toModify, title: "")
             .frame(width: 50, height: 200)

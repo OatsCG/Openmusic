@@ -13,6 +13,7 @@ struct ControlsOptions: View {
     @AppStorage("volumeSkipSpeed") var volumeSkipSpeed: Double = 0.3
     @AppStorage("volumeSkipMargin") var volumeSkipMargin: Double = 0.6
     @AppStorage("volumeSkipSelection") var volumeSkipSelection: Int = 1
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -33,13 +34,13 @@ struct ControlsOptions: View {
                             .onChange(of: volumeSkipSelection) {
                                 print("VOL: change")
                                 print(volumeSkipSelection)
-                                if (volumeSkipSelection == 0) {
+                                if volumeSkipSelection == 0 {
                                     volumeSkipSpeed = 1
                                     volumeSkipMargin = 1.2
-                                } else if (volumeSkipSelection == 1) {
+                                } else if volumeSkipSelection == 1 {
                                     volumeSkipSpeed = 0.5
                                     volumeSkipMargin = 0.7
-                                } else if (volumeSkipSelection == 2) {
+                                } else if volumeSkipSelection == 2 {
                                     volumeSkipSpeed = 0.2
                                     volumeSkipMargin = 0.4
                                 }
@@ -48,33 +49,6 @@ struct ControlsOptions: View {
                             }
                     }
                     .disabled(!volumeSkipEnabled)
-                    
-//                    HStack {
-//                        Text("Speed")
-//                        Slider(value: $volumeSkipSpeed, in: 2...6, step: 1) {
-//                            Text("Label")
-//                        } minimumValueLabel: {
-//                            Text("0.\(Int(volumeSkipSpeed))s")
-//                        } maximumValueLabel: {
-//                            Text("")
-//                        } onEditingChanged: { bool in
-//                            playerManager.volumeSkipSpeed = volumeSkipSpeed / 10
-//                        }
-//                            .disabled(!volumeSkipEnabled)
-//                    }
-//                    HStack {
-//                        Text("Margin")
-//                        Slider(value: $volumeSkipMargin, in: 5...8, step: 1) {
-//                            Text("Label")
-//                        } minimumValueLabel: {
-//                            Text("0.\(Int(volumeSkipMargin))s")
-//                        } maximumValueLabel: {
-//                            Text("")
-//                        } onEditingChanged: { bool in
-//                            playerManager.volumeSkipMargin = volumeSkipMargin / 10
-//                        }
-//                            .disabled(!volumeSkipEnabled)
-//                    }
                 }, header: {
                     Text("CONTROLS")
                 }, footer: {

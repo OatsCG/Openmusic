@@ -13,6 +13,7 @@ struct LibrarySongLink: View {
     var track: StoredTrack
     var songList: [StoredTrack]
     var index: Int
+    
     var body: some View {
         Group {
             Button(action: {
@@ -32,4 +33,3 @@ struct LibrarySongLink: View {
         }
     }
 }
-

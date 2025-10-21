@@ -10,9 +10,8 @@ import SwiftUI
 struct ProximityEditor: View {
     @AppStorage("proximityHorizontalColumn") var proximityHorizontalColumn: Double = 0.5
     @AppStorage("proximityVerticalRange") var proximityVerticalRange: Double = 1
-    //@State var ProxColumn: Double = 0.5
-    //@State var verticalRange: Double = 5
     var rowCount: Int = 6
+    
     var body: some View {
         ScrollView {
             Group {
@@ -38,13 +37,10 @@ struct ProximityEditor: View {
                             // dots
                             DotVisualizer(proximityHorizontalColumn: $proximityHorizontalColumn, proximityVerticalRange: $proximityVerticalRange, rowCount: rowCount)
                         }
-                            //.border(.blue)
                         DoubleSlider(proximityVerticalRange: $proximityVerticalRange)
                     }
-                    //.border(.red)
                     NPProximityTester()
                 }
-                //.border(.yellow)
                     .safeAreaPadding(.all)
             }
         }
@@ -63,6 +59,7 @@ struct NPProximityTester: View {
     let capturetimer = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
     @State var captureGood: Bool = false
     @State var captureDepth: Float = 0
+    
     var body: some View {
         VStack {
             Text("Test TrueDepth by hovering your hand")
@@ -70,7 +67,7 @@ struct NPProximityTester: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 15.0).fill(Color(hue: 0.38, saturation: 1, brightness: Double(captureDepth))).stroke(.primary, lineWidth: 2)
                     .frame(width: 200, height: 40)
-                if (captureGood) {
+                if captureGood {
                     Image(systemName: "checkmark.circle.fill")
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(.white, .black.opacity(0.7))
@@ -96,6 +93,7 @@ struct DotVisualizer: View {
     @Binding var proximityHorizontalColumn: Double
     @Binding var proximityVerticalRange: Double
     var rowCount: Int
+    
     var body: some View {
         Group {
             // top
@@ -171,6 +169,7 @@ struct DotVisualizer: View {
 
 struct ProxColumnSlider: View {
     @Binding var proximityHorizontalColumn: Double
+    
     var body: some View {
         Slider(
             value: $proximityHorizontalColumn,
@@ -183,6 +182,7 @@ struct ProxColumnSlider: View {
 
 struct DoubleSlider: View {
     @Binding var proximityVerticalRange: Double
+    
     var body: some View {
         VStack {
             Slider(

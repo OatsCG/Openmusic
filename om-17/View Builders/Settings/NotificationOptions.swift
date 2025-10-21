@@ -12,13 +12,14 @@ struct NotificationOptions: View {
     @AppStorage("SkipNotifyEnabled") var SkipNotifyEnabled: Bool = false
     @AppStorage("AlertHapticsDisabled") var AlertHapticsDisabled: Bool = false
     @AppStorage("SuggestionHapticsDisabled") var SuggestionHapticsDisabled: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {
                 Section(content: {
                     Toggle("Push Now Playing", isOn: $SkipNotifyEnabled)
                         .onChange(of: SkipNotifyEnabled) { oldValue, newValue in
-                            if (newValue == true) {
+                            if newValue {
                                 UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                                     if success {
                                         print("All set!")

@@ -11,11 +11,10 @@ import SwiftData
 struct LibraryPlaylistsList: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    //@Query(sort: \StoredPlaylist.dateCreated, order: .reverse) private var playlists: [StoredPlaylist]
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     @Binding var playlists: [StoredPlaylist]?
     @Binding var libraryNSPath: NavigationPath
-    //var playlists: [Playlist]
+    
     var body: some View {
         Group {
             PlaylistCreationButtons(libraryNSPath: $libraryNSPath)
@@ -44,6 +43,7 @@ struct LibraryPlaylistsList: View {
             self.updatePlaylists()
         }
     }
+    
     func updatePlaylists() {
         Task {
             let predicate = #Predicate<StoredPlaylist> { _ in true }
@@ -61,5 +61,3 @@ struct LibraryPlaylistsList: View {
         }
     }
 }
-
-

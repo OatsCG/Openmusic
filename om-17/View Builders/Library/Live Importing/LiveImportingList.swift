@@ -12,13 +12,14 @@ struct LiveImportingList: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     @Binding var playlists: [StoredPlaylist]?
     @State var expanded: Bool = false
+    
     var body: some View {
         Group {
-            if (playlistImporter.newPlaylists.count > 0) {
+            if !playlistImporter.newPlaylists.isEmpty {
                 VStack {
                     Button(action: {
                         withAnimation {
-                            self.expanded = !self.expanded
+                            expanded.toggle()
                         }
                     }) {
                         HStack {
@@ -26,8 +27,6 @@ struct LiveImportingList: View {
                             Image(systemName: expanded ? "chevron.up.circle" : "chevron.down.circle")
                                 .contentTransition(.symbolEffect(.replace.offUp))
                             Spacer()
-                            //LiveDownloadSum()
-                                //.frame(height: 16)
                         }
                     }
                         .foregroundStyle(.primary)
@@ -47,25 +46,26 @@ struct LiveImportingList: View {
         }
         .onChange(of: playlistImporter.newPlaylists) { oldValue, newValue in
             if newValue.isEmpty {
-                self.updatePlaylists()
+                updatePlaylists()
             }
         }
     }
+    
     func updatePlaylists() {
         Task {
             let predicate = #Predicate<StoredPlaylist> { _ in true }
             let sortDescriptors = [SortDescriptor(\StoredPlaylist.dateCreated, order: .reverse)]
-            let playlists = try? await database.fetch(predicate, sortBy: sortDescriptors)
-            if let playlists = playlists {
+            let fetchedplaylists = try? await database.fetch(predicate, sortBy: sortDescriptors)
+            if let fetchedplaylists {
                 await MainActor.run {
                     withAnimation {
-                        self.playlists = playlists
+                        playlists = fetchedplaylists
                     }
                 }
             } else {
                 await MainActor.run {
                     withAnimation {
-                        self.playlists = []
+                        playlists = []
                     }
                 }
             }

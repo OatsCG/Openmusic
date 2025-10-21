@@ -13,6 +13,7 @@ struct PlaybackOptions: View {
     @AppStorage("crossfadeAlbums") var crossfadeAlbums: Bool = false
     @AppStorage("playerFadeSeconds") var playerFadeSeconds: Double = 0
     @AppStorage("EQEnabled") var EQEnabled: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {

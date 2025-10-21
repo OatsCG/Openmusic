@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NowPlayingOptions: View {
     @AppStorage("NowPlayingUsesCover") var NowPlayingUsesCover: Bool = false
+    
     var body: some View {
         NavigationStack {
             Form {

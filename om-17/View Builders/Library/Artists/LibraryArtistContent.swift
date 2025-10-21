@@ -12,6 +12,7 @@ struct LibraryArtistContent: View {
     var artist: SearchedArtist
     var albums: [FetchedAlbum]
     var features: [any Track]
+    
     var body: some View {
         ScrollView {
             VStack {

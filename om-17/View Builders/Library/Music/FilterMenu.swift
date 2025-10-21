@@ -13,6 +13,7 @@ struct FilterMenu: View {
     @Binding var songSortType: LibrarySortType
     @Binding var artistSortType: LibrarySortType
     @Binding var filterDownloaded: Bool
+    
     var body: some View {
         Menu {
             Section("Sort By") {

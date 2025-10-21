@@ -10,6 +10,7 @@ import SwiftData
 
 struct LibraryAlbumContent: View {
     @State var album: StoredAlbum
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -57,8 +58,8 @@ struct LibraryAlbumContent: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     //let playlist = StoredPlaylist(Title: "Test!")
+    
     return NavigationStack {
             LibraryAlbumContent(album: StoredAlbum(from: [FetchedTrack(default: true)]))
         }

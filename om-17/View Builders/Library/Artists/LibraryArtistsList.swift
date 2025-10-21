@@ -23,22 +23,11 @@ struct LibraryArtistsList: View {
     
     var body: some View {
         Group {
-            if joinedArtists == nil {
-                if tracks.count == 0 {
-                    ContentUnavailableView {
-                        Label("No Music in Library", systemImage: "music.mic")
-                    } description: {
-                        Text("Add items to your library from Search or Explore to see them here.")
-                    }
-                } else {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                }
-            } else {
+            if let joinedArtists {
                 VStack {
                     HStack {
                         Button(action: {
-                            if (!networkMonitor.isConnected) {
+                            if !networkMonitor.isConnected {
                                 Task {
                                     await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks))
                                 }
@@ -61,7 +50,7 @@ struct LibraryArtistsList: View {
                                 }
                             }
                         Button(action: {
-                            if (!networkMonitor.isConnected) {
+                            if !networkMonitor.isConnected {
                                 Task {
                                     await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(tracks.shuffled()))
                                 }
@@ -85,35 +74,46 @@ struct LibraryArtistsList: View {
                             }
                     }
                     VStackWrapped(columns: albumGridColumns_sizing(h: horizontalSizeClass, v: verticalSizeClass)) {
-                        if let joinedArtists = joinedArtists {
+                        if let artistAlbums, let artistFeatures {
                             ForEach(joinedArtists, id: \.self) { artist in
-                                LibraryArtistLink(artist: artist, albums: artistAlbums![artist], features: artistFeatures![artist])
+                                LibraryArtistLink(artist: artist, albums: artistAlbums[artist], features: artistFeatures[artist])
                             }
                         }
                     }
                 }
+            } else {
+                if tracks.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Music in Library", systemImage: "music.mic")
+                    } description: {
+                        Text("Add items to your library from Search or Explore to see them here.")
+                    }
+                } else {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                }
             }
         }
         .onAppear {
-            self.updateGroupedArtists()
+            updateGroupedArtists()
         }
-        .onChange(of: self.tracks) {
-            self.updateGroupedArtists()
+        .onChange(of: tracks) {
+            updateGroupedArtists()
         }
-        .onChange(of: self.sortType) {
-            self.updateGroupedArtists()
+        .onChange(of: sortType) {
+            updateGroupedArtists()
         }
-        .onChange(of: self.filterOnlyDownloaded) {
-            self.updateGroupedArtists()
+        .onChange(of: filterOnlyDownloaded) {
+            updateGroupedArtists()
         }
     }
     
     func updateGroupedArtists() {
-        self.joinedArtists = nil
+        joinedArtists = nil
         Task {
-            let downloadedRespectedTracks: [StoredTrack] = await self.filterOnlyDownloaded ? self.downloadManager.filter_downloaded(self.tracks) : self.tracks
+            let downloadedRespectedTracks: [StoredTrack] = await filterOnlyDownloaded ? downloadManager.filter_downloaded(tracks) : tracks
             let dateSortedTracks: [StoredTrack]
-            switch self.sortType {
+            switch sortType {
             case .date_up:
                 dateSortedTracks = downloadedRespectedTracks.sorted{ $0.dateAdded > $1.dateAdded }
             case .date_down:
@@ -130,7 +130,7 @@ struct LibraryArtistsList: View {
             }
             let joined: [SearchedArtist] = Array(Set(Array(artistAlbums.keys) + Array(artistFeatures.keys)))
             let sortedJoined: [SearchedArtist]
-            switch self.sortType {
+            switch sortType {
             case .title_up:
                 sortedJoined = joined.sorted{ $0.Name < $1.Name }
             case .title_down:
@@ -139,7 +139,7 @@ struct LibraryArtistsList: View {
                 sortedJoined = joined
             }
             await MainActor.run {
-                self.joinedArtists = sortedJoined
+                joinedArtists = sortedJoined
             }
         }
     }

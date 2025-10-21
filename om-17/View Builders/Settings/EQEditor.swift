@@ -17,6 +17,7 @@ struct EQEditor: View {
     @State var currentPresets: [EQPreset] = []
     @State var bandCount: Int = 8
     var frameHeight: CGFloat = 300
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -39,10 +40,10 @@ struct EQEditor: View {
                             }
                         }
                             .onChange(of: bandCount) {
-                                self.currentBands = EQManager.decodeCurrentBands(count: self.bandCount + 1)
-                                self.updateStoredBands()
+                                currentBands = EQManager.decodeCurrentBands(count: bandCount + 1)
+                                updateStoredBands()
                                 Task {
-                                    self.playerManager.resetEQs()
+                                    playerManager.resetEQs()
                                 }
                             }
                     }
@@ -70,7 +71,7 @@ struct EQEditor: View {
                                 }
                                 HStack(spacing: 3) {
                                     VStack {
-                                        if (currentBands.count > 1) {
+                                        if currentBands.count > 1 {
                                             EQBandSlider(toModify: $currentBands.first!.value, title: "AMP")
                                                 .onChange(of: currentBands.first?.value) {
                                                     updateStoredBands()
@@ -85,7 +86,7 @@ struct EQEditor: View {
                                         .clipShape(UnevenRoundedRectangle(topLeadingRadius: 12, bottomLeadingRadius: 12, bottomTrailingRadius: 5, topTrailingRadius: 5))
                                         .padding(.trailing, 4)
                                     ForEach($currentBands, id: \.index) { $band in
-                                        if (band.index >= 0) {
+                                        if band.index >= 0 {
                                             EQBandSlider(toModify: $band.value, title: condense_num(n: band.freq))
                                                 .clipShape(UnevenRoundedRectangle(topLeadingRadius: band.index == 0 ? 5 : 0, bottomLeadingRadius: band.index == 0 ? 5 : 0, bottomTrailingRadius: 0, topTrailingRadius: 0))
                                                 .onChange(of: band.value) {
@@ -117,7 +118,7 @@ struct EQEditor: View {
                     // saved presets
                     VStack {
                         HStack {
-                            if currentPresets.count > 0 {
+                            if !currentPresets.isEmpty {
                                 Text("Presets")
                                     .customFont(fontManager, .title, bold: true)
                                     .padding(.top)
@@ -144,20 +145,20 @@ struct EQEditor: View {
     
     private func updateLocalBands() {
         withAnimation {
-            self.currentBands = []
-            self.currentBands = EQManager.decodeCurrentBands()
-            self.bandCount = self.currentBands.count - 1
+            currentBands = []
+            currentBands = EQManager.decodeCurrentBands()
+            bandCount = currentBands.count - 1
         }
     }
     
     private func updateLocalPresets() {
         withAnimation {
-            self.currentPresets = EQManager.decodePresets()
+            currentPresets = EQManager.decodePresets()
         }
     }
     
     private func updateStoredBands() {
-        EQManager.encodeBandsToCurrent(bands: self.currentBands)
+        EQManager.encodeBandsToCurrent(bands: currentBands)
     }
 }
 
@@ -183,7 +184,6 @@ func printBands(bands: [EQBand]) {
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

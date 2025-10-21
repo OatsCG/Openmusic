@@ -10,6 +10,7 @@ import SwiftUI
 struct ManageImages: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(FontManager.self) private var fontManager
+    
     var body: some View {
         List {
             ForEach(downloadManager.gather_downloaded_images(), id: \.hashValue) { track in

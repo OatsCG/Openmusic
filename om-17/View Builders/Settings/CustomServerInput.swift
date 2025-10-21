@@ -12,11 +12,11 @@ struct CustomServerInput: View {
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @State var viewModel: StatusViewModel = StatusViewModel()
     @State var showingServerSheet: Bool = false
+    
     var body: some View {
         VStack {
             HStack {
                 TextField("No URL Entered", text: $globalIPAddress)
-                //Text(globalIPAddress)
                     .disabled(true)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
@@ -24,7 +24,7 @@ struct CustomServerInput: View {
                     .textInputAutocapitalization(.never)
                     .keyboardType(.URL)
                     .onAppear {
-                        self.viewModel.runCheck()
+                        viewModel.runCheck()
                     }
                 Divider()
                 Button(action: { showingServerSheet = true }) {
@@ -40,16 +40,11 @@ struct CustomServerInput: View {
                         AddServerSheet(showingServerSheet: $showingServerSheet)
                     })
                 Divider()
-                Button(action: {self.viewModel.runCheck()}) {
+                Button(action: {viewModel.runCheck()}) {
                     HStack {
-                        if (viewModel.serverStatus == nil) {
-                            Image(systemName: "circle.fill")
-                                .customFont(fontManager, .caption2)
-                                .foregroundStyle(.gray)
-                            Text("Fetching")
-                        } else {
-                            if (viewModel.serverStatus!.online) {
-                                if (viewModel.serverStatus!.om_verify == "topsecretpassword") {
+                        if let serverStatus = viewModel.serverStatus {
+                            if serverStatus.online {
+                                if (serverStatus.om_verify == "topsecretpassword") {
                                     Image(systemName: "circle.fill")
                                         .customFont(fontManager, .caption2)
                                         .foregroundStyle(.cyan)
@@ -68,8 +63,12 @@ struct CustomServerInput: View {
                                     .foregroundStyle(.red)
                                 Text("Offline")
                             }
+                        } else {
+                            Image(systemName: "circle.fill")
+                                .customFont(fontManager, .caption2)
+                                .foregroundStyle(.gray)
+                            Text("Fetching")
                         }
-                        
                     }
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 5)

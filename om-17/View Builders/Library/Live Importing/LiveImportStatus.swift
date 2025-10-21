@@ -11,6 +11,7 @@ struct LiveImportStatus: View {
     @Environment(PlaylistImporter.self) var playlistImporter
     var playlist: ImportedPlaylist
     @State var importProgress: Double = 0
+    
     var body: some View {
         Group {
             if playlist.is_importing_successful() {

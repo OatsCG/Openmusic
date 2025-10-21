@@ -11,6 +11,7 @@ struct QPAlbumTracks: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(FontManager.self) private var fontManager
     var tracks: [any Track]
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             let sortedTracks: [any Track] = sort_by_date(tracks: tracks)
@@ -18,12 +19,10 @@ struct QPAlbumTracks: View {
             ForEach(Array(threeRecentTracks.enumerated()), id: \.offset) {index, track in
                 Button(action: {
                     playerManager.fresh_play_multiple(tracks: Array(sortedTracks.suffix(from: index)))
-                    //PlayerManager.shared.fresh_play(track: track)
                 }) {
                     HStack {
                         Text(track.Title)
                             .customFont(fontManager, .subheadline)
-                            //.font(Font.custom("Poppins-Regular", size: 15))
                             .foregroundColor(.primary)
                             .multilineTextAlignment(.leading)
                             .lineLimit(1)
@@ -37,13 +36,14 @@ struct QPAlbumTracks: View {
                         TrackMenuPreview_component(track: track)
                             .environment(fontManager)
                     }
-                if (index < tracks.count) {
+                if index < tracks.count {
                     Divider()
                         .opacity(0.8)
                 }
             }
         }
     }
+    
     private func sort_by_date(tracks: [any Track]) -> [any Track] {
         if tracks[0] is StoredTrack {
             return tracks.map{($0 as? StoredTrack)!}.sorted{(Int($0.dateAdded.timeIntervalSince1970) - $0.Index) > (Int($1.dateAdded.timeIntervalSince1970) - $1.Index)}

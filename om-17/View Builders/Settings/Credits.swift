@@ -42,7 +42,7 @@ struct Credits: View {
                         }
                         .padding(.bottom, 5)
                         VStack(alignment: .leading) {
-                            Text("Ben Giannis")
+                            Text("XXXXX")
                                 .font(.title3 .bold())
                             VStack(alignment: .leading) {
                                 Text("• Programming")
@@ -52,7 +52,7 @@ struct Credits: View {
                                 .font(.footnote)
                         }
                         VStack(alignment: .leading) {
-                            Text("Stephen Clark")
+                            Text("XXXXX")
                                 .font(.title3 .bold())
                             VStack(alignment: .leading) {
                                 Text("• Programming")
@@ -62,7 +62,7 @@ struct Credits: View {
                                 .font(.footnote)
                         }
                         VStack(alignment: .leading) {
-                            Text("Daniel Pawlik")
+                            Text("XXXXX")
                                 .font(.title3 .bold())
                             VStack(alignment: .leading) {
                                 Text("• Graphic Design")
@@ -71,7 +71,7 @@ struct Credits: View {
                                 .font(.footnote)
                         }
                         VStack(alignment: .leading) {
-                            Text("Adam Handziuk")
+                            Text("XXXXX")
                                 .font(.title3 .bold())
                             VStack(alignment: .leading) {
                                 Text("• Graphic Design")
@@ -80,7 +80,7 @@ struct Credits: View {
                                 .font(.footnote)
                         }
                         VStack(alignment: .leading) {
-                            Text("Alex Isacco")
+                            Text("XXXXX")
                                 .font(.title3 .bold())
                             VStack(alignment: .leading) {
                                 Text("• Input Contributor")
