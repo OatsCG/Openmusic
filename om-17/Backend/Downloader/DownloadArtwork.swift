@@ -8,15 +8,31 @@
 import Foundation
 import SwiftUI
 
-func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {    
-    if let imgID = imgID {
-        let url = URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
-        return url ?? nil
-    } else {
-        return nil
-//        let url = URL(string: "")
-//        return url ?? nil
+func isImageURL(_ url: URL?) async throws -> Bool {
+    guard let url = url else { return false }
+    var request = URLRequest(url: url)
+    request.httpMethod = "HEAD"
+
+    let (_, response) = try await URLSession.shared.data(for: request)
+    
+    let httpResponse = response as? HTTPURLResponse
+    if let contentType = httpResponse?.value(forHTTPHeaderField: "Content-Type") {
+        return contentType.lowercased().hasPrefix("image/")
     }
+    
+    return false
+}
+
+
+func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
+    guard let imgID = imgID else { return nil }
+    
+//    if await (try? isImageURL(URL(string: imgID))) ?? false {
+//        return URL(string: imgID)
+//    }
+    
+    let url = URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
+    return url ?? nil
 }
 
 func downloadAlbumArt(artworkID: String) async -> URL? {
