@@ -10,39 +10,39 @@ import SwiftUI
 
 extension PlayerManager {
     func volume_control_check(oldValue: Float?, newValue: Float?) {
-        if (self.volumeSkipEnabled == false) {
-            return
-        }
+        guard volumeSkipEnabled else { return }
         
         let changeDate = Date().timeIntervalSince1970
         //best: self.volumeSkipSpeed = 0.3
         //best: self.volumeSkipMargin = 0.6
-        if oldValue != nil && newValue != nil {
-            if self.lastVolume == nil {
+        if let oldValue, let newValue {
+            if lastVolume == nil {
                 // new volume session
-                self.lastVolume = (oldValue!, newValue!, changeDate, true)
-            } else if changeDate > self.lastVolume!.2 + self.volumeSkipMargin {
+                lastVolume = (oldValue, newValue, changeDate, true)
+            } else if let lastVolume, changeDate > lastVolume.2 + volumeSkipMargin {
                 // new volume session
-                self.lastVolume = (oldValue!, newValue!, changeDate, true)
-            } else if changeDate < self.lastVolume!.2 + self.volumeSkipSpeed {
+                self.lastVolume = (oldValue, newValue, changeDate, true)
+            } else if let lastVolume, changeDate < lastVolume.2 + volumeSkipSpeed {
                 // second click in session
                 // if consecutive clicks line up:
-                if newValue! == self.lastVolume!.0 && self.lastVolume!.3 == true {
-                    let difference = oldValue! - newValue!
+                if newValue == lastVolume.0 && lastVolume.3 {
+                    let difference = oldValue - newValue
                     if estEqual(difference, 0.0625) {
-                        self.player_backward(userInitiated: true)
+                        player_backward(userInitiated: true)
                     }
                     if estEqual(difference, -0.0625) {
-                        self.player_forward(userInitiated: true)
+                        player_forward(userInitiated: true)
                     }
-                    self.lastVolume = (oldValue!, newValue!, changeDate, false)
+                    self.lastVolume = (oldValue, newValue, changeDate, false)
                 }
             }
         }
     }
+    
     func volume_up_pressed() {
         print("volume UP")
     }
+    
     func volume_down_pressed() {
         print("volume DOWN")
     }

@@ -30,6 +30,6 @@ protocol PlayerEngineProtocol: Equatable {
 
 extension PlayerEngineProtocol {
     func isEqual(to other: (any PlayerEngineProtocol)?) -> Bool {
-        return self.id == other?.id
+        return id == other?.id
     }
 }

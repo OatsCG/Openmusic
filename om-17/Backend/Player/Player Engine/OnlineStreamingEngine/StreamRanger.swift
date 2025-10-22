@@ -18,7 +18,7 @@ func bufferAudioData(from url: URL, startSeconds: Int, secondsToBuffer: Int, com
 
     let session = URLSession(configuration: .default)
     let dataTask = session.dataTask(with: request) { data, response, error in
-        if let error = error {
+        if let error {
             completionHandler(nil, error)
         } else {
             completionHandler(data, nil)

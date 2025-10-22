@@ -12,12 +12,12 @@ extension PlayerManager {
         DispatchQueue.main.async {
             self.setIsPlaying(to: true)
         }
-        self.player.playImmediately()
-        self.play_fade_timer?.invalidate()
-        self.pause_fade_timer?.invalidate()
-        self.startingVol = self.player.volume()
-        self.total_fade_steps = Int((UserDefaults.standard.double(forKey: "playerFadeSeconds") + 0.05) * 100) // Calculate steps based on duration, here it's assuming the time unit is in seconds
-        self.current_fade_step = 0
+        player.playImmediately()
+        play_fade_timer?.invalidate()
+        pause_fade_timer?.invalidate()
+        startingVol = player.volume()
+        total_fade_steps = Int((UserDefaults.standard.double(forKey: "playerFadeSeconds") + 0.05) * 100) // Calculate steps based on duration, here it's assuming the time unit is in seconds
+        current_fade_step = 0
         if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [unowned self] in
                 self.play_fade_timer?.invalidate()
@@ -45,14 +45,14 @@ extension PlayerManager {
         DispatchQueue.main.async {
             self.setIsPlaying(to: false)
         }
-        self.play_fade_timer?.invalidate()
-        self.pause_fade_timer?.invalidate()
-        self.current_fade_step = 0
-        self.total_fade_steps = Int(UserDefaults.standard.double(forKey: "playerFadeSeconds") * 100)
-        self.startingVol = self.player.volume()
+        play_fade_timer?.invalidate()
+        pause_fade_timer?.invalidate()
+        current_fade_step = 0
+        total_fade_steps = Int(UserDefaults.standard.double(forKey: "playerFadeSeconds") * 100)
+        startingVol = player.volume()
         Task { [unowned self] in
             DispatchQueue.main.async { [unowned self] in
-                if (UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0) {
+                if UserDefaults.standard.double(forKey: "playerFadeSeconds") != 0 {
                     self.pause_fade_timer?.invalidate()
                     self.pause_fade_timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [unowned self] playTimer in
                         DispatchQueue.main.async { [unowned self] in

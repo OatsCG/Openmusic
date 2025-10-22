@@ -28,4 +28,3 @@ protocol AEPlayer {
     func setVolume(_ to: Float) -> Void
     func amplitudeChart() -> [Float]?
 }
-

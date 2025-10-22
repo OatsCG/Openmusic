@@ -15,70 +15,68 @@ import AudioKit
 @Observable class AEPlayerOffline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status
-    var volume: Float { return self.player.playerNode.volume }
+    var volume: Float { player.playerNode.volume }
     var player: BAPlayer
     var eqManager: EQManager
     var amplitudeFetcher: AmplitudeFetcher
-    var duration: Double {
-        return player.duration > 0 ? player.duration : Double.nan
-    }
-    var currentTime: Double {
-        return player.currentTime
-    }
+    var duration: Double { player.duration > 0 ? player.duration : Double.nan }
+    var currentTime: Double { player.currentTime }
 
     init(url: URL? = nil) {
-        self.player = BAPlayer()
-        self.eqManager = EQManager()
-        self.amplitudeFetcher = AmplitudeFetcher()
-        self.filehash = UUID()
-        self.status = .unknown
-        if (url != nil) {
-            let baplayer: BAPlayer? = try? BAPlayer(url: url!)
-            if baplayer != nil {
-                self.player = baplayer!
-                self.status = .unknown
+        player = BAPlayer()
+        eqManager = EQManager()
+        amplitudeFetcher = AmplitudeFetcher()
+        filehash = UUID()
+        status = .unknown
+        if let url {
+            let baplayer: BAPlayer? = try? BAPlayer(url: url)
+            if let baplayer {
+                player = baplayer
+                status = .unknown
             } else {
-                self.player = BAPlayer()
-                self.status = .failed
+                player = BAPlayer()
+                status = .failed
             }
         }
     }
     
     func amplitudeChart() -> [Float]? {
-        if (self.eqManager.isReady) {
-            return self.amplitudeFetcher.amplitudes
+        if eqManager.isReady {
+            return amplitudeFetcher.amplitudes
         }
         return nil
     }
     
     func modifyEQ(index: Int, value: Double) {
-        self.eqManager.adjustEQBand(for: index, value: Float(value))
+        eqManager.adjustEQBand(for: index, value: Float(value))
     }
     
     func resetEQ(playerManager: PlayerManager) {
         
         //self.eqManager = EQManager()
-        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
+        eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
         //self.eqManager.resetEQ()
     }
     
     func play() {
-        if (self.eqManager.isReady) {
-            self.player.play()
+        if eqManager.isReady {
+            player.play()
             
         }
     }
+    
     func pause() {
-        if (self.eqManager.isReady) {
+        if eqManager.isReady {
             //self.player.playerNode.pause()
             //if (self.player.status != .playing) {
-                self.player.pause()
+                player.pause()
             //}
         }
     }
+    
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        if (self.eqManager.isReady) {
-            self.player.playerNode.seek(to: TimeInterval(to.seconds))
+        if eqManager.isReady {
+            player.playerNode.seek(to: TimeInterval(to.seconds))
             print("seek info 1 for \(to): \(self.duration)")
             print("successful seek to: \(to)")
             completionHandler(true)
@@ -87,19 +85,21 @@ import AudioKit
             completionHandler(false)
         }
     }
+    
     func has_file() -> Bool {
-        return self.player.status != .noSource
+        player.status != .noSource
     }
+    
     func preroll(parent: PlayerEngine, completion: @Sendable @escaping (_ success: Bool) -> Void) {
         //self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
-        self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
+        eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
         if parent.isReady {
             print("seek: parent is ready ready")
             completion(true)
             return
         } else {
             print("seek: parent is NOT ready")
-            if (self.has_file() && self.eqManager.audioEngine == nil) {
+            if has_file() && eqManager.audioEngine == nil {
                 Task.detached { [weak self] in
                     if let self = self {
                         await self.eqManager.setEngine(audioEngine: self.player.engine, playerNode: self.player.playerNode.node)
@@ -111,12 +111,13 @@ import AudioKit
                     }
                 }
             } else {
-                completion(self.has_file())
+                completion(has_file())
             }
         }
     }
+    
     func setVolume(_ to: Float) {
-        if (self.eqManager.isReady) {
+        if eqManager.isReady {
             Task {
                 self.player.playerNode.volume = min(max(to, 0), 1)
             }

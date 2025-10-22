@@ -14,19 +14,19 @@ import AVFoundation
     var alreadyAttempted: Bool
     
     init() {
-        self.amplitudes = nil
-        self.alreadyAttempted = false
+        amplitudes = nil
+        alreadyAttempted = false
     }
     
     func try_amplitude_fetch(audioFile: AVAudioFile?) async {
-        if (self.alreadyAttempted == true) {
+        if alreadyAttempted {
             return
         }
-        self.alreadyAttempted = true
+        alreadyAttempted = true
         if let audioFile = audioFile {
             let avgCount: Int = 60
             let avgRange: Int = 100
-            self.getAmplitudes(audioFile: audioFile, numberOfAmplitudes: avgCount * avgRange)
+            getAmplitudes(audioFile: audioFile, numberOfAmplitudes: avgCount * avgRange)
         }
     }
     
@@ -37,7 +37,6 @@ import AVFoundation
         
         return amplitudes.map { $0 / maxAmplitude }
     }
-
 
     func getAmplitudes(audioFile: AVAudioFile?, numberOfAmplitudes: Int) {
         Task.detached { [weak self] in

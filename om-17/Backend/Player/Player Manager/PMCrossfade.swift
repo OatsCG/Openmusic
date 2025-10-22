@@ -9,75 +9,66 @@ import SwiftUI
 
 extension PlayerManager {
     func crossfade_check() {
-        // if crossfadeAlbums == false and consecutive
-        if self.can_crossfade() {
-            if !self.isCrossfading {
-                if (self.elapsedTime == self.durationSeconds) {
-//                    print("ELAPSED IS EQUAL")
+        if can_crossfade() {
+            if !isCrossfading {
+                if elapsedTime == durationSeconds {
                     // elapsed time is reporting incorrectly
-                    if self.isPlaying {
-                        self.play()
+                    if isPlaying {
+                        play()
                     }
                     return
                 }
-                if self.trackQueue.first != nil && self.is_next_item_ready() {
+                if let next = trackQueue.first, is_next_item_ready() {
                     //if in range, not crossfading, song ready
-                    self.isCrossfading = true
-                    self.trackQueue[0].queueItemPlayer!.set_volume(to: 0)
-                    self.trackQueue[0].queueItemPlayer!.playImmediately()
-                    print("starting animation: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
-                    // if crossfadeAlbums == false and consecutive
-                    if self.crossfadeAlbums == false && self.is_consecutive() {
-                        self.crossfade(duration: self.pickCrossfadeZero()) {
+                    isCrossfading = true
+                    next.queueItemPlayer?.set_volume(to: 0)
+                    next.queueItemPlayer?.playImmediately()
+                    if !crossfadeAlbums && is_consecutive() {
+                        crossfade(duration: pickCrossfadeZero()) {
                             DispatchQueue.main.async {
                                 self.update_elapsed_time()
-                                if (self.isCrossfading) {
-                                    print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                if self.isCrossfading {
                                     self.player_forward(continueCurrent: false)
                                     self.update_elapsed_time()
-                                    print("done crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
                                 }
                             }
                         }
                     } else {
-                        self.crossfade(duration: self.crossfadeSeconds) {
+                        crossfade(duration: crossfadeSeconds) {
                             DispatchQueue.main.async {
-                                if (self.isCrossfading) {
-                                    print("stopping crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
+                                if self.isCrossfading {
                                     self.player_forward(continueCurrent: false)
                                     self.update_elapsed_time()
-                                    print("done crossfade: \(String(describing: self.currentQueueItem?.Track.Title)), \(self.elapsedTime), \(self.durationSeconds)")
                                 }
                             }
                         }
                     }
                 } else {
                     //if in range, not crossfading, no song next
-                    self.end_song_check()
+                    end_song_check()
                 }
             }
         }
     }
     
     func is_consecutive() -> Bool {
-        return (self.currentQueueItem?.Track.Album.AlbumID == self.trackQueue.first?.Track.Album.AlbumID && (self.currentQueueItem?.Track.Index ?? -1) + 1 == self.trackQueue.first?.Track.Index)
+        currentQueueItem?.Track.Album.AlbumID == trackQueue.first?.Track.Album.AlbumID && (currentQueueItem?.Track.Index ?? -1) + 1 == trackQueue.first?.Track.Index
     }
     
     func in_crossfade_range(duration: Double, elapsed: Double, range: Double) -> Bool {
-        return duration > range && duration - elapsed < range
+        duration > range && duration - elapsed < range
     }
     
     func can_crossfade() -> Bool {
-        if self.durationSeconds == 0.9 {
+        if durationSeconds == 0.9 {
             return false
         } else {
-            let cancf: Bool = self.is_current_item_ready() && self.in_crossfade_range(duration: self.durationSeconds, elapsed: self.elapsedTime, range: (self.crossfadeAlbums == false && self.is_consecutive()) ? self.pickCrossfadeZero() : self.crossfadeSeconds)
-            return cancf
+            return is_current_item_ready() && in_crossfade_range(duration: durationSeconds, elapsed: elapsedTime, range: (!crossfadeAlbums && is_consecutive()) ? pickCrossfadeZero() : crossfadeSeconds)
         }
     }
     
     func pickCrossfadeZero() -> Double {
-        return (self.trackQueue.first?.audio_AVPlayer?.isRemote ?? false) ? self.crossfadeZero : self.crossfadeZeroDownload
+        (trackQueue.first?.audio_AVPlayer?.isRemote ?? false) ? crossfadeZero : crossfadeZeroDownload
     }
     
     typealias TransitionCompletionHandler = () -> Void
@@ -85,10 +76,10 @@ extension PlayerManager {
         let steps = Int(duration * 1000) // Calculate steps based on duration, here it's assuming the time unit is in seconds
         var step = 0
         
-        self.crossfadeTimer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { crossfadeTimer in
+        crossfadeTimer = Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { crossfadeTimer in
             DispatchQueue.main.async {
                 step += 1
-                self.trackQueue[0].queueItemPlayer?.set_volume(to: self.appVolume * (Float(step) / Float(steps)))
+                self.trackQueue.first?.queueItemPlayer?.set_volume(to: self.appVolume * (Float(step) / Float(steps)))
                 self.player.set_volume(to: self.appVolume - self.appVolume * (Float(step) / Float(steps)))
                 if self.isCrossfading == false || step == steps {
                     self.crossfadeTimer.invalidate()

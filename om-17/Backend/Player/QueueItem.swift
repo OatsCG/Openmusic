@@ -13,105 +13,93 @@ import SwiftUI
 @Observable class QueueItem: Hashable {
     nonisolated let queueID: UUID
     var Track: any Track
-    var fetchedPlayback: FetchedPlayback? = nil
-    var queueItemPlayer: (any PlayerEngineProtocol)? = nil
-    var audio_AVPlayer: PlayerEngine? = nil
-    var video_AVPlayer: VideoPlayerEngine? = nil
-    var explicit: Bool = false
-    var isVideo: Bool = false
-    var currentlyPriming: Bool = false
-    var wasSongEnjoyed: Bool = false
+    var fetchedPlayback: FetchedPlayback?
+    var queueItemPlayer: (any PlayerEngineProtocol)?
+    var audio_AVPlayer: PlayerEngine?
+    var video_AVPlayer: VideoPlayerEngine?
+    var explicit = false
+    var isVideo = false
+    var currentlyPriming = false
+    var wasSongEnjoyed = false
     var primeStatus: PrimeStatus = .waiting
-    var isDownloaded: Bool = false
+    var isDownloaded = false
     
     init(from: any Track, explicit: Bool? = nil) {
-        self.queueID = UUID()
-        self.Track = from
+        queueID = UUID()
+        Track = from
         self.explicit = (explicit != nil ? explicit! : (from.Playback_Explicit != nil))
-        self.update_download_status()
-        self.setVideo(to: false)
-//        Task {
-//            if await SharedDatabase.shared.database.is_track_stored(TrackID: Track.TrackID) {
-//                await downloadAlbumArt(artworkID: self.Track.Album.Artwork)
-//            }
-//        }
+        update_download_status()
+        setVideo(to: false)
     }
     
     init(from: QueueItem) {
-        self.queueID = UUID()
-        self.Track = from.Track
-        self.fetchedPlayback = from.fetchedPlayback
-        self.explicit = from.explicit
-        self.audio_AVPlayer = PlayerEngine()
-        self.video_AVPlayer = VideoPlayerEngine(ytid: from.fetchedPlayback?.YT_Video_ID)
-        self.update_download_status()
+        queueID = UUID()
+        Track = from.Track
+        fetchedPlayback = from.fetchedPlayback
+        explicit = from.explicit
+        audio_AVPlayer = PlayerEngine()
+        video_AVPlayer = VideoPlayerEngine(ytid: from.fetchedPlayback?.YT_Video_ID)
+        update_download_status()
         
-        if (from.audio_AVPlayer != nil) {
-            if (from.audio_AVPlayer!.has_file()) {
-                self.audio_AVPlayer = PlayerEngine(copy: from.audio_AVPlayer)
-            }
+        if let avplayer = from.audio_AVPlayer, avplayer.has_file() {
+            audio_AVPlayer = PlayerEngine(copy: avplayer)
         }
-        self.setVideo(to: false)
-        self.audio_AVPlayer?.pause()
-        self.audio_AVPlayer?.seek_to_zero()
+        setVideo(to: false)
+        audio_AVPlayer?.pause()
+        audio_AVPlayer?.seek_to_zero()
     }
     
     func setExplicity(to: Bool) {
-        if to != self.explicit {
-            self.explicit = to
-            self.clearPlayback()
+        if to != explicit {
+            explicit = to
+            clearPlayback()
         }
     }
     
     func setVideo(to: Bool) {
-        if (self.isVideo != to) {
-            //self.queueItemPlayer?.pause()
-        }
-        if to == true && self.fetchedPlayback?.YT_Video_ID != nil {
-            self.isVideo = true
-            self.video_AVPlayer = VideoPlayerEngine(ytid: self.fetchedPlayback?.YT_Video_ID)
-            //self.queueItemPlayer = self.video_AVPlayer
-        } else if (to == false) {
-            self.isVideo = false
-            self.queueItemPlayer = self.audio_AVPlayer
+        if isVideo != to { }
+        if to && fetchedPlayback?.YT_Video_ID != nil {
+            isVideo = true
+            video_AVPlayer = VideoPlayerEngine(ytid: self.fetchedPlayback?.YT_Video_ID)
+        } else if !to {
+            isVideo = false
+            queueItemPlayer = audio_AVPlayer
         }
     }
     
     func clearPlayback() {
-        self.audio_AVPlayer?.pause()
-        self.audio_AVPlayer?.clear_file()
-        self.video_AVPlayer?.pause()
-        self.video_AVPlayer?.clear_file()
-        self.fetchedPlayback = nil
-        self.audio_AVPlayer = nil
-        self.video_AVPlayer = nil
-        self.queueItemPlayer = nil
-        self.currentlyPriming = false
-        self.update_prime_status(.waiting)
-        
-        
-        self.update_download_status()
+        audio_AVPlayer?.pause()
+        audio_AVPlayer?.clear_file()
+        video_AVPlayer?.pause()
+        video_AVPlayer?.clear_file()
+        fetchedPlayback = nil
+        audio_AVPlayer = nil
+        video_AVPlayer = nil
+        queueItemPlayer = nil
+        currentlyPriming = false
+        update_prime_status(.waiting)
+        update_download_status()
     }
     
     func isReady() -> Bool {
-        if queueItemPlayer != nil && self.queueItemPlayer!.isReady && !self.queueItemPlayer!.duration().isNaN && self.queueItemPlayer!.duration() > 0 {
+        if let queueItemPlayer, queueItemPlayer.isReady, queueItemPlayer.duration().isNaN, queueItemPlayer.duration() > 0 {
             return true
         }
         return false
     }
     
     func userEnjoyedSong() {
-        if (self.wasSongEnjoyed == false) {
-            self.wasSongEnjoyed = true
+        if !wasSongEnjoyed {
+            wasSongEnjoyed = true
         }
     }
     
     func prime_object_fresh(playerManager: PlayerManager, continueCurrent: Bool = false, seek: Bool = false) {
-        if self.isDownloaded == false {
-            self.update_prime_status(.waiting)
+        if !isDownloaded {
+            update_prime_status(.waiting)
         }
         if seek {
-            if let timestamp = self.queueItemPlayer?.currentTime {
+            if let timestamp = queueItemPlayer?.currentTime {
                 DispatchQueue.main.async {
                     self.clearPlayback()
                     Task {
@@ -131,7 +119,7 @@ import SwiftUI
     
     func update_download_status() {
         Task {
-            if await DownloadManager.shared.is_downloaded(self.Track, explicit: self.explicit) {
+            if await DownloadManager.shared.is_downloaded(Track, explicit: explicit) {
                 DispatchQueue.main.async {
                     self.isDownloaded = true
                 }
@@ -145,22 +133,18 @@ import SwiftUI
     
     func update_prime_status(_ status: PrimeStatus) {
         withAnimation {
-            self.primeStatus = status
+            primeStatus = status
         }
     }
     
-    // Conform to Hashable
     nonisolated func hash(into hasher: inout Hasher) {
-        hasher.combine(self.queueID)
+        hasher.combine(queueID)
     }
 
-    // Define equality
     nonisolated static func ==(lhs: QueueItem, rhs: QueueItem) -> Bool {
-        return lhs.queueID == rhs.queueID
+        lhs.queueID == rhs.queueID
     }
 }
-
-
 
 enum PrimeStatus {
     case waiting, loading, success, primed, failed, passed

@@ -10,38 +10,37 @@ import AVFoundation
 
 extension PlayerManager {
     func update_elapsed_time() {
-        if (self.player.currentTime.isNaN) {
+        if player.currentTime.isNaN {
             DispatchQueue.main.async {
                 self.elapsedTime = 0
             }
-        } else if (self.player.isSeeking == false) {
-            let playerTime: Double = self.player.currentTime
-            self.elapsedTime = playerTime
+        } else if !player.isSeeking {
+            self.elapsedTime = player.currentTime
         }
-        if (self.player.has_file() && self.player.duration().isNaN == false) {
-            let playerDuration: Double = self.player.duration()
-            self.durationSeconds = playerDuration
-            if (playerDuration > 0 && playerDuration - self.elapsedTime - self.crossfadeSeconds <= 1) { // if close to crossfading
-                self.update_timer(to: 0.01)
+        if player.has_file() && !player.duration().isNaN {
+            let playerDuration = player.duration()
+            durationSeconds = playerDuration
+            if playerDuration > 0 && playerDuration - elapsedTime - crossfadeSeconds <= 1 { // if close to crossfading
+                update_timer(to: 0.01)
             } else {
-                self.update_timer(to: 0.1)
+                update_timer(to: 0.1)
             }
-            if (self.elapsedTime > 45 || self.elapsedNormal > 0.5) {
+            if elapsedTime > 45 || elapsedNormal > 0.5 {
                 // add enjoyed song to recents
-                if (self.currentQueueItem?.wasSongEnjoyed == false) {
+                if currentQueueItem?.wasSongEnjoyed == false {
                     withAnimation {
-                        if let fetchedTrack = self.currentQueueItem?.Track as? FetchedTrack {
+                        if let fetchedTrack = currentQueueItem?.Track as? FetchedTrack {
                             RecentlyPlayedManager.prependRecentTrack(track: fetchedTrack)
-                        } else if let importedTrack = self.currentQueueItem?.Track as? ImportedTrack {
+                        } else if let importedTrack = currentQueueItem?.Track as? ImportedTrack {
                             RecentlyPlayedManager.prependRecentTrack(track: FetchedTrack(from: importedTrack))
                         }
                     }
                 }
-                self.currentQueueItem?.userEnjoyedSong()
-                self.trySuggestingPlaylistCreation()
+                currentQueueItem?.userEnjoyedSong()
+                trySuggestingPlaylistCreation()
             }
         } else {
-            self.durationSeconds = 0.9
+            durationSeconds = 0.9
         }
         DispatchQueue.main.async {
             withAnimation {
@@ -51,24 +50,22 @@ extension PlayerManager {
     }
     
     func change_volume(to: Float) {
-        self.appVolume = to
-        self.player.set_volume(to: self.appVolume)
+        appVolume = to
+        player.set_volume(to: appVolume)
     }
     
     func set_currentlyPlaying(queueItem: QueueItem) {
-        if (self.currentQueueItem != nil) {
-            if (self.currentQueueItem!.queueID == queueItem.queueID) {
-                if (self.currentQueueItem!.queueItemPlayer != nil) {
+        if let currentQueueItem {
+            if currentQueueItem.queueID == queueItem.queueID {
+                if currentQueueItem.queueItemPlayer != nil {
                     //if current avplayer doesnt equal queueitem avplayer
-                    if (queueItem.queueItemPlayer != nil && !self.player.isEqual(to: queueItem.queueItemPlayer)) {
-                        if queueItem.queueItemPlayer != nil {
-                            // NEW SONG SET
-                            self.player.pause()
-                            self.player = queueItem.queueItemPlayer!
-                            self.player.set_volume(to: self.appVolume)
-                            if (self.is_playing()) {
-                                self.player.playImmediately()
-                            }
+                    if let queueItemPlayer = queueItem.queueItemPlayer, !player.isEqual(to: queueItemPlayer) {
+                        // NEW SONG SET
+                        player.pause()
+                        player = queueItemPlayer
+                        player.set_volume(to: appVolume)
+                        if is_playing() {
+                            player.playImmediately()
                         }
                         setupNowPlaying()
                         defineInterruptionObserver()
@@ -81,16 +78,16 @@ extension PlayerManager {
             queueItem.audio_AVPlayer?.pause()
         }
         
-        self.setAudioSession()
+        setAudioSession()
         Task {
-            self.addSuggestions()
+            addSuggestions()
         }
     }
     
     func setAudioSession() {
         do {
-            try self.audioSession.setCategory(.playback, mode: .default, policy: .longFormAudio, options: [])
-            try self.audioSession.setActive(true)
+            try audioSession.setCategory(.playback, mode: .default, policy: .longFormAudio, options: [])
+            try audioSession.setActive(true)
         } catch {
             print("Failed to set audio session route sharing policy: \(error)")
         }

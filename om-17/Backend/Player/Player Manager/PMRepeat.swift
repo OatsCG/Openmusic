@@ -11,63 +11,58 @@ import AVFoundation
 extension PlayerManager {
     func cycle_repeat_mode() {
         withAnimation {
-            if (self.repeatMode == .off) {
-                self.repeatMode = .queue
-            } else if (self.repeatMode == .queue) {
-                self.repeatMode = .single
+            if repeatMode == .off {
+                repeatMode = .queue
+            } else if repeatMode == .queue {
+                repeatMode = .single
             } else {
-                self.repeatMode = .off
+                repeatMode = .off
             }
         }
     }
     
     func repeat_check() {
-        if (self.didAddFromRepeat || self.repeatMode == .off) {
+        if didAddFromRepeat || repeatMode == .off {
             return
         }
-        let timeRemaining: Double = self.durationSeconds - self.elapsedTime - self.crossfadeSeconds
-        if (self.currentQueueItem?.isReady() ?? false && timeRemaining < 5) {
-            if self.currentQueueItem != nil {
-                self.didAddFromRepeat = true
-                if self.repeatMode == .single {
-                    single_repeat_add()
-                } else if self.repeatMode == .queue {
-                    queue_repeat_add()
-                }
+        let timeRemaining = durationSeconds - elapsedTime - crossfadeSeconds
+        if let currentQueueItem, currentQueueItem.isReady() && timeRemaining < 5 {
+            didAddFromRepeat = true
+            if repeatMode == .single {
+                single_repeat_add()
+            } else if repeatMode == .queue {
+                queue_repeat_add()
             }
         }
     }
     
     func single_repeat_add() {
         // add copy of current song to front of queue
-        let newQueueItem: QueueItem = QueueItem(from: self.currentQueueItem!)
-        withAnimation {
-            self.queue_next(queueItem: newQueueItem)
+        if let currentQueueItem {
+            withAnimation {
+                queue_next(queueItem: QueueItem(from: currentQueueItem))
+            }
         }
     }
     
     func queue_repeat_add() {
-        if (self.trackQueue.count == 0 && self.currentQueueItem != nil) {
+        if trackQueue.isEmpty, let currentQueueItem {
             // if queue is empty: move history to queue and clear history
             withAnimation {
-                self.trackQueue = self.sessionHistory
-                self.reset_session_history()
+                trackQueue = sessionHistory
+                reset_session_history()
             }
             // add copy of current song to end of queue
-            if (self.trackQueue.count == 0) {
-                let newQueueItem: QueueItem = QueueItem(from: self.currentQueueItem!)
+            if trackQueue.isEmpty {
                 withAnimation {
-                    self.queue_song(queueItem: newQueueItem)
+                    queue_song(queueItem: QueueItem(from: currentQueueItem))
                 }
             }
         }
     }
-    
 }
-
 
 enum RepeatMode: String, Identifiable, CaseIterable {
     case off, queue, single
     var id: Self { self }
 }
-

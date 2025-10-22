@@ -12,12 +12,12 @@ import SwiftUI
 extension PlayerManager {
     func syncPlayingTimeControls() {
         // push elapsed time to Media Center
-        if (self.isUpdatingInfoCenter) {
+        if isUpdatingInfoCenter {
             return
         }
         DispatchQueue.main.async {
             self.isUpdatingInfoCenter = true
-            if (self.currentQueueItem?.isReady() ?? false && self.durationSeconds > 1) {
+            if self.currentQueueItem?.isReady() ?? false && self.durationSeconds > 1 {
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.elapsedTime
                 self.nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = self.durationSeconds
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = self.is_playing() ? 1.0 : 0.0
@@ -30,15 +30,12 @@ extension PlayerManager {
             }
             self.isUpdatingInfoCenter = false
         }
-//        Task.detached {
-//
-//        }
     }
     
     func setupNowPlaying() {
         // push track data to Media Center
-        if (self.currentlyTryingInfoCenterAlbumArtUpdate == false && self.currentQueueItem != nil) {
-            self.currentlyTryingInfoCenterAlbumArtUpdate = true
+        if currentlyTryingInfoCenterAlbumArtUpdate == false && currentQueueItem != nil {
+            currentlyTryingInfoCenterAlbumArtUpdate = true
             Task.detached {
                 let title = await self.currentQueueItem?.Track.Title
                 let artists = await stringArtists(artistlist: self.currentQueueItem?.Track.Album.Artists ?? [])
@@ -94,6 +91,7 @@ extension PlayerManager {
                        name: AVAudioSession.interruptionNotification,
                        object: AVAudioSession.sharedInstance())
     }
+    
     @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
@@ -107,14 +105,14 @@ extension PlayerManager {
         case .ended:
             guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
             let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
-            self.setupRemoteTransportControls()
-            self.setAudioSession()
+            setupRemoteTransportControls()
+            setAudioSession()
             if options.contains(.shouldResume) {
                 print("[pause] ended interruption, playing")
-                self.play()
+                play()
             } else {
                 print("[pause] ended interruption")
-                self.pause()
+                pause()
             }
         default: ()
         }
@@ -122,41 +120,41 @@ extension PlayerManager {
     
     func setupRemoteTransportControls() {
         // sets up system play/pause commands
-        if (self.commandCenterAlreadyLoaded) {
+        if commandCenterAlreadyLoaded {
             return
         }
-        self.commandCenterAlreadyLoaded = true
-        self.commandCenter.changePlaybackPositionCommand.isEnabled = true;
+        commandCenterAlreadyLoaded = true
+        commandCenter.changePlaybackPositionCommand.isEnabled = true;
         
-        self.commandCenter.nextTrackCommand.addTarget { [unowned self] event in
-            self.player_forward(userInitiated: true)
+        commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+            player_forward(userInitiated: true)
             return .success
         }
-        self.commandCenter.previousTrackCommand.addTarget { [unowned self] event in
-            self.player_backward(userInitiated: true)
+        commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+            player_backward(userInitiated: true)
             return .success
         }
-        self.commandCenter.playCommand.addTarget { [unowned self] event in
+        commandCenter.playCommand.addTarget { [unowned self] event in
 //            if self.is_playing() == false {
 //                self.play()
 //                return .success
 //            }
 //            return .commandFailed
-            self.play()
+            play()
             return .success
         }
-        self.commandCenter.pauseCommand.addTarget { [unowned self] event in
+        commandCenter.pauseCommand.addTarget { [unowned self] event in
 //            if self.is_playing() == true {
 //                self.pause()
 //                return .success
 //            }
 //            return .commandFailed
-            self.pause()
+            pause()
             return .success
         }
-        self.commandCenter.stopCommand.addTarget { [unowned self] event in
-            print("\(self.currentQueueItem?.Track.Title ?? "nil") STOPPED")
-            self.pause()
+        commandCenter.stopCommand.addTarget { [unowned self] event in
+            print("\(currentQueueItem?.Track.Title ?? "nil") STOPPED")
+            pause()
             return .success
             
 //            if self.player.rate == 1.0 {
@@ -165,10 +163,10 @@ extension PlayerManager {
 //            }
 //            return .commandFailed
         }
-        self.commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
+        commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
             if let event = event as? MPChangePlaybackPositionCommandEvent {
-                self.player.seek(to: event.positionTime)
-                self.play()
+                player.seek(to: event.positionTime)
+                play()
                 syncPlayingTimeControls()
                 return .success
             }

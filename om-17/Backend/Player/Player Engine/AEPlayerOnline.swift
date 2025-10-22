@@ -15,29 +15,29 @@ import AudioKit
 @Observable class AEPlayerOnline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status
-    var volume: Float { return self.player.volume }
+    var volume: Float { player.volume }
     var player: AVPlayer
     var duration: Double {
-        return (player.currentItem?.duration.seconds ?? Double.nan)
+        player.currentItem?.duration.seconds ?? Double.nan
     }
     var currentTime: Double {
-        return player.currentTime().seconds
+        player.currentTime().seconds
     }
     private var url: URL?
 
     init(url: URL? = nil) {
         self.url = url
-        if let url = url {
+        if let url {
             let asset = AVURLAsset(url: url)
             let playerItem = AVPlayerItem(asset: asset)
-            self.player = AVPlayer(playerItem: playerItem)
+            player = AVPlayer(playerItem: playerItem)
         } else {
-            self.player = AVPlayer()
+            player = AVPlayer()
         }
-        self.filehash = UUID()
-        self.status = .unknown
-        self.player.automaticallyWaitsToMinimizeStalling = false
-        self.player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
+        filehash = UUID()
+        status = .unknown
+        player.automaticallyWaitsToMinimizeStalling = false
+        player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
     }
     
     @objc func handleAccessLogEntry(_ notification: Notification) {
@@ -59,41 +59,39 @@ import AudioKit
     
     init(playerItem: AVPlayerItem) {
 //        playerItem.preferredPeakBitRate = 1
-        self.player = AVPlayer(playerItem: playerItem)
+        player = AVPlayer(playerItem: playerItem)
         //self.duration = playerItem.duration.seconds
-        self.filehash = UUID()
-        self.status = .unknown
+        filehash = UUID()
+        status = .unknown
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleAccessLogEntry(_:)),
                                                name: .AVPlayerItemNewAccessLogEntry,
                                                object: self.player.currentItem)
-        self.player.automaticallyWaitsToMinimizeStalling = false
-        self.player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
+        player.automaticallyWaitsToMinimizeStalling = false
+        player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
     }
     
     func amplitudeChart() -> [Float]? {
-        return nil
+        nil
     }
     
-    func modifyEQ(index: Int, value: Double) {
-        return
-    }
+    func modifyEQ(index: Int, value: Double) { }
     
-    func resetEQ(playerManager: PlayerManager) {
-        return
-    }
+    func resetEQ(playerManager: PlayerManager) { }
     
     func play() {
         //self.player.play()
-        self.player.playImmediately(atRate: 1.0)
+        player.playImmediately(atRate: 1.0)
 //        self.player.currentItem?.preferredPeakBitRate = 1
     }
+    
     func pause() {
-        self.player.pause()
+        player.pause()
     }
+    
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        let wasPlaying: Bool = self.player.rate == 1
-        self.player.seek(to: to, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) {_ in
+        let wasPlaying = player.rate == 1
+        player.seek(to: to, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) {_ in
             if wasPlaying {
                 self.play()
             }
@@ -101,16 +99,18 @@ import AudioKit
             print(self.player.rate)
         }
     }
+    
     func has_file() -> Bool {
-        return self.player.currentItem != nil
+        player.currentItem != nil
     }
+    
     func preroll(parent: PlayerEngine, completion: @escaping (Bool) -> Void) {
-        if (parent.isReady) {
-            self.player.cancelPendingPrerolls()
+        if parent.isReady {
+            player.cancelPendingPrerolls()
             completion(true)
             return
         }
-        parent.statusObservation = self.player.observe(\.status, options: [.new]) { (player, change) in
+        parent.statusObservation = player.observe(\.status, options: [.new]) { (player, change) in
             if player.status == .readyToPlay {
                 print("STATUS READY STATUS READY")
                 DispatchQueue.main.async {
@@ -138,11 +138,11 @@ import AudioKit
             }
         }
     }
+    
     func setVolume(_ to: Float) {
-        self.player.volume = min(max(to, 0), 1)
+        player.volume = min(max(to, 0), 1)
     }
 }
-
 
 func fetchContentLength(myURL: URL?, callback: @escaping (Double?) -> Void) {
     if let myURL = myURL {

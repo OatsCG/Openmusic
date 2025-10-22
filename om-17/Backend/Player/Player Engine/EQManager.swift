@@ -17,16 +17,15 @@ class EQManager {
     var isReady: Bool
 
     init() {
-        self.eqNode = AVAudioUnitEQ(numberOfBands: EQManager.decodeCurrentBands().count) // Assuming 10 sliders
-        self.isReady = false
+        eqNode = AVAudioUnitEQ(numberOfBands: EQManager.decodeCurrentBands().count) // Assuming 10 sliders
+        isReady = false
     }
     
     static func decodeBands(bands: String?) -> [EQBand] {
         // FORMAT: <count>C<index>!<freq>!<val>B<index>!<freq>!...
         if let bands = bands {
             let CSplit: [String] = bands.components(separatedBy: "C")
-            let bands: String? = CSplit.last
-            if let bands = bands {
+            if let bands = CSplit.last {
                 let bandStrings: [String] = bands.components(separatedBy: "B")
                 var bandObjs: [EQBand] = []
                 for band in bandStrings {
@@ -35,12 +34,8 @@ class EQManager {
                         let index: Int? = Int(bandSplit[0])
                         let freq: Float? = Float(bandSplit[1])
                         let val: Double? = Double(bandSplit[2])
-                        if let index = index {
-                            if let freq = freq {
-                                if let val = val {
-                                    bandObjs.append(EQBand(freq: freq, value: val, index: index))
-                                }
-                            }
+                        if let index, let freq, let val {
+                            bandObjs.append(EQBand(freq: freq, value: val, index: index))
                         }
                     }
                 }
@@ -62,7 +57,6 @@ class EQManager {
         let toPush: String = "\(bandCount)C\(joinedBands)"
         return toPush
     }
-    
     
     static func decodeCurrentBands(count: Int? = nil) -> [EQBand] {
         let EQBandsCurrent: String? = UserDefaults.standard.string(forKey: "EQBandsCurrent")
@@ -93,7 +87,7 @@ class EQManager {
             UserDefaults.standard.set("", forKey: "EQBandsPresets")
             return []
         }
-        if let EQPresets = EQPresets {
+        if let EQPresets {
             let splitPresets: [String] = EQPresets.components(separatedBy: "QBANDSPLITQ")
             var savedPresets: [EQPreset] = []
             for preset in splitPresets {
@@ -154,11 +148,10 @@ class EQManager {
     }
     
     func setEngine(audioEngine: AVAudioEngine, playerNode: AVAudioPlayerNode) {
-        print("seek: setting engine...")
         self.audioEngine = audioEngine
         self.playerNode = playerNode
-        self.isReady = false
-        self.eqNode = AVAudioUnitEQ(numberOfBands: EQManager.decodeCurrentBands().count) // Assuming 10 sliders
+        isReady = false
+        eqNode = AVAudioUnitEQ(numberOfBands: EQManager.decodeCurrentBands().count)
         setupEQ()
     }
     
@@ -176,29 +169,25 @@ class EQManager {
                 adjustEQBand(for: band.index, value: Float(band.value))
             }
         }
-        if (self.isReady == false) {
+        if !isReady {
             // Insert EQ in the existing audio chain
             DispatchQueue.main.async { [weak self] in
-                if let playerNode = self?.playerNode {
-                    if let audioEngine = self?.audioEngine {
-                        if let eqNode = self?.eqNode {
-                            let format = playerNode.outputFormat(forBus: 0)
-                            audioEngine.disconnectNodeOutput(playerNode)
-                            audioEngine.attach(eqNode)
-                            audioEngine.connect(playerNode, to: eqNode, format: format)
-                            audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: format)
-                        }
-                    }
+                if let playerNode = self?.playerNode,
+                   let audioEngine = self?.audioEngine,
+                   let eqNode = self?.eqNode {
+                    let format = playerNode.outputFormat(forBus: 0)
+                    audioEngine.disconnectNodeOutput(playerNode)
+                    audioEngine.attach(eqNode)
+                    audioEngine.connect(playerNode, to: eqNode, format: format)
+                    audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: format)
                 }
             }
-            self.isReady = true
+            isReady = true
         }
     }
 
     func adjustEQBand(for sliderIndex: Int, value: Float) {
-        if (UserDefaults.standard.bool(forKey: "EQEnabled") == false) {
-            return
-        }
+        guard UserDefaults.standard.bool(forKey: "EQEnabled") else { return }
         reallyAdjustBand(for: sliderIndex, value: value)
     }
     
@@ -209,22 +198,21 @@ class EQManager {
         let dbValue = minDb + (maxDb - minDb) * value
         if sliderIndex < 0 {
             eqNode.globalGain = dbValue
-        } else if (sliderIndex < eqNode.bands.count) {
+        } else if sliderIndex < eqNode.bands.count {
             eqNode.bands[sliderIndex].gain = dbValue
         }
     }
     
     func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) {
         Task {
-            if (self.isReady == false) {
-                return
-            }
-            if (enabled == false) {
+            guard isReady else { return }
+            
+            if !enabled {
                 for i in 0..<eqNode.bands.count {
                     eqNode.bands[i].gain = 0
                 }
             } else {
-                if (EQManager.decodeCurrentBands().count != eqNode.bands.count) {
+                if EQManager.decodeCurrentBands().count != eqNode.bands.count {
                     if let playerManager = playerManager {
                         //playerManager.pause()
                         Task {
@@ -241,7 +229,6 @@ class EQManager {
             }
         }
     }
-
 }
 
 @Observable class EQBand: Equatable {
@@ -254,8 +241,8 @@ class EQManager {
         self.value = value
         self.index = index
     }
-    static func == (lhs: EQBand, rhs: EQBand) -> Bool {
-        return lhs.value == rhs.value
+    static func ==(lhs: EQBand, rhs: EQBand) -> Bool {
+        lhs.value == rhs.value
     }
 }
 
@@ -272,26 +259,23 @@ struct EQPreset: Hashable {
         self.bands = bands
     }
     
-    static func == (lhs: EQPreset, rhs: EQPreset) -> Bool {
-        return lhs.id == rhs.id
+    static func ==(lhs: EQPreset, rhs: EQPreset) -> Bool {
+        lhs.id == rhs.id
     }
     public func hash(into hasher: inout Hasher) {
-        return hasher.combine(self.id)
+        hasher.combine(id)
     }
 }
 
-
-
-@MainActor func currentFrequencies() -> [Float] {
+@MainActor
+func currentFrequencies() -> [Float] {
     var frequencies: [Float] = []
     let currentBands: [EQBand] = EQManager.decodeCurrentBands()
     for band in currentBands {
         frequencies.append(band.freq)
     }
-
     return frequencies
 }
-
 
 func defaultEqualizer(bandCount: Int) -> [Float] {
     let minFreq: Double = 32
@@ -303,7 +287,6 @@ func defaultEqualizer(bandCount: Int) -> [Float] {
         let freq = minFreq * pow(ratio, Double(i))
         frequencies.append(Float(round(freq)))
     }
-
     return frequencies
 }
 

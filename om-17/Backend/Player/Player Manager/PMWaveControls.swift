@@ -14,38 +14,37 @@ extension PlayerManager {
         let waveMax = 0.2
         
         let changeDate = Date().timeIntervalSince1970
-        let lastDepth = self.lastWaveDepth.0
-        let lastTime = self.lastWaveDepth.1
-        let isValid = self.lastWaveDepth.2
+        let lastDepth = lastWaveDepth.0
+        let lastTime = lastWaveDepth.1
+        let isValid = lastWaveDepth.2
         if close {
-            if lastDepth == false {
+            if !lastDepth {
                 if changeDate - lastTime > sessionDelay {
-                    self.lastWaveDepth = (true, changeDate, true)
+                    lastWaveDepth = (true, changeDate, true)
                 } else {
-                    self.lastWaveDepth = (true, changeDate, false)
+                    lastWaveDepth = (true, changeDate, false)
                 }
             } else {
                 if changeDate - lastTime > hoverMax && isValid {
-                    self.lastWaveDepth = (true, changeDate, false)
-                    if self.is_playing() {
-                        self.pause()
+                    lastWaveDepth = (true, changeDate, false)
+                    if is_playing() {
+                        pause()
                     } else {
-                        self.play()
+                        play()
                     }
                 }
             }
         }
 
         if !close {
-            if lastDepth == true {
+            if lastDepth {
                 if changeDate - lastTime < waveMax && isValid {
-                    self.lastWaveDepth = (false, changeDate, false)
-                    self.player_forward(userInitiated: true)
+                    lastWaveDepth = (false, changeDate, false)
+                    player_forward(userInitiated: true)
                 } else {
-                    self.lastWaveDepth = (false, changeDate, false)
+                    lastWaveDepth = (false, changeDate, false)
                 }
             }
         }
-
     }
 }

@@ -78,62 +78,62 @@ import Combine
 
     
     init(dormant: Bool) {
-        self.commandCenterAlreadyLoaded = false
-        self.currentlyTryingInfoCenterAlbumArtUpdate = false
-        self.player = PlayerEngine()
-        self.isPlaying = false
-        self.currentQueueItem = nil
-        self.trackQueue = []
-        self.sessionHistory = []
-        self.elapsedTime = 0
-        self.durationSeconds = 0.9
-        self.elapsedNormal = 0
-        self.appVolume = 1
-        self.crossfadeZero = 0.15
-        self.crossfadeZeroDownload = 0.05
-        self.crossfadeSeconds = 0
-        self.isCrossfading = false
-        self.didAddFromRepeat = false
-        self.crossfadeTimer = Timer()
-        self.crossfadeAlbums = false
-        self.volumeSkipEnabled = false
-        self.volumeSkipSpeed = 0
-        self.volumeSkipMargin = 0
-        if self.volumeSkipSpeed == 0 {
-            self.volumeSkipSpeed = 0.5
+        commandCenterAlreadyLoaded = false
+        currentlyTryingInfoCenterAlbumArtUpdate = false
+        player = PlayerEngine()
+        isPlaying = false
+        currentQueueItem = nil
+        trackQueue = []
+        sessionHistory = []
+        elapsedTime = 0
+        durationSeconds = 0.9
+        elapsedNormal = 0
+        appVolume = 1
+        crossfadeZero = 0.15
+        crossfadeZeroDownload = 0.05
+        crossfadeSeconds = 0
+        isCrossfading = false
+        didAddFromRepeat = false
+        crossfadeTimer = Timer()
+        crossfadeAlbums = false
+        volumeSkipEnabled = false
+        volumeSkipSpeed = 0
+        volumeSkipMargin = 0
+        if volumeSkipSpeed == 0 {
+            volumeSkipSpeed = 0.5
         }
-        if self.volumeSkipMargin == 0 {
-            self.volumeSkipMargin = 0.7
+        if volumeSkipMargin == 0 {
+            volumeSkipMargin = 0.7
         }
     }
     
     init() {
-        self.commandCenterAlreadyLoaded = false
-        self.currentlyTryingInfoCenterAlbumArtUpdate = false
-        self.player = PlayerEngine()
-        self.isPlaying = false
-        self.currentQueueItem = nil
-        self.trackQueue = []
-        self.sessionHistory = []
-        self.elapsedTime = 0
-        self.durationSeconds = 0.9
-        self.elapsedNormal = 0
-        self.appVolume = 1
-        self.crossfadeZero = 0.15
-        self.crossfadeZeroDownload = 0.05
-        self.crossfadeSeconds = UserDefaults.standard.double(forKey: "crossfadeSeconds") == 0 ? 0.15 : UserDefaults.standard.double(forKey: "crossfadeSeconds")
-        self.isCrossfading = false
-        self.didAddFromRepeat = false
-        self.crossfadeTimer = Timer()
-        self.crossfadeAlbums = UserDefaults.standard.bool(forKey: "crossfadeAlbums")
-        self.volumeSkipEnabled = UserDefaults.standard.bool(forKey: "volumeSkipEnabled")
-        self.volumeSkipSpeed = UserDefaults.standard.double(forKey: "volumeSkipSpeed")
-        self.volumeSkipMargin = UserDefaults.standard.double(forKey: "volumeSkipMargin")
-        if self.volumeSkipSpeed == 0 {
-            self.volumeSkipSpeed = 0.5
+        commandCenterAlreadyLoaded = false
+        currentlyTryingInfoCenterAlbumArtUpdate = false
+        player = PlayerEngine()
+        isPlaying = false
+        currentQueueItem = nil
+        trackQueue = []
+        sessionHistory = []
+        elapsedTime = 0
+        durationSeconds = 0.9
+        elapsedNormal = 0
+        appVolume = 1
+        crossfadeZero = 0.15
+        crossfadeZeroDownload = 0.05
+        crossfadeSeconds = UserDefaults.standard.double(forKey: "crossfadeSeconds") == 0 ? 0.15 : UserDefaults.standard.double(forKey: "crossfadeSeconds")
+        isCrossfading = false
+        didAddFromRepeat = false
+        crossfadeTimer = Timer()
+        crossfadeAlbums = UserDefaults.standard.bool(forKey: "crossfadeAlbums")
+        volumeSkipEnabled = UserDefaults.standard.bool(forKey: "volumeSkipEnabled")
+        volumeSkipSpeed = UserDefaults.standard.double(forKey: "volumeSkipSpeed")
+        volumeSkipMargin = UserDefaults.standard.double(forKey: "volumeSkipMargin")
+        if volumeSkipSpeed == 0 {
+            volumeSkipSpeed = 0.5
         }
-        if self.volumeSkipMargin == 0 {
-            self.volumeSkipMargin = 0.7
+        if volumeSkipMargin == 0 {
+            volumeSkipMargin = 0.7
         }
         
         //initialize media center
@@ -145,11 +145,11 @@ import Combine
             self.volume_control_check(oldValue: VolumeObserver.shared.oldValue, newValue: VolumeObserver.shared.newValue)
         }
         //update timer
-        self.update_timer(to: 0.1)
+        update_timer(to: 0.1)
     }
     
     func update_timer(to: Double) {
-        if (self.syncedTimerInterval == to) {
+        if syncedTimerInterval == to {
             return
         }
         DispatchQueue.main.async {
@@ -167,8 +167,8 @@ import Combine
     }
     
     func timer_fired() {
-        if self.timerMidFire == false {
-            self.timerMidFire = true
+        if !timerMidFire {
+            timerMidFire = true
             DispatchQueue.main.async { [weak self] in
                 self?.syncPlayingTimeControls()
                 self?.update_elapsed_time()
@@ -182,17 +182,16 @@ import Combine
     }
     
     func track_reached_end() {
-        // DONE
-        self.player_forward()
+        player_forward()
     }
     
     func is_playing() -> Bool {
-        return self.isPlaying
+        isPlaying
     }
     
     func end_song_check() {
-        if (self.durationSeconds - self.elapsedTime < 0.01) {
-            self.player_forward()
+        if durationSeconds - elapsedTime < 0.01 {
+            player_forward()
         }
     }
 }

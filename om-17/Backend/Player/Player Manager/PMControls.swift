@@ -10,11 +10,11 @@ import AVFoundation
 
 extension PlayerManager {
     func play() {
-        self.setAudioSession()
-        if (self.currentQueueItem == nil) {
-            if (self.trackQueue.isEmpty) {
+        setAudioSession()
+        if currentQueueItem == nil {
+            if trackQueue.isEmpty {
                 if let recentTrack = RecentlyPlayedManager.getRecentTracks().first {
-                    self.fresh_play(track: recentTrack)
+                    fresh_play(track: recentTrack)
                     Task.detached {
                         await self.play_fade()
                     }
@@ -30,34 +30,34 @@ extension PlayerManager {
                 await self.play_fade()
             }
         }
-        self.prime_current_song()
+        prime_current_song()
     }
     
     func pause() {
         //self.setIsPlaying(to: false)
-        self.pause_fade()
+        pause_fade()
     }
     
     func player_forward(continueCurrent: Bool = false, userInitiated: Bool = false) {
-        self.isCrossfading = false
-        self.didAddFromRepeat = false
-        if (continueCurrent == false) {
+        isCrossfading = false
+        didAddFromRepeat = false
+        if !continueCurrent {
             //self.setIsPlaying(to: false)
-            self.player.pause()
-            self.player.seek_to_zero()
+            player.pause()
+            player.seek_to_zero()
         }
-        self.player = PlayerEngine()
+        player = PlayerEngine()
         DispatchQueue.main.async {
-            if (self.currentQueueItem != nil) {
+            if let currentQueueItem = self.currentQueueItem {
                 withAnimation(.easeInOut(duration: userInitiated ? 0.3 : 0.6)) {
-                    self.sessionHistory.append(self.currentQueueItem!)
+                    self.sessionHistory.append(currentQueueItem)
                 }
             }
-            if (self.trackQueue.first != nil) {
+            if self.trackQueue.first != nil {
                 withAnimation(.easeInOut(duration: userInitiated ? 0.3 : 0.6)) {
                     self.currentQueueItem = self.trackQueue.removeFirst()
                 }
-            } else if (self.sessionHistory.first != nil) {
+            } else if self.sessionHistory.first != nil {
                 self.pause()
                 self.queue_start_over()
                 self.player_forward(userInitiated: userInitiated)
@@ -74,17 +74,17 @@ extension PlayerManager {
     }
     
     func player_backward(userInitiated: Bool = false) {
-        self.isCrossfading = false
-        self.didAddFromRepeat = false
+        isCrossfading = false
+        didAddFromRepeat = false
         DispatchQueue.main.async {
             withAnimation(.easeInOut(duration: userInitiated ? 0.3 : 0.6)) {
-                if (self.currentQueueItem != nil) {
-                    if ((self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil) {
+                if let currentQueueItem = self.currentQueueItem {
+                    if (self.player.currentTime.isNaN || self.player.currentTime < 5) && self.sessionHistory.last != nil {
                         //self.setIsPlaying(to: false)
                         self.player.pause()
                         self.player.seek_to_zero()
                         self.player = PlayerEngine()
-                        self.trackQueue.insert(self.currentQueueItem!, at: 0)
+                        self.trackQueue.insert(currentQueueItem, at: 0)
                         self.currentQueueItem = self.sessionHistory.removeLast()
                         self.scheduleNotification()
                         self.prime_current_song()
@@ -92,9 +92,9 @@ extension PlayerManager {
                     } else {
                         self.player.seek(to: 0)
                         self.play()
-                        if (self.trackQueue.first != nil) {
-                            self.trackQueue.first?.audio_AVPlayer?.pause()
-                            self.trackQueue.first?.audio_AVPlayer?.seek_to_zero()
+                        if let first = self.trackQueue.first {
+                            first.audio_AVPlayer?.pause()
+                            first.audio_AVPlayer?.seek_to_zero()
                         }
                     }
                 }
@@ -103,12 +103,12 @@ extension PlayerManager {
     }
     
     func setIsPlaying(to: Bool) {
-        if self.isPlaying != to {
-            if (to == true) {
-                try? self.audioSession.setActive(true)
+        if isPlaying != to {
+            if to {
+                try? audioSession.setActive(true)
             }
             withAnimation(.bouncy) {
-                self.isPlaying = to
+                isPlaying = to
             }
         }
     }
