@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		E50189AF2C7C223B004FD1A9 /* DownloadManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50189AE2C7C2239004FD1A9 /* DownloadManagerDelegate.swift */; };
 		E50189B12C7C2402004FD1A9 /* DownloadManagerActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50189B02C7C23FD004FD1A9 /* DownloadManagerActor.swift */; };
-		E5018BCB2A9130D300143967 /* StoredChecks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BCA2A9130D300143967 /* StoredChecks.swift */; };
 		E5018BCD2A91410900143967 /* ArtistPageImageDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BCC2A91410900143967 /* ArtistPageImageDisplay.swift */; };
 		E5018BCF2A91431200143967 /* DownloadArtistBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BCE2A91431200143967 /* DownloadArtistBanner.swift */; };
 		E5018BD22A917C9400143967 /* SearchArtistExtendedTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5018BD12A917C9400143967 /* SearchArtistExtendedTracks.swift */; };
@@ -630,7 +629,6 @@
 /* Begin PBXFileReference section */
 		E50189AE2C7C2239004FD1A9 /* DownloadManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerDelegate.swift; sourceTree = "<group>"; };
 		E50189B02C7C23FD004FD1A9 /* DownloadManagerActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerActor.swift; sourceTree = "<group>"; };
-		E5018BCA2A9130D300143967 /* StoredChecks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredChecks.swift; sourceTree = "<group>"; };
 		E5018BCC2A91410900143967 /* ArtistPageImageDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistPageImageDisplay.swift; sourceTree = "<group>"; };
 		E5018BCE2A91431200143967 /* DownloadArtistBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadArtistBanner.swift; sourceTree = "<group>"; };
 		E5018BD12A917C9400143967 /* SearchArtistExtendedTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistExtendedTracks.swift; sourceTree = "<group>"; };
@@ -2648,7 +2646,6 @@
 				E5DD99652AB643BF00CFE16C /* PlaybackTypes.swift */,
 				E582E1BA2A772A8400B2C8B7 /* PlaylistTypes.swift */,
 				E5E6A1BD2A7DAFEE00880E6B /* typeDefaults.swift */,
-				E5018BCA2A9130D300143967 /* StoredChecks.swift */,
 				E56E3C692B6813BD0088FA50 /* RecentlyPlayedManager.swift */,
 			);
 			path = "Item Models";
@@ -3774,7 +3771,6 @@
 				E58E8F9B2BA16BB8009F7E43 /* NPBackground_faero.swift in Sources */,
 				E5C2DD6C2A30398400E6BB97 /* ipAddress.swift in Sources */,
 				E59B3A232CC59D0B001D419A /* ExploreVibesView.swift in Sources */,
-				E5018BCB2A9130D300143967 /* StoredChecks.swift in Sources */,
 				E58CA2452B9D466E00BCBD7B /* ImportFileTrack.swift in Sources */,
 				E58E8F942BA16BB8009F7E43 /* FetchedArtistContentHeader_faero.swift in Sources */,
 				E52300732AAEE8F30023EF94 /* QPPlaylistLink_classic.swift in Sources */,

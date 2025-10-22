@@ -137,7 +137,6 @@ struct NDSong: Codable {
     var explicitStatus: String
 }
 
-
 struct NavidromeSearch: Codable {
     var subsonicresponse: SubsonicResponseSearch
     

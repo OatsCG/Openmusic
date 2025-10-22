@@ -44,63 +44,64 @@ struct FetchedTrack: Codable, Hashable, Track {
     }
     
     init() {
-        self.TrackID = UUID().uuidString
-        self.Title = ""
-        self.Playback_Clean = nil
-        self.Playback_Explicit = nil
-        self.Length = 0
-        self.Index = 1
-        self.Views = 0
-        self.Album = SearchedAlbum()
-        self.Features = []
+        TrackID = UUID().uuidString
+        Title = ""
+        Playback_Clean = nil
+        Playback_Explicit = nil
+        Length = 0
+        Index = 1
+        Views = 0
+        Album = SearchedAlbum()
+        Features = []
     }
     
     init(default: Bool) {
-        self.TrackID = "-5648816593022018624"
-        self.Title = "Private Landing (feat. Justin Bieber & Future)"
-        self.Playback_Clean = ""
-        self.Playback_Explicit = ""
-        self.Length = 239
-        self.Index = 13
-        self.Views = 564000
-        self.Album = SearchedAlbum(default: true)
-        self.Features = []
+        TrackID = "-5648816593022018624"
+        Title = "Private Landing (feat. Justin Bieber & Future)"
+        Playback_Clean = ""
+        Playback_Explicit = ""
+        Length = 239
+        Index = 13
+        Views = 564000
+        Album = SearchedAlbum(default: true)
+        Features = []
     }
 
     init(from: StoredTrack) {
-        self.TrackID = from.TrackID
-        self.Title = from.Title
-        self.Playback_Clean = from.Playback_Clean
-        self.Playback_Explicit = from.Playback_Explicit
-        self.Length = from.Length
-        self.Index = from.Index
-        self.Views = -1
-        self.Album = from.Album
-        self.Features = from.Features
+        TrackID = from.TrackID
+        Title = from.Title
+        Playback_Clean = from.Playback_Clean
+        Playback_Explicit = from.Playback_Explicit
+        Length = from.Length
+        Index = from.Index
+        Views = -1
+        Album = from.Album
+        Features = from.Features
     }
+    
     init(from: ImportedTrack) {
-        self.TrackID = from.TrackID
-        self.Title = from.Title
-        self.Playback_Clean = from.Playback_Clean
-        self.Playback_Explicit = from.Playback_Explicit
-        self.Length = from.Length
-        self.Index = from.Index
-        self.Views = from.Views
-        self.Album = from.Album
-        self.Features = from.Features
+        TrackID = from.TrackID
+        Title = from.Title
+        Playback_Clean = from.Playback_Clean
+        Playback_Explicit = from.Playback_Explicit
+        Length = from.Length
+        Index = from.Index
+        Views = from.Views
+        Album = from.Album
+        Features = from.Features
     }
     
     @MainActor
     init(from: QueueItem) {
-        self.TrackID = from.Track.TrackID
-        self.Title = from.Track.Title
-        self.Playback_Clean = from.Track.Playback_Clean
-        self.Playback_Explicit = from.Track.Playback_Explicit
-        self.Length = from.Track.Length
-        self.Index = from.Track.Index
-        self.Views = -1
-        self.Album = from.Track.Album
-        self.Features = from.Track.Features
+        TrackID = from.Track.TrackID
+        Title = from.Track.Title
+        Playback_Clean = from.Track.Playback_Clean
+        Playback_Explicit = from.Track.Playback_Explicit
+        Length = from.Track.Length
+        Index = from.Track.Index
+        Views = -1
+        Album = from.Track.Album
+        Features = from.Track.Features
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -122,16 +123,16 @@ final class StoredTrack: Hashable, Track {
     var originServer: String
     
     init(from: any Track) {
-        self.TrackID = from.TrackID
-        self.Title = from.Title
-        self.Playback_Clean = from.Playback_Clean
-        self.Playback_Explicit = from.Playback_Explicit
-        self.Length = from.Length
-        self.Index = from.Index
-        self.Album = from.Album
-        self.Features = from.Features
-        self.dateAdded = Date()
-        self.originServer = NetworkManager.globalIPAddress()
+        TrackID = from.TrackID
+        Title = from.Title
+        Playback_Clean = from.Playback_Clean
+        Playback_Explicit = from.Playback_Explicit
+        Length = from.Length
+        Index = from.Index
+        Album = from.Album
+        Features = from.Features
+        dateAdded = Date()
+        originServer = NetworkManager.globalIPAddress()
         Task.detached {
             await downloadAlbumArt(artworkID: from.Album.Artwork)
         }
@@ -139,23 +140,23 @@ final class StoredTrack: Hashable, Track {
     
     @MainActor
     init(from: QueueItem) {
-        self.TrackID = from.Track.TrackID
-        self.Title = from.Track.Title
-        self.Playback_Clean = from.Track.Playback_Clean
-        self.Playback_Explicit = from.Track.Playback_Explicit
-        self.Length = from.Track.Length
-        self.Index = from.Track.Index
-        self.Album = from.Track.Album
-        self.Features = from.Track.Features
-        self.dateAdded = Date()
-        self.originServer = NetworkManager.globalIPAddress()
+        TrackID = from.Track.TrackID
+        Title = from.Track.Title
+        Playback_Clean = from.Track.Playback_Clean
+        Playback_Explicit = from.Track.Playback_Explicit
+        Length = from.Track.Length
+        Index = from.Track.Index
+        Album = from.Track.Album
+        Features = from.Track.Features
+        dateAdded = Date()
+        originServer = NetworkManager.globalIPAddress()
         Task.detached {
             await downloadAlbumArt(artworkID: from.Track.Album.Artwork)
         }
     }
     
     func setTrackID(to: String) {
-        self.TrackID = to
+        TrackID = to
     }
     
     required init(from decoder:Decoder) throws {
@@ -200,9 +201,6 @@ final class StoredTrack: Hashable, Track {
     }
 }
 
-
-
-
 struct FetchedTracks: Codable, Hashable {
     var Tracks: [FetchedTrack]
     
@@ -234,22 +232,18 @@ struct ImportedTrack: Codable, Hashable, Track {
     var artistsScore: Float
     
     func score() -> Float {
-        return titleScore + albumScore + artistsScore
+        titleScore + albumScore + artistsScore
     }
     
     func lowest_score() -> Float {
-        return min(titleScore, albumScore, artistsScore)
+        min(titleScore, albumScore, artistsScore)
     }
     
     func isAccurate() -> Bool {
         let trackAccurate = self.titleScore > 0.8
         let albumAccurate = self.albumScore > 0.3
         let artistAccurate = self.artistsScore > 0.7
-        if (trackAccurate && albumAccurate && artistAccurate) {
-            return true
-        } else {
-            return false
-        }
+        return trackAccurate && albumAccurate && artistAccurate
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -263,6 +257,6 @@ struct NaiveTrack: Equatable {
     var artists: String
     
     static func ==(lhs: NaiveTrack, rhs: NaiveTrack) -> Bool {
-        return lhs.title == rhs.title && lhs.album == rhs.album && lhs.artists == rhs.artists
+        lhs.title == rhs.title && lhs.album == rhs.album && lhs.artists == rhs.artists
     }
 }

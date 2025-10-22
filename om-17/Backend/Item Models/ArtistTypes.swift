@@ -21,22 +21,24 @@ struct SearchedArtist: Codable, Hashable {
     }
     
     init() {
-        self.ArtistID = UUID().uuidString
-        self.Name = ""
-        self.Profile_Photo = ""
-        self.Subscribers = 0
+        ArtistID = UUID().uuidString
+        Name = ""
+        Profile_Photo = ""
+        Subscribers = 0
     }
+    
     init(default: Bool) {
-        self.ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
-        self.Name = "Don Toliver"
-        self.Profile_Photo = "iPLK-SftNUxhdxy5-_g6_o_-r6faLLlCP4UebYWQwF-r2SSsTB2iM59h7EPJTLPP8rmsCYsfD2zIb4Y"
-        self.Subscribers = 1750000
+        ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
+        Name = "Don Toliver"
+        Profile_Photo = "iPLK-SftNUxhdxy5-_g6_o_-r6faLLlCP4UebYWQwF-r2SSsTB2iM59h7EPJTLPP8rmsCYsfD2zIb4Y"
+        Subscribers = 1750000
     }
+    
     init(from: Bool) {
-        self.ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
-        self.Name = "Don Toliver"
-        self.Profile_Photo = "iPLK-SftNUxhdxy5-_g6_o_-r6faLLlCP4UebYWQwF-r2SSsTB2iM59h7EPJTLPP8rmsCYsfD2zIb4Y"
-        self.Subscribers = 1750000
+        ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
+        Name = "Don Toliver"
+        Profile_Photo = "iPLK-SftNUxhdxy5-_g6_o_-r6faLLlCP4UebYWQwF-r2SSsTB2iM59h7EPJTLPP8rmsCYsfD2zIb4Y"
+        Subscribers = 1750000
     }
 }
 
@@ -50,22 +52,22 @@ struct FetchedArtist: Codable, Hashable {
     var Tracks: [FetchedTrack]
     
     init() {
-        self.ArtistID = "-1"
-        self.Name = ""
-        self.Profile_Photo = ""
-        self.Subscribers = 9999
-        self.Albums = []
-        self.Singles = []
-        self.Tracks = []
+        ArtistID = "-1"
+        Name = ""
+        Profile_Photo = ""
+        Subscribers = 9999
+        Albums = []
+        Singles = []
+        Tracks = []
     }
     
     init(default: Bool) {
-        self.ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
-        self.Name = "Don Toliver"
-        self.Profile_Photo = "iPLK-SftNUxhdxy5-_g6_o_-r6faLLlCP4UebYWQwF-r2SSsTB2iM59h7EPJTLPP8rmsCYsfD2zIb4Y"
-        self.Subscribers = 1750000
-        self.Albums = []
-        self.Singles = []
-        self.Tracks = []
+        ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
+        Name = "Don Toliver"
+        Profile_Photo = "iPLK-SftNUxhdxy5-_g6_o_-r6faLLlCP4UebYWQwF-r2SSsTB2iM59h7EPJTLPP8rmsCYsfD2zIb4Y"
+        Subscribers = 1750000
+        Albums = []
+        Singles = []
+        Tracks = []
     }
 }

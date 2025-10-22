@@ -64,7 +64,7 @@ actor DownloadManagerActor {
     func retryDownload(download: DownloadData) async {
         self.tracksLookup.removeValue(forKey: download.playbackID)
         self.tracksDownloading.removeAll(where: {$0.id == download.id})
-        await self.addDownloadTask(track: download.parent, explicit: download.explicit)
+        await addDownloadTask(track: download.parent, explicit: download.explicit)
     }
     
     private func getDownloadURL(playbackID: String) async -> URL? {
@@ -77,11 +77,11 @@ actor DownloadManagerActor {
     }
     
     private func findTask(playbackID: String) -> DownloadTask? {
-        return downloader.tasks.first(where: { $0.value.dID == playbackID })?.value
+        downloader.tasks.first(where: { $0.value.dID == playbackID })?.value
     }
     
     func isPlaybackDownloaded(playbackID: String?) -> Bool {
-        if let playbackID = playbackID {
+        if let playbackID {
             let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
                 .first?.appendingPathComponent("Audio-\(playbackID).mp4")
             let doesExist = FileManager.default.fileExists(atPath: destination?.path ?? "")
@@ -94,44 +94,46 @@ actor DownloadManagerActor {
     // OTHER STUFFS FOR MANAGING, NOT DOWNLOADING
     func get_sum_progression() -> Double {
         var sum: Double = 0
-        for dl in self.tracksDownloading {
+        for dl in tracksDownloading {
             sum += dl.progress
         }
-        return (sum / Double(self.tracksDownloading.count))
+        return sum / Double(tracksDownloading.count)
     }
     
     // DELEGATE STUFFS
     func taskID_to_tracks_downloading(taskID: UUID?) -> DownloadData? {
-        let firstTask: DownloadData? = self.tracksDownloading.first(where: { $0.id == taskID })
-        return firstTask
+        tracksDownloading.first(where: { $0.id == taskID })
     }
     
     func ds(downloader: Downloader, task: DownloadTask) {
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.state = .downloading
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.state = .downloading
     }
+    
     func dc(downloader: Downloader, task: DownloadTask) async {
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.state = .cancelled
-        await self.tryNextDownload()
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.state = .cancelled
+        await tryNextDownload()
     }
+    
     func df(downloader: Downloader, task: DownloadTask) async {
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.state = .success
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.location = task.destination
-        self.currentlyDownloading -= 1
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.state = .success
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.location = task.destination
+        currentlyDownloading -= 1
         do {
-            self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.size = try FileManager.default.attributesOfItem(atPath: task.destination.path())[.size] as! Int
+            taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.size = try FileManager.default.attributesOfItem(atPath: task.destination.path())[.size] as! Int
         } catch {
-            self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.size = -1
+            taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.size = -1
         }
-        await self.tryNextDownload()
+        await tryNextDownload()
     }
+    
     func dpc(downloader: Downloader, task: DownloadTask) {
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.progress = task.progress // ISSUE HERE GETTING PROGRESS
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.progress = task.progress // ISSUE HERE GETTING PROGRESS
     }
+    
     func de(downloader: Downloader, task: DownloadTask, error: Error) async {
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.state = .error
-        self.taskID_to_tracks_downloading(taskID: self.tracksLookup[task.dID])?.errorReason = error.localizedDescription
-        self.currentlyDownloading -= 1
-        await self.tryNextDownload()
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.state = .error
+        taskID_to_tracks_downloading(taskID: tracksLookup[task.dID])?.errorReason = error.localizedDescription
+        currentlyDownloading -= 1
+        await tryNextDownload()
     }
 }
-

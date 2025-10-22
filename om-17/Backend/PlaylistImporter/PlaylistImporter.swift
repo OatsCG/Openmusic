@@ -14,32 +14,27 @@ import SwiftData
     var currentContext: BackgroundDatabase? = nil
     var isCheckingEnd: Bool = false
     
-    //let config = URLSessionConfiguration.background(withIdentifier: "om17ImportSession")
-    //let backgroundSession: URLSession
-    init() {
-        //self.backgroundSession = URLSession(configuration: self.config, delegate: T##URLSessionDelegate?, delegateQueue: T##OperationQueue?)
-        //self.backgroundSession = URLSession(configuration: self.config)
-    }
+    init() { }
     
     func addPlaylist(playlist: ImportedPlaylist, database: BackgroundDatabase) {
-        self.currentContext = database
+        currentContext = database
         withAnimation {
-            self.newPlaylists.append(playlist)
+            newPlaylists.append(playlist)
         }
-        self.attempt_next_fetch()
+        attempt_next_fetch()
     }
     
     func beginTask(playlistImport: PlaylistImport) {
         // start task
-        self.publish_status(playlistImport: playlistImport, status: .importing)
+        publish_status(playlistImport: playlistImport, status: .importing)
         
         Task.detached {
             do {
                 let importedTracks = try await fetchPlaylistTracksFetchData(importData: playlistImport.importData)
                 await self.publish_imports(playlistImport: playlistImport, imports: importedTracks)
-                if (importedTracks.Tracks.count == 0) {
+                if importedTracks.Tracks.isEmpty {
                     await self.publish_status(playlistImport: playlistImport, status: .zeroed)
-                } else if (importedTracks.Tracks.first!.isAccurate() == false) { // .score() < 1.5
+                } else if importedTracks.Tracks.first?.isAccurate() == false {
                     await self.publish_status(playlistImport: playlistImport, status: .uncertain)
                 } else {
                     await self.publish_status(playlistImport: playlistImport, status: .success)
@@ -55,13 +50,11 @@ import SwiftData
     
     func attempt_next_fetch() {
         Task.detached {
-            //try await Task.sleep(until: .now + .seconds(2), clock: .continuous)
             await self.check_playlist_end()
-            let nextPlaylist: ImportedPlaylist? = await self.newPlaylists.first(where: { $0.is_importing_successful() == false })
-            if let nextPlaylist = nextPlaylist {
+            let nextPlaylist: ImportedPlaylist? = await self.newPlaylists.first(where: { !$0.is_importing_successful() })
+            if let nextPlaylist {
                 let nextImport = nextPlaylist.items.first(where: { $0.importData.status == .hold })
-                if let nextImport = nextImport {
-                    //print("attempting next")
+                if let nextImport {
                     await self.beginTask(playlistImport: nextImport)
                 }
             }
@@ -69,8 +62,7 @@ import SwiftData
     }
     
     func get_progress(playlistID: UUID) -> Double {
-        let playlist: ImportedPlaylist? = self.newPlaylists.first(where: {$0.PlaylistID == playlistID})
-        if let playlist = playlist {
+        if let playlist = newPlaylists.first(where: {$0.PlaylistID == playlistID}) {
             return playlist.import_progress()
         } else {
             return 0
@@ -79,20 +71,19 @@ import SwiftData
     
     func check_playlist_end() async {
         guard !isCheckingEnd else { return }
-        self.isCheckingEnd = true
-        let successfulPlaylists: [ImportedPlaylist] = self.newPlaylists.filter({$0.is_importing_successful()})
+        isCheckingEnd = true
+        let successfulPlaylists: [ImportedPlaylist] = newPlaylists.filter({$0.is_importing_successful()})
         for playlist in successfulPlaylists {
-            let finishedPlaylistIndex: Int? = self.newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID})
-            if let finishedPlaylistIndex = finishedPlaylistIndex {
+            if newPlaylists.firstIndex(where: {$0.PlaylistID == playlist.PlaylistID}) != nil {
                 let storedPlaylist = await StoredPlaylist(from: playlist)
-                await self.currentContext?.insert(storedPlaylist)
-                try? self.currentContext?.save()
+                await currentContext?.insert(storedPlaylist)
+                try? currentContext?.save()
                 withAnimation {
-                    self.newPlaylists.removeAll(where: {$0.PlaylistID == playlist.PlaylistID})
+                    newPlaylists.removeAll(where: {$0.PlaylistID == playlist.PlaylistID})
                 }
             }
         }
-        self.isCheckingEnd = false
+        isCheckingEnd = false
     }
     
     func publish_status(playlistImport: PlaylistImport, status: ImportStatus) {
@@ -111,22 +102,18 @@ import SwiftData
     }
     
     func fetch_playlist_item(playlist: StoredPlaylist, itemID: UUID) -> PlaylistItem? {
-        return(playlist.items.first(where: { $0.id == itemID }))
+        playlist.items.first(where: { $0.id == itemID })
     }
     
-//    func get_index(itemID: UUID) -> Int? {
-//        return(self.newImports.firstIndex(where: { $0.id == itemID }))
-//    }
-    
     func get_playlist(playlistID: UUID) -> ImportedPlaylist? {
-        return self.newPlaylists.first(where: { $0.PlaylistID == playlistID })
+        newPlaylists.first(where: { $0.PlaylistID == playlistID })
     }
     
     func get_database() throws -> BackgroundDatabase {
-        if (self.currentContext == nil) {
-            throw ContextError.noContextAvailable
+        if let currentContext {
+            return currentContext
         } else {
-            return self.currentContext!
+            throw ContextError.noContextAvailable
         }
     }
 }

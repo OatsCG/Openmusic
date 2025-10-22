@@ -16,8 +16,8 @@ import SwiftUI
     var sumProgression: Double = 0
     
     init() {
-        self.downloadsCount = UserDefaults.standard.integer(forKey: "downloadsCount")
-        self.downloadActor.downloader.delegate = self
+        downloadsCount = UserDefaults.standard.integer(forKey: "downloadsCount")
+        downloadActor.downloader.delegate = self
     }
     
     
@@ -56,7 +56,6 @@ import SwiftUI
     }
 }
 
-
 // MANAGING DOWNLOADED CONTENT
 extension DownloadManager {
     func gather_downloaded_audios() -> [FetchedTrack] {
@@ -66,7 +65,7 @@ extension DownloadManager {
         // .TrackID = date string
         // .Playback_Clean = file path
         let basePath: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        if let basePath = basePath {
+        if let basePath {
             do {
                 let files = try FileManager.default.contentsOfDirectory(atPath: basePath.path())
                 for file in files {
@@ -84,13 +83,9 @@ extension DownloadManager {
                         if file.lastPathComponent.contains("Audio-") {
                             toReturn.append(track)
                         }
-                    } catch {
-                        
-                    }
+                    } catch { }
                 }
-            } catch {
-                
-            }
+            } catch { }
         }
         return toReturn.sorted(by: { $0.Views < $1.Views })
     }
@@ -98,7 +93,7 @@ extension DownloadManager {
     func gather_downloaded_images() -> [FetchedTrack] {
         var toReturn: [FetchedTrack] = []
         let basePath: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        if let basePath = basePath {
+        if let basePath {
             do {
                 let files = try FileManager.default.contentsOfDirectory(atPath: basePath.path())
                 for file in files {
@@ -120,9 +115,7 @@ extension DownloadManager {
                         print(error)
                     }
                 }
-            } catch {
-                
-            }
+            } catch { }
         }
         return toReturn.sorted(by: { $0.Views < $1.Views })
     }
@@ -130,16 +123,17 @@ extension DownloadManager {
     func filter_downloaded<T: Track>(_ tracks: [T]) async -> [T] {
         var downloadedTracks: [T] = []
         for track in tracks {
-            if await self.is_downloaded(track) {
+            if await is_downloaded(track) {
                 downloadedTracks.append(track)
             }
         }
         return downloadedTracks
     }
+    
     func filter_downloaded(_ tracks: [PlaylistItem]) async -> [PlaylistItem] {
         var downloadedTracks: [PlaylistItem] = []
         for item in tracks {
-            if await self.is_downloaded(item.track) {
+            if await is_downloaded(item.track) {
                 downloadedTracks.append(item)
             }
         }
@@ -147,7 +141,7 @@ extension DownloadManager {
     }
     
     func is_playback_downloaded(PlaybackID: String?) async -> Bool {
-        return await downloadActor.isPlaybackDownloaded(playbackID: PlaybackID)
+        await downloadActor.isPlaybackDownloaded(playbackID: PlaybackID)
     }
     
     func is_downloaded(_ track: any Track, explicit: Bool? = nil) async -> Bool {
@@ -165,6 +159,7 @@ extension DownloadManager {
             }
         }
     }
+    
     func is_downloaded(_ queueItem: QueueItem, explicit: Bool? = nil) async -> Bool {
         if explicit == nil {
             if queueItem.Track.Playback_Explicit != nil {
@@ -183,7 +178,7 @@ extension DownloadManager {
     
     func are_playbacks_downloaded(PlaybackIDs: [String]) async -> Bool {
         for playbackID in PlaybackIDs {
-            if await is_playback_downloaded(PlaybackID: playbackID) == false {
+            if await !is_playback_downloaded(PlaybackID: playbackID) {
                 return false
             }
         }
@@ -193,14 +188,13 @@ extension DownloadManager {
     func get_stored_location(PlaybackID: String) -> URL {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let destinationUrl = docsUrl?.appendingPathComponent("Audio-\(PlaybackID).mp4")
-        return(destinationUrl!)
+        return destinationUrl ?? URL(string: "")!
     }
     
     func delete_playback(PlaybackID: String) {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let destinationUrl = docsUrl?.appendingPathComponent("Audio-\(PlaybackID).mp4")
         
-        if let destinationUrl = destinationUrl {
+        if let destinationUrl = docsUrl?.appendingPathComponent("Audio-\(PlaybackID).mp4") {
             guard FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
             do {
                 try FileManager.default.removeItem(atPath: destinationUrl.path)
@@ -213,9 +207,8 @@ extension DownloadManager {
     
     func delete_playback(url: String) {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let destinationUrl = docsUrl?.appendingPathComponent(url)
         
-        if let destinationUrl = destinationUrl {
+        if let destinationUrl = docsUrl?.appendingPathComponent(url) {
             guard FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
             do {
                 try FileManager.default.removeItem(atPath: destinationUrl.path)
@@ -228,9 +221,8 @@ extension DownloadManager {
     
     func delete_image(url: String) {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let destinationUrl = docsUrl?.appendingPathComponent(url)
         
-        if let destinationUrl = destinationUrl {
+        if let destinationUrl = docsUrl?.appendingPathComponent(url) {
             guard FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
             do {
                 try FileManager.default.removeItem(atPath: destinationUrl.path)
@@ -242,16 +234,10 @@ extension DownloadManager {
     }
     
     func task_exists(PlaybackID: String) async -> Bool {
-        if await (self.downloadActor.tracksLookup[PlaybackID] != nil) {
-            return true
-        } else {
-            return false
-        }
+        await downloadActor.tracksLookup[PlaybackID] != nil
     }
     
     func taskID_to_tracks_downloading(taskID: UUID?) -> DownloadData? {
-        let firstTask: DownloadData? = self.tracksDownloading.first(where: { $0.id == taskID })
-        return firstTask
+        tracksDownloading.first(where: { $0.id == taskID })
     }
 }
-

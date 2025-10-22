@@ -13,4 +13,3 @@ struct SearchResults: Codable, Hashable {
     var Singles: [SearchedAlbum] = []
     var Artists: [SearchedArtist] = []
 }
-

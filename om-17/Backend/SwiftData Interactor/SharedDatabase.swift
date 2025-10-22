@@ -11,7 +11,6 @@ import SwiftData
 @MainActor @Observable
 public class SharedDatabase {
     public static let shared: SharedDatabase = .init(schemas: [StoredTrack.self, StoredPlaylist.self])
-
     public let schemas: [any PersistentModel.Type]
     public let modelContainer: ModelContainer
     public let database: BackgroundDatabase
@@ -20,11 +19,7 @@ public class SharedDatabase {
         schemas: [any PersistentModel.Type] = []
     ) {
         self.schemas = schemas
-        let modelContainer = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self)
-        self.modelContainer = modelContainer
-        self.database = BackgroundDatabase(modelContainer: modelContainer)
+        self.modelContainer = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self)
+        database = BackgroundDatabase(modelContainer: modelContainer)
     }
-    
-    
-    
 }

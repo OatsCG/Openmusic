@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct OMUserNPM: Hashable {
-
-}
+struct OMUserNPM: Hashable { }
 
 struct SearchAlbumContentNPM: Hashable {
     var album: SearchedAlbum
@@ -88,18 +86,10 @@ struct PlaylistEditMenuNPM: Hashable {
     var playlist: StoredPlaylist
 }
 
-struct UserViewNPM: Hashable {
-    
-}
+struct UserViewNPM: Hashable { }
 
-struct FileManagerNPM: Hashable {
-    
-}
+struct FileManagerNPM: Hashable { }
 
-struct ManageAudiosNPM: Hashable {
-    
-}
+struct ManageAudiosNPM: Hashable { }
 
-struct ManageImagesNPM: Hashable {
-    
-}
+struct ManageImagesNPM: Hashable { }

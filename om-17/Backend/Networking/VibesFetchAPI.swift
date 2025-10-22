@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch explore results
 func fetchVibeResults() async throws -> VibeShelf {
-    return try await NetworkManager.shared.fetch(endpoint: .vibes, type: VibeShelf.self)
+    try await NetworkManager.shared.fetch(endpoint: .vibes, type: VibeShelf.self)
 }
 
 // Actor to manage explore data
@@ -24,15 +24,15 @@ actor VibesViewActor {
         defer { isSearching = false }
         
         let results = try await fetchVibeResults()
-        self.vibeResults = results
+        vibeResults = results
     }
     
     func getVibeResults() -> VibeShelf? {
-        return vibeResults
+        vibeResults
     }
     
     func getIsSearching() -> Bool {
-        return isSearching
+        isSearching
     }
 }
 
@@ -40,7 +40,6 @@ actor VibesViewActor {
 @MainActor
 @Observable class VibesViewModel {
     private let viewActor = VibesViewActor()
-    
     var vibeResults: VibeShelf? = nil
     var isSearching: Bool = false
     
@@ -53,20 +52,21 @@ actor VibesViewActor {
                 
                 await MainActor.run {
                     withAnimation {
-                        self.vibeResults = results
-                        self.isSearching = searching
+                        vibeResults = results
+                        isSearching = searching
                     }
                 }
             } catch {
                 await MainActor.run {
                     withAnimation {
-                        self.isSearching = false
+                        isSearching = false
                     }
                 }
                 print("Error: \(error)")
             }
         }
     }
+    
     func refresh() async {
         do {
             try await viewActor.runSearch()
@@ -76,14 +76,14 @@ actor VibesViewActor {
             
             await MainActor.run {
                 withAnimation {
-                    self.vibeResults = results
-                    self.isSearching = searching
+                    vibeResults = results
+                    isSearching = searching
                 }
             }
         } catch {
             await MainActor.run {
                 withAnimation {
-                    self.isSearching = false
+                    isSearching = false
                 }
             }
             print("Error: \(error)")

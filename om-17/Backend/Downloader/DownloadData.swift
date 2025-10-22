@@ -22,12 +22,16 @@ import SwiftData
     let explicit: Bool
     
     init(track: any Track, explicit: Bool) {
-        self.parent = track
-        self.playbackID = explicit ? track.Playback_Explicit! : track.Playback_Clean!
+        parent = track
         self.explicit = explicit
+        if explicit, let Playback_Explicit = track.Playback_Explicit {
+            playbackID = Playback_Explicit
+        } else {
+            playbackID = track.Playback_Clean ?? ""
+        }
     }
     
-    static func == (lhs: DownloadData, rhs: DownloadData) -> Bool {
-        return (lhs.parent.TrackID == rhs.parent.TrackID && lhs.explicit == rhs.explicit)
+    static func ==(lhs: DownloadData, rhs: DownloadData) -> Bool {
+        lhs.parent.TrackID == rhs.parent.TrackID && lhs.explicit == rhs.explicit
     }
 }

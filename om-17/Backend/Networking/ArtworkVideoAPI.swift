@@ -32,27 +32,27 @@ actor AlbumVideoViewActor {
     
     func runSearch(albumID: String) async throws {
         let thisSessionID = UUID()
-        self.currentSessionID = thisSessionID
-        self.fetchedAlbumVideo = nil
+        currentSessionID = thisSessionID
+        fetchedAlbumVideo = nil
         
         let videoData = try await fetchAlbumVideoData(albumID: albumID)
         
-        guard thisSessionID == self.currentSessionID else {
+        guard thisSessionID == currentSessionID else {
             print("Search aborted")
             return
         }
         
-        if let url = URL(string: videoData), thisSessionID == self.currentSessionID {
-            self.fetchedAlbumVideo = url
+        if let url = URL(string: videoData), thisSessionID == currentSessionID {
+            fetchedAlbumVideo = url
         }
     }
     
     func getFetchedAlbumVideo() -> URL? {
-        return fetchedAlbumVideo
+        fetchedAlbumVideo
     }
     
     func getCurrentSessionID() -> UUID {
-        return currentSessionID
+        currentSessionID
     }
 }
 
@@ -60,7 +60,6 @@ actor AlbumVideoViewActor {
 @MainActor
 @Observable class AlbumVideoViewModel {
     private let viewActor = AlbumVideoViewActor()
-    
     var fetchedAlbumVideo: URL? = nil
     var vAlbumID: String = ""
     var currentSessionID: UUID = UUID()
@@ -75,9 +74,9 @@ actor AlbumVideoViewActor {
                 
                 await MainActor.run {
                     withAnimation(.linear(duration: 1).delay(2)) {
-                        self.fetchedAlbumVideo = albumVideo
-                        self.vAlbumID = albumID
-                        self.currentSessionID = sessionID
+                        fetchedAlbumVideo = albumVideo
+                        vAlbumID = albumID
+                        currentSessionID = sessionID
                     }
                 }
             } catch {

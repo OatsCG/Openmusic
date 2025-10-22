@@ -17,11 +17,8 @@ func getIPAddressType(_ ip: String) async throws -> ServerType {
     }
 }
 
-
 func isNavidrome(_ ip: String) async throws -> Bool {
-    guard let url = URL(string: "\(ip)/rest/ping?f=json") else {
-        return false
-    }
+    guard let url = URL(string: "\(ip)/rest/ping?f=json") else { return false }
     
     let (data, _) = try await URLSession.shared.data(from: url)
     let decoder = JSONDecoder()
@@ -78,31 +75,31 @@ actor StatusViewActor {
         defer { isFetching = false }
         
         let newFetchHash = UUID()
-        self.fetchHash = newFetchHash
+        fetchHash = newFetchHash
         
         do {
             let status = try await fetchServerStatus(with: ipAddress, u: u, p: p)
-            if self.fetchHash == newFetchHash {
-                self.serverStatus = status
+            if fetchHash == newFetchHash {
+                serverStatus = status
             }
         } catch {
-            if self.fetchHash == newFetchHash {
-                self.serverStatus = ServerStatus(online: false, om_verify: "", type: .openmusic)
+            if fetchHash == newFetchHash {
+                serverStatus = ServerStatus(online: false, om_verify: "", type: .openmusic)
             }
             throw error
         }
     }
     
     func getServerStatus() -> ServerStatus? {
-        return serverStatus
+        serverStatus
     }
     
     func getFetchHash() -> UUID {
-        return fetchHash
+        fetchHash
     }
     
     func getIsFetching() -> Bool {
-        return isFetching
+        isFetching
     }
 }
 
@@ -146,7 +143,6 @@ actor StatusViewActor {
                     try? await viewActor.runCheck(with: tempIPAddress, u: username, p: password)
                 }
             }
-            
             updateIPCreds(status: await viewActor.getServerStatus(), hash: await viewActor.getFetchHash())
         }
     }
@@ -169,8 +165,6 @@ actor StatusViewActor {
         }
     }
 }
-
-
 
 struct ServerStatus: Codable, Hashable {
     var online: Bool

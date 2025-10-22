@@ -37,7 +37,3 @@ struct DefaultDatabase: Database {
     throw NotImplmentedError.instance
   }
 }
-
-
-
-

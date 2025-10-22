@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch artist data
 func fetchArtistData(artistID: String) async throws -> FetchedArtist {
-    return try await NetworkManager.shared.fetch(endpoint: .artist(id: artistID), type: FetchedArtist.self)
+    try await NetworkManager.shared.fetch(endpoint: .artist(id: artistID), type: FetchedArtist.self)
 }
 
 // Actor to manage artist data
@@ -18,11 +18,11 @@ actor ArtistViewActor {
     
     func runSearch(artistID: String) async throws {
         let artist = try await fetchArtistData(artistID: artistID)
-        self.fetchedArtist = artist
+        fetchedArtist = artist
     }
     
     func getFetchedArtist() -> FetchedArtist? {
-        return fetchedArtist
+        fetchedArtist
     }
 }
 
@@ -42,7 +42,7 @@ actor ArtistViewActor {
                 
                 await MainActor.run {
                     withAnimation {
-                        self.fetchedArtist = artist
+                        fetchedArtist = artist
                     }
                 }
             } catch {

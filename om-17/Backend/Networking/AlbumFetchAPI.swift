@@ -9,9 +9,8 @@ import Foundation
 import SwiftUI
 
 func fetchAlbumData(albumID: String) async throws -> FetchedAlbum {
-    return try await NetworkManager.shared.fetch(endpoint: .album(id: albumID), type: FetchedAlbum.self)
+    try await NetworkManager.shared.fetch(endpoint: .album(id: albumID), type: FetchedAlbum.self)
 }
-
 
 actor AlbumViewActor {
     private var fetchedAlbum: FetchedAlbum? = nil
@@ -24,17 +23,16 @@ actor AlbumViewActor {
         defer { isSearching = false }
         
         let album = try await fetchAlbumData(albumID: albumID)
-        self.fetchedAlbum = album
+        fetchedAlbum = album
     }
     
     func getFetchedAlbum() -> FetchedAlbum? {
-        return fetchedAlbum
+        fetchedAlbum
     }
     func getIsSearching() -> Bool {
-        return isSearching
+        isSearching
     }
 }
-
 
 @MainActor
 @Observable class AlbumViewModel {
@@ -55,8 +53,8 @@ actor AlbumViewActor {
                 }
                 await MainActor.run {
                     withAnimation {
-                        self.fetchedAlbum = album
-                        self.areTracksStored = isstored
+                        fetchedAlbum = album
+                        areTracksStored = isstored
                     }
                 }
             } catch {

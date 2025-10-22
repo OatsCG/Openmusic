@@ -24,14 +24,14 @@ public extension Database {
     where predicate: Predicate<T>?,
     sortBy: [SortDescriptor<T>]
   ) async throws -> [T] {
-    try await self.fetch(FetchDescriptor<T>(predicate: predicate, sortBy: sortBy))
+    try await fetch(FetchDescriptor<T>(predicate: predicate, sortBy: sortBy))
   }
 
   func fetch<T: PersistentModel>(
     _ predicate: Predicate<T>,
     sortBy: [SortDescriptor<T>] = []
   ) async throws -> [T] {
-    try await self.fetch(where: predicate, sortBy: sortBy)
+    try await fetch(where: predicate, sortBy: sortBy)
   }
 
   func fetch<T: PersistentModel>(
@@ -39,13 +39,13 @@ public extension Database {
     predicate: Predicate<T>? = nil,
     sortBy: [SortDescriptor<T>] = []
   ) async throws -> [T] {
-    try await self.fetch(where: predicate, sortBy: sortBy)
+    try await fetch(where: predicate, sortBy: sortBy)
   }
 
   func delete<T: PersistentModel>(
     model _: T.Type,
     where predicate: Predicate<T>? = nil
   ) async throws {
-    try await self.delete(where: predicate)
+    try await delete(where: predicate)
   }
 }

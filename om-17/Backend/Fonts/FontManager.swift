@@ -12,20 +12,14 @@ import SwiftUI
     var currentlyChosenTheme: Theme
     
     init(currentlyChosenTheme: Theme? = nil) {
-        if let currentlyChosenTheme = currentlyChosenTheme {
+        if let currentlyChosenTheme {
             self.currentlyChosenTheme = currentlyChosenTheme
         } else {
-            let storedFont: String? = UserDefaults.standard.string(forKey: "currentTheme")
-            if let storedFont = storedFont {
-                let gotFont: Theme? = Theme.init(rawValue: storedFont)
-                if let gotFont = gotFont {
-                    self.currentlyChosenTheme = gotFont
-                } else {
-                    self.currentlyChosenTheme = .classic
-                }
-            } else {
-                self.currentlyChosenTheme = .classic
+            if let storedFont = UserDefaults.standard.string(forKey: "currentTheme"),
+               let gotFont = Theme.init(rawValue: storedFont) {
+                self.currentlyChosenTheme = gotFont
             }
+            self.currentlyChosenTheme = .classic
         }
     }
     
@@ -68,11 +62,11 @@ import SwiftUI
     }
     
     func currentThemeFont(font: Font, style: Font.TextStyle, bold: Bool) -> Font {
-        if (UserDefaults.standard.bool(forKey: "customFonts") == false) {
+        if !UserDefaults.standard.bool(forKey: "customFonts") {
             return Font.system(style, weight: bold ? .bold : .regular)
         }
         let fontName = currentThemeFontName(bold: bold)
-        if (fontName == "") {
+        if fontName == "" {
             return Font.system(style, weight: bold ? .bold : .regular)
         } else {
             return Font.custom(fontName, size: FontManager.customFontSize(font), relativeTo: style)
@@ -81,7 +75,7 @@ import SwiftUI
     
     static func forceCurrentThemeFont(font: Font, style: Font.TextStyle, bold: Bool, theme: Theme) -> Font {
         let fontName = customThemeFontName(theme: theme, bold: bold)
-        if (fontName == "") {
+        if fontName == "" {
             return Font.system(style, weight: bold ? .bold : .regular)
         } else {
             
@@ -90,7 +84,7 @@ import SwiftUI
     }
     
     func currentThemeUIFont(_ fontManager: FontManager, _ font: Font, bold: Bool = false) -> UIFont {
-        if (UserDefaults.standard.bool(forKey: "customFonts") == false) {
+        if !UserDefaults.standard.bool(forKey: "customFonts") {
             return UIFontMetrics(forTextStyle: FontManager.fontToUIFont(font)).scaledFont(for: .systemFont(ofSize: FontManager.customFontSize(font), weight: bold ? .bold : .regular))
         }
         switch fontManager.currentlyChosenTheme {
@@ -168,8 +162,6 @@ import SwiftUI
             return 14
         }
     }
-    
-    
 }
 
 extension View {
@@ -211,7 +203,6 @@ extension View {
             return self.font(FontManager.forceCurrentThemeFont(font: .caption2, style: .caption2, bold: bold, theme: theme))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         default:
-            //return self.font(Font.custom(FontManager.currentThemeFont(bold: bold), size: 14, relativeTo: .body))
             return self.font(Font.system(.body, weight: bold ? .bold : .regular))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         }
@@ -255,18 +246,16 @@ extension View {
             return self.font(fontManager.currentThemeFont(font: .caption2, style: .caption2, bold: bold))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         default:
-            //return self.font(Font.custom(FontManager.currentThemeFont(bold: bold), size: 14, relativeTo: .body))
             return self.font(Font.system(.body, weight: bold ? .bold : .regular))
                 .shadow(color: shadowColor, radius: 0, x: 0, y: shadowDepth)
         }
     }
 }
 
-
-
 #Preview {
     @Previewable @Environment(FontManager.self) var fontManager
     @Previewable @AppStorage("currentTheme") var currentTheme: String = "faero"
+    
     return ScrollView {
         HStack(spacing: 40) {
             VStack {
@@ -299,7 +288,6 @@ extension View {
             VStack {
                 Text("largeTitle")
                     .customFont(fontManager, .largeTitle)
-                    //.forceCustomFont(.largeTitle)
                 Text("title")
                     .customFont(fontManager, .title)
                 Text("title2")

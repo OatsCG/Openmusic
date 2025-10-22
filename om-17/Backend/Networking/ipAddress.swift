@@ -8,21 +8,21 @@
 import Foundation
 
 class NetworkManager {
-    static var shared = NetworkManager()
+    static let shared = NetworkManager()
     var networkService: NetworkService
     var networkLogs: [NetworkLog] = []
     
     init() {
-        let serverType: String = UserDefaults.standard.string(forKey: "ServerType") ?? ""
+        let serverType = UserDefaults.standard.string(forKey: "ServerType") ?? ""
         if let type = ServerType(rawValue: serverType) {
             switch type {
             case .navidrome:
-                self.networkService = NavidromeNetworkService(u: UserDefaults.standard.string(forKey: "ServerUsername") ?? "", p: UserDefaults.standard.string(forKey: "ServerPassword") ?? "")
+                networkService = NavidromeNetworkService(u: UserDefaults.standard.string(forKey: "ServerUsername") ?? "", p: UserDefaults.standard.string(forKey: "ServerPassword") ?? "")
             case .openmusic:
-                self.networkService = OpenmusicNetworkService()
+                networkService = OpenmusicNetworkService()
             }
         } else {
-            self.networkService = OpenmusicNetworkService()
+            networkService = OpenmusicNetworkService()
         }
     }
     
@@ -92,15 +92,14 @@ class NetworkManager {
     }
     
     static func globalIPAddress() -> String {
-        let defaultIP: String = UserDefaults.standard.string(forKey: "globalIPAddress") ?? ""
-        if (defaultIP == "") {
+        let defaultIP = UserDefaults.standard.string(forKey: "globalIPAddress") ?? ""
+        if defaultIP == "" {
             return ""
         } else {
             return defaultIP
         }
     }
 }
-
 
 protocol NetworkService {
     func baseURL() -> String
@@ -121,7 +120,6 @@ protocol NetworkService {
     func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum
     func decodeFetchedTrack(_ data: Data) throws -> FetchedTrack
 }
-
 
 class OpenmusicNetworkService: NetworkService {
     let decoder = JSONDecoder()
@@ -236,8 +234,8 @@ class NavidromeNetworkService: NetworkService {
     }
     
     init() {
-        self.u = ""
-        self.p = ""
+        u = ""
+        p = ""
     }
     
     func baseURL() -> String {
@@ -377,9 +375,7 @@ class NavidromeNetworkService: NetworkService {
     func decodeFetchedTrack(_ data: Data) throws -> FetchedTrack {
         return FetchedTrack()
     }
-    
 }
-
 
 enum ServerType: String, Codable {
     case openmusic, navidrome

@@ -10,7 +10,7 @@ import SwiftUI
 
 // Function to fetch search results
 func fetchSearchResults(query: String) async throws -> SearchResults {
-    return try await NetworkManager.shared.fetch(endpoint: .search(q: query), type: SearchResults.self)
+    try await NetworkManager.shared.fetch(endpoint: .search(q: query), type: SearchResults.self)
 }
 
 // Actor to manage search data
@@ -24,7 +24,7 @@ actor SearchViewActor {
     
     func runSearch(query: String) async throws {
         guard !attemptingSearch else { return }
-        
+
         searchInitialized = true
         attemptingSearch = true
         fullSearchSubmitted = true
@@ -34,31 +34,31 @@ actor SearchViewActor {
         defer { attemptingSearch = false }
         
         let results = try await fetchSearchResults(query: query)
-        self.searchResults = results
+        searchResults = results
     }
     
     func getSearchResults() -> SearchResults? {
-        return searchResults
+        searchResults
     }
     
     func getLastSearch() -> String {
-        return lastSearch
+        lastSearch
     }
     
     func getSearchInitialized() -> Bool {
-        return searchInitialized
+        searchInitialized
     }
     
     func getAttemptingSearch() -> Bool {
-        return attemptingSearch
+        attemptingSearch
     }
     
     func getFullSearchSubmitted() -> Bool {
-        return fullSearchSubmitted
+        fullSearchSubmitted
     }
     
     func getSearchHasChanged() -> Bool {
-        return searchHasChanged
+        searchHasChanged
     }
 }
 
@@ -109,6 +109,6 @@ actor SearchViewActor {
     }
     
     func runLastSearch() {
-        self.runSearch(query: self.lastSearch)
+        runSearch(query: lastSearch)
     }
 }

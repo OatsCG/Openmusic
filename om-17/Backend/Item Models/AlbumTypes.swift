@@ -16,7 +16,6 @@ protocol Album {
     var Artists: [SearchedArtist] { get set }
 }
 
-
 struct SearchedAlbum: Codable, Hashable, Album {
     var AlbumID: String
     var Title: String
@@ -35,36 +34,39 @@ struct SearchedAlbum: Codable, Hashable, Album {
     }
     
     init() {
-        self.AlbumID = UUID().uuidString
-        self.Title = ""
-        self.Artwork = ""
-        self.AlbumType = "Album"
-        self.Year = 2024
-        self.Artists = []
+        AlbumID = UUID().uuidString
+        Title = ""
+        Artwork = ""
+        AlbumType = "Album"
+        Year = 2024
+        Artists = []
     }
+    
     init(default: Bool) {
-        self.AlbumID = "MPREb_DaVYg3RUfP2"
-        self.Title = "Love Sick (Deluxe)"
-        self.Artwork = "iKd3qRCjYuyJ3qPdPmYY-KhBYpHC5LvbYYbBpwF8cbL1ImAl_-lX8FAPJBkLio_Acz7fTBDksNeGUBzFpg"
-        self.AlbumType = "Album"
-        self.Year = 2024
-        self.Artists = [SearchedArtist(default: true)]
+        AlbumID = "MPREb_DaVYg3RUfP2"
+        Title = "Love Sick (Deluxe)"
+        Artwork = "iKd3qRCjYuyJ3qPdPmYY-KhBYpHC5LvbYYbBpwF8cbL1ImAl_-lX8FAPJBkLio_Acz7fTBDksNeGUBzFpg"
+        AlbumType = "Album"
+        Year = 2024
+        Artists = [SearchedArtist(default: true)]
     }
+    
     init(from: StoredAlbum) {
-        self.AlbumID = from.AlbumID
-        self.Title = from.Title
-        self.Artwork = from.Artwork
-        self.AlbumType = from.AlbumType
-        self.Year = from.Year
-        self.Artists = from.Artists
+        AlbumID = from.AlbumID
+        Title = from.Title
+        Artwork = from.Artwork
+        AlbumType = from.AlbumType
+        Year = from.Year
+        Artists = from.Artists
     }
+    
     init(from: FetchedAlbum) {
-        self.AlbumID = from.AlbumID
-        self.Title = from.Title
-        self.Artwork = from.Artwork
-        self.AlbumType = from.AlbumType
-        self.Year = from.Year
-        self.Artists = from.Artists
+        AlbumID = from.AlbumID
+        Title = from.Title
+        Artwork = from.Artwork
+        AlbumType = from.AlbumType
+        Year = from.Year
+        Artists = from.Artists
     }
 }
 
@@ -79,34 +81,35 @@ struct FetchedAlbum: Codable, Hashable, Album {
     var Features: [SearchedArtist]
     
     init(from: [StoredTrack]) {
-        self.AlbumID = from[0].Album.AlbumID
-        self.Title = from[0].Album.Title
-        self.Artwork = from[0].Album.Artwork
-        self.AlbumType = from[0].Album.AlbumType
-        self.Year = from[0].Album.Year
-        self.Artists = from[0].Album.Artists
-        self.Tracks = []
-        self.Features = []
+        AlbumID = from[0].Album.AlbumID
+        Title = from[0].Album.Title
+        Artwork = from[0].Album.Artwork
+        AlbumType = from[0].Album.AlbumType
+        Year = from[0].Album.Year
+        Artists = from[0].Album.Artists
+        Tracks = []
+        Features = []
         for track in from {
-            self.Tracks.append(FetchedTrack(from: track))
+            Tracks.append(FetchedTrack(from: track))
             for feature in track.Features {
-                self.Features.append(feature)
+                Features.append(feature)
             }
         }
     }
+    
     init(from: [FetchedTrack]) {
-        self.AlbumID = from[0].Album.AlbumID
-        self.Title = from[0].Album.Title
-        self.Artwork = from[0].Album.Artwork
-        self.AlbumType = from[0].Album.AlbumType
-        self.Year = from[0].Album.Year
-        self.Artists = from[0].Album.Artists
-        self.Tracks = []
-        self.Features = []
+        AlbumID = from[0].Album.AlbumID
+        Title = from[0].Album.Title
+        Artwork = from[0].Album.Artwork
+        AlbumType = from[0].Album.AlbumType
+        Year = from[0].Album.Year
+        Artists = from[0].Album.Artists
+        Tracks = []
+        Features = []
         for track in from {
-            self.Tracks.append(track)
+            Tracks.append(track)
             for feature in track.Features {
-                self.Features.append(feature)
+                Features.append(feature)
             }
         }
     }
@@ -123,24 +126,26 @@ struct StoredAlbum: Hashable, Album {
     var Features: [SearchedArtist]
     
     init(from: [any Track]) {
-        self.AlbumID = from[0].Album.AlbumID
-        self.Title = from[0].Album.Title
-        self.Artwork = from[0].Album.Artwork
-        self.AlbumType = from[0].Album.AlbumType
-        self.Year = from[0].Album.Year
-        self.Artists = from[0].Album.Artists
-        self.Tracks = []
-        self.Features = []
+        AlbumID = from[0].Album.AlbumID
+        Title = from[0].Album.Title
+        Artwork = from[0].Album.Artwork
+        AlbumType = from[0].Album.AlbumType
+        Year = from[0].Album.Year
+        Artists = from[0].Album.Artists
+        Tracks = []
+        Features = []
         for track in from {
-            self.Tracks.append(track)
+            Tracks.append(track)
             for feature in track.Features {
-                self.Features.append(feature)
+                Features.append(feature)
             }
         }
     }
+    
     static func == (lhs: StoredAlbum, rhs: StoredAlbum) -> Bool {
         lhs.AlbumID == rhs.AlbumID
     }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(AlbumID)
     }

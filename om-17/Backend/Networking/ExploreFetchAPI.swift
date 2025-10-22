@@ -42,15 +42,15 @@ actor ExploreViewActor {
         defer { isSearching = false }
         
         let results = try await fetchExploreResults()
-        self.exploreResults = results
+        exploreResults = results
     }
     
     func getExploreResults() -> ExploreResults? {
-        return exploreResults
+        exploreResults
     }
     
     func getIsSearching() -> Bool {
-        return isSearching
+        isSearching
     }
 }
 
@@ -58,7 +58,6 @@ actor ExploreViewActor {
 @MainActor
 @Observable class ExploreViewModel {
     private let viewActor = ExploreViewActor()
-    
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
     
@@ -72,20 +71,21 @@ actor ExploreViewActor {
                 
                 await MainActor.run {
                     withAnimation {
-                        self.exploreResults = results
-                        self.isSearching = searching
+                        exploreResults = results
+                        isSearching = searching
                     }
                 }
             } catch {
                 await MainActor.run {
                     withAnimation {
-                        self.isSearching = false
+                        isSearching = false
                     }
                 }
                 print("Error: \(error)")
             }
         }
     }
+    
     func refresh() async {
         do {
             try await viewActor.runSearch()
@@ -95,8 +95,8 @@ actor ExploreViewActor {
             
             await MainActor.run {
                 withAnimation {
-                    self.exploreResults = results
-                    self.isSearching = searching
+                    exploreResults = results
+                    isSearching = searching
                 }
             }
         } catch {
@@ -109,8 +109,6 @@ actor ExploreViewActor {
         }
     }
 }
-
-
 
 struct ExploreResults: Codable, Hashable {
     var Shelves: [ExploreShelf]

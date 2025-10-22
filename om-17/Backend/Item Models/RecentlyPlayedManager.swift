@@ -9,30 +9,20 @@ import SwiftUI
 
 class RecentlyPlayedManager {
     static func getRecentTracks() -> [FetchedTrack] {
-        let tracksString: String? = UserDefaults.standard.string(forKey: "recentlyPlayed")
-        if (tracksString != nil) {
-            let decodedTracks: [FetchedTrack] = RecentlyPlayedManager.decodeRecentTracks(tracks: tracksString!)
-            return decodedTracks
+        if let tracksString = UserDefaults.standard.string(forKey: "recentlyPlayed") {
+            return RecentlyPlayedManager.decodeRecentTracks(tracks: tracksString)
         }
         return []
     }
     
     static func prependRecentTrack(track: FetchedTrack?) {
-        print("IN RECENT TRACK")
-        if (track == nil) {
-            print("TRACK WAS NIL")
-            return
-        } else {
+        if let track {
             var tracks: [FetchedTrack] = RecentlyPlayedManager.getRecentTracks()
-            print("GOT EXISTING TRACKS")
             //check if exists. if it does, remove all instances and then prepend
-            tracks = Array(tracks.filter{ $0.TrackID != track?.TrackID }.prefix(50))
-            tracks.insert(track!, at: 0)
-            print("INSERTED")
+            tracks = Array(tracks.filter{ $0.TrackID != track.TrackID }.prefix(50))
+            tracks.insert(track, at: 0)
             let encodedTracks: String = RecentlyPlayedManager.encodeRecentTracks(tracks: tracks)
-            print("WRITING")
             UserDefaults.standard.set(encodedTracks, forKey: "recentlyPlayed")
-            print("WROTE")
         }
     }
     
@@ -70,14 +60,12 @@ class RecentlyPlayedManager {
     }
 }
 
-
-
-
 class RecentTrack {
     var track: any Track
     var timePlayed: Date
+    
     init(track: any Track) {
         self.track = track
-        self.timePlayed = Date()
+        timePlayed = Date()
     }
 }

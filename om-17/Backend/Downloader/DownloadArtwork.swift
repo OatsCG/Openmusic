@@ -23,7 +23,6 @@ func isImageURL(_ url: URL?) async throws -> Bool {
     return false
 }
 
-
 func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
     guard let imgID = imgID else { return nil }
     
@@ -62,18 +61,14 @@ func downloadAlbumArt(artworkID: String) async -> URL? {
     }
 }
 
-
 func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) {
-    let downloadURL: URL? = URL(string: ArtworkURL)
-    if downloadURL == nil {
-        return
-    }
+    guard let downloadURL = URL(string: ArtworkURL) else { return }
     
     let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Playlist-\(playlistID.uuidString).jpg")
-    if let destinationURL = destinationURL {
+    if let destinationURL {
         if FileManager.default.fileExists(atPath: destinationURL.path) {
         } else {
-            let urlRequest = URLRequest(url: downloadURL!)
+            let urlRequest = URLRequest(url: downloadURL)
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
                 if error != nil {
                     return
@@ -97,15 +92,10 @@ func downloadPlaylistArt(playlistID: UUID, ArtworkURL: String) {
 }
 
 func ArtworkExists(ArtworkID: String?) -> Bool {
-    if let ArtworkID = ArtworkID {
-        let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
-        if let path = destination?.path {
-            let doesFileExist: Bool = FileManager.default.fileExists(atPath: path)
-            if doesFileExist {
-                return true
-            }
-        }
-        
+    if let ArtworkID,
+       let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Artwork-\(ArtworkID).jpg").path,
+       FileManager.default.fileExists(atPath: path) {
+        return true
     }
     return false
 }
@@ -113,27 +103,25 @@ func ArtworkExists(ArtworkID: String?) -> Bool {
 func RetrieveArtwork(ArtworkID: String) -> URL {
     let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     let destinationUrl = docsUrl?.appendingPathComponent("Artwork-\(ArtworkID).jpg")
-    return(destinationUrl!)
+    return destinationUrl ?? URL(string: "")!
 }
 
 func RetrieveArtwork(url: String) -> URL {
     let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     let destinationUrl = docsUrl?.appendingPathComponent(url)
-    return(destinationUrl!)
+    return destinationUrl ?? URL(string: "")!
 }
 
 func PlaylistArtworkExists(playlistID: UUID) -> Bool {
-    let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Playlist-\(playlistID.uuidString).jpg")
-    if FileManager.default.fileExists(atPath: destination!.path) {
-        return(true)
+    if let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Playlist-\(playlistID.uuidString).jpg"),
+       FileManager.default.fileExists(atPath: destination.path) {
+        return true
     }
-    return(false)
+    return false
 }
 
 func RetrievePlaylistArtwork(playlistID: UUID) -> URL {
     let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     let destinationUrl = docsUrl?.appendingPathComponent("Playlist-\(playlistID.uuidString).jpg")
-    return(destinationUrl!)
+    return destinationUrl ?? URL(string: "")!
 }
-
-

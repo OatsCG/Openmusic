@@ -9,5 +9,5 @@
 import Foundation
 
 func fetchPlaybackData(playbackID: String) async throws -> FetchedPlayback {
-    return try await NetworkManager.shared.fetch(endpoint: .playback(id: playbackID), type: FetchedPlayback.self)
+    try await NetworkManager.shared.fetch(endpoint: .playback(id: playbackID), type: FetchedPlayback.self)
 }

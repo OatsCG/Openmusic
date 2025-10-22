@@ -9,72 +9,56 @@ import SwiftUI
 
 @MainActor
 @Observable class OMUser {
-    // main
     var userID: String
     var userName: String
     var profilePicture: String? = nil
     var discordID: String? = nil
-    
-    // liked songs
     var likedSongs: [String] // TrackIDs
     
-    
     init() {
-        self.userID = ""
-        self.userName = ""
-        self.profilePicture = UserDefaults.standard.string(forKey: "User_profilePicture")
-        self.likedSongs = []
+        userID = ""
+        userName = ""
+        profilePicture = UserDefaults.standard.string(forKey: "User_profilePicture")
+        likedSongs = []
         
-        self.userID = self.getUUID()
-        self.userName = self.getName()
-        self.discordID = self.getDiscordID()
-        self.updatePrivateLikedSongs()
+        userID = getUUID()
+        userName = getName()
+        discordID = getDiscordID()
+        updatePrivateLikedSongs()
     }
     
     func getUUID() -> String {
-        let storedUUID: String? = UserDefaults.standard.string(forKey: "User_userID")
-        var toset: String
-        
-        if let storedUUID = storedUUID {
-            toset = storedUUID
-        } else {
-            toset = UUID().uuidString
-            UserDefaults.standard.setValue(toset, forKey: "User_userID")
+        if let storedUUID = UserDefaults.standard.string(forKey: "User_userID") {
+            return storedUUID
         }
-        return toset
+        let id = UUID().uuidString
+        UserDefaults.standard.setValue(id, forKey: "User_userID")
+        return id
     }
     
     func getName() -> String {
-        let storedName: String? = UserDefaults.standard.string(forKey: "User_userName")
-        var toset: String
-        if let storedName = storedName {
-            toset = storedName
-        } else {
-            toset = "New User"
-            UserDefaults.standard.setValue(toset, forKey: "User_userName")
+        if let storedName = UserDefaults.standard.string(forKey: "User_userName") {
+            return storedName
         }
-        return toset
+        let name = "New User"
+        UserDefaults.standard.setValue(name, forKey: "User_userName")
+        return name
     }
     
     func getDiscordID() -> String? {
-        let storedDiscordID: String? = UserDefaults.standard.string(forKey: "User_discordID")
-        var toset: String? = nil
-        if let storedDiscordID = storedDiscordID {
-            toset = storedDiscordID
+        if let storedDiscordID = UserDefaults.standard.string(forKey: "User_discordID") {
+            return storedDiscordID
         }
-        return toset
+        return nil
     }
     
     func updateName(to newName: String) {
-        self.userName = newName
+        userName = newName
         UserDefaults.standard.setValue(newName, forKey: "User_userName")
     }
     
     func updateDiscordCode(to newCode: String?) {
-        self.discordID = newCode
+        discordID = newCode
         UserDefaults.standard.setValue(newCode, forKey: "User_discordID")
     }
 }
-
-
-

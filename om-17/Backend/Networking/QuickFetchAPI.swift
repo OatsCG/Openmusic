@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch quick search results
 func fetchQuickSearchResults(query: String) async throws -> FetchedTracks {
-    return try await NetworkManager.shared.fetch(endpoint: .quick(q: query), type: FetchedTracks.self)
+    try await NetworkManager.shared.fetch(endpoint: .quick(q: query), type: FetchedTracks.self)
 }
 
 // Actor to manage quick search data
@@ -29,23 +29,23 @@ actor QuickSearchViewActor {
         defer { attemptingSearch = false }
         
         let tracks = try await fetchQuickSearchResults(query: query)
-        self.fetchedTracks = tracks
+        fetchedTracks = tracks
     }
     
     func getFetchedTracks() -> FetchedTracks? {
-        return fetchedTracks
+        fetchedTracks
     }
     
     func getLastSearch() -> String {
-        return lastSearch
+        lastSearch
     }
     
     func getSearchInitialized() -> Bool {
-        return searchInitialized
+        searchInitialized
     }
     
     func getAttemptingSearch() -> Bool {
-        return attemptingSearch
+        attemptingSearch
     }
 }
 
@@ -90,6 +90,6 @@ actor QuickSearchViewActor {
     }
     
     func runLastSearch() {
-        self.runSearch(query: self.lastSearch)
+        runSearch(query: lastSearch)
     }
 }

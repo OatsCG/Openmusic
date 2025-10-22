@@ -26,12 +26,11 @@ public final class BackgroundDatabase: Database {
                 let task = Task {
                     factory()
                 }
-                self.wrappedTask = task
+                wrappedTask = task
                 return await task.value
             }
         }
     }
-    
     
     private let container: DatabaseContainer
     
@@ -42,7 +41,7 @@ public final class BackgroundDatabase: Database {
     }
     
     internal init(_ factory: @Sendable @escaping () -> any Database) {
-        self.container = .init(factory: factory)
+        container = .init(factory: factory)
     }
     
     convenience init(modelContainer: ModelContainer) {
@@ -52,36 +51,36 @@ public final class BackgroundDatabase: Database {
       }
     
     public func delete(where predicate: Predicate<some PersistentModel>?) async throws {
-        try await self.database.delete(where: predicate)
-        try self.save()
+        try await database.delete(where: predicate)
+        try save()
       }
     
     public func delete<T>(_ model: T) async where T : PersistentModel {
-        await self.database.delete(model)
-        try? self.save()
+        await database.delete(model)
+        try? save()
     }
 
     public func fetch<T>(_ descriptor: FetchDescriptor<T>) async throws -> [T] where T: PersistentModel {
-        return try await self.database.fetch(descriptor)
+        return try await database.fetch(descriptor)
     }
 
     public func insert(_ model: some PersistentModel) async {
-        await self.database.insert(model)
-        try? self.save()
+        await database.insert(model)
+        try? save()
     }
 
     public func save() throws {
         Task {
-            try await self.database.save()
+            try await database.save()
         }
     }
     
     func store_track(_ track: any Track) {
         Task {
             if let track = track as? StoredTrack {
-                await self.insert(track)
+                await insert(track)
             } else {
-                await self.insert(StoredTrack(from: track))
+                await insert(StoredTrack(from: track))
             }
             ToastManager.shared.propose(toast: Toast.library(track.Album.Artwork))
         }
@@ -89,7 +88,7 @@ public final class BackgroundDatabase: Database {
 
     func store_track(_ queueItem: QueueItem) {
         Task {
-            await self.insert(StoredTrack(from: queueItem))
+            await insert(StoredTrack(from: queueItem))
             await ToastManager.shared.propose(toast: Toast.library(queueItem.Track.Album.Artwork))
         }
     }
@@ -98,9 +97,9 @@ public final class BackgroundDatabase: Database {
         Task {
             for track in tracks {
                 if let track = track as? StoredTrack {
-                    await self.insert(track)
+                    await insert(track)
                 } else {
-                    await self.insert(StoredTrack(from: track))
+                    await insert(StoredTrack(from: track))
                 }
             }
             ToastManager.shared.propose(toast: Toast.library(tracks.first?.Album.Artwork, count: tracks.count))
@@ -113,10 +112,8 @@ public final class BackgroundDatabase: Database {
         let predicate = #Predicate<StoredTrack> { ptrack in
             ptrack.TrackID == TrackID
         }
-        if let ctxp = try? await self.fetch(FetchDescriptor(predicate: predicate)) {
-            if (ctxp.count > 0) {
-                return true
-            }
+        if let ctxp = try? await fetch(FetchDescriptor(predicate: predicate)), !ctxp.isEmpty {
+            return true
         }
         return false
     }
@@ -126,7 +123,7 @@ public final class BackgroundDatabase: Database {
             return false
         }
         for track in tracks {
-            if await self.is_track_stored(TrackID: track.TrackID) == false {
+            if await !is_track_stored(TrackID: track.TrackID) {
                 return false
             }
         }
@@ -137,10 +134,8 @@ public final class BackgroundDatabase: Database {
         let predicate = #Predicate<StoredTrack> { ptrack in
             ptrack.TrackID == TrackID
         }
-        if let ctxp = try? await self.fetch(FetchDescriptor(predicate: predicate)) {
-            if (ctxp.count > 0) {
-                return ctxp.first
-            }
+        if let ctxp = try? await fetch(FetchDescriptor(predicate: predicate)), !ctxp.isEmpty {
+            return ctxp.first
         }
         return nil
     }
@@ -149,10 +144,8 @@ public final class BackgroundDatabase: Database {
         let predicate = #Predicate<StoredPlaylist> { playlist in
             playlist.PlaylistID == PlaylistID
         }
-        if let ctxp = try? await self.fetch(FetchDescriptor(predicate: predicate)) {
-            if (ctxp.count > 0) {
-                return ctxp.first
-            }
+        if let ctxp = try? await fetch(FetchDescriptor(predicate: predicate)), !ctxp.isEmpty {
+            return ctxp.first
         }
         return nil
     }

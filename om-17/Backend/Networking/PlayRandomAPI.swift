@@ -8,9 +8,8 @@
 import SwiftUI
 
 func playRandomSongs() async throws -> RandomTracks {
-    return try await NetworkManager.shared.fetch(endpoint: .random, type: RandomTracks.self)
+    try await NetworkManager.shared.fetch(endpoint: .random, type: RandomTracks.self)
 }
-
 
 struct RandomTracks: Codable {
     var Tracks: [FetchedTrack]

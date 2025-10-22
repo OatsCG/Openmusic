@@ -9,7 +9,7 @@ import SwiftUI
 
 // Function to fetch playlist tracks naive data
 func fetchPlaylistTracksNaiveData(playlistID: String, type: Platform) async throws -> FetchedPlaylistInfoTracks {
-    return try await NetworkManager.shared.fetch(endpoint: .playlisttracks(platform: type.rawValue, id: playlistID), type: FetchedPlaylistInfoTracks.self)
+    try await NetworkManager.shared.fetch(endpoint: .playlisttracks(platform: type.rawValue, id: playlistID), type: FetchedPlaylistInfoTracks.self)
 }
 
 // Actor to manage playlist tracks data
@@ -17,12 +17,11 @@ actor PlaylistTracksNaiveViewActor {
     private var fetchedPlaylistInfoTracks: FetchedPlaylistInfoTracks? = nil
     
     func runSearch(playlistID: String, platform: Platform) async throws {
-        let tracks = try await fetchPlaylistTracksNaiveData(playlistID: playlistID, type: platform)
-        self.fetchedPlaylistInfoTracks = tracks
+        fetchedPlaylistInfoTracks = try await fetchPlaylistTracksNaiveData(playlistID: playlistID, type: platform)
     }
     
     func getFetchedPlaylistInfoTracks() -> FetchedPlaylistInfoTracks? {
-        return fetchedPlaylistInfoTracks
+        fetchedPlaylistInfoTracks
     }
 }
 
@@ -41,7 +40,7 @@ actor PlaylistTracksNaiveViewActor {
                 let tracks = await viewActor.getFetchedPlaylistInfoTracks()
                 
                 await MainActor.run {
-                    self.fetchedPlaylistInfoTracks = tracks
+                    fetchedPlaylistInfoTracks = tracks
                 }
             } catch {
                 print("Error: \(error)")
