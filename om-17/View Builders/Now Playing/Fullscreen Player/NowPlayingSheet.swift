@@ -22,18 +22,17 @@ struct NowPlayingSheet: View {
     @State var currentAlbum: SearchedAlbum? = nil
     @State var attentionOpacity: Double = 1
     @State private var timer: Timer? = nil
-    
     var namespace: Namespace.ID? = nil
+    
     func onTap() {
-        print("TAP RECOGNISED")
         timer?.invalidate()
         withAnimation {
-            self.attentionOpacity = 1
+            attentionOpacity = 1
         }
         timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false) { _ in
             DispatchQueue.main.async {
                 withAnimation(.easeInOut(duration: 4)) {
-                    self.attentionOpacity = 0
+                    attentionOpacity = 0
                 }
             }
         }
@@ -43,7 +42,7 @@ struct NowPlayingSheet: View {
         NowPlayingSheetContent(showingNPSheet: $showingNPSheet, fullscreen: $fullscreen, carModeEnabled: $carModeEnabled, passedNSPath: $passedNSPath, currentAlbum: $currentAlbum, attentionOpacity: $attentionOpacity)
             .contentShape(Rectangle())
             .simultaneousGesture(TapGesture().onEnded({
-                self.onTap()
+                onTap()
             }))
     }
 }
@@ -60,7 +59,6 @@ struct NowPlayingSheetContent: View {
     @Binding var passedNSPath: NavigationPath
     @Binding var currentAlbum: SearchedAlbum?
     @Binding var attentionOpacity: Double
-    
     var namespace: Namespace.ID? = nil
     
     var body: some View {
@@ -75,13 +73,11 @@ struct NowPlayingSheetContent: View {
                     .opacity(fullscreen ? attentionOpacity : 1)
                     .disabled(fullscreen ? (attentionOpacity == 1 ? false : true) : false)
             }
-            if fullscreen {
-                if carModeEnabled {
-                    NPProximityWarning()
-                }
+            if fullscreen && carModeEnabled {
+                NPProximityWarning()
             }
             VStack {
-                if (verticalSizeClass == .compact || horizontalSizeClass == .regular) {
+                if verticalSizeClass == .compact || horizontalSizeClass == .regular {
                     // landscape
                     HStack(spacing: 20) {
                         NPHeaderSegment(fullscreen: $fullscreen, passedNSPath: $passedNSPath, showingNPSheet: $showingNPSheet)
@@ -134,27 +130,3 @@ struct NowPlayingSheetContent: View {
             }
     }
 }
-
-
-//#Preview {
-//    @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
-//    @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
-//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-//    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-//
-//    let playlist = StoredPlaylist(Title: "Test!")
-//    container.mainContext.insert(playlist)
-//    
-//    return ContentView()
-//        .modelContainer(container)
-//        .environment(PlayerManager())
-//        .environment(PlaylistImporter())
-//        .environment(DownloadManager())
-//        .environment(NetworkMonitor())
-//        .environment(FontManager())
-//        .environment(OMUser())
-//        .task {
-//            currentTheme = "classic"
-////            globalIPAddress = "server.openmusic.app"
-//        }
-//}

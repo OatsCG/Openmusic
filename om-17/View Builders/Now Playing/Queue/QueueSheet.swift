@@ -19,6 +19,7 @@ struct QueueSheet: View {
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     @Binding var showingQueueSheet: Bool
+    
     var body: some View {
         VStack {
             HStack(alignment: .center) {
@@ -60,8 +61,3 @@ struct QueueSheet: View {
             .safeAreaPadding(.top, 5)
     }
 }
-
-//#Preview {
-//    NowPlayingSheet()
-//    //QueueSheet()
-//}

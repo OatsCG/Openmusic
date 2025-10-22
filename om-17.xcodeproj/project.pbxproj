@@ -380,7 +380,6 @@
 		E59B3A272CC59E56001D419A /* VibeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59B3A262CC59E56001D419A /* VibeView.swift */; };
 		E59CA73F2A4E022F006A34F5 /* TrackTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59CA73E2A4E022F006A34F5 /* TrackTypes.swift */; };
 		E59E30B12A41310B007B7874 /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E59E30B02A41310B007B7874 /* MarqueeText */; };
-		E59E30B32A4138A4007B7874 /* MiniArtistCookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59E30B22A4138A4007B7874 /* MiniArtistCookies.swift */; };
 		E59E30B72A415ECA007B7874 /* NowPlayingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59E30B62A415ECA007B7874 /* NowPlayingSheet.swift */; };
 		E59E30B92A416482007B7874 /* NPTrackScrubber.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59E30B82A416482007B7874 /* NPTrackScrubber.swift */; };
 		E59E30BB2A421B04007B7874 /* NPControlButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59E30BA2A421B04007B7874 /* NPControlButtons.swift */; };
@@ -991,7 +990,6 @@
 		E59B3A222CC59D0B001D419A /* ExploreVibesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreVibesView.swift; sourceTree = "<group>"; };
 		E59B3A262CC59E56001D419A /* VibeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeView.swift; sourceTree = "<group>"; };
 		E59CA73E2A4E022F006A34F5 /* TrackTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackTypes.swift; sourceTree = "<group>"; };
-		E59E30B22A4138A4007B7874 /* MiniArtistCookies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniArtistCookies.swift; sourceTree = "<group>"; };
 		E59E30B62A415ECA007B7874 /* NowPlayingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingSheet.swift; sourceTree = "<group>"; };
 		E59E30B82A416482007B7874 /* NPTrackScrubber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPTrackScrubber.swift; sourceTree = "<group>"; };
 		E59E30BA2A421B04007B7874 /* NPControlButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPControlButtons.swift; sourceTree = "<group>"; };
@@ -2400,7 +2398,6 @@
 			isa = PBXGroup;
 			children = (
 				E5A65A032A41279F00072966 /* MiniPlayer.swift */,
-				E59E30B22A4138A4007B7874 /* MiniArtistCookies.swift */,
 				E5B9138A2ABCE03B00E0C53C /* MiniToasts.swift */,
 			);
 			path = "Mini Player";
@@ -3466,7 +3463,6 @@
 				E51CE7762A5C981E00377848 /* DownloadArtwork.swift in Sources */,
 				E59600922B3B76D5009E5858 /* CustomServerInput.swift in Sources */,
 				E5DCFE0E2B4510530044D9B5 /* NPBackButton_honeycrisp.swift in Sources */,
-				E59E30B32A4138A4007B7874 /* MiniArtistCookies.swift in Sources */,
 				E5DCFE082B450F760044D9B5 /* NPPlayButton_wii.swift in Sources */,
 				E506D9E62B00B9E100D3AAAD /* NPHeaderSegment.swift in Sources */,
 				E58E8FD02BA172AF009F7E43 /* BAPlayer.swift in Sources */,

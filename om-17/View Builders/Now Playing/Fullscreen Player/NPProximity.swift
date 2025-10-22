@@ -13,6 +13,7 @@ struct NPProximity: View {
     @AppStorage("proximityVerticalRange") var proximityVerticalRange: Double = 1
     var proximityManager: ProximityManager = ProximityManager()
     let capturetimer = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
+    
     var body: some View {
         EmptyView()
         .onReceive(capturetimer) { time in

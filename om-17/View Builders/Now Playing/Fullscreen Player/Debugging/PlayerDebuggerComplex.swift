@@ -11,6 +11,7 @@ struct PlayerDebuggerComplex: View {
     @Environment(PlayerManager.self) var playerManager
     @AppStorage("playerDebugger") var playerDebugger: Bool = false
     @Binding var visibleState: DebuggerState
+    
     var body: some View {
         VStack(spacing: 5) {
             Spacer()

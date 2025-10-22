@@ -57,18 +57,18 @@ struct CacheAsyncImage<Content, Content2>: View where Content: View, Content2: V
                                scale: scale,
                                transaction: transaction ?? Transaction(),
                                content: { cacheAndRender(phase: $0) })
-                } else if contentImage != nil && placeholder != nil {
+                } else if contentImage != nil, let placeholder {
                     AsyncImage(url: realURL,
                                scale: scale,
                                content: { cacheAndRender(image: $0) },
-                               placeholder: placeholder!)
+                               placeholder: placeholder)
                 }
             }
         }
     }
 
     private func cacheAndRender(image: Image) -> some View {
-        if url != nil {
+        if let url {
             ImageCache[url] = image
         }
         return contentImage?(image)
@@ -76,7 +76,7 @@ struct CacheAsyncImage<Content, Content2>: View where Content: View, Content2: V
 
     private func cacheAndRender(phase: AsyncImagePhase) -> some View{
         if case .success (let image) = phase {
-            if url != nil {
+            if let url {
                 ImageCache[url] = image
             }
         }

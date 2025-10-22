@@ -21,6 +21,7 @@ struct NPArtwork: View {
     var minDistance: CGFloat = 30
     var maxDistance: CGFloat = 200
     var maxThrowDistance: CGFloat = 400
+    
     var body: some View {
         ZStack {
             GeometryReader { geo in
@@ -54,12 +55,10 @@ struct NPArtwork: View {
                 }
             }
             .onTapGesture {
-                if (true) {
-                    if playerManager.isPlaying {
-                        playerManager.pause()
-                    } else {
-                        playerManager.play()
-                    }
+                if playerManager.isPlaying {
+                    playerManager.pause()
+                } else {
+                    playerManager.play()
                 }
             }
             .gesture(DragGesture(minimumDistance: minDistance, coordinateSpace: .local)
@@ -67,38 +66,34 @@ struct NPArtwork: View {
                     withAnimation(.interactiveSpring) {
                         swipeDistance = value.translation.width
                         artworkOffset = value.translation.width
-                        if (swipeDistance > 0) {
+                        if swipeDistance > 0 {
                             direction = 1
-                        } else if (swipeDistance < 0) {
+                        } else if swipeDistance < 0 {
                             direction = -1
                         }
                         
-                        if value.translation.width < -(maxDistance) {
-                            if shouldSkip == false {
+                        if value.translation.width < -maxDistance {
+                            if !shouldSkip {
                                 if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                             }
-                            shouldSkip = true
-                        } else {
-                            shouldSkip = false
                         }
-                        if value.translation.width > (maxDistance) {
-                            if shouldPrevious == false {
+                        shouldSkip = value.translation.width < -maxDistance
+                        if value.translation.width > maxDistance {
+                            if !shouldPrevious {
                                 if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                             }
-                            shouldPrevious = true
-                        } else {
-                            shouldPrevious = false
                         }
+                        shouldPrevious = value.translation.width > maxDistance
                     }
                 })
                 .onEnded({ value in
                     if value.translation.width < -maxDistance || value.predictedEndTranslation.width < -maxThrowDistance {
-                        if shouldSkip == false {
+                        if !shouldSkip {
                             if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                         }
                         shouldSkip = true
                     } else if value.translation.width > maxDistance || value.predictedEndTranslation.width > maxThrowDistance {
-                        if shouldPrevious == false {
+                        if !shouldPrevious {
                             if !UserDefaults.standard.bool(forKey: "AlertHapticsDisabled") { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
                         }
                         shouldPrevious = true
@@ -138,8 +133,6 @@ struct NPArtwork: View {
                             artworkOpacity = 1
                         }
                     }
-                    
-                    
                 })
             )
     }
@@ -147,6 +140,7 @@ struct NPArtwork: View {
 
 #Preview {
     let playerManager = PlayerManager()
+    
     return VStack {
         Spacer()
         MiniPlayer_classic()
@@ -158,15 +152,13 @@ struct NPArtwork: View {
             }
         Spacer()
     }
-    //.background(.gray)
 }
-
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-    
     let playerManager = PlayerManager()
+    
     return NowPlayingSheet(showingNPSheet: .constant(true), passedNSPath: .constant(NavigationPath()))
         .environment(playerManager)
         .environment(DownloadManager())

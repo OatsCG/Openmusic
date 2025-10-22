@@ -11,9 +11,10 @@ import SwiftData
 struct LibraryAlbumMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     var album: StoredAlbum
     @State var arePlaybacksDownloaded: Bool = false
+    
     var body: some View {
         Button(role: .destructive, action: {
             Task {
@@ -30,11 +31,11 @@ struct LibraryAlbumMenu: View {
         if arePlaybacksDownloaded {
             Button(role: .destructive, action: {
                 for track in album.Tracks {
-                    if track.Playback_Clean != nil {
-                        downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
+                    if let Playback_Clean = track.Playback_Clean {
+                        downloadManager.delete_playback(PlaybackID: Playback_Clean)
                     }
-                    if track.Playback_Explicit != nil {
-                        downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
+                    if let Playback_Explicit = track.Playback_Explicit {
+                        downloadManager.delete_playback(PlaybackID: Playback_Explicit)
                     }
                 }
             }) {
@@ -49,7 +50,6 @@ struct LibraryAlbumMenu: View {
                 Label("Download Album", systemImage: "square.and.arrow.down")
             }
         }
-        
         Section {
             Menu {
                 ForEach(album.Artists, id: \.ArtistID) { artist in
@@ -73,7 +73,6 @@ struct LibraryAlbumMenu: View {
                 }
             }
         }
-        
         Section {
             Button {
                 playerManager.fresh_play_multiple(tracks: album.Tracks)
@@ -81,7 +80,6 @@ struct LibraryAlbumMenu: View {
                 Label("Play", systemImage: "play.fill")
                     .symbolRenderingMode(.hierarchical)
             }
-            
             Menu {
                 Button {
                     playerManager.queue_songs_next(tracks: album.Tracks)
@@ -106,7 +104,6 @@ struct LibraryAlbumMenu: View {
                     .symbolRenderingMode(.hierarchical)
             }
         }
-        
         Section {
             Button {
                 playerManager.fresh_play_multiple(tracks: album.Tracks.shuffled())
@@ -114,7 +111,6 @@ struct LibraryAlbumMenu: View {
                 Label("Shuffle", systemImage: "shuffle")
                     .symbolRenderingMode(.hierarchical)
             }
-            
             Menu {
                 Button {
                     playerManager.queue_songs_next(tracks: album.Tracks.shuffled())
@@ -135,23 +131,32 @@ struct LibraryAlbumMenu: View {
         }
         .onAppear {
             Task {
-                await self.updateArePlaybacksDownloaded()
+                await updateArePlaybacksDownloaded()
             }
         }
     }
     func updateArePlaybacksDownloaded() async {
-        let arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: album.Tracks.map{$0.Playback_Explicit != nil ? $0.Playback_Explicit! : $0.Playback_Clean!})
+        var toDetermineDownloadState: [String] = []
+        for track in album.Tracks {
+            if let Playback_Explicit = track.Playback_Explicit {
+                toDetermineDownloadState.append(Playback_Explicit)
+            }
+            if let Playback_Clean = track.Playback_Clean {
+                toDetermineDownloadState.append(Playback_Clean)
+            }
+        }
+        let arePlaybacksDownloaded = await downloadManager.are_playbacks_downloaded(PlaybackIDs: toDetermineDownloadState)
         await MainActor.run {
             self.arePlaybacksDownloaded = arePlaybacksDownloaded
         }
     }
 }
 
-
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredPlaylist.self, StoredTrack.self, configurations: config)
     let album = StoredAlbum(from: [FetchedTrack(default: true)])
+    
     return Menu("press me") {
         LibraryAlbumMenu(album: album)
     }

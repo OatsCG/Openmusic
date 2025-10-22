@@ -17,9 +17,10 @@ struct NPHeaderSegment: View {
     @Binding var showingNPSheet: Bool
     @State var visualWidth: CGFloat = 100
     @State var video_AVPlayer: VideoPlayerEngine? = nil
+    
     var body: some View {
         VStack {
-            if (playerManager.currentQueueItem?.isVideo ?? false), let videoPlayer = self.video_AVPlayer?.player {
+            if playerManager.currentQueueItem?.isVideo ?? false, let videoPlayer = self.video_AVPlayer?.player {
                 YouTubePlayerView(videoPlayer)
             } else {
                 NPArtwork(fullscreen: $fullscreen, visualWidth: $visualWidth)
@@ -27,7 +28,7 @@ struct NPHeaderSegment: View {
                         PlayerDebugger()
                     }
             }
-            if let currentQueueItem = playerManager.currentQueueItem, !fullscreen {
+            if !fullscreen, let currentQueueItem = playerManager.currentQueueItem {
                 HStack(alignment: .top) {
                     Menu {
                         Menu {
@@ -80,12 +81,12 @@ struct NPHeaderSegment: View {
                         }) {
                             Label("Refresh Track", systemImage: "arrow.clockwise")
                         }
-                        if (playerManager.currentQueueItem?.fetchedPlayback?.YT_Video_ID != nil) {
+                        if playerManager.currentQueueItem?.fetchedPlayback?.YT_Video_ID != nil {
                             Button(action: {
-                                if ((playerManager.currentQueueItem?.isVideo ?? false) == true) {
-                                    self.playerManager.currentQueueItem?.setVideo(to: false)
+                                if (playerManager.currentQueueItem?.isVideo ?? false) == true {
+                                    playerManager.currentQueueItem?.setVideo(to: false)
                                 } else {
-                                    self.playerManager.currentQueueItem?.setVideo(to: true)
+                                    playerManager.currentQueueItem?.setVideo(to: true)
                                 }
                             }) {
                                 Label((playerManager.currentQueueItem?.isVideo ?? false) ? "Hide Video" : "Show Video", systemImage: (playerManager.currentQueueItem?.isVideo ?? false) ? "tv.slash" : "tv")
@@ -105,7 +106,7 @@ struct NPHeaderSegment: View {
                         }
                     } label: {
                         HStack {
-                            if (playerManager.currentQueueItem?.fetchedPlayback?.YT_Video_ID != nil) {
+                            if playerManager.currentQueueItem?.fetchedPlayback?.YT_Video_ID != nil {
                                 Image(systemName: "tv")
                                     .symbolRenderingMode(.hierarchical)
                                     .foregroundStyle(.secondary)
@@ -120,21 +121,8 @@ struct NPHeaderSegment: View {
         }
             .scaleEffect((playerManager.isPlaying || playerManager.currentQueueItem?.isVideo == true) ? 1 : 0.75)
             .disabled(playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false)
-//            .overlay {
-//                if (playerManager.shouldSuggestPlaylistCreation == true && playerManager.hasSuggestedPlaylistCreation == false) {
-//                    ZStack {
-//                        NPEnjoyingSession()
-//                            .padding(30)
-//                    }
-//                }
-//            }
             .task {
-                self.video_AVPlayer = playerManager.currentQueueItem?.video_AVPlayer
+                video_AVPlayer = playerManager.currentQueueItem?.video_AVPlayer
             }
-            //.contentTransition(.numericText())
     }
 }
-
-//#Preview {
-//    NPHeaderArt()
-//}

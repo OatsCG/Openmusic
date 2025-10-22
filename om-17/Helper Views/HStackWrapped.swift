@@ -36,7 +36,6 @@ struct HStackWrapped<Content: View>: View {
                 ScrollView(.horizontal) {
                     HStackWrapped(rows: 2) {
                         SearchAlbumLink(album: SearchedAlbum(default: true), fill: false)
-                        //SearchAlbumLink(album: SearchedAlbum(default: true), fill: false)
                     }
                         .scrollTargetLayout()
                 }

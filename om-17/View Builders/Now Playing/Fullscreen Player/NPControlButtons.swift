@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NPControlButtons: View {
     @Environment(PlayerManager.self) var playerManager
+    
     var body: some View {
         HStack {
             Spacer()
@@ -38,7 +39,3 @@ struct NPControlButtons: View {
         .foregroundStyle(.primary)
     }
 }
-
-//#Preview {
-//    NowPlayingSheet()
-//}

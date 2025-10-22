@@ -38,6 +38,7 @@ struct AlbumArtDisplay: View {
     var artworkExistsObj: ArtworkExistsObj = ArtworkExistsObj()
     var customTransaction: Transaction = Transaction(animation: .smooth(duration: 0.31))
     @State private var ArtworkURL: URL?
+    
     var body: some View {
         ZStack {
             if artworkExistsObj.artworkExists == true {
@@ -47,7 +48,6 @@ struct AlbumArtDisplay: View {
                         .drawingGroup()
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
-//                        .drawingGroup()
                 }
                 ZStack {
                     BetterAsyncImage(url: ArtworkURL, animated: true, customTransaction: customTransaction)
@@ -57,18 +57,17 @@ struct AlbumArtDisplay: View {
                 }
                     .cornerRadius(cornerRadius)
             } else {
-                if (BlurOpacity > 0) {
-                    BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: false, customTransaction: customTransaction)
+                if BlurOpacity > 0 {
+                    BetterAsyncImage(url: BuildArtworkURL(imgID: ArtworkID, resolution: Resolution), animated: false, customTransaction: customTransaction)
                         .cornerRadius(cornerRadius)
                         .drawingGroup()
                         .blur(radius: Blur)
                         .opacity(BlurOpacity)
-//                        .drawingGroup()
                 }
                 ZStack {
-                    BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: self.Resolution), animated: true, customTransaction: customTransaction)
-                    if (AlbumID != nil && albumVideoViewModel.fetchedAlbumVideo != nil && AlbumID == albumVideoViewModel.vAlbumID) {
-                        AnimatedAlbumArtDisplay(albumURL: albumVideoViewModel.fetchedAlbumVideo!)
+                    BetterAsyncImage(url: BuildArtworkURL(imgID: ArtworkID, resolution: Resolution), animated: true, customTransaction: customTransaction)
+                    if AlbumID == albumVideoViewModel.vAlbumID, let fetchedAlbumVideo = albumVideoViewModel.fetchedAlbumVideo {
+                        AnimatedAlbumArtDisplay(albumURL: fetchedAlbumVideo)
                     }
                 }
                     .cornerRadius(cornerRadius)
@@ -77,7 +76,7 @@ struct AlbumArtDisplay: View {
         .scaledToFit()
         .onAppear {
             if let ArtworkID {
-                self.ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)
+                ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)
             }
         }
         .onChange(of: ArtworkID) {
@@ -85,11 +84,11 @@ struct AlbumArtDisplay: View {
                 albumVideoViewModel.runSearch(albumID: AlbumID)
             }
             if let ArtworkID {
-                self.ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)
+                ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)
             }
         }
         .task {
-            self.artworkExistsObj.update(ArtworkID: self.ArtworkID ?? "")
+            artworkExistsObj.update(ArtworkID: ArtworkID ?? "")
             if let AlbumID {
                 albumVideoViewModel.runSearch(albumID: AlbumID)
             }
@@ -101,22 +100,19 @@ struct AlbumArtBGDisplay: View {
     @Environment(\.colorScheme) var colorScheme
     var ArtworkID: String?
     var Resolution: Resolution
+    
     var body: some View {
-        if (ArtworkExists(ArtworkID: self.ArtworkID ?? "")) {
-            BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID!), animated: false, customTransaction: Transaction(animation: .easeInOut(duration: 0.6)))
+        if let ArtworkID, ArtworkExists(ArtworkID: ArtworkID) {
+            BetterAsyncImage(url: RetrieveArtwork(ArtworkID: ArtworkID), animated: false, customTransaction: Transaction(animation: .easeInOut(duration: 0.6)))
                 .aspectRatio(contentMode: .fill)
                 .allowsHitTesting(false)
         } else {
-            BetterAsyncImage(url: BuildArtworkURL(imgID: self.ArtworkID, resolution: .background), animated: false, customTransaction: Transaction(animation: .easeInOut(duration: 0.6)))
+            BetterAsyncImage(url: BuildArtworkURL(imgID: ArtworkID, resolution: .background), animated: false, customTransaction: Transaction(animation: .easeInOut(duration: 0.6)))
                     .aspectRatio(contentMode: .fill)
                     .allowsHitTesting(false)
         }
     }
 }
-
-//#Preview {
-//    NowPlayingSheet()
-//}
 
 #Preview {
     MiniPlayer(passedNSPath: .constant(NavigationPath()))
@@ -134,14 +130,10 @@ struct AlbumArtBGDisplay: View {
             }
             Spacer()
         }
-        //.border(.green)
         .padding(5)
         .background {
             AlbumBackground(ArtworkID: SearchedAlbum().Artwork, blur: 0, light_opacity: 0, dark_opacity: 0, spin: false)
-                
-                //.border(.blue)
         }
     }
     .buttonStyle(.plain)
-    //.border(.red)
 }

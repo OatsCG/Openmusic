@@ -12,7 +12,7 @@ struct NPMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(OMUser.self) var omUser
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     var queueItem: QueueItem?
     @Binding var playlists: [StoredPlaylist]
     @Binding var passedNSPath: NavigationPath
@@ -20,17 +20,16 @@ struct NPMenu: View {
     @State var isDownloadedExp: Bool? = nil
     @State var isDownloadedClean: Bool? = nil
     @State var isTrackStored: Bool? = nil
+    
     var body: some View {
         Group {
-            if (queueItem == nil) {
-                Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
-            } else {
+            if let queueItem {
                 Section {
                     if let isTrackStored {
-                        if isTrackStored == true {
+                        if isTrackStored {
                             Button(role: .destructive, action: {
                                 Task {
-                                    if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem!.Track.TrackID) {
+                                    if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem.Track.TrackID) {
                                         await database.delete(fetchedTrack)
                                         try? database.save()
                                     }
@@ -40,7 +39,7 @@ struct NPMenu: View {
                             }
                         } else {
                             Button(action: {
-                                database.store_track(queueItem!)
+                                database.store_track(queueItem)
                             }) {
                                 Label("Add to Library", systemImage: "plus.circle")
                             }
@@ -48,29 +47,29 @@ struct NPMenu: View {
                     } else {
                         Label("Add to Library...", systemImage: "circle.dashed")
                     }
-                    if playlists.count > 0 {
+                    if !playlists.isEmpty {
                         Menu {
                             ForEach(playlists, id: \.PlaylistID) { playlist in
                                 Button(action: {
-                                    playlist.add_track(queueItem: queueItem!)
+                                    playlist.add_track(queueItem: queueItem)
                                     try? database.save()
                                 }) {
-                                    Label(playlist.Title, systemImage: itemInPlaylist(playlist: playlist, track: queueItem!.Track) ? "checkmark" : "")
+                                    Label(playlist.Title, systemImage: itemInPlaylist(playlist: playlist, track: queueItem.Track) ? "checkmark" : "")
                                 }
                             }
                         } label: {
                             Label("Add to Playlist", systemImage: "music.note.list")
                         }
                     }
-                    if (omUser.isSongLiked(track: queueItem!.Track)) {
+                    if omUser.isSongLiked(track: queueItem.Track) {
                         Button(action: {
-                            omUser.removeLikedSong(track: queueItem!.Track)
+                            omUser.removeLikedSong(track: queueItem.Track)
                         }) {
                             Label("Unlove Song", systemImage: "heart.slash.fill")
                         }
                     } else {
                         Button(action: {
-                            omUser.addLikedSong(track: queueItem!.Track)
+                            omUser.addLikedSong(track: queueItem.Track)
                         }) {
                             Label("Love Song", systemImage: "heart")
                         }
@@ -78,14 +77,14 @@ struct NPMenu: View {
                 }
                 Section {
                     Button(action: {
-                        passedNSPath.append(SearchAlbumContentNPM(album: queueItem!.Track.Album))
+                        passedNSPath.append(SearchAlbumContentNPM(album: queueItem.Track.Album))
                         showingNPSheet = false
                     }) {
                         Label("Album", systemImage: "play.square.fill")
-                        Text(queueItem!.Track.Album.Title)
+                        Text(queueItem.Track.Album.Title)
                     }
                     Menu {
-                        ForEach(queueItem!.Track.Album.Artists, id: \.ArtistID) { artist in
+                        ForEach(queueItem.Track.Album.Artists, id: \.ArtistID) { artist in
                             Button(action: {
                                 passedNSPath.append(SearchArtistContentNPM(artist: artist))
                                 showingNPSheet = false
@@ -97,9 +96,9 @@ struct NPMenu: View {
                         Label("Artists", systemImage: "person.fill")
                     }
                     
-                    if !queueItem!.Track.Features.isEmpty {
+                    if !queueItem.Track.Features.isEmpty {
                         Menu {
-                            ForEach(queueItem!.Track.Features, id: \.ArtistID) { artist in
+                            ForEach(queueItem.Track.Features, id: \.ArtistID) { artist in
                                 Button(action: {
                                     passedNSPath.append(SearchArtistContentNPM(artist: artist))
                                     showingNPSheet = false
@@ -113,21 +112,20 @@ struct NPMenu: View {
                     }
                 }
                 Section {
-                    if queueItem!.Track.Playback_Clean != nil && queueItem!.Track.Playback_Explicit != nil {
+                    if queueItem.Track.Playback_Clean != nil && queueItem.Track.Playback_Explicit != nil {
                         Menu {
                             Section {
                                 if let isDownloadedClean {
-                                    if isDownloadedClean {
+                                    if isDownloadedClean, let Playback_Clean = queueItem.Track.Playback_Clean {
                                         Button(role: .destructive) {
-                                            //print("REMOVE DOWNLOAD \(queueItem!.Playback_Clean!)")
-                                            downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Clean!)
+                                            downloadManager.delete_playback(PlaybackID: Playback_Clean)
                                         } label: {
                                             Label("Remove Download", systemImage: "trash")
                                                 .symbolRenderingMode(.multicolor)
                                         }
                                     } else {
                                         Button {
-                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: false)
+                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: false)
                                         } label: {
                                             Label("Download", systemImage: "square.and.arrow.down")
                                                 .symbolRenderingMode(.hierarchical)
@@ -139,19 +137,19 @@ struct NPMenu: View {
                             }
                             Section {
                                 Button {
-                                    playerManager.queue_next(track: StoredTrack(from: queueItem!), explicit: false)
+                                    playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: false)
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_song(track: StoredTrack(from: queueItem!), explicit: false)
+                                    playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: false)
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_randomly(track: StoredTrack(from: queueItem!), explicit: false)
+                                    playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: false)
                                 } label: {
                                     Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                         .symbolRenderingMode(.hierarchical)
@@ -166,17 +164,16 @@ struct NPMenu: View {
                         Menu {
                             Section {
                                 if let isDownloadedExp {
-                                    if isDownloadedExp {
+                                    if isDownloadedExp, let Playback_Explicit = queueItem.Track.Playback_Explicit {
                                         Button(role: .destructive) {
-                                            downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Explicit!)
-                                            //print("REMOVE DOWNLOAD \(queueItem!.Playback_Explicit!)")
+                                            downloadManager.delete_playback(PlaybackID: Playback_Explicit)
                                         } label: {
                                             Label("Remove Download", systemImage: "trash")
                                                 .symbolRenderingMode(.multicolor)
                                         }
                                     } else {
                                         Button {
-                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: true)
+                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: true)
                                         } label: {
                                             Label("Download", systemImage: "square.and.arrow.down")
                                                 .symbolRenderingMode(.hierarchical)
@@ -188,19 +185,19 @@ struct NPMenu: View {
                             }
                             Section {
                                 Button {
-                                    playerManager.queue_next(track: StoredTrack(from: queueItem!), explicit: true)
+                                    playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: true)
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_song(track: StoredTrack(from: queueItem!), explicit: true)
+                                    playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: true)
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_randomly(track: StoredTrack(from: queueItem!), explicit: true)
+                                    playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: true)
                                 } label: {
                                     Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                         .symbolRenderingMode(.hierarchical)
@@ -213,18 +210,17 @@ struct NPMenu: View {
                             }
                         }
                         Button {
-                            playerManager.queue_song(track: StoredTrack(from: queueItem!))
+                            playerManager.queue_song(track: StoredTrack(from: queueItem))
                         } label: {
                             Label("Add to Queue", systemImage: "text.line.last.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
-                    } else if queueItem!.Track.Playback_Clean != nil {
+                    } else if queueItem.Track.Playback_Clean != nil {
                         Section {
                             if let isDownloadedClean {
-                                if isDownloadedClean {
+                                if isDownloadedClean, let Playback_Clean = queueItem.Track.Playback_Clean {
                                     Button(role: .destructive) {
-                                        //print("REMOVE DOWNLOAD \(track!.Playback_Clean!)")
-                                        downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Clean!)
+                                        downloadManager.delete_playback(PlaybackID: Playback_Clean)
                                     } label: {
                                         Label("Remove Download", systemImage: "trash")
                                             .symbolRenderingMode(.multicolor)
@@ -232,7 +228,7 @@ struct NPMenu: View {
                                     }
                                 } else {
                                     Button {
-                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: false)
+                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: false)
                                     } label: {
                                         Label("Download", systemImage: "square.and.arrow.down")
                                             .symbolRenderingMode(.hierarchical)
@@ -249,30 +245,30 @@ struct NPMenu: View {
                         }
                         Section {
                             Button {
-                                playerManager.queue_next(track: StoredTrack(from: queueItem!), explicit: false)
+                                playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: false)
                             } label: {
                                 Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                playerManager.queue_song(track: StoredTrack(from: queueItem!), explicit: false)
+                                playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: false)
                             } label: {
                                 Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                playerManager.queue_randomly(track: StoredTrack(from: queueItem!), explicit: false)
+                                playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: false)
                             } label: {
                                 Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                     .symbolRenderingMode(.hierarchical)
                             }
                         }
-                    } else if queueItem!.Track.Playback_Explicit != nil {
+                    } else if queueItem.Track.Playback_Explicit != nil {
                         Section {
                             if let isDownloadedExp {
-                                if isDownloadedExp {
+                                if isDownloadedExp, let Playback_Explicit = queueItem.Track.Playback_Explicit {
                                     Button(role: .destructive) {
-                                        downloadManager.delete_playback(PlaybackID: queueItem!.Track.Playback_Explicit!)
+                                        downloadManager.delete_playback(PlaybackID: Playback_Explicit)
                                         //print("REMOVE DOWNLOAD \(track!.Playback_Explicit!)")
                                     } label: {
                                         Label("Remove Download", systemImage: "trash")
@@ -281,7 +277,7 @@ struct NPMenu: View {
                                     }
                                 } else {
                                     Button {
-                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem!), explicit: true)
+                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: true)
                                     } label: {
                                         Label("Download", systemImage: "square.and.arrow.down")
                                         Text("Explicit")
@@ -297,19 +293,19 @@ struct NPMenu: View {
                         }
                         Section {
                             Button {
-                                playerManager.queue_next(track: StoredTrack(from: queueItem!), explicit: true)
+                                playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: true)
                             } label: {
                                 Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                 playerManager.queue_song(track: StoredTrack(from: queueItem!), explicit: true)
+                                 playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: true)
                             } label: {
                                 Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                playerManager.queue_randomly(track: StoredTrack(from: queueItem!), explicit: true)
+                                playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: true)
                             } label: {
                                 Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                     .symbolRenderingMode(.hierarchical)
@@ -325,6 +321,8 @@ struct NPMenu: View {
                             .symbolRenderingMode(.hierarchical)
                     }
                 }
+            } else {
+                Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
             }
         }
         .onAppear {
@@ -334,8 +332,9 @@ struct NPMenu: View {
             }
         }
     }
+    
     func updateIsDownloaded() async {
-        if let queueItem = queueItem {
+        if let queueItem {
             let isDownloadedExp = await downloadManager.is_downloaded(queueItem, explicit: true)
             let isDownloadedClean = await downloadManager.is_downloaded(queueItem, explicit: false)
             await MainActor.run {
@@ -344,8 +343,9 @@ struct NPMenu: View {
             }
         }
     }
+    
     func updateIsTrackStored() async {
-        if let queueItem = self.queueItem {
+        if let queueItem {
             let isTrackStored = await database.is_track_stored(TrackID: queueItem.Track.TrackID)
             await MainActor.run {
                 self.isTrackStored = isTrackStored
@@ -353,17 +353,3 @@ struct NPMenu: View {
         }
     }
 }
-
-//#Preview {
-//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-//    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-//    let playerManager = PlayerManager()
-//    let playlist = StoredPlaylist(Title: "Test!")
-//    container.mainContext.insert(playlist)
-//    return Menu("PRESS ME!") {
-//        NPMenu(queueItem: QueueItem(globalPlayerManager: playerManager, from: FetchedTrack(default: true), explicit: true), playlists: [playlist])
-//            .modelContainer(container)
-//            .environment(playerManager)
-//            .environment(DownloadManager())
-//    }
-//}

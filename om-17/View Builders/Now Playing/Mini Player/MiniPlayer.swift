@@ -18,13 +18,11 @@ struct MiniPlayer: View {
     @Environment(NetworkMonitor.self) var networkMonitor
     @Environment(FontManager.self) private var fontManager
     @Environment(OMUser.self) var omUser
-    @Environment(BackgroundDatabase.self) var database  // was \.modelContext
-    //@Query(sort: \StoredPlaylist.dateCreated) private var playlists: [StoredPlaylist]
+    @Environment(BackgroundDatabase.self) var database
     @State var playlists: [StoredPlaylist] = []
     @State private var showingNPSheet = false
     @Binding var passedNSPath: NavigationPath
     var minDistance: CGFloat = 30
-    
     @Namespace var namespace
     
     var body: some View {
@@ -34,7 +32,6 @@ struct MiniPlayer: View {
             VStack(spacing: 10) {
                 MiniToasts()
                 MiniPlayer_component(namespace: namespace)
-                    
                     .contextMenu {
                         NPMenu(queueItem: playerManager.currentQueueItem, playlists: $playlists, passedNSPath: $passedNSPath, showingNPSheet: .constant(true))
                             .environment(fontManager)
@@ -53,11 +50,11 @@ struct MiniPlayer: View {
                     })
                     .gesture(DragGesture(minimumDistance: minDistance, coordinateSpace: .local)
                         .onEnded { value in
-                            if (value.predictedEndTranslation.width > 200) {
+                            if value.predictedEndTranslation.width > 200 {
                                 playerManager.player_backward(userInitiated: true)
-                            } else if (value.predictedEndTranslation.width < -200) {
+                            } else if value.predictedEndTranslation.width < -200 {
                                 playerManager.player_forward(userInitiated: true)
-                            } else if (value.predictedEndTranslation.height < -400) {
+                            } else if value.predictedEndTranslation.height < -400 {
                                 showingNPSheet.toggle()
                             }
                         }
@@ -66,7 +63,7 @@ struct MiniPlayer: View {
         }
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .onAppear {
-                self.updatePlaylists()
+                updatePlaylists()
             }
     }
     func updatePlaylists() {
@@ -92,7 +89,6 @@ struct MiniPlayer: View {
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

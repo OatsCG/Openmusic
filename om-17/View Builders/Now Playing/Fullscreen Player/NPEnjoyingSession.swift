@@ -12,7 +12,8 @@ struct NPEnjoyingSession: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(PlaylistImporter.self) var playlistImporter
     @Environment(FontManager.self) private var fontManager
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
+    
     var body: some View {
         VStack {
             Text("Enjoying this session?")
@@ -25,7 +26,7 @@ struct NPEnjoyingSession: View {
                     playlist.Image = nil
                     playlist.importURL = nil
                     
-                    let tracksToAdd: [ImportedTrack] = playerManager.sessionHistory.filter({ $0.wasSongEnjoyed == true }).compactMap { $0.Track as? ImportedTrack }
+                    let tracksToAdd: [ImportedTrack] = playerManager.sessionHistory.filter({ $0.wasSongEnjoyed }).compactMap { $0.Track as? ImportedTrack }
                     playlist.add_tracks(tracks: tracksToAdd.map { FetchedTrack(from: $0) })
                     await database.insert(playlist)
                     try? database.save()
@@ -53,8 +54,6 @@ struct NPEnjoyingSession: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .shadow(color: .black.opacity(1), radius: 50)
-            //.padding(50)
-        
     }
 }
 
@@ -63,7 +62,6 @@ struct NPEnjoyingSession: View {
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

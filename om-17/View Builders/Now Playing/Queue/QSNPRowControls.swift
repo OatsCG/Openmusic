@@ -9,6 +9,7 @@ import SwiftUI
 
 struct QSNPRowControls: View {
     @Environment(PlayerManager.self) var playerManager
+    
     var body: some View {
         HStack {
             Spacer()
@@ -47,12 +48,5 @@ struct QSNPRowControls: View {
             Spacer()
         }
         .foregroundStyle(.primary)
-        //.opacity(0.8)
-        
     }
 }
-
-//#Preview {
-//    QueueSheet()
-//}
-

@@ -12,17 +12,18 @@ struct QueueItemMenu: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
     @Environment(OMUser.self) var omUser
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     @State var playlists: [StoredPlaylist] = []
     var queueItem: QueueItem
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
     @State var isDownloaded: Bool? = nil
     @State var isTrackStored: Bool? = nil
+    
     var body: some View {
         Section {
             if let isTrackStored {
-                if isTrackStored == true {
+                if isTrackStored {
                     Button(role: .destructive, action: {
                         Task {
                             if let fetchedTrack = await database.fetch_persistent_track(TrackID: queueItem.Track.TrackID) {
@@ -43,7 +44,7 @@ struct QueueItemMenu: View {
             } else {
                 Label("Add to Library...", systemImage: "circle.dashed")
             }
-            if playlists.count > 0 {
+            if !playlists.isEmpty {
                 Menu {
                     ForEach(playlists, id: \.PlaylistID) { playlist in
                         Button(action: {
@@ -57,7 +58,7 @@ struct QueueItemMenu: View {
                     Label("Add to Playlist", systemImage: "music.note.list")
                 }
             }
-            if (omUser.isSongLiked(track: queueItem.Track)) {
+            if omUser.isSongLiked(track: queueItem.Track) {
                 Button(action: {
                     omUser.removeLikedSong(track: queueItem.Track)
                 }) {
@@ -108,24 +109,32 @@ struct QueueItemMenu: View {
             }
         }
         Section {
-            if (queueItem.Track.Playback_Clean != nil && queueItem.Track.Playback_Explicit != nil) {
+            if queueItem.Track.Playback_Clean != nil && queueItem.Track.Playback_Explicit != nil {
                 Button(action: {
                     queueItem.explicit.toggle()
                     queueItem.prime_object_fresh(playerManager: playerManager)
                 }) {
                     Label("Toggle Explicity", systemImage: "arrow.left.arrow.right.square")
-                    //arrow.left.arrow.right.square
-                    //square.on.square.dashed
                 }
             }
             if let isDownloaded {
                 if isDownloaded {
-                    Button(role: .destructive) {
-                        downloadManager.delete_playback(PlaybackID: queueItem.explicit ? queueItem.Track.Playback_Explicit! : queueItem.Track.Playback_Clean!)
-                    } label: {
-                        Label("Remove Download", systemImage: "trash")
-                            .symbolRenderingMode(.multicolor)
-                        Text(queueItem.explicit ? "Explicit" : "Clean")
+                    if queueItem.explicit, let Playback_Explicit = queueItem.Track.Playback_Explicit {
+                        Button(role: .destructive) {
+                            downloadManager.delete_playback(PlaybackID: Playback_Explicit)
+                        } label: {
+                            Label("Remove Download", systemImage: "trash")
+                                .symbolRenderingMode(.multicolor)
+                            Text("Explicit")
+                        }
+                    } else if let Playback_Clean = queueItem.Track.Playback_Clean {
+                        Button(role: .destructive) {
+                            downloadManager.delete_playback(PlaybackID: Playback_Clean)
+                        } label: {
+                            Label("Remove Download", systemImage: "trash")
+                                .symbolRenderingMode(.multicolor)
+                            Text("Clean")
+                        }
                     }
                 } else {
                     Button {
@@ -190,23 +199,26 @@ struct QueueItemMenu: View {
             Task {
                 await updateIsDownloaded()
                 await updateIsTrackStored()
-                self.updatePlaylists()
+                updatePlaylists()
             }
         }
         
     }
+    
     func updateIsDownloaded() async {
         let isDownloaded = await downloadManager.is_downloaded(queueItem, explicit: queueItem.explicit)
         await MainActor.run {
             self.isDownloaded = isDownloaded
         }
     }
+    
     func updateIsTrackStored() async {
         let isTrackStored = await database.is_track_stored(TrackID: queueItem.Track.TrackID)
         await MainActor.run {
             self.isTrackStored = isTrackStored
         }
     }
+    
     func updatePlaylists() {
         Task {
             let predicate = #Predicate<StoredPlaylist> { _ in true }
@@ -224,17 +236,3 @@ struct QueueItemMenu: View {
         }
     }
 }
-
-//#Preview {
-//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-//    let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-//    let playerManager = PlayerManager()
-//    let playlist = StoredPlaylist(Title: "Test!")
-//    container.mainContext.insert(playlist)
-//    return Menu("PRESS ME!") {
-//        QueueItemMenu(queueItem: QueueItem(globalPlayerManager: playerManager, from: FetchedTrack(default: true), explicit: true))
-//            .modelContainer(container)
-//            .environment(playerManager)
-//            .environment(DownloadManager())
-//    }
-//}

@@ -17,6 +17,7 @@ struct PlaylistBackground: View {
     var saturate: Bool = false
     var material: Bool = true
     @State var isRotating = Double.random(in: 0..<360)
+    
     var body: some View {
         ZStack {
             if material {
@@ -44,8 +45,6 @@ struct PlaylistBackground: View {
                     }
                     .clipped()
             }
-                    
-                    
         }
             .aspectRatio(contentMode: .fill)
             .ignoresSafeArea()
@@ -53,21 +52,9 @@ struct PlaylistBackground: View {
                 if spin {
                     withAnimation(.linear(duration: 33)
                         .repeatForever(autoreverses: false)) {
-                            isRotating = isRotating+360
+                            isRotating = isRotating + 360
                         }
                 }
             }
     }
 }
-
-//#Preview {
-//    VStack {
-//        Text("HI")
-//    }
-//    .frame(width: 400, height: 100)
-//    .background {
-//        PlaylistBackground(playlistID: UUID(), blur: 60, light_opacity: 0.15, dark_opacity: 0.15, spin: false, material: false)
-//            .allowsHitTesting(false)
-//    }
-//    .cornerRadius(30)
-//}

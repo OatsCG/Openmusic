@@ -21,8 +21,8 @@ struct NPVolumeScrubber: View {
     var body: some View {
         HStack {
             Image(systemName: "speaker.fill")
-                .opacity(self.isDragging ? 0.7 : 0.45)
-            if (inAppVolume) {
+                .opacity(isDragging ? 0.7 : 0.45)
+            if inAppVolume {
                 ProgressView(value: 0)
                     .progressViewStyle(NPVolumeScrubberBar(currentVolume: playerManager.appVolume, currentVolumePost: playerManager.appVolume, isDragging: $isDragging))
             } else {
@@ -34,7 +34,7 @@ struct NPVolumeScrubber: View {
                     }
             }
             Image(systemName: "speaker.wave.3.fill")
-                .opacity(self.isDragging ? 0.7 : 0.45)
+                .opacity(isDragging ? 0.7 : 0.45)
             Button(action: {
                 withAnimation {
                     inAppVolume.toggle()
@@ -42,12 +42,10 @@ struct NPVolumeScrubber: View {
             }) {
                 Image(systemName: inAppVolume ? "music.note" : "iphone")
                     .customFont(fontManager, .title3)
-                    //.dynamicTypeSize(.xxxLarge)
                     .padding(5)
                     .background(inAppVolume ? .white.opacity(0.15) : .clear)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
             }
-            
         }
             .customFont(fontManager, .caption)
             .onChange(of: AVAudioSession.sharedInstance().outputVolume) {
@@ -64,25 +62,23 @@ struct VolumeSlider: UIViewRepresentable {
    func updateUIView(_ view: MPVolumeView, context: Context) {}
 }
 
-
 struct NPVolumeScrubberBar: ProgressViewStyle {
     @Environment(\.colorScheme) var colorScheme
     @Environment(PlayerManager.self) var playerManager
-    //@State var isDragging = false
     @State var currentVolume: Float
     @State var currentVolumePost: Float
     @Binding var isDragging: Bool
     @State var dragAmount: Float = 0
     @State var geo_width: CGFloat = 0
+    
     var drag: some Gesture {
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
-                    if (self.isDragging == false) {
+                    if !isDragging {
                         withAnimation(.interactiveSpring(duration: 0.3)) {
-                            self.isDragging = true
+                            isDragging = true
                         }
                     }
-                    
                     withAnimation(.interactiveSpring) {
                         dragAmount = Float(value.translation.width / geo_width)
                         currentVolumePost = min(max(currentVolume + dragAmount, 0), 1)
@@ -95,12 +91,13 @@ struct NPVolumeScrubberBar: ProgressViewStyle {
                         dragAmount = 0
                     }
                     withAnimation(.interactiveSpring(duration: 0.3)) {
-                        self.isDragging = false
+                        isDragging = false
                     }
                 }
         }
+    
     func makeBody(configuration: Configuration) -> some View {
-        return Group {
+        Group {
             let currentNormal = min(max(CGFloat(currentVolumePost), 0), 1) * geo_width
             ScrubberBar_component(isDragging: $isDragging, width: $geo_width, currentNormal: currentNormal, pressedNormal: currentNormal)
                 .gesture(drag)
@@ -116,39 +113,41 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
     @Binding var isDragging: Bool
     @State var dragAmount: Float = 0
     @State var geo_width: CGFloat = 0
+    
     var drag: some Gesture {
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    if (self.isDragging == false) {
-                        withAnimation(.interactiveSpring(duration: 0.3)) {
-                            self.isDragging = true
-                        }
-                        currentVolume = VolumeObserver.shared.currentVolume
-                    }
-                    
-                    withAnimation(.interactiveSpring) {
-                        dragAmount = Float(value.translation.width / geo_width)
-                        currentVolumePost = min(max(currentVolume + dragAmount, 0), 1)
-                        VolumeObserver.shared.setVolume(currentVolumePost)
-                    }
-                }
-                .onEnded { _ in
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                if !isDragging {
                     withAnimation(.interactiveSpring(duration: 0.3)) {
-                        self.isDragging = false
+                        isDragging = true
                     }
-                    withAnimation(.interactiveSpring) {
-                        dragAmount = 0
-                        currentVolume = VolumeObserver.shared.currentVolume
-                    }
+                    currentVolume = VolumeObserver.shared.currentVolume
                 }
-        }
+                
+                withAnimation(.interactiveSpring) {
+                    dragAmount = Float(value.translation.width / geo_width)
+                    currentVolumePost = min(max(currentVolume + dragAmount, 0), 1)
+                    VolumeObserver.shared.setVolume(currentVolumePost)
+                }
+            }
+            .onEnded { _ in
+                withAnimation(.interactiveSpring(duration: 0.3)) {
+                    isDragging = false
+                }
+                withAnimation(.interactiveSpring) {
+                    dragAmount = 0
+                    currentVolume = VolumeObserver.shared.currentVolume
+                }
+            }
+    }
+    
     func makeBody(configuration: Configuration) -> some View {
-        return Group {
+        Group {
             let currentNormal = min(max(CGFloat(currentVolumePost), 0), 1) * geo_width
             ScrubberBar_component(isDragging: $isDragging, width: $geo_width, currentNormal: currentNormal, pressedNormal: currentNormal)
                 .gesture(drag)
                 .onChange(of: VolumeObserver.shared.currentVolume) {
-                    if (isDragging == false) {
+                    if !isDragging {
                         withAnimation(.interactiveSpring) {
                             currentVolume = VolumeObserver.shared.currentVolume
                             currentVolumePost = currentVolume

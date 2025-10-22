@@ -19,6 +19,7 @@ struct NPBottomToolBar: View {
     @Binding var carModeEnabled: Bool
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
+    
     var body: some View {
         HStack {
             if fullscreen {
@@ -89,7 +90,3 @@ struct NPBottomToolBar: View {
             }
     }
 }
-
-//#Preview {
-//    NowPlayingSheet()
-//}

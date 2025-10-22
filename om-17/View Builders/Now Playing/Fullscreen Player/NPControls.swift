@@ -10,6 +10,7 @@ import SwiftUI
 struct NPControls: View {
     @Binding var fullscreen: Bool
     @Binding var carModeEnabled: Bool
+    
     var body: some View {
         VStack(spacing: 20) {
             NPTrackScrubber(fullscreen: $fullscreen)

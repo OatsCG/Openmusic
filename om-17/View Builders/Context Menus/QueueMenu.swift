@@ -12,9 +12,10 @@ struct QueueMenu: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(PlayerManager.self) var playerManager
     @Binding var selectedPick: QueuePicks
+    
     var body: some View {
         if selectedPick == .queue {
-            Section("Up Next: \(playerManager.trackQueue.filter{$0.explicit == true}.count) Explicit, \(playerManager.trackQueue.filter{$0.explicit == false}.count) Clean") {
+            Section("Up Next: \(playerManager.trackQueue.filter{$0.explicit}.count) Explicit, \(playerManager.trackQueue.filter{!$0.explicit}.count) Clean") {
                 Button(action: {
                     for item in playerManager.trackQueue {
                         downloadManager.addDownloadTask(track: StoredTrack(from: item), explicit: item.explicit)
@@ -51,7 +52,7 @@ struct QueueMenu: View {
                 }
             }
         } else {
-            Section("Played: \(playerManager.sessionHistory.filter{$0.explicit == true}.count) Explicit, \(playerManager.sessionHistory.filter{$0.explicit == false}.count) Clean") {
+            Section("Played: \(playerManager.sessionHistory.filter{$0.explicit}.count) Explicit, \(playerManager.sessionHistory.filter{!$0.explicit}.count) Clean") {
                 Button(action: {
                     for item in playerManager.sessionHistory {
                         downloadManager.addDownloadTask(track: StoredTrack(from: item), explicit: item.explicit)
@@ -95,6 +96,7 @@ struct QueueMenu: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
     let playerManager = PlayerManager()
+    
     return Menu("PRESS ME!") {
         QueueMenu(selectedPick: .constant(QueuePicks.queue))
             .modelContainer(container)

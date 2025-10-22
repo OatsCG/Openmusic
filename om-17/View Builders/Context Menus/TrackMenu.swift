@@ -13,16 +13,17 @@ struct TrackMenu: View {
     @Environment(DownloadManager.self) var downloadManager
     @Environment(FontManager.self) var fontManager
     @Environment(OMUser.self) var omUser
-    @Environment(BackgroundDatabase.self) private var database  // was \.modelContext
+    @Environment(BackgroundDatabase.self) private var database
     @State var playlists: [StoredPlaylist]? = nil
     var track: any Track
     @State var isDownloadedExp: Bool? = nil
     @State var isDownloadedClean: Bool? = nil
     @State var isTrackStored: Bool? = nil
+    
     var body: some View {
         Section {
             if let isTrackStored {
-                if isTrackStored == true {
+                if isTrackStored {
                     Button(role: .destructive, action: {
                         Task {
                             if let fetchedTrack = await database.fetch_persistent_track(TrackID: track.TrackID) {
@@ -45,7 +46,7 @@ struct TrackMenu: View {
             }
             if let playlists {
                 Menu {
-                    if playlists.count > 0 {
+                    if !playlists.isEmpty {
                         ForEach(playlists, id: \.PlaylistID) { playlist in
                             Button(action: {
                                 playlist.add_track(track: track)
@@ -63,7 +64,7 @@ struct TrackMenu: View {
             } else {
                 Label("Playlists...", systemImage: "circle.dashed")
             }
-            if (omUser.isSongLiked(track: track)) {
+            if omUser.isSongLiked(track: track) {
                 Button(action: {
                     omUser.removeLikedSong(track: track)
                 }) {
@@ -115,10 +116,9 @@ struct TrackMenu: View {
                             Label("Play", systemImage: "play.fill")
                         }
                         if let isDownloadedClean {
-                            if isDownloadedClean {
+                            if isDownloadedClean, let Playback_Clean = track.Playback_Clean {
                                 Button(role: .destructive) {
-                                    downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
-                                    //print("REMOVE DOWNLOAD \(track.Playback_Clean!)")
+                                    downloadManager.delete_playback(PlaybackID: Playback_Clean)
                                 } label: {
                                     Label("Remove Download", systemImage: "trash")
                                         .symbolRenderingMode(.multicolor)
@@ -169,10 +169,9 @@ struct TrackMenu: View {
                             Label("Play", systemImage: "play.fill")
                         }
                         if let isDownloadedExp {
-                            if isDownloadedExp {
+                            if isDownloadedExp, let Playback_Explicit = track.Playback_Explicit {
                                 Button(role: .destructive) {
-                                    downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
-                                    //print("REMOVE DOWNLOAD \(track.Playback_Explicit!)")
+                                    downloadManager.delete_playback(PlaybackID: Playback_Explicit)
                                 } label: {
                                     Label("Remove Download", systemImage: "trash")
                                         .symbolRenderingMode(.multicolor)
@@ -229,10 +228,9 @@ struct TrackMenu: View {
                         Label("Play", systemImage: "play.fill")
                     }
                     if let isDownloadedClean {
-                        if isDownloadedClean {
+                        if isDownloadedClean, let Playback_Clean = track.Playback_Clean {
                             Button(role: .destructive) {
-                                downloadManager.delete_playback(PlaybackID: track.Playback_Clean!)
-                                //print("REMOVE DOWNLOAD \(track.Playback_Clean!)")
+                                downloadManager.delete_playback(PlaybackID: Playback_Clean)
                             } label: {
                                 Label("Remove Download", systemImage: "trash")
                                     .symbolRenderingMode(.multicolor)
@@ -283,10 +281,9 @@ struct TrackMenu: View {
                         Label("Play", systemImage: "play.fill")
                     }
                     if let isDownloadedExp {
-                        if isDownloadedExp {
+                        if isDownloadedExp, let Playback_Explicit = track.Playback_Explicit {
                             Button(role: .destructive) {
-                                downloadManager.delete_playback(PlaybackID: track.Playback_Explicit!)
-                                //print("REMOVE DOWNLOAD \(track.Playback_Explicit!)")
+                                downloadManager.delete_playback(PlaybackID: Playback_Explicit)
                             } label: {
                                 Label("Remove Download", systemImage: "trash")
                                     .symbolRenderingMode(.multicolor)
@@ -333,12 +330,13 @@ struct TrackMenu: View {
         }
         .onAppear {
             Task {
-                await self.updateIsDownloaded()
-                await self.updateIsStored()
-                self.updatePlaylists()
+                await updateIsDownloaded()
+                await updateIsStored()
+                updatePlaylists()
             }
         }
     }
+    
     func updateIsDownloaded() async {
         let isDownloadedExp = await downloadManager.is_downloaded(track, explicit: true)
         let isDownloadedClean = await downloadManager.is_downloaded(track, explicit: false)
@@ -347,12 +345,14 @@ struct TrackMenu: View {
             self.isDownloadedClean = isDownloadedClean
         }
     }
+    
     func updateIsStored() async {
         let isStored = await database.is_track_stored(TrackID: track.TrackID)
         await MainActor.run {
-            self.isTrackStored = isStored
+            isTrackStored = isStored
         }
     }
+    
     func updatePlaylists() {
         Task {
             let predicate = #Predicate<StoredPlaylist> { _ in true }
@@ -371,13 +371,12 @@ struct TrackMenu: View {
     }
 }
 
-
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredPlaylist.self, StoredTrack.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
+    
     return Menu("press me") {
         TrackMenu(track: FetchedTrack(default: true))
     }

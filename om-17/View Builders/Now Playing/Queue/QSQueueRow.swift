@@ -21,10 +21,9 @@ struct QSQueueRow: View {
     
     var body: some View {
         Button(action: {
-            // move to top of queue
             ToastManager.shared.propose(toast: Toast.queuenext(queueItem.Track.Album.Artwork))
             withAnimation {
-                if (isQueue) {
+                if isQueue {
                     playerManager.trackQueue.move(fromOffsets: IndexSet(integer: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0), toOffset: 0)
                 } else {
                     playerManager.trackQueue.insert(queueItem, at: 0)
@@ -32,7 +31,6 @@ struct QSQueueRow: View {
                 }
                 playerManager.player_forward(userInitiated: true)
             }
-            // skip current song
         }) {
             HStack {
                 AlbumArtDisplay(ArtworkID: queueItem.Track.Album.Artwork, Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 3)
@@ -54,30 +52,29 @@ struct QSQueueRow: View {
                     .foregroundStyle(.secondary)
                 }
                 Spacer()
-                if (queueItem.primeStatus == .loading) {
+                if queueItem.primeStatus == .loading {
                     ProgressView()
                         .progressViewStyle(.circular)
                         .controlSize(.small)
                         .padding(3)
-                } else if (queueItem.primeStatus == .success) {
+                } else if queueItem.primeStatus == .success {
                     Image(systemName: "circle.dashed")
                         .symbolEffect(.pulse, isActive: true)
                         .foregroundStyle(.tertiary)
-                } else if (queueItem.primeStatus == .primed) {
+                } else if queueItem.primeStatus == .primed {
                     Image(systemName: "checkmark")
                         .foregroundStyle(.tertiary)
-                } else if (queueItem.primeStatus == .failed || queueItem.primeStatus == .passed) {
+                } else if queueItem.primeStatus == .failed || queueItem.primeStatus == .passed {
                     Menu {
                         Section("An error occurred loading this track.") {
                             Button(action: {
                                 Task {
-                                    self.queueItem.prime_object_fresh(playerManager: playerManager)
+                                    queueItem.prime_object_fresh(playerManager: playerManager)
                                 }
                             }) {
                                 Label("Refresh Track", systemImage: "arrow.clockwise")
                             }
                         }
-                        
                     } label: {
                         Image(systemName: "exclamationmark.circle.fill")
                             .symbolRenderingMode(.multicolor)
@@ -107,8 +104,3 @@ struct QSQueueRow: View {
         }
     }
 }
-
-//#Preview {
-//    //NowPlayingSheet()
-//    QueueSheet()
-//}

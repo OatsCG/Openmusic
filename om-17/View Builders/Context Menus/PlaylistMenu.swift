@@ -12,12 +12,13 @@ struct PlaylistMenu: View {
     @Environment(BackgroundDatabase.self) private var database
     @Environment(PlayerManager.self) var playerManager
     @Environment(DownloadManager.self) var downloadManager
-    var playlist: StoredPlaylist // dont have to "loading" this
+    var playlist: StoredPlaylist
+    
     var body: some View {
         Section {
-            if (playlist.pinned == false) {
+            if !playlist.pinned {
                 Button {
-                    self.playlist.pin()
+                    playlist.pin()
                     try? database.save()
                 } label: {
                     Label("Pin Playlist", systemImage: "pin")
@@ -25,7 +26,7 @@ struct PlaylistMenu: View {
                 }
             } else {
                 Button {
-                    self.playlist.unpin()
+                    playlist.unpin()
                     try? database.save()
                 } label: {
                     Label("Unpin Playlist", systemImage: "pin.slash")
@@ -36,7 +37,6 @@ struct PlaylistMenu: View {
         }
         Section {
             Button {
-                
                 playerManager.fresh_play_multiple(tracks: playlist.items)
             } label: {
                 Label("Play", systemImage: "play.fill")
@@ -98,16 +98,3 @@ struct PlaylistMenu: View {
 
     }
 }
-
-//#Preview {
-//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-//    let container = try! ModelContainer(for: StoredPlaylist.self, StoredTrack.self, configurations: config)
-//    let album = SearchedAlbum(default: true)
-//    return Menu("press me") {
-//        SearchAlbumMenu(searchedAlbum: album)
-//    }
-//        .modelContainer(container)
-//        .environment(PlayerManager())
-//        .environment(PlaylistImporter())
-//        .environment(DownloadManager())
-//}

@@ -11,6 +11,7 @@ struct PlayerDebuggerSimple: View {
     @State var visible: Bool
     @State var text: String
     @State var symbol: String
+    
     var body: some View {
         VStack {
             Spacer()

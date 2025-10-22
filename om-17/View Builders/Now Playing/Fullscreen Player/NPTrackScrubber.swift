@@ -17,23 +17,23 @@ struct NPTrackScrubber: View {
     @State var localElapsedTime: Double = 0
     @Binding var fullscreen: Bool
     @State var showingAmplitudes: Bool = false
+    
     var body: some View {
         VStack {
             ProgressView(value: 0)
                 .progressViewStyle(NPTrackScrubberBar(isDragging: $isDragging, localElapsedTime: $localElapsedTime, showingAmplitudes: $showingAmplitudes))
             if !fullscreen {
                 HStack {
-                    Text(secondsToText(seconds: self.isDragging ? localElapsedTime : playerManager.elapsedTime))
+                    Text(secondsToText(seconds: isDragging ? localElapsedTime : playerManager.elapsedTime))
                     Spacer()
                     Text(secondsToText(seconds: playerManager.durationSeconds))
                 }
                     .customFont(fontManager, .caption)
-                    .opacity(self.isDragging ? (self.showingAmplitudes ? 0 : 0.7) : 0.45)
+                    .opacity(isDragging ? (showingAmplitudes ? 0 : 0.7) : 0.45)
             }
         }
     }
 }
-
 
 struct NPTrackScrubberBar: ProgressViewStyle {
     @Environment(\.colorScheme) var colorScheme
@@ -48,10 +48,11 @@ struct NPTrackScrubberBar: ProgressViewStyle {
     @State var geo_width: CGFloat = 0
     @State var currentNormal: CGFloat = 0
     @State var pressedNormal: CGFloat = 0
+    
     var drag: some Gesture {
         DragGesture()
             .onChanged { value in
-                if (self.isDragging == false) {
+                if !isDragging {
                     dragPosition = min(max(value.location.x, 0), geo_width)
                     dragStartPosition = min(max(value.location.x, 0), geo_width)
                     dragStartElapsed = min(max(playerManager.elapsedNormal * geo_width, 0), geo_width)
@@ -62,8 +63,8 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                 withAnimation(.interactiveSpring) {
                     dragPosition = min(max(value.location.x, 0), geo_width)
                     var dragNormal: Double = min(max(((dragPosition - (dragStartPosition - dragStartElapsed)) / geo_width), 0), 1)
-                    if (abs(playerManager.elapsedNormal - dragNormal) < 0.013) {
-                        if (isSnapped == false) {
+                    if abs(playerManager.elapsedNormal - dragNormal) < 0.013 {
+                        if !isSnapped {
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
                         }
                         isSnapped = true
@@ -72,26 +73,23 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                     } else {
                         isSnapped = false
                     }
+                    
                     let timeToSeek = dragNormal * playerManager.durationSeconds
                     localElapsedTime = timeToSeek
                     
-                    if (value.translation.height > 70 && self.playerManager.currentQueueItem?.isDownloaded == true) {
-                        self.showingAmplitudes = true
-                    } else {
-                        self.showingAmplitudes = false
-                    }
+                    showingAmplitudes = value.translation.height > 70 && playerManager.currentQueueItem?.isDownloaded == true
                 }
             }
             .onEnded { _ in
                 withAnimation(.interactiveSpring(duration: 0.3)) {
-                    self.isDragging = false
-                    self.showingAmplitudes = false
+                    isDragging = false
+                    showingAmplitudes = false
                 }
                 let endNormal: Double = min(max(((dragPosition - (dragStartPosition - dragStartElapsed))) / geo_width, 0), 1)
                 
-                if (isSnapped == false) {
+                if !isSnapped {
                     withAnimation(.interactiveSpring) {
-                        if (playerManager.currentQueueItem != nil) {
+                        if playerManager.currentQueueItem != nil {
                             playerManager.elapsedTime = endNormal * playerManager.durationSeconds
                             playerManager.elapsedNormal = endNormal
                             playerManager.currentQueueItem?.audio_AVPlayer?.seek(to: endNormal * playerManager.durationSeconds)
@@ -101,35 +99,36 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                 }
             }
     }
+    
     func makeBody(configuration: Configuration) -> some View {
         return Group {
             ScrubberBar_component(isDragging: $isDragging, width: $geo_width, currentNormal: currentNormal, pressedNormal: pressedNormal)
                 .gesture(drag)
                 .overlay {
                     ScrubberBarAmplitudes(isDragging: $isDragging, showingAmplitudes: $showingAmplitudes)
-                    //.border(.red)
                     .offset(y: 20)
                 }
                 .onChange(of: playerManager.elapsedNormal) {
-                    self.updateNormals()
+                    updateNormals()
                 }
                 .onChange(of: geo_width) {
-                    self.updateNormals()
+                    updateNormals()
                 }
                 .onChange(of: dragPosition) {
-                    self.updateNormals()
+                    updateNormals()
                 }
                 .onChange(of: dragStartPosition) {
-                    self.updateNormals()
+                    updateNormals()
                 }
                 .onChange(of: dragStartElapsed) {
-                    self.updateNormals()
+                    updateNormals()
                 }
                 .onChange(of: isSnapped) {
-                    self.updateNormals()
+                    updateNormals()
                 }
         }
     }
+    
     func updateNormals() {
         Task.detached {
             let currentNormal: CGFloat = await min(max(playerManager.elapsedNormal, 0), 1) * geo_width
@@ -148,12 +147,12 @@ struct ScrubberBarAmplitudes: View {
     @Binding var isDragging: Bool
     @Binding var showingAmplitudes: Bool
     @State var amplitudeChart: [Float]?
+    
     var body: some View {
         Group {
             if let amplitudes: [Float] = amplitudeChart {
-                if (self.showingAmplitudes) {
+                if showingAmplitudes {
                     HStack(alignment: .top, spacing: 3) {
-                        //Spacer()
                         ForEach(0..<60, id: \.self) { i in
                             let thisAmplitude: Float = amplitudes[i]
                             let ampHeight: CGFloat = CGFloat(thisAmplitude) * 20
@@ -161,12 +160,11 @@ struct ScrubberBarAmplitudes: View {
                                 .frame(height: ampHeight)
                         }
                         .padding(.vertical, 5)
-                        //Spacer()
                     }
                     .onAppear {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
-                } else if (self.isDragging) {
+                } else if isDragging {
                     VStack(spacing: 1) {
                         Image(systemName: "waveform")
                             .font(.caption)
@@ -182,18 +180,16 @@ struct ScrubberBarAmplitudes: View {
         }
         .task {
             Task {
-                self.amplitudeChart = self.playerManager.currentQueueItem?.audio_AVPlayer?.player.amplitudeChart()
+                amplitudeChart = playerManager.currentQueueItem?.audio_AVPlayer?.player.amplitudeChart()
             }
         }
     }
 }
 
-
 #Preview {
     @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

@@ -17,6 +17,7 @@ struct AlbumBackground: View {
     var saturate: Bool = false
     var material: Bool = true
     @State var isRotating = Double.random(in: 0..<360)
+    
     var body: some View {
         ZStack {
             if material {
@@ -24,7 +25,7 @@ struct AlbumBackground: View {
                     .clipShape(Rectangle())
                     .overlay {
                         GeometryReader { g in
-                            AlbumArtBGDisplay(ArtworkID: self.ArtworkID, Resolution: .background)
+                            AlbumArtBGDisplay(ArtworkID: ArtworkID, Resolution: .background)
                                 .blur(radius: blur, opaque: true)
                                 .saturation(saturate ? 2 : 1.3)
                                 .opacity(colorScheme == .dark ? dark_opacity : light_opacity)
@@ -38,7 +39,7 @@ struct AlbumBackground: View {
                                     if spin {
                                         withAnimation(.linear(duration: 33)
                                             .repeatForever(autoreverses: false)) {
-                                                isRotating = isRotating+360
+                                                isRotating = isRotating + 360
                                             }
                                     }
                                 }
@@ -46,12 +47,10 @@ struct AlbumBackground: View {
                     }
                     .clipped()
                     .clipShape(Rectangle())
-
-                
             } else {
                 Rectangle().fill(Color.clear)
                     .overlay {
-                        AlbumArtBGDisplay(ArtworkID: self.ArtworkID, Resolution: .blur)
+                        AlbumArtBGDisplay(ArtworkID: ArtworkID, Resolution: .blur)
                             .blur(radius: blur, opaque: true)
                             .saturation(saturate ? 2 : 1.3)
                             .opacity(colorScheme == .dark ? dark_opacity : light_opacity)
@@ -63,15 +62,13 @@ struct AlbumBackground: View {
                                 if spin {
                                     withAnimation(.linear(duration: 33)
                                         .repeatForever(autoreverses: false)) {
-                                            isRotating = isRotating+360
+                                            isRotating = isRotating + 360
                                         }
                                 }
                             }
                     }
                     .clipped()
             }
-                    
-                    
         }
             .allowsHitTesting(false)
             .ignoresSafeArea()
@@ -95,22 +92,12 @@ struct AlbumBackground: View {
             .zIndex(2)
         testbutton()
             .border(.yellow)
-//        VStack {
-//            testbutton()
-//            HStack {
-//                testbutton()
-//                testbutton()
-//            }
-//        }
     }
 }
 
-
-
-
-
 struct temppicker: View {
     @State var t: LibraryPicks = .recents
+    
     var body: some View {
         Picker("Category", selection: $t) {
             ForEach(LibraryPicks.allCases) { option in
@@ -133,10 +120,7 @@ struct testbutton: View {
             .padding(5)
             .background {
                 AlbumBackground(ArtworkID: SearchedAlbum().Artwork, blur: 40, light_opacity: 1, dark_opacity: 1, spin: true, saturate: true)
-                //AlbumBackground(ArtworkID: "", blur: 40, light_opacity: 1, dark_opacity: 1, spin: true, saturate: true)
             }
-            //.clipped()
-            
         }
         .buttonStyle(.plain)
     }

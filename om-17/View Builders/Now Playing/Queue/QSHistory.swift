@@ -12,8 +12,9 @@ struct QSHistory: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
+    
     var body: some View {
-        if (playerManager.sessionHistory.count == 0) {
+        if playerManager.sessionHistory.isEmpty {
             VStack {
                 Spacer()
                 Text("Nothing in History")
@@ -45,6 +46,7 @@ struct QSHistory: View {
                 .listStyle(PlainListStyle())
         }
     }
+    
     private func move(from source: IndexSet, to destination: Int) {
         var updatedQueue = playerManager.sessionHistory
         updatedQueue.move(fromOffsets: source, toOffset: destination)
@@ -59,7 +61,3 @@ struct QSHistory: View {
         playerManager.prime_next_song()
     }
 }
-
-//#Preview {
-//    QSHistory()
-//}

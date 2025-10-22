@@ -14,11 +14,12 @@ struct QSUpNext: View {
     @Environment(FontManager.self) private var fontManager
     @Binding var passedNSPath: NavigationPath
     @Binding var showingNPSheet: Bool
+    
     var body: some View {
-        if (playerManager.trackQueue.count == 0) {
+        if playerManager.trackQueue.isEmpty {
             VStack {
                 Spacer()
-                if (playerManager.fetchSuggestionsModel.isFetching) {
+                if playerManager.fetchSuggestionsModel.isFetching {
                     HStack {
                         Text("Queuing ")
                         ProgressView()
@@ -64,6 +65,7 @@ struct QSUpNext: View {
                 .listStyle(PlainListStyle())
         }
     }
+    
     private func move(from source: IndexSet, to destination: Int) {
         var updatedQueue = playerManager.trackQueue
         updatedQueue.move(fromOffsets: source, toOffset: destination)
@@ -84,7 +86,6 @@ struct QSUpNext: View {
     @Previewable @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: StoredTrack.self, StoredPlaylist.self, configurations: config)
-
     let playlist = StoredPlaylist(Title: "Test!")
     container.mainContext.insert(playlist)
     

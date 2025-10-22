@@ -14,6 +14,7 @@ struct NPInfoSegment: View {
     @Binding var fullscreen: Bool
     @Binding var carModeEnabled: Bool
     @Binding var passedNSPath: NavigationPath
+    
     var body: some View {
         VStack(spacing: 10) {
             NPTitles(showingNPSheet: $showingNPSheet, fullscreen: $fullscreen, passedNSPath: $passedNSPath)
@@ -22,7 +23,3 @@ struct NPInfoSegment: View {
         }
     }
 }
-
-//#Preview {
-//    NPInfoSegment()
-//}

@@ -11,21 +11,21 @@ import Combine
 struct PlaylistArtwork: View {
     var playlist: Playlist
     var animate: Bool
+    
     var body: some View {
-        if (playlist.Image == nil) {
-            PlaylistArtCanvas(playlistID: playlist.PlaylistID, animate: animate)
-        } else {
-            if (PlaylistArtworkExists(playlistID: self.playlist.PlaylistID)) {
-                BetterAsyncImage(url: RetrievePlaylistArtwork(playlistID: self.playlist.PlaylistID), animated: animate)
+        if let image = playlist.Image {
+            if PlaylistArtworkExists(playlistID: playlist.PlaylistID) {
+                BetterAsyncImage(url: RetrievePlaylistArtwork(playlistID: playlist.PlaylistID), animated: animate)
                     .scaledToFit()
             } else {
-                BetterAsyncImage(url: URL(string: playlist.Image!), animated: animate)
+                BetterAsyncImage(url: URL(string: image), animated: animate)
                     .scaledToFit()
             }
+        } else {
+            PlaylistArtCanvas(playlistID: playlist.PlaylistID, animate: animate)
         }
     }
 }
-
 
 struct PlaylistArtCanvas: View {
     var playlistID: UUID
@@ -34,11 +34,12 @@ struct PlaylistArtCanvas: View {
     var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     @State private var xOffset: CGFloat = 0
     @State private var yOffset: CGFloat = 0
+    
     init(playlistID: UUID, animate: Bool) {
         self.playlistID = playlistID
         self.animate = animate
-        self.random = Random(playlistID) // ↓ ↓ ↓ ↓ 0.05
-        self.timer = Timer.publish(every: animate ? 0.03 : 100000, on: .main, in: .common).autoconnect()
+        random = Random(playlistID)
+        timer = Timer.publish(every: animate ? 0.03 : 100000, on: .main, in: .common).autoconnect()
     }
     
     var body: some View {
@@ -69,12 +70,10 @@ struct PlaylistArtCanvas: View {
                     let xpos: CGFloat = (xmodded * 2) - (size.width / 2) - radius
                     //let xpos: CGFloat = xmodded - radius
                     
-                    
                     let yposfixed: Double = (random.next() * size.width) + Double(xOffset * vely)
                     let ymodded: Double = mod(yposfixed, size.width)
                     let ypos: CGFloat = (ymodded * 2) - (size.width / 2) - radius
                     //let ypos: CGFloat = ymodded - radius
-                    
                     
                     let rect = CGRect(origin: CGPoint(
                         x: xpos,
@@ -97,7 +96,6 @@ struct PlaylistArtCanvas: View {
                 .saturation(0.2)
                 .blur(radius: geo.size.width / 12, opaque: true)
                 .saturation(20)
-            
                 .blur(radius: geo.size.width / 20, opaque: true)
                 .saturation(0.4)
                 .drawingGroup()
@@ -107,7 +105,6 @@ struct PlaylistArtCanvas: View {
                         yOffset = yOffset + geo.size.width / 100
                     }
                 }
-                
         }
             .aspectRatio(1, contentMode: .fit)
     }
@@ -118,6 +115,7 @@ struct PlaylistArtDisplay: View {
     var Blur: CGFloat
     var BlurOpacity: Double
     var cornerRadius: Double
+    
     var body: some View {
         ZStack {
             PlaylistArtwork(playlist: playlist, animate: false)
@@ -126,19 +124,16 @@ struct PlaylistArtDisplay: View {
                 .opacity(BlurOpacity)
                 .drawingGroup()
             PlaylistArtwork(playlist: playlist, animate: true)
-                //.background(.black)
                 .cornerRadius(cornerRadius)
         }
             .scaledToFit()
     }
 }
+
 struct PlaylistArtBGDisplay: View {
     var playlist: Playlist
+    
     var body: some View {
         PlaylistArtwork(playlist: playlist, animate: false)
     }
 }
-
-//#Preview {
-//    PlaylistArtDisplay(playlistID: UUID(), Blur: 30, BlurOpacity: 0.6, cornerRadius: 8.0)
-//}

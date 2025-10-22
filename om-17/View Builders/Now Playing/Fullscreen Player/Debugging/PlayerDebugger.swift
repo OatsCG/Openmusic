@@ -13,12 +13,13 @@ struct PlayerDebugger: View {
     @Environment(NetworkMonitor.self) var networkMonitor
     @AppStorage("playerDebugger") var playerDebugger: Bool = false
     @State var visibleState: DebuggerState = .hidden
+    
     var body: some View {
-        if (playerDebugger == true) {
+        if playerDebugger {
             PlayerDebuggerComplex(visibleState: $visibleState)
         } else {
             ZStack {
-                if (playerManager.currentQueueItem?.primeStatus == .loading) {
+                if playerManager.currentQueueItem?.primeStatus == .loading {
                     VStack {
                         Spacer()
                         HStack {
@@ -36,7 +37,7 @@ struct PlayerDebugger: View {
                         .font(.caption2)
                         .lineLimit(1)
                         .padding(10)
-                } else if (playerManager.currentQueueItem?.primeStatus == .success) {
+                } else if playerManager.currentQueueItem?.primeStatus == .success {
                     VStack {
                         Spacer()
                         HStack {
@@ -56,10 +57,10 @@ struct PlayerDebugger: View {
                         .font(.caption2)
                         .lineLimit(1)
                         .padding(10)
-                } else if (playerManager.currentQueueItem?.primeStatus == .primed) {
+                } else if playerManager.currentQueueItem?.primeStatus == .primed {
                     EmptyView()
-                } else if (playerManager.currentQueueItem?.primeStatus == .failed || playerManager.currentQueueItem?.primeStatus == .passed) {
-                    if networkMonitor.isConnected == false {
+                } else if playerManager.currentQueueItem?.primeStatus == .failed || playerManager.currentQueueItem?.primeStatus == .passed {
+                    if !networkMonitor.isConnected {
                         PlayerDebuggerSimple(visible: true, text: "No Connection", symbol: "network.slash")
                     } else if playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "" {
                         PlayerDebuggerSimple(visible: true, text: "Not Available For Streaming", symbol: "x.circle.fill")

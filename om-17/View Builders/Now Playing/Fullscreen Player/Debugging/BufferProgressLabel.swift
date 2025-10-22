@@ -18,9 +18,10 @@ struct BufferProgressLabel: View {
     @Binding var visibleState: DebuggerState
     @State var currentPlayerStatus: AVPlayer.Status? = nil
     @State var currentPlayerDuration: Double? = nil
+    
     var body: some View {
         HStack(alignment: .center) {
-            if networkMonitor.isConnected == false && playerManager.currentQueueItem?.isDownloaded == false {
+            if !networkMonitor.isConnected && playerManager.currentQueueItem?.isDownloaded == false {
                 Image(systemName: "network.slash")
                 Text("No Connection")
                     .task {
@@ -28,7 +29,7 @@ struct BufferProgressLabel: View {
                             visibleState = .noconnection
                         }
                     }
-            } else { // if network connected
+            } else {
                 if playerManager.currentQueueItem?.currentlyPriming == true {
                     if playerManager.currentQueueItem?.fetchedPlayback == nil {
                         Image(systemName: "circle.dashed")
@@ -97,7 +98,6 @@ struct BufferProgressLabel: View {
     }
 }
 
-
 struct BufferLabelLevelTwo: View {
     @Environment(PlayerManager.self) var playerManager
     @Environment(NetworkMonitor.self) var networkMonitor
@@ -105,9 +105,10 @@ struct BufferLabelLevelTwo: View {
     @Binding var currentPlayerStatus: AVPlayer.Status?
     @Binding var currentPlayerDuration: Double?
     @State var onlinePlayer: AEPlayerOnline?
+    
     var body: some View {
         Group {
-            if (playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "") {
+            if playerManager.currentQueueItem?.fetchedPlayback?.Playback_Audio_URL == "" {
                 Image(systemName: "x.circle.fill")
                 VStack(alignment: .leading) {
                     /*
@@ -136,8 +137,8 @@ struct BufferLabelLevelTwo: View {
                 }
             } else {
                 if playerManager.currentQueueItem?.isReady() == true {
-                    if (self.currentPlayerStatus == .readyToPlay) {
-                        if (self.currentPlayerDuration ?? 0 > 0) {
+                    if currentPlayerStatus == .readyToPlay {
+                        if currentPlayerDuration ?? 0 > 0 {
                             Image(systemName: "checkmark")
                             Text("Ready")
                                 .task {
@@ -156,7 +157,7 @@ struct BufferLabelLevelTwo: View {
                                 }
                         }
                         
-                    } else if (self.currentPlayerStatus == .failed) {
+                    } else if currentPlayerStatus == .failed {
                         Image(systemName: "x.circle.fill")
                         Text("Failed")
                             .task {
@@ -164,7 +165,7 @@ struct BufferLabelLevelTwo: View {
                                     visibleState = .playererror
                                 }
                             }
-                    } else if (self.currentPlayerStatus == .unknown) {
+                    } else if currentPlayerStatus == .unknown {
                         Image(systemName: "circle.dashed")
                         Text("Waiting")
                             .task {
@@ -188,9 +189,9 @@ struct BufferLabelLevelTwo: View {
         }
         .onChange(of: playerManager.currentQueueItem?.audio_AVPlayer?.player.status) { oldValue, newValue in
             Task {
-                let onlinePlayer = playerManager.currentQueueItem?.audio_AVPlayer?.player as? AEPlayerOnline
+                let newPlayer = playerManager.currentQueueItem?.audio_AVPlayer?.player as? AEPlayerOnline
                 await MainActor.run {
-                    self.onlinePlayer = onlinePlayer
+                    onlinePlayer = newPlayer
                 }
             }
         }
@@ -208,10 +209,10 @@ struct BufferLabelLevelThree: View {
     
     var body: some View {
         Group {
-            if (self.currentPlayerStatus == .readyToPlay) {
+            if currentPlayerStatus == .readyToPlay {
                 // PLAYER GETS STUCK HERE
-                if let p = self.onlinePlayer {
-                    if p.player.currentItem == nil {
+                if let onlinePlayer {
+                    if onlinePlayer.player.currentItem == nil {
                         // no item loaded
                         Text("player.currentItem not loaded")
                             .task {
@@ -220,14 +221,14 @@ struct BufferLabelLevelThree: View {
                                 }
                             }
                     } else {
-                        if p.player.status == .failed {
+                        if onlinePlayer.player.status == .failed {
                             Text("Failed 3")
                                 .task {
                                     withAnimation {
                                         visibleState = .playererror
                                     }
                                 }
-                        } else if p.player.status == .readyToPlay {
+                        } else if onlinePlayer.player.status == .readyToPlay {
                             if playerManager.currentQueueItem?.currentlyPriming == true {
                                 Text("Currently Priming...")
                                     .task {
@@ -260,7 +261,7 @@ struct BufferLabelLevelThree: View {
                             }
                         }
                 }
-            } else if (self.currentPlayerStatus == .failed) {
+            } else if currentPlayerStatus == .failed {
                 Image(systemName: "x.circle.fill")
                 Text("Failed 2")
                     .task {
@@ -268,7 +269,7 @@ struct BufferLabelLevelThree: View {
                             visibleState = .playererror
                         }
                     }
-            } else if (self.currentPlayerStatus == .unknown) {
+            } else if currentPlayerStatus == .unknown {
                 Image(systemName: "circle.dashed")
                 Text("Waiting 2")
                     .task {
@@ -277,7 +278,7 @@ struct BufferLabelLevelThree: View {
                         }
                     }
             } else {
-                if (playerManager.currentQueueItem?.isReady() == false) {
+                if playerManager.currentQueueItem?.isReady() == false {
                     Image(systemName: "exclamationmark.triangle.fill")
                     VStack {
                         Text("Audio Uninitialized")

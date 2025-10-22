@@ -10,6 +10,7 @@ import SwiftUI
 struct QSQueueRowSparkle: View {
     @Environment(FontManager.self) private var fontManager
     @State var gradientRotate: CGFloat = 0
+    
     var body: some View {
         VStack(spacing: 0) {
             Image(systemName: "sparkles")

@@ -10,11 +10,12 @@ import SwiftUI
 struct MiniToasts: View {
     @Environment(FontManager.self) private var fontManager
     @State var toastManager: ToastManager = ToastManager.shared
+    
     var body: some View {
         HStack {
             AlbumArtDisplay(ArtworkID: toastManager.on ? (toastManager.currentToast?.artworkID ?? "") : "", Resolution: .cookie, Blur: 0, BlurOpacity: 0, cornerRadius: 6)
                 .frame(width: 30, height: 30)
-            if (ToastManager.shared.currentToast?.isSuggestion == true) {
+            if ToastManager.shared.currentToast?.isSuggestion == true {
                 Text(toastManager.on ? toastManager.currentToast!.message : "")
                     .customFont(fontManager, .subheadline, bold: true)
                 QSQueueRowSparkle()
