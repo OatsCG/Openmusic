@@ -192,9 +192,9 @@ struct ThemePreviews: View {
         }
     }
     func runUpdateTracks() {
-        for index in 1...7 {
+//        for index in 1...7 {
 //            updateTrack(index: index)
-        }
+//        }
     }
     
     func updateTrack(index: Int) {

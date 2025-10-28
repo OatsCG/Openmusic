@@ -12,12 +12,13 @@ class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, 
     private let session = AVCaptureSession()
     private let depthDataOutput = AVCaptureDepthDataOutput()
     private let queue = DispatchQueue(label: "com.example.DepthDataVideoCaptureQueue")
+    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
     var depthData: CVPixelBuffer? = nil
 
     override init() {
         super.init()
-        Task.detached {
-            self.configureCaptureSession()
+        sessionQueue.async { [weak self] in
+            self?.configureCaptureSession()
         }
     }
 
@@ -48,8 +49,8 @@ class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, 
         //videoOutput.setSampleBufferDelegate(self, queue: queue)
         depthDataOutput.setDelegate(self, callbackQueue: queue)
         
-        Task.detached {
-            self.session.startRunning()
+        sessionQueue.async { [weak self] in
+            self?.session.startRunning()
         }
     }
 
@@ -75,7 +76,9 @@ class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, 
 
     // Call this method to stop the capture session
     func stopRunning() {
-        session.stopRunning()
+        sessionQueue.async { [weak self] in
+            self?.session.stopRunning()
+        }
     }
     
     //MARK: - MY SHIT

@@ -242,6 +242,7 @@ class NavidromeNetworkService: NetworkService {
         return NetworkManager.globalIPAddress()
     }
     
+    /// For use in the New Server page
     func getEndpointURL(_ endpoint: Endpoint, ip: String) -> String {
         return switch endpoint {
         case .status:
@@ -255,31 +256,31 @@ class NavidromeNetworkService: NetworkService {
         return switch endpoint {
         case .status:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .explore:
+        case .explore:  // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .vibes:
+        case .vibes:  // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .search(q: let q):
             "\(baseURL())/rest/search2?\(params)&u=\(u)&p=\(p)&any=\(q)"
-        case .quick(q: let q):
+        case .quick(q: let q):  // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .album(id: let id):
+        case .album(id: let id):  // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .artist(id: let id):
+        case .artist(id: let id): // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .random:
+        case .random: // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .playlistinfo(platform: let platform, id: let id):
+        case .playlistinfo(platform: let platform, id: let id): // TODO:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)" // TODO:
+        case .ampVideo(id: let id): // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .ampVideo(id: let id):
+        case .playlisttracks(platform: let platform, id: let id): // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .playlisttracks(platform: let platform, id: let id):
+        case .exact(song: let song, album: let album, artist: let artist): // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .exact(song: let song, album: let album, artist: let artist):
+        case .suggest: // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .suggest:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .suggestVibe:
+        case .suggestVibe: // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .playback(id: let id):
             "\(baseURL())/rest/getSong?\(params)&u=\(u)&p=\(p)&id=\(id)"

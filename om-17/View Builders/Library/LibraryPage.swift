@@ -113,15 +113,16 @@ struct LibraryPage: View {
             let sortDescriptors = [SortDescriptor(\StoredTrack.dateAdded)]
             let fetchedtracks = try? await database.fetch(predicate, sortBy: sortDescriptors)
             if let fetchedtracks {
-                await MainActor.run {
-                    tracks = fetchedtracks
-                }
+                updateTracksWith(fetchedtracks)
             } else {
-                await MainActor.run {
-                    tracks = []
-                }
+                updateTracksWith([])
             }
         }
+    }
+    
+    @MainActor
+    func updateTracksWith(_ with: [StoredTrack]) {
+        tracks = with
     }
 }
 

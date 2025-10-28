@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 
-protocol Track: Codable, Hashable, Sendable {
+protocol Track: Codable, Hashable {
     var TrackID: String { get set }
     var Title: String { get set }
     var Playback_Clean: String? { get set }
@@ -133,8 +133,9 @@ final class StoredTrack: Hashable, Track {
         Features = from.Features
         dateAdded = Date()
         originServer = NetworkManager.globalIPAddress()
-        Task.detached {
-            await downloadAlbumArt(artworkID: from.Album.Artwork)
+        let artwork = from.Album.Artwork
+        Task(priority: .background) {
+            await downloadAlbumArt(artworkID: artwork)
         }
     }
     
@@ -150,8 +151,9 @@ final class StoredTrack: Hashable, Track {
         Features = from.Track.Features
         dateAdded = Date()
         originServer = NetworkManager.globalIPAddress()
-        Task.detached {
-            await downloadAlbumArt(artworkID: from.Track.Album.Artwork)
+        let artwork = from.Track.Album.Artwork
+        Task(priority: .background) {
+            await downloadAlbumArt(artworkID: artwork)
         }
     }
     

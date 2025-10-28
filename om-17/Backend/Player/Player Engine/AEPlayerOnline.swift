@@ -96,7 +96,6 @@ import AudioKit
                 self.play()
             }
             completionHandler(true)
-            print(self.player.rate)
         }
     }
     
@@ -104,7 +103,7 @@ import AudioKit
         player.currentItem != nil
     }
     
-    func preroll(parent: PlayerEngine, completion: @escaping (Bool) -> Void) {
+    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (Bool) -> Void) {
         if parent.isReady {
             player.cancelPendingPrerolls()
             completion(true)
