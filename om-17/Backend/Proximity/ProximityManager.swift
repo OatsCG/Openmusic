@@ -8,51 +8,99 @@
 import CoreVideo
 import AVFoundation
 
-class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureDepthDataOutputDelegate {
+actor ProximitySessionActor {
     private let session = AVCaptureSession()
     private let depthDataOutput = AVCaptureDepthDataOutput()
-    private let queue = DispatchQueue(label: "com.example.DepthDataVideoCaptureQueue")
-    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
-    var depthData: CVPixelBuffer? = nil
-
-    override init() {
-        super.init()
-        sessionQueue.async { [weak self] in
-            self?.configureCaptureSession()
-        }
-    }
-
-    private func configureCaptureSession() {
+    
+    
+    
+    func configureCaptureSession() {
         guard let device = AVCaptureDevice.default(.builtInTrueDepthCamera, for: .video, position: .front),
               let input = try? AVCaptureDeviceInput(device: device) else {
             print("Unable to access front TrueDepth camera.")
             return
         }
         
-        session.beginConfiguration()
-        if session.canAddInput(input) { session.addInput(input) }
+        self.beginConfiguration()
+        if self.canAddInput(input) { self.addInput(input) }
 
-        if session.canAddOutput(depthDataOutput) {
+        if self.canAddOutput(depthDataOutput) {
             depthDataOutput.isFilteringEnabled = false
-            session.addOutput(depthDataOutput)
+            self.addOutput(depthDataOutput)
             if let connection = depthDataOutput.connection(with: .depthData) {
                 connection.isEnabled = true
             }
         } else {
             print("Depth Data Output is not supported on this device.")
-            session.commitConfiguration()
+            self.commitConfiguration()
             return
         }
 
+        self.commitConfiguration()
+    }
+    
+    func setDepthDelegate(_ delegate: AVCaptureDepthDataOutputDelegate, queue: DispatchQueue) {
+        // AVFoundation delivers callbacks on the provided queue.
+        depthDataOutput.setDelegate(delegate, callbackQueue: queue)
+    }
+    
+    func beginConfiguration() {
+        session.beginConfiguration()
+    }
+    
+    func canAddInput(_ input: AVCaptureInput) -> Bool {
+        session.canAddInput(input)
+    }
+    
+    func addInput(_ input: AVCaptureInput) {
+        session.addInput(input)
+    }
+    
+    func canAddOutput(_ output: AVCaptureOutput) -> Bool {
+        session.canAddOutput(output)
+    }
+    
+    func addOutput(_ output: AVCaptureOutput) {
+        session.addOutput(output)
+    }
+    
+    func commitConfiguration() {
         session.commitConfiguration()
+    }
+    
+    func startRunning() {
+        session.startRunning()
+    }
+    
+    func stopRunning() {
+        session.stopRunning()
+    }
+}
 
-        //videoOutput.setSampleBufferDelegate(self, queue: queue)
-        depthDataOutput.setDelegate(self, callbackQueue: queue)
-        
-        sessionQueue.async { [weak self] in
-            self?.session.startRunning()
+class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureDepthDataOutputDelegate {
+    
+    var depthData: CVPixelBuffer? = nil
+    
+    private let sessionActor = ProximitySessionActor()
+    
+    private let queue = DispatchQueue(label: "com.example.DepthDataVideoCaptureQueue")
+    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
+
+    override init() {
+        super.init()
+        Task {
+            await configureCaptureSession()
         }
     }
+
+    func configureCaptureSession() async {
+        await sessionActor.configureCaptureSession()
+        await sessionActor.setDepthDelegate(self, queue: queue)
+        
+        await sessionActor.startRunning()
+    }
+    
+    
 
     // MARK: - Video Data Output Delegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -75,10 +123,8 @@ class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, 
     }
 
     // Call this method to stop the capture session
-    func stopRunning() {
-        sessionQueue.async { [weak self] in
-            self?.session.stopRunning()
-        }
+    func stopRunning() async {
+        await sessionActor.stopRunning()
     }
     
     //MARK: - MY SHIT
