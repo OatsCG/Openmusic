@@ -51,13 +51,17 @@ struct QSHistory: View {
         var updatedQueue = playerManager.sessionHistory
         updatedQueue.move(fromOffsets: source, toOffset: destination)
         playerManager.sessionHistory = updatedQueue
-        playerManager.prime_next_song()
+        Task {
+            await playerManager.prime_next_song()
+        }
     }
     
     private func delete(at offsets: IndexSet) {
         var updatedQueue = playerManager.sessionHistory
         updatedQueue.remove(atOffsets: offsets)
         playerManager.sessionHistory = updatedQueue
-        playerManager.prime_next_song()
+        Task {
+            await playerManager.prime_next_song()
+        }
     }
 }

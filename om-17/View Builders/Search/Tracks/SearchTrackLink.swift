@@ -14,7 +14,9 @@ struct SearchTrackLink: View {
     
     var body: some View {
         Button(action: {
-            playerManager.fresh_play(track: track)
+            Task {
+                await playerManager.fresh_play(track: track)
+            }
         }) {
             SearchTrackLink_component(track: track)
         }

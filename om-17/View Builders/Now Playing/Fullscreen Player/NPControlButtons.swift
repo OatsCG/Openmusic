@@ -14,7 +14,9 @@ struct NPControlButtons: View {
         HStack {
             Spacer()
             Button(action: {
-                playerManager.player_backward(userInitiated: true)
+                Task {
+                    await playerManager.player_backward(userInitiated: true)
+                }
             }) {
                 NPBackButton_component()
             }
@@ -23,14 +25,18 @@ struct NPControlButtons: View {
                 if playerManager.isPlaying {
                     playerManager.pause()
                 } else {
-                    playerManager.play()
+                    Task {
+                        await playerManager.play()
+                    }
                 }
             }) {
                 NPPlayButton_component()
             }
             Spacer()
             Button(action: {
-                playerManager.player_forward(userInitiated: true)
+                Task {
+                    await playerManager.player_forward(userInitiated: true)
+                }
             }) {
                 NPSkipButton_component()
             }

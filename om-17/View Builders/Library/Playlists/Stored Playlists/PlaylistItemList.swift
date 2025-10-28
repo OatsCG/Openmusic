@@ -29,13 +29,17 @@ struct PlaylistItemList: View {
                     .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 20))
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
-                            playerManager.queue_song(track: item.track, explicit: item.explicit)
+                            Task {
+                                await playerManager.queue_song(track: item.track, explicit: item.explicit)
+                            }
                         } label: {
                             Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                         }
                         .tint(Color(.systemBackground))
                         Button {
-                            playerManager.queue_next(track: item.track, explicit: item.explicit)
+                            Task {
+                                await playerManager.queue_next(track: item.track, explicit: item.explicit)
+                            }
                         } label: {
                             Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                         }

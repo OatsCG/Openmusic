@@ -9,39 +9,37 @@ import SwiftUI
 import MediaPlayer
 
 @Observable final class VolumeObserver: Sendable {
-    @MainActor static let shared = VolumeObserver()
-    @MainActor let volumeView: MPVolumeView = MPVolumeView()
-    let slider: UISlider?
-    var currentVolume: Float
+//    static let shared = VolumeObserver()
+    var volumeView: MPVolumeView?
+    var slider: UISlider?
+    var currentVolume: Float = 0
     var volumeTimer: Timer?
     var oldValue: Float? = nil
     var newValue: Float? = nil
     var VolumeSkipObserver: ((Float?) -> Void)?
     
-    @MainActor private init() {
-        self.slider = self.volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
-        if (self.slider != nil) {
-            self.currentVolume = self.slider!.value
-            
-            self.slider!.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+    func initSliders() async {
+        await volumeView = MPVolumeView()
+        slider = await volumeView?.subviews.first(where: { $0 is UISlider }) as? UISlider
+        if let slider {
+            currentVolume = await slider.value
+            await slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
             
         } else {
-            self.currentVolume = 0
-            self.volumeTimer = nil
+            currentVolume = 0
+            volumeTimer = nil
         }
     }
     
     @MainActor @objc private func sliderValueChanged(_ sender: UISlider) {
-        if (self.slider?.value != self.currentVolume) {
-            if (self.slider != nil) {
-                self.oldValue = self.currentVolume
-                self.newValue = self.slider!.value
-                DispatchQueue.main.async {
-                    withAnimation(.interactiveSpring) {
-                        self.currentVolume = self.slider!.value
-                    }
-                    self.VolumeSkipObserver?(self.newValue)
+        if slider?.value != currentVolume {
+            if let slider {
+                oldValue = currentVolume
+                newValue = slider.value
+                withAnimation(.interactiveSpring) {
+                    currentVolume = slider.value
                 }
+                VolumeSkipObserver?(newValue)
             }
         }
     }
@@ -50,12 +48,11 @@ import MediaPlayer
 //        return self.currentVolume
 //    }
     
+    @MainActor
     func setVolume(_ volume: Float) {
-        DispatchQueue.main.async {
-            self.slider?.value = volume
-            if (self.slider != nil) {
-                self.sliderValueChanged(self.slider!)
-            }
+        slider?.value = volume
+        if let slider {
+            sliderValueChanged(slider)
         }
     }
 }

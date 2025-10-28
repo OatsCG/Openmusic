@@ -49,7 +49,9 @@ struct SearchAlbumMenu: View {
                     } else {
                         Button(action: {
                             for track in album.Tracks {
-                                downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
+                                Task {
+                                    await downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
+                                }
                             }
                         }) {
                             Label("Download Album", systemImage: "square.and.arrow.down")
@@ -57,7 +59,9 @@ struct SearchAlbumMenu: View {
                     }
                 } else {
                     Button(action: {
-                        database.store_tracks(album.Tracks)
+                        Task {
+                            await database.store_tracks(album.Tracks)
+                        }
                     }) {
                         Label("Add to Library", systemImage: "plus.circle")
                     }
@@ -89,7 +93,9 @@ struct SearchAlbumMenu: View {
                 
                 Section {
                     Button {
-                        playerManager.fresh_play_multiple(tracks: album.Tracks)
+                        Task {
+                            await playerManager.fresh_play_multiple(tracks: album.Tracks)
+                        }
                     } label: {
                         Label("Play", systemImage: "play.fill")
                             .symbolRenderingMode(.hierarchical)
@@ -97,19 +103,25 @@ struct SearchAlbumMenu: View {
                     
                     Menu {
                         Button {
-                            playerManager.queue_songs_next(tracks: album.Tracks)
+                            Task {
+                                await playerManager.queue_songs_next(tracks: album.Tracks)
+                            }
                         } label: {
                             Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_songs(tracks: album.Tracks)
+                            Task {
+                                await playerManager.queue_songs(tracks: album.Tracks)
+                            }
                         } label: {
                             Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_songs_randomly(tracks: album.Tracks)
+                            Task {
+                                await playerManager.queue_songs_randomly(tracks: album.Tracks)
+                            }
                         } label: {
                             Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                 .symbolRenderingMode(.hierarchical)
@@ -122,7 +134,9 @@ struct SearchAlbumMenu: View {
                 
                 Section {
                     Button {
-                        playerManager.fresh_play_multiple(tracks: album.Tracks.shuffled())
+                        Task {
+                            await playerManager.fresh_play_multiple(tracks: album.Tracks.shuffled())
+                        }
                     } label: {
                         Label("Shuffle", systemImage: "shuffle")
                             .symbolRenderingMode(.hierarchical)
@@ -130,13 +144,17 @@ struct SearchAlbumMenu: View {
                     
                     Menu {
                         Button {
-                            playerManager.queue_songs_next(tracks: album.Tracks.shuffled())
+                            Task {
+                                await playerManager.queue_songs_next(tracks: album.Tracks.shuffled())
+                            }
                         } label: {
                             Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_songs(tracks: album.Tracks.shuffled())
+                            Task {
+                                await playerManager.queue_songs(tracks: album.Tracks.shuffled())
+                            }
                         } label: {
                             Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)

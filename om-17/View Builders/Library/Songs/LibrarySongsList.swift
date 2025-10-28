@@ -39,7 +39,9 @@ struct LibrarySongsList: View {
                                     await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(perceivedTracks))
                                 }
                             } else {
-                                playerManager.fresh_play_multiple(tracks: perceivedTracks)
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: perceivedTracks)
+                                }
                             }
                         }) {
                             AlbumWideButton_component(text: "Play", subtitle: "Downloaded Only", ArtworkID: "")
@@ -62,7 +64,9 @@ struct LibrarySongsList: View {
                                     await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(perceivedTracks.shuffled()))
                                 }
                             } else {
-                                playerManager.fresh_play_multiple(tracks: perceivedTracks.shuffled())
+                                Task {
+                                    await playerManager.fresh_play_multiple(tracks: perceivedTracks.shuffled())
+                                }
                             }
                         }) {
                             AlbumWideButton_component(text: "Shuffle", subtitle: "Downloaded Only", ArtworkID: "")

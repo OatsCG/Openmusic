@@ -75,35 +75,30 @@ public final class BackgroundDatabase: Database {
         }
     }
     
-    func store_track(_ track: any Track) {
-        Task {
+    func store_track(_ track: any Track) async {
+        if let track = track as? StoredTrack {
+            await insert(track)
+        } else {
+            await insert(StoredTrack(from: track))
+        }
+        ToastManager.shared.propose(toast: Toast.library(track.Album.Artwork))
+    }
+
+    @MainActor
+    func store_track(_ queueItem: QueueItem) async {
+        await insert(StoredTrack(from: queueItem))
+        ToastManager.shared.propose(toast: Toast.library(queueItem.Track.Album.Artwork))
+    }
+
+    func store_tracks(_ tracks: [any Track]) async {
+        for track in tracks {
             if let track = track as? StoredTrack {
                 await insert(track)
             } else {
                 await insert(StoredTrack(from: track))
             }
-            ToastManager.shared.propose(toast: Toast.library(track.Album.Artwork))
         }
-    }
-
-    func store_track(_ queueItem: QueueItem) {
-        Task {
-            await insert(StoredTrack(from: queueItem))
-            await ToastManager.shared.propose(toast: Toast.library(queueItem.Track.Album.Artwork))
-        }
-    }
-
-    func store_tracks(_ tracks: [any Track]) {
-        Task {
-            for track in tracks {
-                if let track = track as? StoredTrack {
-                    await insert(track)
-                } else {
-                    await insert(StoredTrack(from: track))
-                }
-            }
-            ToastManager.shared.propose(toast: Toast.library(tracks.first?.Album.Artwork, count: tracks.count))
-        }
+        ToastManager.shared.propose(toast: Toast.library(tracks.first?.Album.Artwork, count: tracks.count))
     }
 
 

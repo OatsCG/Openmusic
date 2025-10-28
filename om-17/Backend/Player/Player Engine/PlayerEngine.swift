@@ -11,7 +11,6 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-@MainActor
 @Observable class PlayerEngine: PlayerEngineProtocol {
     var id: UUID
     
@@ -22,6 +21,7 @@ import AudioKit
     var isReady: Bool = false
     var currentTime: Double { player.currentTime }
     var isRemote: Bool = false
+    
     static func ==(lhs: PlayerEngine, rhs: PlayerEngine) -> Bool {
         lhs.player.filehash == rhs.player.filehash
     }
@@ -122,8 +122,8 @@ import AudioKit
     }
     
     /// Primes the player for playback, and then performs the comletion callback
-    func preroll(completion: @escaping (_ success: Bool) -> Void) {
-        player.preroll(parent: self, completion: completion)
+    func preroll(completion: @Sendable @escaping (_ success: Bool) async -> Void) async {
+        await player.preroll(parent: self, completion: completion)
     }
 
     /// Plays the player's audio immediately
@@ -141,10 +141,10 @@ import AudioKit
         player.pause()
     }
     
-    @MainActor func update_EQ(enabled: Bool) {
+    func update_EQ(enabled: Bool) async {
         if !isRemote {
             let thisplayer: AEPlayerOffline? = player as? AEPlayerOffline
-            thisplayer?.eqManager.update_EQ(enabled: enabled)
+            await thisplayer?.eqManager.update_EQ(enabled: enabled)
         }
     }
 }

@@ -18,7 +18,9 @@ struct QueueMenu: View {
             Section("Up Next: \(playerManager.trackQueue.filter{$0.explicit}.count) Explicit, \(playerManager.trackQueue.filter{!$0.explicit}.count) Clean") {
                 Button(action: {
                     for item in playerManager.trackQueue {
-                        downloadManager.addDownloadTask(track: StoredTrack(from: item), explicit: item.explicit)
+                        Task {
+                            await downloadManager.addDownloadTask(track: StoredTrack(from: item), explicit: item.explicit)
+                        }
                     }
                 }) {
                     Label("Download All", systemImage: "square.and.arrow.down")
@@ -29,7 +31,9 @@ struct QueueMenu: View {
                             item.setExplicity(to: false)
                         }
                     }
-                    playerManager.prime_next_song()
+                    Task {
+                        await playerManager.prime_next_song()
+                    }
                 }) {
                     Label("Try Converting to Clean", systemImage: "c.square.fill")
                 }
@@ -39,7 +43,9 @@ struct QueueMenu: View {
                             item.setExplicity(to: true)
                         }
                     }
-                    playerManager.prime_next_song()
+                    Task {
+                        await playerManager.prime_next_song()
+                    }
                 }) {
                     Label("Try Converting to Explicit", systemImage: "e.square.fill")
                 }
@@ -55,7 +61,9 @@ struct QueueMenu: View {
             Section("Played: \(playerManager.sessionHistory.filter{$0.explicit}.count) Explicit, \(playerManager.sessionHistory.filter{!$0.explicit}.count) Clean") {
                 Button(action: {
                     for item in playerManager.sessionHistory {
-                        downloadManager.addDownloadTask(track: StoredTrack(from: item), explicit: item.explicit)
+                        Task {
+                            await downloadManager.addDownloadTask(track: StoredTrack(from: item), explicit: item.explicit)
+                        }
                     }
                 }) {
                     Label("Download All", systemImage: "square.and.arrow.down")
@@ -66,7 +74,9 @@ struct QueueMenu: View {
                             item.setExplicity(to: false)
                         }
                     }
-                    playerManager.prime_next_song()
+                    Task {
+                        await playerManager.prime_next_song()
+                    }
                 }) {
                     Label("Try Converting to Clean", systemImage: "c.square.fill")
                 }
@@ -76,7 +86,9 @@ struct QueueMenu: View {
                             item.setExplicity(to: true)
                         }
                     }
-                    playerManager.prime_next_song()
+                    Task {
+                        await playerManager.prime_next_song()
+                    }
                 }) {
                     Label("Try Converting to Explicit", systemImage: "e.square.fill")
                 }

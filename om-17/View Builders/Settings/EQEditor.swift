@@ -43,7 +43,7 @@ struct EQEditor: View {
                                 currentBands = EQManager.decodeCurrentBands(count: bandCount + 1)
                                 updateStoredBands()
                                 Task {
-                                    playerManager.resetEQs()
+                                    await playerManager.resetEQs()
                                 }
                             }
                     }

@@ -19,9 +19,11 @@ struct SearchExtendedTracks: View {
                 if let tracks {
                     ForEach(Array(tracks.enumerated()), id: \.offset) { index, track in
                         Button(action: {
-                            playerManager.fresh_play(track: track)
-                            if shouldQueueAll {
-                                playerManager.queue_songs(tracks: Array(tracks.suffix(from: index + 1)))
+                            Task {
+                                await playerManager.fresh_play(track: track)
+                                if shouldQueueAll {
+                                    await playerManager.queue_songs(tracks: Array(tracks.suffix(from: index + 1)))
+                                }
                             }
                         }) {
                             TrackLink_component(track: track)

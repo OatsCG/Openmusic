@@ -32,7 +32,9 @@ struct QSUpNext: View {
                         .foregroundStyle(.secondary)
                     if !DisableQueuingSuggestions && playerManager.currentVibe != nil {
                         Button(action: {
-                            playerManager.addSuggestions(noQuestionsAsked: true)
+                            Task {
+                                await playerManager.addSuggestions(noQuestionsAsked: true)
+                            }
                         }) {
                             AlbumWideButton_component(text: "Queue Suggestions", ArtworkID: "")
                         }
@@ -70,14 +72,18 @@ struct QSUpNext: View {
         var updatedQueue = playerManager.trackQueue
         updatedQueue.move(fromOffsets: source, toOffset: destination)
         playerManager.trackQueue = updatedQueue
-        playerManager.prime_next_song()
+        Task {
+            await playerManager.prime_next_song()
+        }
     }
     
     private func delete(at offsets: IndexSet) {
         var updatedQueue = playerManager.trackQueue
         updatedQueue.remove(atOffsets: offsets)
         playerManager.trackQueue = updatedQueue
-        playerManager.prime_next_song()
+        Task {
+            await playerManager.prime_next_song()
+        }
     }
 }
 

@@ -84,7 +84,9 @@ struct NPProximityTester: View {
             })
         }
         .onDisappear {
-            proximityManager.stopRunning()
+            Task {
+                await proximityManager.stopRunning()
+            }
         }
     }
 }

@@ -250,7 +250,7 @@ struct PlaylistItem: Codable, Hashable {
     }
 }
 
-@Observable final class ImportedPlaylist: Hashable, Sendable {
+@Observable final class ImportedPlaylist: Hashable {
     var PlaylistID: UUID
     var Title: String
     var Bio: String
@@ -327,7 +327,7 @@ struct PlaylistItem: Codable, Hashable {
     }
 }
 
-@Observable final class PlaylistImport: Codable, Hashable, Sendable {
+@Observable final class PlaylistImport: Codable, Hashable {
     var id: UUID
     var playlistID: UUID
     var track: FetchedTrack
@@ -367,7 +367,7 @@ struct PlaylistItem: Codable, Hashable {
         if let explicit = explicit {
             self.explicit = explicit
         } else {
-            self.explicit = await queueItem.Track.Playback_Explicit != nil
+            self.explicit = queueItem.Track.Playback_Explicit != nil
         }
     }
     

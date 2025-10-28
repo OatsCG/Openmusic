@@ -58,7 +58,9 @@ struct NPArtwork: View {
                 if playerManager.isPlaying {
                     playerManager.pause()
                 } else {
-                    playerManager.play()
+                    Task {
+                        await playerManager.play()
+                    }
                 }
             }
             .gesture(DragGesture(minimumDistance: minDistance, coordinateSpace: .local)
@@ -101,11 +103,15 @@ struct NPArtwork: View {
                     
                     if shouldSkip {
                         print("forward gesture")
-                        playerManager.player_forward(userInitiated: true)
+                        Task {
+                            await playerManager.player_forward(userInitiated: true)
+                        }
                     }
                     if shouldPrevious {
                         print("backward gesture")
-                        playerManager.player_backward(userInitiated: true)
+                        Task {
+                            await playerManager.player_backward(userInitiated: true)
+                        }
                         
                     }
                     if shouldSkip || shouldPrevious {
@@ -164,7 +170,7 @@ struct NPArtwork: View {
         .environment(DownloadManager())
         .modelContainer(container)
         .task {
-            playerManager.queue_songs(tracks: [FetchedTrack(default: true), FetchedTrack(default: true), FetchedTrack(default: true), FetchedTrack(default: true)])
-            playerManager.player_forward()
+            await playerManager.queue_songs(tracks: [FetchedTrack(default: true), FetchedTrack(default: true), FetchedTrack(default: true), FetchedTrack(default: true)])
+            await playerManager.player_forward()
         }
 }

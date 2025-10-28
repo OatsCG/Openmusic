@@ -18,7 +18,9 @@ struct QPAlbumTracks: View {
             let threeRecentTracks: [any Track] = max_three(tracks: sortedTracks)
             ForEach(Array(threeRecentTracks.enumerated()), id: \.offset) {index, track in
                 Button(action: {
-                    playerManager.fresh_play_multiple(tracks: Array(sortedTracks.suffix(from: index)))
+                    Task {
+                        await playerManager.fresh_play_multiple(tracks: Array(sortedTracks.suffix(from: index)))
+                    }
                 }) {
                     HStack {
                         Text(track.Title)

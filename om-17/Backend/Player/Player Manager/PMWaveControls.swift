@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension PlayerManager {
-    func depth_change_detected(close: Bool) {
+    func depth_change_detected(close: Bool) async {
         let sessionDelay = 0.8
         let hoverMax = 0.3
         let waveMax = 0.2
@@ -30,7 +30,7 @@ extension PlayerManager {
                     if is_playing() {
                         pause()
                     } else {
-                        play()
+                        await play()
                     }
                 }
             }
@@ -40,7 +40,7 @@ extension PlayerManager {
             if lastDepth {
                 if changeDate - lastTime < waveMax && isValid {
                     lastWaveDepth = (false, changeDate, false)
-                    player_forward(userInitiated: true)
+                    await player_forward(userInitiated: true)
                 } else {
                     lastWaveDepth = (false, changeDate, false)
                 }

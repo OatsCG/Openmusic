@@ -21,7 +21,9 @@ struct PlaylistItemLink: View {
     var body: some View {
         Button(action: {
             let nextItems: [PlaylistItem] = Array(playlist.items.suffix(from: index)).filter({ $0.importData.status == .success })
-            playerManager.fresh_play_multiple(tracks: nextItems)
+            Task {
+                await playerManager.fresh_play_multiple(tracks: nextItems)
+            }
         }) {
             HStack {
                 if item.importData.status != .success {

@@ -37,7 +37,9 @@ struct LibraryPlaylistDownloadButton: View {
                 Button (action: {
                     for item in playlist.items {
                         if item.importData.status == .success {
-                            downloadManager.addDownloadTask(track: item.track, explicit: item.explicit)
+                            Task {
+                                await downloadManager.addDownloadTask(track: item.track, explicit: item.explicit)
+                            }
                         }
                     }
                 }) {

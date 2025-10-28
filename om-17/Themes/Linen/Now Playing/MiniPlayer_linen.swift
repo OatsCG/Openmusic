@@ -56,7 +56,9 @@ struct MiniPlayer_linen: View {
                 if playerManager.isPlaying {
                     playerManager.pause()
                 } else {
-                    playerManager.play()
+                    Task {
+                        await playerManager.play()
+                    }
                 }
             }) {
                 Image(systemName: (playerManager.isPlaying) ? "pause.fill" : "play.fill")

@@ -35,7 +35,9 @@ struct RecentlyPlayedList: View {
             Divider()
             ForEach(Array(RecentlyPlayedManager.getRecentTracks().prefix(50).enumerated()), id: \.offset) { index, track in
                 Button(action: {
-                    playerManager.fresh_play(track: track)
+                    Task {
+                        await playerManager.fresh_play(track: track)
+                    }
                 }) {
                     TrackLink_component(track: track)
                 }

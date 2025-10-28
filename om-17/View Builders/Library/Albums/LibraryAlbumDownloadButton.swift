@@ -34,7 +34,9 @@ struct LibraryAlbumDownloadButton: View {
         } else {
             Button (action: {
                 for track in album.Tracks {
-                    downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
+                    Task {
+                        await downloadManager.addDownloadTask(track: track, explicit: track.Playback_Explicit != nil)
+                    }
                 }
             }) {
                 Image(systemName: "arrow.down.circle")

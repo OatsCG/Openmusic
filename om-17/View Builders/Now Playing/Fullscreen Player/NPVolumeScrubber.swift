@@ -16,7 +16,6 @@ struct NPVolumeScrubber: View {
     @Environment(FontManager.self) private var fontManager
     @State var isDragging: Bool = false
     @State var inAppVolume: Bool = false
-    @State var sysVolume: Float = VolumeObserver.shared.currentVolume
     
     var body: some View {
         HStack {
@@ -27,9 +26,9 @@ struct NPVolumeScrubber: View {
                     .progressViewStyle(NPVolumeScrubberBar(currentVolume: playerManager.appVolume, currentVolumePost: playerManager.appVolume, isDragging: $isDragging))
             } else {
                 ProgressView(value: 0)
-                    .progressViewStyle(NPSystemVolumeScrubberBar(currentVolume: $sysVolume, currentVolumePost: playerManager.appVolume, isDragging: $isDragging))
+                    .progressViewStyle(NPSystemVolumeScrubberBar(currentVolume: playerManager.volumeObserver.currentVolume, currentVolumePost: playerManager.appVolume, isDragging: $isDragging))
                     .overlay {
-                        VolumeSlider()
+                        VolumeSlider(observer: playerManager.volumeObserver)
                             .opacity(0)
                     }
             }
@@ -55,8 +54,9 @@ struct NPVolumeScrubber: View {
 }
 
 struct VolumeSlider: UIViewRepresentable {
-   func makeUIView(context: Context) -> MPVolumeView {
-       VolumeObserver.shared.volumeView
+    let observer: VolumeObserver
+    func makeUIView(context: Context) -> MPVolumeView {
+        observer.volumeView ?? MPVolumeView()
    }
 
    func updateUIView(_ view: MPVolumeView, context: Context) {}
@@ -108,7 +108,7 @@ struct NPVolumeScrubberBar: ProgressViewStyle {
 struct NPSystemVolumeScrubberBar: ProgressViewStyle {
     @Environment(\.colorScheme) var colorScheme
     @Environment(PlayerManager.self) var playerManager
-    @Binding var currentVolume: Float
+    @State var currentVolume: Float
     @State var currentVolumePost: Float
     @Binding var isDragging: Bool
     @State var dragAmount: Float = 0
@@ -121,13 +121,13 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
                     withAnimation(.interactiveSpring(duration: 0.3)) {
                         isDragging = true
                     }
-                    currentVolume = VolumeObserver.shared.currentVolume
+                    currentVolume = playerManager.volumeObserver.currentVolume
                 }
                 
                 withAnimation(.interactiveSpring) {
                     dragAmount = Float(value.translation.width / geo_width)
                     currentVolumePost = min(max(currentVolume + dragAmount, 0), 1)
-                    VolumeObserver.shared.setVolume(currentVolumePost)
+                    playerManager.volumeObserver.setVolume(currentVolumePost)
                 }
             }
             .onEnded { _ in
@@ -136,7 +136,7 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
                 }
                 withAnimation(.interactiveSpring) {
                     dragAmount = 0
-                    currentVolume = VolumeObserver.shared.currentVolume
+                    currentVolume = playerManager.volumeObserver.currentVolume
                 }
             }
     }
@@ -146,16 +146,16 @@ struct NPSystemVolumeScrubberBar: ProgressViewStyle {
             let currentNormal = min(max(CGFloat(currentVolumePost), 0), 1) * geo_width
             ScrubberBar_component(isDragging: $isDragging, width: $geo_width, currentNormal: currentNormal, pressedNormal: currentNormal)
                 .gesture(drag)
-                .onChange(of: VolumeObserver.shared.currentVolume) {
+                .onChange(of: playerManager.volumeObserver.currentVolume) {
                     if !isDragging {
                         withAnimation(.interactiveSpring) {
-                            currentVolume = VolumeObserver.shared.currentVolume
+                            currentVolume = playerManager.volumeObserver.currentVolume
                             currentVolumePost = currentVolume
                         }
                     }
                 }
                 .onAppear {
-                    currentVolume = VolumeObserver.shared.currentVolume
+                    currentVolume = playerManager.volumeObserver.currentVolume
                     currentVolumePost = currentVolume
                 }
         }

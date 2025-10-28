@@ -51,9 +51,13 @@ struct MiniPlayer: View {
                     .gesture(DragGesture(minimumDistance: minDistance, coordinateSpace: .local)
                         .onEnded { value in
                             if value.predictedEndTranslation.width > 200 {
-                                playerManager.player_backward(userInitiated: true)
+                                Task {
+                                    await playerManager.player_backward(userInitiated: true)
+                                }
                             } else if value.predictedEndTranslation.width < -200 {
-                                playerManager.player_forward(userInitiated: true)
+                                Task {
+                                    await playerManager.player_forward(userInitiated: true)
+                                }
                             } else if value.predictedEndTranslation.height < -400 {
                                 showingNPSheet.toggle()
                             }

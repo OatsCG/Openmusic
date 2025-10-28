@@ -29,7 +29,9 @@ struct QSQueueRow: View {
                     playerManager.trackQueue.insert(queueItem, at: 0)
                     playerManager.sessionHistory.remove(at: playerManager.sessionHistory.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
                 }
-                playerManager.player_forward(userInitiated: true)
+            }
+            Task {
+                await playerManager.player_forward(userInitiated: true)
             }
         }) {
             HStack {

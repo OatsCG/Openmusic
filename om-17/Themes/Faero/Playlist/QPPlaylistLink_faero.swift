@@ -39,7 +39,9 @@ struct QPPlaylistLink_faero: View {
                         }
                     VStack(spacing: 10) {
                         Button(action: {
-                            playerManager.fresh_play_multiple(tracks: playlist.items)
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: playlist.items)
+                            }
                         }) {
                             Image(systemName: "play.circle.fill")
                                 .symbolRenderingMode(.palette)
@@ -57,26 +59,34 @@ struct QPPlaylistLink_faero: View {
                         }
                             .contextMenu {
                                 Button {
-                                    playerManager.queue_songs_next(tracks: playlist.items)
+                                    Task {
+                                        await playerManager.queue_songs_next(tracks: playlist.items)
+                                    }
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_songs(tracks: playlist.items)
+                                    Task {
+                                        await playerManager.queue_songs(tracks: playlist.items)
+                                    }
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_songs_randomly(tracks: playlist.items)
+                                    Task {
+                                        await playerManager.queue_songs_randomly(tracks: playlist.items)
+                                    }
                                 } label: {
                                     Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                             }
                         Button(action: {
-                            playerManager.fresh_play_multiple(tracks: playlist.items.shuffled())
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: playlist.items.shuffled())
+                            }
                         }) {
                             Image(systemName: "shuffle.circle.fill")
                                 .symbolRenderingMode(.palette)
@@ -94,13 +104,17 @@ struct QPPlaylistLink_faero: View {
                         }
                             .contextMenu {
                                 Button {
-                                    playerManager.queue_songs_next(tracks: playlist.items.shuffled())
+                                    Task {
+                                        await playerManager.queue_songs_next(tracks: playlist.items.shuffled())
+                                    }
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_songs(tracks: playlist.items.shuffled())
+                                    Task {
+                                        await playerManager.queue_songs(tracks: playlist.items.shuffled())
+                                    }
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)

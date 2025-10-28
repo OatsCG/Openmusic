@@ -8,8 +8,7 @@
 import SwiftUI
 import AVFoundation
 
-@MainActor
-@Observable class AmplitudeFetcher {
+@Observable class AmplitudeFetcher: Sendable {
     var amplitudes: [Float]?
     var alreadyAttempted: Bool
     
@@ -86,7 +85,7 @@ import AVFoundation
                     }
                     tempAmplitudes.append(thisAmp / Float(avgRange))
                 }
-                let normalizeAmplitudes = await self?.normalizeAmplitudes(tempAmplitudes)
+                let normalizeAmplitudes = self?.normalizeAmplitudes(tempAmplitudes)
                 DispatchQueue.main.async { [weak self] in
                     self?.amplitudes = normalizeAmplitudes
                 }

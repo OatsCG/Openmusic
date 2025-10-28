@@ -36,7 +36,9 @@ struct LiveDownloadStatus: View {
                 Menu {
                     Section(download.errorReason ?? "Unknown Error") {
                         Button {
-                            downloadManager.retry_download(download: download)
+                            Task {
+                                await downloadManager.retry_download(download: download)
+                            }
                         } label: {
                             Label("Retry Download", systemImage: "arrow.circlepath")
                         }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension PlayerManager {
-    func prime_next_song() {
+    func prime_next_song() async {
         var next5songs: ArraySlice<QueueItem> = trackQueue.prefix(5)
         if let cqi = currentQueueItem {
             next5songs.insert(cqi, at: 0)
@@ -16,25 +16,19 @@ extension PlayerManager {
         let firstDownloaded: QueueItem? = next5songs.first(where: { $0.isDownloaded && $0.primeStatus == .waiting })
         
         if let firstDownloaded {
-            Task {
-                await firstDownloaded.prime_object(playerManager: self)
-            }
+            await firstDownloaded.prime_object(playerManager: self)
         } else {
             for track in next5songs {
                 if track.primeStatus == .waiting || track.primeStatus == .loading {
-                    Task {
-                        await track.prime_object(playerManager: self)
-                    }
+                    await track.prime_object(playerManager: self)
                     break
                 }
             }
         }
     }
     
-    func prime_current_song(continueCurrent: Bool = false) {
-        Task {
-            await self.currentQueueItem?.prime_object(playerManager: self, continueCurrent: continueCurrent)
-        }
+    func prime_current_song(continueCurrent: Bool = false) async {
+        await self.currentQueueItem?.prime_object(playerManager: self, continueCurrent: continueCurrent)
     }
     
     func is_current_item_ready() -> Bool {
@@ -63,17 +57,17 @@ extension PlayerManager {
         }
     }
     
-    func resetEQs() {
+    func resetEQs() async {
         let wasPlaying = isPlaying
-        currentQueueItem?.audio_AVPlayer?.player.resetEQ(playerManager: self)
+        await currentQueueItem?.audio_AVPlayer?.player.resetEQ(playerManager: self)
         for item in sessionHistory {
             if item.audio_AVPlayer?.isRemote == false {
-                item.audio_AVPlayer?.player.resetEQ(playerManager: self)
+                await item.audio_AVPlayer?.player.resetEQ(playerManager: self)
             }
         }
         for item in trackQueue {
             if item.audio_AVPlayer?.isRemote == false {
-                item.audio_AVPlayer?.player.resetEQ(playerManager: self)
+                await item.audio_AVPlayer?.player.resetEQ(playerManager: self)
             }
         }
         if wasPlaying {

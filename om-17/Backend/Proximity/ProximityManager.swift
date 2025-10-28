@@ -77,6 +77,7 @@ actor ProximitySessionActor {
     }
 }
 
+@MainActor
 class ProximityManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureDepthDataOutputDelegate {
     
     var depthData: CVPixelBuffer? = nil

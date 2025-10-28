@@ -36,7 +36,9 @@ struct TrackMenu: View {
                     }
                 } else {
                     Button(action: {
-                        database.store_track(track)
+                        Task {
+                            await database.store_track(track)
+                        }
                     }) {
                         Label("Add to Library", systemImage: "plus.circle")
                     }
@@ -111,7 +113,9 @@ struct TrackMenu: View {
                 Menu {
                     Section {
                         Button {
-                            playerManager.fresh_play(track: track, explicit: false)
+                            Task {
+                                await playerManager.fresh_play(track: track, explicit: false)
+                            }
                         } label: {
                             Label("Play", systemImage: "play.fill")
                         }
@@ -125,7 +129,9 @@ struct TrackMenu: View {
                                 }
                             } else {
                                 Button {
-                                    downloadManager.addDownloadTask(track: track, explicit: false)
+                                    Task {
+                                        await downloadManager.addDownloadTask(track: track, explicit: false)
+                                    }
                                 } label: {
                                     Label("Download", systemImage: "square.and.arrow.down")
                                         .symbolRenderingMode(.hierarchical)
@@ -137,19 +143,25 @@ struct TrackMenu: View {
                     }
                     Section {
                         Button {
-                            playerManager.queue_next(track: track, explicit: false)
+                            Task {
+                                await playerManager.queue_next(track: track, explicit: false)
+                            }
                         } label: {
                             Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_song(track: track, explicit: false)
+                            Task {
+                                await playerManager.queue_song(track: track, explicit: false)
+                            }
                         } label: {
                             Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_randomly(track: track, explicit: false)
+                            Task {
+                                await playerManager.queue_randomly(track: track, explicit: false)
+                            }
                         } label: {
                             Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                 .symbolRenderingMode(.hierarchical)
@@ -164,7 +176,9 @@ struct TrackMenu: View {
                 Menu {
                     Section {
                         Button {
-                            playerManager.fresh_play(track: track, explicit: true)
+                            Task {
+                                await playerManager.fresh_play(track: track, explicit: true)
+                            }
                         } label: {
                             Label("Play", systemImage: "play.fill")
                         }
@@ -178,7 +192,9 @@ struct TrackMenu: View {
                                 }
                             } else {
                                 Button {
-                                    downloadManager.addDownloadTask(track: track, explicit: true)
+                                    Task {
+                                        await downloadManager.addDownloadTask(track: track, explicit: true)
+                                    }
                                 } label: {
                                     Label("Download", systemImage: "square.and.arrow.down")
                                         .symbolRenderingMode(.hierarchical)
@@ -190,19 +206,25 @@ struct TrackMenu: View {
                     }
                     Section {
                         Button {
-                            playerManager.queue_next(track: track, explicit: true)
+                            Task {
+                                await playerManager.queue_next(track: track, explicit: true)
+                            }
                         } label: {
                             Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_song(track: track, explicit: true)
+                            Task {
+                                await playerManager.queue_song(track: track, explicit: true)
+                            }
                         } label: {
                             Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
                         }
                         Button {
-                            playerManager.queue_randomly(track: track, explicit: true)
+                            Task {
+                                await playerManager.queue_randomly(track: track, explicit: true)
+                            }
                         } label: {
                             Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                 .symbolRenderingMode(.hierarchical)
@@ -215,7 +237,9 @@ struct TrackMenu: View {
                     }
                 }
                 Button {
-                    playerManager.queue_song(track: track)
+                    Task {
+                        await playerManager.queue_song(track: track)
+                    }
                 } label: {
                     Label("Add to Queue", systemImage: "text.line.last.and.arrowtriangle.forward")
                         .symbolRenderingMode(.hierarchical)
@@ -223,7 +247,9 @@ struct TrackMenu: View {
             } else if track.Playback_Clean != nil {
                 Section {
                     Button {
-                        playerManager.fresh_play(track: track, explicit: false)
+                        Task {
+                            await playerManager.fresh_play(track: track, explicit: false)
+                        }
                     } label: {
                         Label("Play", systemImage: "play.fill")
                     }
@@ -238,7 +264,9 @@ struct TrackMenu: View {
                             }
                         } else {
                             Button {
-                                downloadManager.addDownloadTask(track: track, explicit: false)
+                                Task {
+                                    await downloadManager.addDownloadTask(track: track, explicit: false)
+                                }
                             } label: {
                                 Label("Download", systemImage: "square.and.arrow.down")
                                     .symbolRenderingMode(.hierarchical)
@@ -255,19 +283,25 @@ struct TrackMenu: View {
                 }
                 Section {
                     Button {
-                        playerManager.queue_next(track: track, explicit: false)
+                        Task {
+                            await playerManager.queue_next(track: track, explicit: false)
+                        }
                     } label: {
                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                             .symbolRenderingMode(.hierarchical)
                     }
                     Button {
-                        playerManager.queue_song(track: track, explicit: false)
+                        Task {
+                            await playerManager.queue_song(track: track, explicit: false)
+                        }
                     } label: {
                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                             .symbolRenderingMode(.hierarchical)
                     }
                     Button {
-                        playerManager.queue_randomly(track: track, explicit: false)
+                        Task {
+                            await playerManager.queue_randomly(track: track, explicit: false)
+                        }
                     } label: {
                         Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                             .symbolRenderingMode(.hierarchical)
@@ -276,7 +310,9 @@ struct TrackMenu: View {
             } else if track.Playback_Explicit != nil {
                 Section {
                     Button {
-                        playerManager.fresh_play(track: track, explicit: true)
+                        Task {
+                            await playerManager.fresh_play(track: track, explicit: true)
+                        }
                     } label: {
                         Label("Play", systemImage: "play.fill")
                     }
@@ -291,7 +327,9 @@ struct TrackMenu: View {
                             }
                         } else {
                             Button {
-                                downloadManager.addDownloadTask(track: track, explicit: true)
+                                Task {
+                                    await downloadManager.addDownloadTask(track: track, explicit: true)
+                                }
                             } label: {
                                 Label("Download", systemImage: "square.and.arrow.down")
                                     .symbolRenderingMode(.hierarchical)
@@ -308,19 +346,25 @@ struct TrackMenu: View {
                 }
                 Section {
                     Button {
-                        playerManager.queue_next(track: track, explicit: true)
+                        Task {
+                            await playerManager.queue_next(track: track, explicit: true)
+                        }
                     } label: {
                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                             .symbolRenderingMode(.hierarchical)
                     }
                     Button {
-                        playerManager.queue_song(track: track, explicit: true)
+                        Task {
+                            await playerManager.queue_song(track: track, explicit: true)
+                        }
                     } label: {
                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                             .symbolRenderingMode(.hierarchical)
                     }
                     Button {
-                        playerManager.queue_randomly(track: track, explicit: true)
+                        Task {
+                            await playerManager.queue_randomly(track: track, explicit: true)
+                        }
                     } label: {
                         Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                             .symbolRenderingMode(.hierarchical)

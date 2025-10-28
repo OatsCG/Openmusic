@@ -8,8 +8,6 @@
 import SwiftUI
 import AVFoundation
 
-
-@MainActor
 class EQManager {
     var eqNode: AVAudioUnitEQ
     var audioEngine: AVAudioEngine?
@@ -203,28 +201,24 @@ class EQManager {
         }
     }
     
-    func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) {
-        Task {
-            guard isReady else { return }
-            
-            if !enabled {
-                for i in 0..<eqNode.bands.count {
-                    eqNode.bands[i].gain = 0
+    func update_EQ(enabled: Bool, playerManager: PlayerManager? = nil) async {
+        guard isReady else { return }
+        
+        if !enabled {
+            for i in 0..<eqNode.bands.count {
+                eqNode.bands[i].gain = 0
+            }
+        } else {
+            if EQManager.decodeCurrentBands().count != eqNode.bands.count {
+                if let playerManager = playerManager {
+                    //playerManager.pause()
+                    if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
+                        playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
+                    }
                 }
             } else {
-                if EQManager.decodeCurrentBands().count != eqNode.bands.count {
-                    if let playerManager = playerManager {
-                        //playerManager.pause()
-                        Task {
-                            if playerManager.currentQueueItem?.audio_AVPlayer?.isRemote == false {
-                                playerManager.currentQueueItem?.prime_object_fresh(playerManager: playerManager, seek: true)
-                            }
-                        }
-                    }
-                } else {
-                    for band in EQManager.decodeCurrentBands() {
-                        reallyAdjustBand(for: band.index, value: Float(band.value))
-                    }
+                for band in EQManager.decodeCurrentBands() {
+                    reallyAdjustBand(for: band.index, value: Float(band.value))
                 }
             }
         }

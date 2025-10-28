@@ -19,7 +19,9 @@ struct VibeView: View {
             tapping = .stop
             didClick += 1
             if playerManager.currentVibe != vibe {
-                playerManager.setCurrentVibe(vibe: vibe)
+                Task {
+                    await playerManager.setCurrentVibe(vibe: vibe)
+                }
             } else {
                 playerManager.clearVibe()
             }

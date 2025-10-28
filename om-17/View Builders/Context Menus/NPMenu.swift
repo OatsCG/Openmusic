@@ -39,7 +39,9 @@ struct NPMenu: View {
                             }
                         } else {
                             Button(action: {
-                                database.store_track(queueItem)
+                                Task {
+                                    await database.store_track(queueItem)
+                                }
                             }) {
                                 Label("Add to Library", systemImage: "plus.circle")
                             }
@@ -125,7 +127,9 @@ struct NPMenu: View {
                                         }
                                     } else {
                                         Button {
-                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: false)
+                                            Task {
+                                                await downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: false)
+                                            }
                                         } label: {
                                             Label("Download", systemImage: "square.and.arrow.down")
                                                 .symbolRenderingMode(.hierarchical)
@@ -137,19 +141,25 @@ struct NPMenu: View {
                             }
                             Section {
                                 Button {
-                                    playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: false)
+                                    Task {
+                                        await playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: false)
+                                    }
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: false)
+                                    Task {
+                                        await playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: false)
+                                    }
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: false)
+                                    Task {
+                                        await playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: false)
+                                    }
                                 } label: {
                                     Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                         .symbolRenderingMode(.hierarchical)
@@ -173,7 +183,9 @@ struct NPMenu: View {
                                         }
                                     } else {
                                         Button {
-                                            downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: true)
+                                            Task {
+                                                await downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: true)
+                                            }
                                         } label: {
                                             Label("Download", systemImage: "square.and.arrow.down")
                                                 .symbolRenderingMode(.hierarchical)
@@ -185,19 +197,25 @@ struct NPMenu: View {
                             }
                             Section {
                                 Button {
-                                    playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: true)
+                                    Task {
+                                        await playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: true)
+                                    }
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: true)
+                                    Task {
+                                        await playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: true)
+                                    }
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: true)
+                                    Task {
+                                        await playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: true)
+                                    }
                                 } label: {
                                     Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                         .symbolRenderingMode(.hierarchical)
@@ -210,7 +228,9 @@ struct NPMenu: View {
                             }
                         }
                         Button {
-                            playerManager.queue_song(track: StoredTrack(from: queueItem))
+                            Task {
+                                await playerManager.queue_song(track: StoredTrack(from: queueItem))
+                            }
                         } label: {
                             Label("Add to Queue", systemImage: "text.line.last.and.arrowtriangle.forward")
                                 .symbolRenderingMode(.hierarchical)
@@ -228,7 +248,9 @@ struct NPMenu: View {
                                     }
                                 } else {
                                     Button {
-                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: false)
+                                        Task {
+                                            await downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: false)
+                                        }
                                     } label: {
                                         Label("Download", systemImage: "square.and.arrow.down")
                                             .symbolRenderingMode(.hierarchical)
@@ -245,19 +267,25 @@ struct NPMenu: View {
                         }
                         Section {
                             Button {
-                                playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: false)
+                                Task {
+                                    await playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: false)
+                                }
                             } label: {
                                 Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: false)
+                                Task {
+                                    await playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: false)
+                                }
                             } label: {
                                 Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: false)
+                                Task {
+                                    await playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: false)
+                                }
                             } label: {
                                 Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                     .symbolRenderingMode(.hierarchical)
@@ -277,7 +305,9 @@ struct NPMenu: View {
                                     }
                                 } else {
                                     Button {
-                                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: true)
+                                        Task {
+                                            await downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: true)
+                                        }
                                     } label: {
                                         Label("Download", systemImage: "square.and.arrow.down")
                                         Text("Explicit")
@@ -293,19 +323,25 @@ struct NPMenu: View {
                         }
                         Section {
                             Button {
-                                playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: true)
+                                Task {
+                                    await playerManager.queue_next(track: StoredTrack(from: queueItem), explicit: true)
+                                }
                             } label: {
                                 Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                 playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: true)
+                                Task {
+                                    await playerManager.queue_song(track: StoredTrack(from: queueItem), explicit: true)
+                                }
                             } label: {
                                 Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                     .symbolRenderingMode(.hierarchical)
                             }
                             Button {
-                                playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: true)
+                                Task {
+                                    await playerManager.queue_randomly(track: StoredTrack(from: queueItem), explicit: true)
+                                }
                             } label: {
                                 Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                     .symbolRenderingMode(.hierarchical)

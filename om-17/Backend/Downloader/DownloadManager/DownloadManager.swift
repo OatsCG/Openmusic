@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-@MainActor
-@Observable class DownloadManager: DownloaderDelegate {
-    static let shared = DownloadManager()
+@Observable final class DownloadManager: DownloaderDelegate, Sendable {
+    @MainActor static let shared = DownloadManager()
     let downloadActor = DownloadManagerActor()
     var tracksDownloading: [DownloadData] = []
     var downloadsCount: Int
@@ -20,34 +19,24 @@ import SwiftUI
         downloadActor.downloader.delegate = self
     }
     
-    
-    func addDownloadTask(track: any Track, explicit: Bool) {
-        Task {
-            await downloadActor.addDownloadTask(track: track, explicit: explicit)
-            await updateUI()
-        }
+    func addDownloadTask(track: any Track, explicit: Bool) async {
+        await downloadActor.addDownloadTask(track: track, explicit: explicit)
+        await updateUI()
     }
     
-    func begin_download(downloadData: DownloadData) {
-        Task {
-            await downloadActor.beginDownload(downloadData: downloadData)
-            await updateUI()
-        }
+    func begin_download(downloadData: DownloadData) async {
+        await downloadActor.beginDownload(downloadData: downloadData)
+        await updateUI()
     }
     
-    func retry_download(download: DownloadData) {
-        Task {
-            await downloadActor.retryDownload(download: download)
-            await updateUI()
-        }
+    func retry_download(download: DownloadData) async {
+        await downloadActor.retryDownload(download: download)
+        await updateUI()
     }
     
-    func try_next_download() {
-        Task {
-            await downloadActor.tryNextDownload()
-            await updateUI()
-            
-        }
+    func try_next_download() async {
+        await downloadActor.tryNextDownload()
+        await updateUI()
     }
     
     func updateUI() async {

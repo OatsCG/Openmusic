@@ -11,7 +11,6 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-@MainActor
 @Observable class AEPlayerOnline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status
@@ -103,37 +102,33 @@ import AudioKit
         player.currentItem != nil
     }
     
-    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (Bool) -> Void) {
+    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (Bool) async -> Void) async {
         if parent.isReady {
             player.cancelPendingPrerolls()
-            completion(true)
+            await completion(true)
             return
         }
         parent.statusObservation = player.observe(\.status, options: [.new]) { (player, change) in
             if player.status == .readyToPlay {
                 print("STATUS READY STATUS READY")
-                DispatchQueue.main.async {
-                    self.status = .readyToPlay
-                    parent.statusObservation?.invalidate()
-                }
+                self.status = .readyToPlay
+                parent.statusObservation?.invalidate()
                 player.cancelPendingPrerolls()
                 let currentRate: Float = player.rate
                 player.rate = 0
                 player.preroll(atRate: 1.0) { prerollSuccess in
                     player.seek(to: CMTime.zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
                         player.rate = currentRate
-                        DispatchQueue.main.async {
-                            parent.isReady = true
-                            completion(true)
+                        parent.isReady = true
+                        Task {
+                            await completion(true)
                         }
                         
                     }
                 }
             } else if player.status == .failed {
                 print("STATUS FAILED STATUS FAILED")
-                DispatchQueue.main.async {
-                    self.status = .failed
-                }
+                self.status = .failed
             }
         }
     }

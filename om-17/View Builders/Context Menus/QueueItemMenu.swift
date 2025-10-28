@@ -36,7 +36,9 @@ struct QueueItemMenu: View {
                     }
                 } else {
                     Button(action: {
-                        database.store_track(queueItem)
+                        Task {
+                            await database.store_track(queueItem)
+                        }
                     }) {
                         Label("Add to Library", systemImage: "plus.circle")
                     }
@@ -138,7 +140,9 @@ struct QueueItemMenu: View {
                     }
                 } else {
                     Button {
-                        downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
+                        Task {
+                            await downloadManager.addDownloadTask(track: StoredTrack(from: queueItem), explicit: queueItem.explicit)
+                        }
                     } label: {
                         Label("Download", systemImage: "square.and.arrow.down")
                             .symbolRenderingMode(.hierarchical)
@@ -158,7 +162,9 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.move(fromOffsets: IndexSet(integer: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0), toOffset: 0)
                 }
-                playerManager.prime_next_song()
+                Task {
+                    await playerManager.prime_next_song()
+                }
             }) {
                 Label("Move to Top", systemImage: "text.line.first.and.arrowtriangle.forward")
             }
@@ -166,21 +172,23 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.move(fromOffsets: IndexSet(integer: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0), toOffset: Int.random(in: 1..<(playerManager.trackQueue.count)))
                 }
-                playerManager.prime_next_song()
+                Task {
+                    await playerManager.prime_next_song()
+                }
             }) {
                 Label("Move Randomly", systemImage: "arrow.up.and.down.text.horizontal")
             }
             Button(action: {
                 Task {
                     let copiedQueueItem: QueueItem = QueueItem(from: queueItem)
-                    await MainActor.run {
-                        if let track = copiedQueueItem.Track as? ImportedTrack {
-                            copiedQueueItem.Track = FetchedTrack(from: track)
-                        }
-                        withAnimation {
-                            playerManager.trackQueue.insert(copiedQueueItem, at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
-                        }
-                        playerManager.prime_next_song()
+                    if let track = copiedQueueItem.Track as? ImportedTrack {
+                        copiedQueueItem.Track = FetchedTrack(from: track)
+                    }
+                    withAnimation {
+                        playerManager.trackQueue.insert(copiedQueueItem, at: playerManager.trackQueue.firstIndex(where: {$0.queueID == queueItem.queueID}) ?? 0)
+                    }
+                    Task {
+                        await playerManager.prime_next_song()
                     }
                 }
             }) {
@@ -190,7 +198,9 @@ struct QueueItemMenu: View {
                 withAnimation {
                     playerManager.trackQueue.removeAll(where: {$0.queueID == queueItem.queueID})
                 }
-                playerManager.prime_next_song()
+                Task {
+                    await playerManager.prime_next_song()
+                }
             }) {
                 Label("Remove From Queue", systemImage: "minus.circle")
             }

@@ -43,7 +43,7 @@ actor FetchSuggestionsActor {
         isFetching = true
         defer { isFetching = false }
         let data = try await fetchSuggestionsData(songs: songs)
-        if await playerManager.getEnjoyedSongsNaive(limit: 5) == songs {
+        if playerManager.getEnjoyedSongsNaive(limit: 5) == songs {
             await playerManager.queue_songs(tracks: data.Tracks, wasSuggested: true)
         }
     }
@@ -62,48 +62,35 @@ actor FetchSuggestionsActor {
 }
 
 // ViewModel to manage view updates
-@MainActor
 @Observable class FetchSuggestionsModel {
     private let suggestionsActor = FetchSuggestionsActor()
     var isFetching: Bool = false
     
-    func runSearch(songs: [NaiveTrack], playerManager: PlayerManager) {
+    func runSearch(songs: [NaiveTrack], playerManager: PlayerManager) async {
         isFetching = true
-        Task {
-            do {
-                try await suggestionsActor.runSearch(songs: songs, playerManager: playerManager)
-                
-                let fetching = await suggestionsActor.getIsFetching()
-                
-                await MainActor.run {
-                    isFetching = fetching
-                }
-            } catch {
-                print("Error: \(error)")
-                await MainActor.run {
-                    isFetching = false
-                }
-            }
+        do {
+            try await suggestionsActor.runSearch(songs: songs, playerManager: playerManager)
+            
+            let fetching = await suggestionsActor.getIsFetching()
+            
+            isFetching = fetching
+        } catch {
+            print("Error: \(error)")
+            isFetching = false
         }
     }
     
-    func runSearch(vibe: VibeObject, playerManager: PlayerManager) {
+    func runSearch(vibe: VibeObject, playerManager: PlayerManager) async {
         isFetching = true
-        Task {
-            do {
-                try await suggestionsActor.runSearch(vibe: vibe, playerManager: playerManager)
-                
-                let fetching = await suggestionsActor.getIsFetching()
-                
-                await MainActor.run {
-                    isFetching = fetching
-                }
-            } catch {
-                print("Error: \(error)")
-                await MainActor.run {
-                    isFetching = false
-                }
-            }
+        do {
+            try await suggestionsActor.runSearch(vibe: vibe, playerManager: playerManager)
+            
+            let fetching = await suggestionsActor.getIsFetching()
+            
+            isFetching = fetching
+        } catch {
+            print("Error: \(error)")
+            isFetching = false
         }
     }
 }

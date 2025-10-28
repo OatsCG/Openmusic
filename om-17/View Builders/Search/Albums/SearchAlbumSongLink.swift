@@ -28,8 +28,9 @@ struct SearchAlbumSongLink: View {
     
     var body: some View {
         Button(action: {
-            playerManager.fresh_play_multiple(tracks: continuation ?? [])
-            
+            Task {
+                await playerManager.fresh_play_multiple(tracks: continuation ?? [])
+            }
         }) {
             HStack {
                 if isPlayingTrackID(playerManager: playerManager, trackID: track.TrackID) {

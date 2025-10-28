@@ -95,7 +95,9 @@ struct NPTrackScrubberBar: ProgressViewStyle {
                             playerManager.currentQueueItem?.audio_AVPlayer?.seek(to: endNormal * playerManager.durationSeconds)
                         }
                     }
-                    playerManager.play()
+                    Task {
+                        await playerManager.play()
+                    }
                 }
             }
     }

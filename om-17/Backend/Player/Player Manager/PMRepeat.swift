@@ -21,7 +21,7 @@ extension PlayerManager {
         }
     }
     
-    func repeat_check() {
+    func repeat_check() async {
         if didAddFromRepeat || repeatMode == .off {
             return
         }
@@ -29,23 +29,21 @@ extension PlayerManager {
         if let currentQueueItem, currentQueueItem.isReady() && timeRemaining < 5 {
             didAddFromRepeat = true
             if repeatMode == .single {
-                single_repeat_add()
+                await single_repeat_add()
             } else if repeatMode == .queue {
-                queue_repeat_add()
+                await queue_repeat_add()
             }
         }
     }
     
-    func single_repeat_add() {
+    func single_repeat_add() async {
         // add copy of current song to front of queue
         if let currentQueueItem {
-            withAnimation {
-                queue_next(queueItem: QueueItem(from: currentQueueItem))
-            }
+            await queue_next(queueItem: QueueItem(from: currentQueueItem))
         }
     }
     
-    func queue_repeat_add() {
+    func queue_repeat_add() async {
         if trackQueue.isEmpty, let currentQueueItem {
             // if queue is empty: move history to queue and clear history
             withAnimation {
@@ -54,9 +52,7 @@ extension PlayerManager {
             }
             // add copy of current song to end of queue
             if trackQueue.isEmpty {
-                withAnimation {
-                    queue_song(queueItem: QueueItem(from: currentQueueItem))
-                }
+                await queue_song(queueItem: QueueItem(from: currentQueueItem))
             }
         }
     }

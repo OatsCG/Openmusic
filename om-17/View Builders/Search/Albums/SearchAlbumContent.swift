@@ -47,7 +47,9 @@ struct SearchAlbumContent: View {
                         // Add to library
                         if albumModel.fetchedAlbum == nil || albumModel.areTracksStored == false {
                             Button (action: {
-                                database.store_tracks((albumModel.fetchedAlbum?.Tracks ?? []))
+                                Task {
+                                    await database.store_tracks((albumModel.fetchedAlbum?.Tracks ?? []))
+                                }
                             }) {
                                 Image(systemName: "plus.circle.fill")
                                     .symbolRenderingMode(.hierarchical)

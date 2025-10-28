@@ -9,8 +9,7 @@ import Foundation
 import AVFoundation
 import SwiftUI
 
-@MainActor
-@Observable class QueueItem: Hashable {
+@Observable final class QueueItem: Sendable, Hashable {
     nonisolated let queueID: UUID
     var Track: any Track
     var fetchedPlayback: FetchedPlayback?

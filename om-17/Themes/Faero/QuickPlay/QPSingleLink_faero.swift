@@ -25,7 +25,9 @@ struct QPSingleLink_faero: View {
                         .environment(fontManager)
                 }
             Button(action: {
-                playerManager.fresh_play(track: track)
+                Task {
+                    await playerManager.fresh_play(track: track)
+                }
             }) {
                 Image(systemName: "play.circle.fill")
                     .symbolRenderingMode(.palette)
@@ -43,19 +45,25 @@ struct QPSingleLink_faero: View {
             }
                 .contextMenu {
                     Button {
-                        playerManager.queue_next(track: track)
+                        Task {
+                            await playerManager.queue_next(track: track)
+                        }
                     } label: {
                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                             .symbolRenderingMode(.hierarchical)
                     }
                     Button {
-                        playerManager.queue_song(track: track)
+                        Task {
+                            await playerManager.queue_song(track: track)
+                        }
                     } label: {
                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                             .symbolRenderingMode(.hierarchical)
                     }
                     Button {
-                        playerManager.queue_randomly(track: track)
+                        Task {
+                            await playerManager.queue_randomly(track: track)
+                        }
                     } label: {
                         Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                             .symbolRenderingMode(.hierarchical)

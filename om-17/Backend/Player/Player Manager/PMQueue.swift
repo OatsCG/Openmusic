@@ -43,123 +43,123 @@ extension PlayerManager {
         trackQueue = []
     }
     
-    func fresh_play(track: any Track, explicit: Bool? = nil) {
+    func fresh_play(track: any Track, explicit: Bool? = nil) async {
         //self.currentQueueItem?.clearPlayback()
         //self.reset_session_history()
         //self.queue_start_over()
         //self.queue_song(track: track, explicit: explicit)
         clear_suggestions()
-        queue_next(track: track, explicit: explicit)
+        await queue_next(track: track, explicit: explicit)
         //self.play()
-        player_forward()
+        await player_forward()
     }
     
-    func fresh_play_multiple(tracks: [any Track]) {
+    func fresh_play_multiple(tracks: [any Track]) async {
         currentQueueItem?.clearPlayback()
         reset_session_history()
         queue_start_over()
-        queue_songs(tracks: tracks)
-        play()
+        await queue_songs(tracks: tracks)
+        await play()
     }
     
-    func fresh_play_multiple(tracks: [PlaylistItem]) {
+    func fresh_play_multiple(tracks: [PlaylistItem]) async {
         currentQueueItem?.clearPlayback()
         reset_session_history()
         queue_start_over()
-        queue_songs(tracks: tracks.filter({ $0.importData.status == .success }).map{$0.track})
-        play()
+        await queue_songs(tracks: tracks.filter({ $0.importData.status == .success }).map{$0.track})
+        await play()
     }
     
-    func queue_song(track: any Track, explicit: Bool? = nil) {
+    func queue_song(track: any Track, explicit: Bool? = nil) async {
         trackQueue.append(QueueItem(from: track, explicit: explicit))
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuelater(track.Album.Artwork))
     }
     
-    func queue_song(queueItem: QueueItem) {
+    func queue_song(queueItem: QueueItem) async {
         trackQueue.append(queueItem)
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuelater(queueItem.Track.Album.Artwork))
     }
     
-    func queue_songs(tracks: [any Track], wasSuggested: Bool = false) {
+    func queue_songs(tracks: [any Track], wasSuggested: Bool = false) async {
         for track in tracks {
             trackQueue.append(QueueItem(from: track))
         }
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuelater(tracks.first?.Album.Artwork, count: tracks.count, wasSuggested: wasSuggested))
     }
     
-    func queue_songs(tracks: [PlaylistItem]) {
+    func queue_songs(tracks: [PlaylistItem]) async {
         for track in tracks.filter({ $0.importData.status == .success }).map({$0.track}) {
             trackQueue.append(QueueItem(from: track))
         }
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuelater(tracks.first?.track.Album.Artwork, count: tracks.count))
     }
     
-    func queue_next(track: any Track, explicit: Bool? = nil) {
+    func queue_next(track: any Track, explicit: Bool? = nil) async {
         trackQueue.insert(QueueItem(from: track, explicit: explicit), at: 0)
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuenext(track.Album.Artwork))
     }
     
-    func queue_next(queueItem: QueueItem) {
+    func queue_next(queueItem: QueueItem) async {
         trackQueue.insert(queueItem, at: 0)
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuenext(queueItem.Track.Album.Artwork))
     }
     
-    func queue_songs_next(tracks: [any Track]) {
+    func queue_songs_next(tracks: [any Track]) async {
         for track in tracks.reversed() {
             trackQueue.insert(QueueItem(from: track), at: 0)
         }
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuenext(tracks.first?.Album.Artwork, count: tracks.count))
     }
     
-    func queue_songs_next(tracks: [PlaylistItem]) {
+    func queue_songs_next(tracks: [PlaylistItem]) async {
         for track in tracks.filter({ $0.importData.status == .success }).map({$0.track}).reversed() {
             trackQueue.insert(QueueItem(from: track), at: 0)
         }
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuenext(tracks.first?.track.Album.Artwork, count: tracks.count))
     }
     
-    func queue_randomly(track: any Track, explicit: Bool? = nil) {
+    func queue_randomly(track: any Track, explicit: Bool? = nil) async {
         trackQueue.insert(QueueItem(from: track, explicit: explicit), at: Int.random(in: 0..<trackQueue.count + 1))
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuerandom(track.Album.Artwork))
     }
     
-    func queue_songs_randomly(tracks: [any Track]) {
+    func queue_songs_randomly(tracks: [any Track]) async {
         for track in tracks {
             trackQueue.insert(QueueItem(from: track), at: Int.random(in: 0..<trackQueue.count + 1))
         }
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuerandom(tracks.first?.Album.Artwork, count: tracks.count))
     }
     
-    func queue_songs_randomly(tracks: [PlaylistItem]) {
+    func queue_songs_randomly(tracks: [PlaylistItem]) async {
         for track in tracks.filter({ $0.importData.status == .success }).map({$0.track}) {
             trackQueue.insert(QueueItem(from: track), at: Int.random(in: 0..<trackQueue.count + 1))
         }
-        prime_next_song()
+        await prime_next_song()
         ToastManager.shared.propose(toast: Toast.queuerandom(tracks.first?.track.Album.Artwork, count: tracks.count))
     }
     
-    func remove_from_queue(at: Int) {
+    func remove_from_queue(at: Int) async {
         if at >= 0 && at < trackQueue.count {
             trackQueue.remove(at: at)
-            prime_next_song()
+            await prime_next_song()
         }
     }
     
-    func try_auto_skip_if_necessary() {
+    func try_auto_skip_if_necessary() async {
         if currentQueueItem?.isDownloaded == false {
             if currentQueueItem?.primeStatus == .failed {
                 currentQueueItem?.update_prime_status(.passed)
-                player_forward(userInitiated: true)
+                await player_forward(userInitiated: true)
                 return
             }
         }

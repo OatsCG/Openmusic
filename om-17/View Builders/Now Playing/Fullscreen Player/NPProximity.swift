@@ -19,12 +19,16 @@ struct NPProximity: View {
         .onReceive(capturetimer) { time in
             proximityManager.extractCenterPixel(row: Float(proximityHorizontalColumn), range: proximityVerticalRange, completion: { centerDepth in
                 if let centerDepth {
-                    playerManager.depth_change_detected(close: centerDepth.good)
+                    Task {
+                        await playerManager.depth_change_detected(close: centerDepth.good)
+                    }
                 }
             })
         }
         .onDisappear {
-            proximityManager.stopRunning()
+            Task {
+                await proximityManager.stopRunning()
+            }
         }
     }
 }

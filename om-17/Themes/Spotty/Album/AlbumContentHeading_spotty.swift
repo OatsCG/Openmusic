@@ -66,8 +66,10 @@ struct AlbumContentHeading_spotty: View {
                 .environment(\.colorScheme, .dark)
             HStack(spacing: 10) {
                 Button (action: {
-                    if tracks != nil {
-                        playerManager.fresh_play_multiple(tracks: tracks!)
+                    if let tracks {
+                        Task {
+                            await playerManager.fresh_play_multiple(tracks: tracks)
+                        }
                     }
                 }) {
                     AlbumWideButton_component(text: "Play", ArtworkID: album.Artwork)
@@ -76,8 +78,10 @@ struct AlbumContentHeading_spotty: View {
                     .clipped()
                     
                 Button (action: {
-                    if tracks != nil {
-                        playerManager.fresh_play_multiple(tracks: tracks!.shuffled())
+                    if let tracks {
+                        Task {
+                            await playerManager.fresh_play_multiple(tracks: tracks.shuffled())
+                        }
                     }
                 }) {
                     AlbumWideButton_component(text: "Shuffle", ArtworkID: album.Artwork)

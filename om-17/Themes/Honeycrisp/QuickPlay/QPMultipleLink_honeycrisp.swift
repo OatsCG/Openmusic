@@ -27,7 +27,9 @@ struct QPMultipleLink_honeycrisp: View {
                         }
                     VStack(spacing: 10) {
                         Button(action: {
-                            playerManager.fresh_play_multiple(tracks: tracks.sorted{$0.Index < $1.Index})
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: tracks.sorted{$0.Index < $1.Index})
+                            }
                         }) {
                             ZStack {
                                 Image(systemName: "play.circle.fill")
@@ -39,26 +41,34 @@ struct QPMultipleLink_honeycrisp: View {
                         }
                             .contextMenu {
                                 Button {
-                                    playerManager.queue_songs_next(tracks: tracks)
+                                    Task {
+                                        await playerManager.queue_songs_next(tracks: tracks)
+                                    }
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_songs(tracks: tracks)
+                                    Task {
+                                        await playerManager.queue_songs(tracks: tracks)
+                                    }
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_songs_randomly(tracks: tracks)
+                                    Task {
+                                        await playerManager.queue_songs_randomly(tracks: tracks)
+                                    }
                                 } label: {
                                     Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                             }
                         Button(action: {
-                            playerManager.fresh_play_multiple(tracks: tracks.shuffled())
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: tracks.shuffled())
+                            }
                         }) {
                             ZStack {
                                 Image(systemName: "shuffle.circle.fill")
@@ -70,13 +80,17 @@ struct QPMultipleLink_honeycrisp: View {
                         }
                             .contextMenu {
                                 Button {
-                                    playerManager.queue_songs_next(tracks: tracks.shuffled())
+                                    Task {
+                                        await playerManager.queue_songs_next(tracks: tracks.shuffled())
+                                    }
                                 } label: {
                                     Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)
                                 }
                                 Button {
-                                    playerManager.queue_songs(tracks: tracks.shuffled())
+                                    Task {
+                                        await playerManager.queue_songs(tracks: tracks.shuffled())
+                                    }
                                 } label: {
                                     Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                         .symbolRenderingMode(.hierarchical)

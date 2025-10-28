@@ -14,8 +14,8 @@ struct QSNPRowControls: View {
         HStack {
             Spacer()
             Button(action: {
-                withAnimation {
-                    playerManager.player_backward(userInitiated: true)
+                Task {
+                    await playerManager.player_backward(userInitiated: true)
                 }
             }) {
                 Image(systemName: "backward.fill")
@@ -26,7 +26,9 @@ struct QSNPRowControls: View {
                 if playerManager.isPlaying {
                     playerManager.pause()
                 } else {
-                    playerManager.play()
+                    Task {
+                        await playerManager.play()
+                    }
                 }
             }) {
                 Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
@@ -37,8 +39,8 @@ struct QSNPRowControls: View {
             .symbolEffect(.pulse, isActive: !playerManager.is_current_item_ready())
             Spacer()
             Button(action: {
-                withAnimation {
-                    playerManager.player_forward(userInitiated: true)
+                Task {
+                    await playerManager.player_forward(userInitiated: true)
                 }
             }) {
                 Image(systemName: "forward.fill")

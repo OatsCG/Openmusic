@@ -9,7 +9,7 @@ import AVFoundation
 import SwiftUI
 
 extension PlayerManager {
-    func volume_control_check(oldValue: Float?, newValue: Float?) {
+    func volume_control_check(oldValue: Float?, newValue: Float?) async {
         guard volumeSkipEnabled else { return }
         
         let changeDate = Date().timeIntervalSince1970
@@ -28,10 +28,10 @@ extension PlayerManager {
                 if newValue == lastVolume.0 && lastVolume.3 {
                     let difference = oldValue - newValue
                     if estEqual(difference, 0.0625) {
-                        player_backward(userInitiated: true)
+                        await player_backward(userInitiated: true)
                     }
                     if estEqual(difference, -0.0625) {
-                        player_forward(userInitiated: true)
+                        await player_forward(userInitiated: true)
                     }
                     self.lastVolume = (oldValue, newValue, changeDate, false)
                 }

@@ -54,7 +54,7 @@ extension PlayerManager {
         player.set_volume(to: appVolume)
     }
     
-    func set_currentlyPlaying(queueItem: QueueItem) {
+    func set_currentlyPlaying(queueItem: QueueItem) async {
         if let currentQueueItem {
             if currentQueueItem.queueID == queueItem.queueID {
                 if currentQueueItem.queueItemPlayer != nil {
@@ -79,9 +79,7 @@ extension PlayerManager {
         }
         
         setAudioSession()
-        Task {
-            addSuggestions()
-        }
+        await addSuggestions()
     }
     
     func setAudioSession() {

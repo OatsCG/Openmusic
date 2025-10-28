@@ -25,7 +25,9 @@ struct PlaylistContent: View {
                                 await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success })))
                             }
                         } else {
-                            playerManager.fresh_play_multiple(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                            }
                         }
                     }) {
                         AlbumWideButton_component(text: "Play", subtitle: "Downloaded Only", ArtworkID: "")
@@ -38,7 +40,9 @@ struct PlaylistContent: View {
                                 await playerManager.fresh_play_multiple(tracks: downloadManager.filter_downloaded(playlist.items.filter({ $0.importData.status == .success }).shuffled()))
                             }
                         } else {
-                            playerManager.fresh_play_multiple(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                            Task {
+                                await playerManager.fresh_play_multiple(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                            }
                         }
                     }) {
                         AlbumWideButton_component(text: "Shuffle", subtitle: "Downloaded Only", ArtworkID: "")
@@ -57,19 +61,25 @@ struct PlaylistContent: View {
                             Menu {
                                 Menu {
                                     Button {
-                                        playerManager.queue_songs_next(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                        Task {
+                                            await playerManager.queue_songs_next(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                        }
                                     } label: {
                                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)
                                     }
                                     Button {
-                                        playerManager.queue_songs(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                        Task {
+                                            await playerManager.queue_songs(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                        }
                                     } label: {
                                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)
                                     }
                                     Button {
-                                        playerManager.queue_songs_randomly(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                        Task {
+                                            await playerManager.queue_songs_randomly(tracks: playlist.items.filter({ $0.importData.status == .success }))
+                                        }
                                     } label: {
                                         Label("Queue Randomly", systemImage: "arrow.up.and.down.text.horizontal")
                                             .symbolRenderingMode(.hierarchical)
@@ -121,13 +131,17 @@ struct PlaylistContent: View {
                             Menu {
                                 Menu {
                                     Button {
-                                        playerManager.queue_songs_next(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                                        Task {
+                                            await playerManager.queue_songs_next(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                                        }
                                     } label: {
                                         Label("Queue Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)
                                     }
                                     Button {
-                                        playerManager.queue_songs(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                                        Task {
+                                            await playerManager.queue_songs(tracks: playlist.items.filter({ $0.importData.status == .success }).shuffled())
+                                        }
                                     } label: {
                                         Label("Queue Later", systemImage: "text.line.last.and.arrowtriangle.forward")
                                             .symbolRenderingMode(.hierarchical)

@@ -11,7 +11,6 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-@MainActor
 @Observable class AEPlayerOffline: AEPlayer {
     var filehash: UUID
     var status: AVPlayer.Status
@@ -51,10 +50,10 @@ import AudioKit
         eqManager.adjustEQBand(for: index, value: Float(value))
     }
     
-    func resetEQ(playerManager: PlayerManager) {
+    func resetEQ(playerManager: PlayerManager) async {
         
         //self.eqManager = EQManager()
-        eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
+        await eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"), playerManager: playerManager)
         //self.eqManager.resetEQ()
     }
     
@@ -90,37 +89,29 @@ import AudioKit
         player.status != .noSource
     }
     
-    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (_ success: Bool) -> Void) {
+    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (_ success: Bool) async -> Void) async {
         //self.eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
-        eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
+        await eqManager.update_EQ(enabled: UserDefaults.standard.bool(forKey: "EQEnabled"))
         if parent.isReady {
             print("seek: parent is ready ready")
-            completion(true)
+            await completion(true)
             return
         } else {
             print("seek: parent is NOT ready")
             if has_file() && eqManager.audioEngine == nil {
-                Task.detached { [weak self] in
-                    if let self = self {
-                        await self.eqManager.setEngine(audioEngine: self.player.engine, playerNode: self.player.playerNode.node)
-                        await self.amplitudeFetcher.try_amplitude_fetch(audioFile: self.player.file)
-                        DispatchQueue.main.async {
-                            parent.isReady = self.has_file()
-                            completion(self.has_file())
-                        }
-                    }
-                }
+                eqManager.setEngine(audioEngine: player.engine, playerNode: player.playerNode.node)
+                await amplitudeFetcher.try_amplitude_fetch(audioFile: player.file)
+                parent.isReady = has_file()
+                await completion(has_file())
             } else {
-                completion(has_file())
+                await completion(has_file())
             }
         }
     }
     
     func setVolume(_ to: Float) {
         if eqManager.isReady {
-            Task {
-                self.player.playerNode.volume = min(max(to, 0), 1)
-            }
+            player.playerNode.volume = min(max(to, 0), 1)
         }
     }
 }

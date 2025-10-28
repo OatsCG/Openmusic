@@ -102,22 +102,16 @@ struct LibraryPage: View {
                     }
             }
         }
-        .onAppear {
-            self.updateTracks()
+        .task {
+            await updateTracks()
         }
     }
     
-    private func updateTracks() {
-        Task {
-            let predicate = #Predicate<StoredTrack> { _ in true }
-            let sortDescriptors = [SortDescriptor(\StoredTrack.dateAdded)]
-            let fetchedtracks = try? await database.fetch(predicate, sortBy: sortDescriptors)
-            if let fetchedtracks {
-                updateTracksWith(fetchedtracks)
-            } else {
-                updateTracksWith([])
-            }
-        }
+    private func updateTracks() async {
+        let predicate = #Predicate<StoredTrack> { _ in true }
+        let sortDescriptors = [SortDescriptor(\StoredTrack.dateAdded)]
+        let fetchedtracks = try? await database.fetch(predicate, sortBy: sortDescriptors)
+        updateTracksWith(fetchedtracks ?? [])
     }
     
     @MainActor

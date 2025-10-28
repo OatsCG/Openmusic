@@ -11,7 +11,6 @@ import CoreAudio
 import SwiftAudioPlayer
 import AudioKit
 
-@MainActor
 protocol AEPlayer {
     var filehash: UUID { get set }
     var duration: Double { get } // seconds
@@ -23,8 +22,8 @@ protocol AEPlayer {
     func seek(to: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void)
     func has_file() -> Bool
     func modifyEQ(index: Int, value: Double)
-    func resetEQ(playerManager: PlayerManager)
-    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (_ success: Bool) -> Void)
+    func resetEQ(playerManager: PlayerManager) async
+    func preroll(parent: PlayerEngine, completion: @Sendable @escaping (_ success: Bool) async -> Void) async
     func setVolume(_ to: Float) -> Void
     func amplitudeChart() -> [Float]?
 }

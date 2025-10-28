@@ -10,8 +10,7 @@ import SwiftUI
 import MediaPlayer
 import Combine
 
-@MainActor
-@Observable class PlayerManager {
+@Observable class PlayerManager: Sendable {
     let commandCenter = MPRemoteCommandCenter.shared()
     let audioSession = AVAudioSession.sharedInstance()
     
@@ -63,7 +62,8 @@ import Combine
     var volumeSkipMargin: Double
     var lastWaveDepth: (Bool, Double, Bool) = (false, 0, false) // (last, time, valid)
     var SkipNotifyEnabled: Bool = false
-    var notificationManager: NotificationManager = NotificationManager()
+    var notificationManager = NotificationManager()
+    var volumeObserver = VolumeObserver()
     
     // transport
     var commandCenterAlreadyLoaded: Bool
@@ -105,6 +105,9 @@ import Combine
         if volumeSkipMargin == 0 {
             volumeSkipMargin = 0.7
         }
+        Task {
+            await volumeObserver.initSliders()
+        }
     }
     
     init() {
@@ -141,11 +144,18 @@ import Combine
         //setAudioSession()
 
         //initialize volume observer
-        VolumeObserver.shared.VolumeSkipObserver = { newValue in
-            self.volume_control_check(oldValue: VolumeObserver.shared.oldValue, newValue: VolumeObserver.shared.newValue)
+        volumeObserver.VolumeSkipObserver = { newValue in
+            Task {
+                await self.volume_control_check(oldValue: self.volumeObserver.oldValue, newValue: self.volumeObserver.newValue)
+            }
         }
         //update timer
         update_timer(to: 0.1)
+        
+        // start volume observer
+        Task {
+            await volumeObserver.initSliders()
+        }
     }
     
     func update_timer(to: Double) {
@@ -157,41 +167,36 @@ import Combine
             self.syncedTimer?.invalidate()
             self.syncedTimer = Timer.scheduledTimer(withTimeInterval: to, repeats: true) { _ in
                 Task {
-                    await MainActor.run {
-                        self.timer_fired()
-                    }
+                    await self.timer_fired()
                 }
             }
             self.syncedTimer?.fire()
         }
     }
     
-    func timer_fired() {
+    func timer_fired() async {
         if !timerMidFire {
             timerMidFire = true
-            DispatchQueue.main.async { [weak self] in
-                self?.syncPlayingTimeControls()
-                self?.update_elapsed_time()
-                self?.repeat_check()
-                self?.crossfade_check()
-                self?.try_auto_skip_if_necessary()
-                self?.timerMidFire = false
-                //print(ToastManager.shared.currentToast?.message)
-            }
+            syncPlayingTimeControls()
+            update_elapsed_time()
+            await repeat_check()
+            await crossfade_check()
+            await try_auto_skip_if_necessary()
+            timerMidFire = false
         }
     }
     
-    func track_reached_end() {
-        player_forward()
+    func track_reached_end() async {
+        await player_forward()
     }
     
     func is_playing() -> Bool {
         isPlaying
     }
     
-    func end_song_check() {
+    func end_song_check() async{
         if durationSeconds - elapsedTime < 0.01 {
-            player_forward()
+            await player_forward()
         }
     }
 }

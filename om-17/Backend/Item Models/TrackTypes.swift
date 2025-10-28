@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 
-protocol Track: Codable, Hashable {
+protocol Track: Codable, Hashable, Sendable {
     var TrackID: String { get set }
     var Title: String { get set }
     var Playback_Clean: String? { get set }
@@ -110,7 +110,7 @@ struct FetchedTrack: Codable, Hashable, Track {
 }
 
 @Model
-final class StoredTrack: Hashable, Track {
+final class StoredTrack: Sendable, Hashable, Track {
     @Attribute(.unique) var TrackID: String
     var Title: String
     var Playback_Clean: String?
@@ -119,7 +119,7 @@ final class StoredTrack: Hashable, Track {
     var Index: Int
     var Album: SearchedAlbum
     var Features: [SearchedArtist]
-    var dateAdded: Date
+    private(set) var dateAdded: Date
     var originServer: String
     
     init(from: any Track) {

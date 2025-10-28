@@ -109,7 +109,9 @@ extension PlayerManager {
             setAudioSession()
             if options.contains(.shouldResume) {
                 print("[pause] ended interruption, playing")
-                play()
+                Task {
+                    await play()
+                }
             } else {
                 print("[pause] ended interruption")
                 pause()
@@ -127,11 +129,15 @@ extension PlayerManager {
         commandCenter.changePlaybackPositionCommand.isEnabled = true;
         
         commandCenter.nextTrackCommand.addTarget { [unowned self] event in
-            player_forward(userInitiated: true)
+            Task {
+                await player_forward(userInitiated: true)
+            }
             return .success
         }
         commandCenter.previousTrackCommand.addTarget { [unowned self] event in
-            player_backward(userInitiated: true)
+            Task {
+                await player_backward(userInitiated: true)
+            }
             return .success
         }
         commandCenter.playCommand.addTarget { [unowned self] event in
@@ -140,7 +146,9 @@ extension PlayerManager {
 //                return .success
 //            }
 //            return .commandFailed
-            play()
+            Task {
+                await play()
+            }
             return .success
         }
         commandCenter.pauseCommand.addTarget { [unowned self] event in
@@ -166,7 +174,9 @@ extension PlayerManager {
         commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
             if let event = event as? MPChangePlaybackPositionCommandEvent {
                 player.seek(to: event.positionTime)
-                play()
+                Task {
+                    await play()
+                }
                 syncPlayingTimeControls()
                 return .success
             }

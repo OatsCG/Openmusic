@@ -88,12 +88,12 @@ import Combine
         player?.seek(to: 0, allowSeekAhead: true)
     }
     
-    func preroll(completion: @escaping (Bool) -> Void) {
+    func preroll(completion: @escaping (Bool) async -> Void) async {
         if player?.state?.isError == true {
             //self.player?.reload()
-            completion(true)
+            await completion(true)
         } else {
-            completion(true)
+            await completion(true)
         }
     }
     
@@ -107,8 +107,6 @@ import Combine
     }
     
     func pause() {
-        DispatchQueue.main.async {
-            self.player?.pause()
-        }
+        player?.pause()
     }
 }
