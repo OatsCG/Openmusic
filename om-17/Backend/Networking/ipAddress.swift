@@ -256,16 +256,16 @@ class NavidromeNetworkService: NetworkService {
         return switch endpoint {
         case .status:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .explore:  // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .explore:
+            "\(baseURL())/rest/getAlbumList?\(params)&u=\(u)&p=\(p)&type=newest"
         case .vibes:  // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .search(q: let q):
             "\(baseURL())/rest/search2?\(params)&u=\(u)&p=\(p)&any=\(q)"
         case .quick(q: let q):  // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .album(id: let id):  // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .album(id: let id):
+            "\(baseURL())/rest/getAlbum?\(params)&u=\(u)&p=\(p)&id=\(id)"
         case .artist(id: let id): // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .random: // TODO:
@@ -295,7 +295,16 @@ class NavidromeNetworkService: NetworkService {
     }
     
     func decodeExploreResults(_ data: Data) throws -> ExploreResults {
-        return ExploreResults(Shelves: [])
+        let d = try decoder.decode(NavidromeAlbumList.self, from: data)
+        var albums: [SearchedAlbum] = []
+        for album in d.subsonicresponse.albumList.album {
+            var albumArtists: [SearchedArtist] = []
+            for artist in album.albumArtists {
+                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: "", Subscribers: 0))
+            }
+            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.album, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
+        }
+        return ExploreResults(Shelves: [ExploreShelf(Title: "Albums", Albums: albums)])
     }
     
     func decodeVibeShelf(_ data: Data) throws -> VibeShelf {
@@ -325,11 +334,15 @@ class NavidromeNetworkService: NetworkService {
         }
         
         for album in d.subsonicresponse.searchResult2.album {
-//            albums.append
+            var albumArtists: [SearchedArtist] = []
+            for artist in album.albumArtists {
+                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: "", Subscribers: 0))
+            }
+            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.album, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
         }
         
         for artist in d.subsonicresponse.searchResult2.artist {
-            
+            artists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.artistImageUrl, Subscribers: 0))
         }
         
         return SearchResults(Tracks: tracks, Albums: albums, Singles: [], Artists: artists)
