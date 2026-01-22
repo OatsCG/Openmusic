@@ -71,8 +71,10 @@ struct ExplorePage: View {
                             }
                     } else {
                         VStack(spacing: 20) {
-                            ExploreVibesView(vibesViewModel: $vibesViewModel)
-                            Divider()
+                            if NetworkManager.shared.networkService.supportedFeatures.contains(.vibes) {
+                                ExploreVibesView(vibesViewModel: $vibesViewModel)
+                                Divider()
+                            }
                             if let firstShelf = viewModel.exploreResults?.Shelves.first {
                                 ExploreShelfBigView(exploreShelf: firstShelf)
                             }

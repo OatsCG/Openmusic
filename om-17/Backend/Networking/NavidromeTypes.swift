@@ -48,6 +48,10 @@ struct SubsonicAlbumResults: Codable {
     var album: [NDAlbum]
 }
 
+struct SubsonicFetchedAlbum: Codable {
+    var album: NDFetchedAlbum
+}
+
 struct SubsonicAlbumList: Codable {
     var status: String
     var version: String
@@ -109,6 +113,27 @@ struct NDAlbum: Codable {
     var explicitStatus: String
 }
 
+struct NDFetchedAlbum: Codable {
+    var id: String
+    var name: String
+    var artist: String
+    var year: Int
+    var coverArt: String
+    var duration: Int
+    var created: String
+    var artistId: String
+    var songCount: Int
+    var sortName: String
+    var musicBrainzId: String
+    var genres: [String]
+    var moods: [String]
+    var artists: [NDArtistSimple]
+    
+    var displayArtist: String
+    var explicitStatus: String
+    var song: [NDSong]
+}
+
 struct NDSong: Codable {
     var id: String
     var parent: String
@@ -160,6 +185,14 @@ struct NavidromeSearch: Codable {
 
 struct NavidromeAlbumList: Codable {
     var subsonicresponse: SubsonicAlbumList
+    
+    enum CodingKeys: String, CodingKey {
+        case subsonicresponse = "subsonic-response"
+    }
+}
+
+struct NavidromeFetchedAlbum: Codable {
+    var subsonicresponse: SubsonicFetchedAlbum
     
     enum CodingKeys: String, CodingKey {
         case subsonicresponse = "subsonic-response"

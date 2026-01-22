@@ -97,6 +97,17 @@ struct FetchedAlbum: Codable, Hashable, Album {
         }
     }
     
+    init(AlbumID: String, Title: String, Artwork: String, AlbumType: String, Year: Int, Artists: [SearchedArtist], Tracks: [FetchedTrack], Features: [SearchedArtist]) {
+        self.AlbumID = AlbumID
+        self.Title = Title
+        self.Artwork = Artwork
+        self.AlbumType = AlbumType
+        self.Year = Year
+        self.Artists = Artists
+        self.Tracks = Tracks
+        self.Features = Features
+    }
+    
     init(from: [FetchedTrack]) {
         AlbumID = from[0].Album.AlbumID
         Title = from[0].Album.Title

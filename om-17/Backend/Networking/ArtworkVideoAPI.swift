@@ -11,7 +11,7 @@ import SwiftUI
 func fetchAlbumVideoData(albumID: String) async throws -> String {
     // Check if artwork video animations are enabled
     guard UserDefaults.standard.bool(forKey: "artworkVideoAnimations") == true else {
-        throw NSError(domain: "com.yourapp.error", code: 1, userInfo: [NSLocalizedDescriptionKey: "Artwork video animations are disabled."])
+        throw NSError(domain: "com.openmusic.error", code: 1, userInfo: [NSLocalizedDescriptionKey: "Artwork video animations are disabled."])
     }
     
     let urlString = NetworkManager.shared.networkService.getEndpointURL(.ampVideo(id: albumID))

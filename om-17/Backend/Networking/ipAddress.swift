@@ -102,6 +102,8 @@ class NetworkManager {
 }
 
 protocol NetworkService {
+    var supportedFeatures: [ServerFeature] { get }
+    
     func baseURL() -> String
     func getEndpointURL(_ endpoint: Endpoint) -> String
     
@@ -122,6 +124,8 @@ protocol NetworkService {
 }
 
 class OpenmusicNetworkService: NetworkService {
+    var supportedFeatures: [ServerFeature] = [.ampVideo, .playlistmatching, .quicksearch, .random, .suggestions, .vibes]
+    
     let decoder = JSONDecoder()
     
     func baseURL() -> String {
@@ -223,6 +227,8 @@ class OpenmusicNetworkService: NetworkService {
 }
 
 class NavidromeNetworkService: NetworkService {
+    var supportedFeatures: [ServerFeature] = [.quicksearch]
+    
     var u: String
     var p: String
     let params: String = "f=json&v=1.8.0&c=openmusic"
@@ -270,22 +276,12 @@ class NavidromeNetworkService: NetworkService {
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .random: // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .playlistinfo(platform: let platform, id: let id): // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)" // TODO:
-        case .ampVideo(id: let id): // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .playlisttracks(platform: let platform, id: let id): // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .exact(song: let song, album: let album, artist: let artist): // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .suggest: // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
-        case .suggestVibe: // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .playback(id: let id):
             "\(baseURL())/rest/getSong?\(params)&u=\(u)&p=\(p)&id=\(id)"
-        case .image(id: let id, w: let w, h: let h):
+        case .image(id: let id, w: _, h: let h):
             "\(baseURL())/rest/getCoverArt?\(params)&u=\(u)&p=\(p)&id=\(id)&size=\(h)"
+        default:
+            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         }
     }
     
@@ -353,7 +349,20 @@ class NavidromeNetworkService: NetworkService {
     }
     
     func decodeFetchedAlbum(_ data: Data) throws -> FetchedAlbum {
-        return FetchedAlbum(from: [FetchedTrack()])
+        let d = try decoder.decode(NavidromeFetchedAlbum.self, from: data)
+        let s = d.subsonicresponse
+        var artists: [SearchedArtist] = []
+        var tracks: [FetchedTrack] = []
+        
+        for artist in s.album.artists {
+            artists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: "", Subscribers: 0))
+        }
+        let album = SearchedAlbum(AlbumID: s.album.id, Title: s.album.name, Artwork: s.album.coverArt, AlbumType: "Album", Year: s.album.year, Artists: artists)
+        for song in s.album.song {
+            tracks.append(FetchedTrack(TrackID: song.id, Title: song.title, Playback_Clean: song.id, Playback_Explicit: nil, Length: song.duration, Index: song.track, Views: 0, Album: album, Features: []))
+        }
+        
+        return FetchedAlbum(AlbumID: s.album.id, Title: s.album.name, Artwork: s.album.coverArt, AlbumType: "Album", Year: s.album.year, Artists: artists, Tracks: tracks, Features: [])
     }
     
     func decodeFetchedArtist(_ data: Data) throws -> FetchedArtist {
@@ -412,4 +421,13 @@ enum Endpoint {
         suggestVibe(genre: String, acousticness: Float, danceability: Float, energy: Float, instrumentalness: Float, liveness: Float, mode: Int, speechiness: Float, valence: Float),
         playback(id: String),
         image(id: String, w: Int, h: Int)
+}
+
+enum ServerFeature {
+    case vibes,
+         quicksearch,
+         random,
+         ampVideo,
+         playlistmatching,
+         suggestions
 }
