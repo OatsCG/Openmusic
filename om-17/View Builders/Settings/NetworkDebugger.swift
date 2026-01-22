@@ -25,19 +25,22 @@ struct NetworkDebugger: View {
                         Spacer()
                         Text("Network Requests")
                             .font(.body .bold())
+                            .foregroundStyle(.white)
                         Spacer()
                     }
                     .background {
-                        Rectangle()
+                        Rectangle().fill(.black)
                     }
                     ScrollView {
-                        NetworkLogView(networkLog: NetworkLog(requestURL: "test"))
+                        ForEach(NetworkManager.shared.networkLogs, id: \.id) { log in
+                            NetworkLogView(networkLog: log)
+                        }
                     }
                 }
                 .padding(10)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.red)
+                        .stroke(.gray)
                         .fill(.black)
                 }
             }
@@ -56,14 +59,18 @@ struct NetworkLogView: View {
     var body: some View {
         HStack {
             Text(networkLog.time.formatted(date: .omitted, time: .shortened))
+                .foregroundStyle(.white)
             Divider()
             Text(networkLog.requestURL)
+                .foregroundStyle(.white)
             Spacer()
             Divider()
             Text(networkLog.responseStatus.rawValue)
+                .foregroundStyle(networkLog.responseStatus == .pending ? Color.gray : (networkLog.responseStatus == .failed ? Color.red : Color.white))
         }
+        .padding(5)
         .background {
-            Rectangle().fill(.clear).stroke(.white)
+            Rectangle().fill(.clear).stroke(.white.opacity(0.4))
         }
     }
 }
