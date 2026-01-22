@@ -41,12 +41,14 @@ struct PlaylistCreationButtons: View {
                 .sheet(isPresented: $showingImportPlaylistSheet) {
                     ImportPlaylistSheet(isShowingSheet: $showingImportPlaylistSheet)
                 }
-            Button(action: {
-                showingImportPlaylistSheet.toggle()
-            }) {
-                AlbumWideButton_component(text: "Import Playlist", ArtworkID: "")
+            if NetworkManager.shared.networkService.supportedFeatures.contains(.playlistmatching) {
+                Button(action: {
+                    showingImportPlaylistSheet.toggle()
+                }) {
+                    AlbumWideButton_component(text: "Import Playlist", ArtworkID: "")
+                }
+                    .buttonStyle(.plain)
             }
-                .buttonStyle(.plain)
         }
     }
 }
