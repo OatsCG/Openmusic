@@ -110,6 +110,13 @@ struct SettingsPage: View {
                 GlobalBackground_component()
             }
         }
+        .overlay {
+            VStack {
+                Spacer()
+                MiniToasts()
+                    .padding(.bottom, 5)
+            }
+        }
     }
 }
 

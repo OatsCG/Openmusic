@@ -82,8 +82,9 @@ struct NetworkLogDetailView: View {
     var networkLog: NetworkLog
     
     var body: some View {
-        VStack {
+        ScrollView {
             Button(action: {
+                UIPasteboard.general.string = networkLog.time.description
                 ToastManager.shared.propose(toast: Toast(artworkID: nil, message: "Copied to Clipboard", .saved))
             }) {
                 HStack {
@@ -93,6 +94,7 @@ struct NetworkLogDetailView: View {
             }
             Divider()
             Button(action: {
+                UIPasteboard.general.string = networkLog.requestURL
                 ToastManager.shared.propose(toast: Toast(artworkID: nil, message: "Copied to Clipboard", .saved))
             }) {
                 HStack {
@@ -102,6 +104,7 @@ struct NetworkLogDetailView: View {
             }
             Divider()
             Button(action: {
+                UIPasteboard.general.string = networkLog.responseStatus.rawValue
                 ToastManager.shared.propose(toast: Toast(artworkID: nil, message: "Copied to Clipboard", .saved))
             }) {
                 HStack {
@@ -111,6 +114,7 @@ struct NetworkLogDetailView: View {
             }
             Divider()
             Button(action: {
+                UIPasteboard.general.string = networkLog.responseObject.debugDescription
                 ToastManager.shared.propose(toast: Toast(artworkID: nil, message: "Copied to Clipboard", .saved))
             }) {
                 HStack {
@@ -148,31 +152,31 @@ func endpointToString(_ endpoint: Endpoint) -> String {
         "explore"
     case .vibes:
         "vibes"
-    case .search(q: let q):
+    case .search(q: _):
         "search"
-    case .quick(q: let q):
+    case .quick(q: _):
         "quick"
-    case .album(id: let id):
+    case .album(id: _):
         "album"
-    case .artist(id: let id):
+    case .artist(id: _):
         "artist"
     case .random:
         "random"
-    case .playlistinfo(platform: let platform, id: let id):
+    case .playlistinfo(platform: _, id: _):
         "playlistinfo"
-    case .ampVideo(id: let id):
+    case .ampVideo(id: _):
         "ampVideo"
-    case .playlisttracks(platform: let platform, id: let id):
+    case .playlisttracks(platform: _, id: _):
         "playlisttracks"
-    case .exact(song: let song, album: let album, artist: let artist):
+    case .exact(song: _, album: _, artist: _):
         "exact"
-    case .suggest(songs: let songs):
+    case .suggest(songs: _):
         "suggest"
-    case .suggestVibe(genre: let genre, acousticness: let acousticness, danceability: let danceability, energy: let energy, instrumentalness: let instrumentalness, liveness: let liveness, mode: let mode, speechiness: let speechiness, valence: let valence):
+    case .suggestVibe(genre: _, acousticness: _, danceability: _, energy: _, instrumentalness: _, liveness: _, mode: _, speechiness: _, valence: _):
         "suggestVibe"
-    case .playback(id: let id):
+    case .playback(id: _):
         "playback"
-    case .image(id: let id, w: let w, h: let h):
+    case .image(id: _, w: _, h: _):
         "image"
     }
 }
