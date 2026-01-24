@@ -126,6 +126,7 @@ struct NetworkLogDetailView: View {
     }
 }
 
+@Observable
 class NetworkLog {
     var id: UUID
     var time: Date
