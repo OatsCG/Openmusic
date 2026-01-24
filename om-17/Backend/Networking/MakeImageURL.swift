@@ -9,7 +9,10 @@ import Foundation
 
 
 func BuildArtistCookieImageURL(imgID: String, resolution: Resolution) -> URL? {
-    URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
+    if let url = isValidURL(imgID) {
+        return url
+    }
+    return URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
 }
 
 enum Resolution: Int {

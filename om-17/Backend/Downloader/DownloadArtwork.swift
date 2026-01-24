@@ -8,27 +8,22 @@
 import Foundation
 import SwiftUI
 
-func isImageURL(_ url: URL?) async throws -> Bool {
-    guard let url = url else { return false }
-    var request = URLRequest(url: url)
-    request.httpMethod = "HEAD"
-
-    let (_, response) = try await URLSession.shared.data(for: request)
-    
-    let httpResponse = response as? HTTPURLResponse
-    if let contentType = httpResponse?.value(forHTTPHeaderField: "Content-Type") {
-        return contentType.lowercased().hasPrefix("image/")
+func isValidURL(_ string: String) -> URL? {
+    guard let url = URL(string: string),
+          url.scheme != nil,
+          url.host != nil
+    else {
+        return nil
     }
-    
-    return false
+    return url
 }
 
 func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
     guard let imgID = imgID else { return nil }
     
-//    if await (try? isImageURL(URL(string: imgID))) ?? false {
-//        return URL(string: imgID)
-//    }
+    if let url = isValidURL(imgID) {
+        return url
+    }
     
     let url = URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
     return url ?? nil

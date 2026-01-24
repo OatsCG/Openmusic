@@ -8,44 +8,11 @@
 import SwiftUI
 
 func BuildArtistBannerURL(imgID: String?, resolution: Resolution, aspectRatio: Double) -> URL? {
-    if imgID == nil {
-        return nil
-//        let url = URL(string: "")
-//        return url ?? nil
-    } else {
-        //let url = URL(string: "https://lh3.googleusercontent.com/\(imgID!)=w\(Int(size * aspectRatio))-h\(Int(size))-p-l90-rj")
-        let url = URL(string: "https://lh3.googleusercontent.com/\(imgID!)")
-        //let url = URL(string: "https://lh3.googleusercontent.com/\(imgID!)=w1080-h2160-p-l90-rj")
-        return url ?? nil
+    guard let imgID else { return nil }
+    if let url = isValidURL(imgID) {
+        return url
     }
-}
-
-func downloadArtistBanner(ArtworkID: String, aspectRatio: Double) async {
-    let downloadURL: String = "https://lh3.googleusercontent.com/\(ArtworkID)=w\(1080 * aspectRatio)-h\(1080)-l90-rj"
-    let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Banner-\(ArtworkID).jpg")
-    if let destinationURL {
-        if !FileManager.default.fileExists(atPath: destinationURL.path) {
-            let urlRequest = URLRequest(url: URL(string: downloadURL)!)
-            let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-                if error != nil {
-                    return
-                }
-                guard let response = response as? HTTPURLResponse else { return }
-                if response.statusCode == 200 {
-                    guard let data = data else {
-                        return
-                    }
-                    //main.async
-                    do {
-                        try data.write(to: destinationURL, options: Data.WritingOptions.atomic)
-                    } catch _ {
-                        return
-                    }
-                }
-            }
-            dataTask.resume()
-        }
-    }
+    return URL(string: NetworkManager.shared.networkService.getEndpointURL(.image(id: imgID, w: resolution.rawValue, h: resolution.rawValue)))
 }
 
 func ArtistBannerExists(ArtworkID: String) -> Bool {
@@ -54,10 +21,4 @@ func ArtistBannerExists(ArtworkID: String) -> Bool {
         return true
     }
     return false
-}
-
-func RetrieveArtistBanner(ArtworkID: String) -> URL {
-    let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-    let destinationUrl = docsUrl?.appendingPathComponent("Banner-\(ArtworkID).jpg")
-    return destinationUrl ?? URL(string: "")!
 }

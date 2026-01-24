@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct NetworkDebugger: View {
-    @AppStorage("networkDebuggerEnabled") var networkDebuggerEnabled: Bool = false
+    @AppStorage("networkDebuggerToastsEnabled") var networkDebuggerToastsEnabled: Bool = false
     
     var body: some View {
         Form {
             Section {
-                Toggle("Show Log Notifications", isOn: $networkDebuggerEnabled)
+                Toggle("Show Log Notifications", isOn: $networkDebuggerToastsEnabled)
                     .tint(.green)
             } footer: {
                 Text("Receive toasts for network requests. Logs are reset on app restart.")
