@@ -19,11 +19,15 @@ struct SearchArtistContent: View {
                     FetchedArtistContentHeader_component(artist: fetchedArtist)
                     Spacer()
                     VStack(spacing: 20) {
-                        SearchArtistShelfTracks(tracks: fetchedArtist.Tracks, artistName: fetchedArtist.Name)
-                        Divider()
+                        if (!fetchedArtist.Tracks.isEmpty) {
+                            SearchArtistShelfTracks(tracks: fetchedArtist.Tracks, artistName: fetchedArtist.Name)
+                            Divider()
+                        }
                         SearchArtistShelfAlbums(albums: fetchedArtist.Albums, artistName: fetchedArtist.Name)
-                        Divider()
-                        SearchArtistShelfSingles(albums: fetchedArtist.Singles, artistName: fetchedArtist.Name)
+                        if (!fetchedArtist.Singles.isEmpty) {
+                            Divider()
+                            SearchArtistShelfSingles(albums: fetchedArtist.Singles, artistName: fetchedArtist.Name)
+                        }
                     }
                 } else {
                     SearchArtistContentHeader_component(artist: artist)

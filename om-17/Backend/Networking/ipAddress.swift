@@ -272,8 +272,8 @@ class NavidromeNetworkService: NetworkService {
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .album(id: let id):
             "\(baseURL())/rest/getAlbum?\(params)&u=\(u)&p=\(p)&id=\(id)"
-        case .artist(id: let id): // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+        case .artist(id: let id):
+            "\(baseURL())/rest/getArtist?\(params)&u=\(u)&p=\(p)&id=\(id)"
         case .random: // TODO:
             "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
         case .playback(id: let id):
@@ -366,7 +366,17 @@ class NavidromeNetworkService: NetworkService {
     }
     
     func decodeFetchedArtist(_ data: Data) throws -> FetchedArtist {
-        return FetchedArtist()
+        let d = try decoder.decode(NavidromeFetchedArtist.self, from: data)
+        var albums: [SearchedAlbum] = []
+        for album in d.subsonicresponse.artist.album {
+            var artists: [SearchedArtist] = []
+            for artist in album.artists {
+                artists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: "", Subscribers: 0))
+            }
+            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.name, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: artists))
+        }
+        
+        return FetchedArtist(ArtistID: d.subsonicresponse.artist.id, Name: d.subsonicresponse.artist.name, Profile_Photo: d.subsonicresponse.artist.artistImageUrl, Subscribers: 0, Albums: albums, Singles: [], Tracks: [])
     }
     
     func decodeRandomTracks(_ data: Data) throws -> RandomTracks {

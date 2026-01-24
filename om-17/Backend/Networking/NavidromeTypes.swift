@@ -52,6 +52,10 @@ struct SubsonicFetchedAlbum: Codable {
     var album: NDFetchedAlbum
 }
 
+struct SubsonicFetchedArtist: Codable {
+    var artist: NDFetchedArtist
+}
+
 struct SubsonicAlbumList: Codable {
     var status: String
     var version: String
@@ -71,6 +75,13 @@ struct NDArtist: Codable {
 struct NDArtistSimple: Codable {
     var id: String
     var name: String
+}
+
+struct NDFetchedArtist: Codable {
+    var id: String
+    var name: String
+    var artistImageUrl: String
+    var album: [NDFetchedArtistAlbum]
 }
 
 struct NDContributor: Codable {
@@ -134,6 +145,26 @@ struct NDFetchedAlbum: Codable {
     var song: [NDSong]
 }
 
+struct NDFetchedArtistAlbum: Codable {
+    var id: String
+    var name: String
+    var artist: String
+    var year: Int
+    var coverArt: String
+    var duration: Int
+    var created: String
+    var artistId: String
+    var songCount: Int
+    var sortName: String
+    var musicBrainzId: String
+    var genres: [String]
+    var moods: [String]
+    var artists: [NDArtistSimple]
+    
+    var displayArtist: String
+    var explicitStatus: String
+}
+
 struct NDSong: Codable {
     var id: String
     var parent: String
@@ -193,6 +224,14 @@ struct NavidromeAlbumList: Codable {
 
 struct NavidromeFetchedAlbum: Codable {
     var subsonicresponse: SubsonicFetchedAlbum
+    
+    enum CodingKeys: String, CodingKey {
+        case subsonicresponse = "subsonic-response"
+    }
+}
+
+struct NavidromeFetchedArtist: Codable {
+    var subsonicresponse: SubsonicFetchedArtist
     
     enum CodingKeys: String, CodingKey {
         case subsonicresponse = "subsonic-response"

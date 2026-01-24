@@ -61,6 +61,16 @@ struct FetchedArtist: Codable, Hashable {
         Tracks = []
     }
     
+    init(ArtistID: String, Name: String, Profile_Photo: String, Subscribers: Int, Albums: [SearchedAlbum], Singles: [SearchedAlbum], Tracks: [FetchedTrack]) {
+        self.ArtistID = ArtistID
+        self.Name = Name
+        self.Profile_Photo = Profile_Photo
+        self.Subscribers = Subscribers
+        self.Albums = Albums
+        self.Singles = Singles
+        self.Tracks = Tracks
+    }
+    
     init(default: Bool) {
         ArtistID = "UCSzWQmDsKG37iKN2vw1G-2Q"
         Name = "Don Toliver"
