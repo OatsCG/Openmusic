@@ -166,7 +166,6 @@
 		E559C6322A60A297001851D9 /* LibraryAlbumTracklist.swift in Sources */ = {isa = PBXBuildFile; fileRef = E559C6312A60A297001851D9 /* LibraryAlbumTracklist.swift */; };
 		E55CB2CB2A6302EC007078A5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55CB2CA2A6302EC007078A5 /* User.swift */; };
 		E55E17F22A4356E800EA5D36 /* QSNPRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E17F12A4356E800EA5D36 /* QSNPRow.swift */; };
-		E55E17F42A4357C600EA5D36 /* defaultalbumart.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E55E17F32A4357C600EA5D36 /* defaultalbumart.jpg */; };
 		E55E17F62A435C6000EA5D36 /* QSNPRowControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E17F52A435C6000EA5D36 /* QSNPRowControls.swift */; };
 		E55E17F82A435F5A00EA5D36 /* QSQueueRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E17F72A435F5A00EA5D36 /* QSQueueRow.swift */; };
 		E56273EA2B5393140062CB7A /* AmplitudeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */; };
@@ -785,7 +784,6 @@
 		E559C6312A60A297001851D9 /* LibraryAlbumTracklist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumTracklist.swift; sourceTree = "<group>"; };
 		E55CB2CA2A6302EC007078A5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E55E17F12A4356E800EA5D36 /* QSNPRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSNPRow.swift; sourceTree = "<group>"; };
-		E55E17F32A4357C600EA5D36 /* defaultalbumart.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = defaultalbumart.jpg; sourceTree = "<group>"; };
 		E55E17F52A435C6000EA5D36 /* QSNPRowControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSNPRowControls.swift; sourceTree = "<group>"; };
 		E55E17F72A435F5A00EA5D36 /* QSQueueRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSQueueRow.swift; sourceTree = "<group>"; };
 		E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeFetcher.swift; sourceTree = "<group>"; };
@@ -1952,6 +1950,7 @@
 				E5C2DD6B2A30398400E6BB97 /* NetworkManager.swift */,
 				E57C41282F245A1000D076D5 /* NetworkService.swift */,
 				E57C412A2F245A3600D076D5 /* OpenmusicNetworkService.swift */,
+				E54053122E73C57E00863014 /* NavidromeTypes.swift */,
 				E57C412C2F245A4700D076D5 /* NavidromeNetworkService.swift */,
 			);
 			path = "Network Manager";
@@ -2370,7 +2369,6 @@
 			isa = PBXGroup;
 			children = (
 				E5D493362A3061790091ED01 /* Image Views */,
-				E5D493392A3061CA0091ED01 /* Image Files */,
 				E5974D732A6C9262009286E2 /* Backgrounds */,
 				E52D2ECE2A4BBE8D004BFAA4 /* VStackWrapped.swift */,
 				E52D2ED02A4BBF6D004BFAA4 /* HStackWrapped.swift */,
@@ -2805,7 +2803,6 @@
 			isa = PBXGroup;
 			children = (
 				E57C41272F245A0700D076D5 /* Network Manager */,
-				E54053122E73C57E00863014 /* NavidromeTypes.swift */,
 				E5F2CA0A2C1520AA00241B8E /* Discord RPC */,
 				E57C41262F2459C600D076D5 /* Fetch APIs */,
 				E5D493432A3063460091ED01 /* MakeImageURL.swift */,
@@ -2825,14 +2822,6 @@
 				E5018BCC2A91410900143967 /* ArtistPageImageDisplay.swift */,
 			);
 			path = "Image Views";
-			sourceTree = "<group>";
-		};
-		E5D493392A3061CA0091ED01 /* Image Files */ = {
-			isa = PBXGroup;
-			children = (
-				E55E17F32A4357C600EA5D36 /* defaultalbumart.jpg */,
-			);
-			path = "Image Files";
 			sourceTree = "<group>";
 		};
 		E5DAAA552BE42E8500721C99 /* Player Engine */ = {
@@ -3248,7 +3237,6 @@
 			files = (
 				E5E668302CEBE76B00616F5B /* linen.xcassets in Resources */,
 				E57CC5752B5996C700537031 /* calibrib.ttf in Resources */,
-				E55E17F42A4357C600EA5D36 /* defaultalbumart.jpg in Resources */,
 				E58E8FB52BA16BB8009F7E43 /* Screenshot 2024-03-10 at 10.35.16 PM.png in Resources */,
 				E51375EF2B4393180005F2D7 /* CircularStd-Bold.otf in Resources */,
 				E538D6502AD477C400938EA1 /* wii.xcassets in Resources */,
