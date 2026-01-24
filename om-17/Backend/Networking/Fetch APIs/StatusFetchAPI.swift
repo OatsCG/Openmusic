@@ -29,6 +29,11 @@ func isNavidrome(_ ip: String) async throws -> Bool {
 // Function to fetch server status
 func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) async throws -> ServerStatus {
     var urlString = NetworkManager.shared.networkService.getEndpointURL(.status)
+    let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .status)
+    var successData: (any Codable)? = nil
+    defer {
+        NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+    }
     if let tempIPAddress = tempIPAddress {
         let serverType = try await getIPAddressType(tempIPAddress)
         switch serverType {
@@ -50,6 +55,7 @@ func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) 
                 serverStatus.footer = "Error code \(error.code)"
                 serverStatus.om_verify = "bad"
             }
+            successData = serverStatus
             return serverStatus
         }
     }

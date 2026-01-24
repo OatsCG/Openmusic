@@ -7,6 +7,7 @@
 
 import Foundation
 
+@Observable
 class NetworkManager {
     static let shared = NetworkManager()
     var networkService: NetworkService
@@ -29,6 +30,11 @@ class NetworkManager {
     
     func fetch<T: Codable>(endpoint: Endpoint, type: T.Type) async throws -> T {
         let urlString = NetworkManager.shared.networkService.getEndpointURL(endpoint)
+        let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: endpoint)
+        var successData: (any Codable)? = nil
+        defer {
+            NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+        }
         
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
@@ -36,6 +42,7 @@ class NetworkManager {
         
         let (data, _) = try await URLSession.shared.data(from: url)
         if let d = try decoder(T.self, data: data) {
+            successData = d
             return d
         } else {
             throw NSError()
@@ -69,14 +76,14 @@ class NetworkManager {
     }
     
     func addNetworkLog(url: String, endpoint: Endpoint) -> UUID {
-        if UserDefaults.standard.bool(forKey: "networkDebuggerEnabled") { return UUID() }
+        if !UserDefaults.standard.bool(forKey: "networkDebuggerEnabled") { return UUID() }
         let networkLog = NetworkLog(requestURL: url, endpoint: endpoint)
         networkLogs.append(networkLog)
         return networkLog.id
     }
     
     func updateLogStatus(id: UUID, with data: (any Codable)?) {
-        if UserDefaults.standard.bool(forKey: "networkDebuggerEnabled") { return }
+        if !UserDefaults.standard.bool(forKey: "networkDebuggerEnabled") { return }
         if let data {
             networkLogs.first(where: { $0.id == id })?.responseStatus = .success
             networkLogs.first(where: { $0.id == id })?.responseObject = data

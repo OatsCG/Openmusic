@@ -15,12 +15,18 @@ func fetchAlbumVideoData(albumID: String) async throws -> String {
     }
     
     let urlString = NetworkManager.shared.networkService.getEndpointURL(.ampVideo(id: albumID))
+    let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .ampVideo(id: albumID))
+    var successData: (any Codable)? = nil
+    defer {
+        NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+    }
     
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
+    successData = data
     let decoder = JSONDecoder()
     return try decoder.decode(String.self, from: data)
 }
