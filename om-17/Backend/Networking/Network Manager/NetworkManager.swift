@@ -13,6 +13,7 @@ class NetworkManager {
     var networkLogs: [NetworkLog] = []
     
     init() {
+        UserDefaults.standard.setValue(false, forKey: "networkDebuggerEnabled")
         let serverType = UserDefaults.standard.string(forKey: "ServerType") ?? ""
         if let type = ServerType(rawValue: serverType) {
             switch type {
@@ -67,14 +68,22 @@ class NetworkManager {
         }
     }
     
-    func addNetworkLog(url: String) -> UUID {
-        let networkLog = NetworkLog(requestURL: url)
+    func addNetworkLog(url: String, endpoint: Endpoint) -> UUID {
+        if UserDefaults.standard.bool(forKey: "networkDebuggerEnabled") { return UUID() }
+        let networkLog = NetworkLog(requestURL: url, endpoint: endpoint)
         networkLogs.append(networkLog)
         return networkLog.id
     }
     
-    func updateLogStatus(id: UUID, to: ResponseStatus) {
-        networkLogs.first(where: { $0.id == id })?.responseStatus = to
+    func updateLogStatus(id: UUID, with data: (any Codable)?) {
+        if UserDefaults.standard.bool(forKey: "networkDebuggerEnabled") { return }
+        if let data {
+            networkLogs.first(where: { $0.id == id })?.responseStatus = .success
+            networkLogs.first(where: { $0.id == id })?.responseObject = data
+        } else {
+            networkLogs.first(where: { $0.id == id })?.responseStatus = .failed
+        }
+        
     }
     
     func updateGlobalIPAddress(with newValue: String, type: ServerType, u: String, p: String) {

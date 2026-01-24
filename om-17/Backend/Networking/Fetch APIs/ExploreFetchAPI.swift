@@ -10,14 +10,10 @@ import SwiftUI
 // Function to fetch explore results
 func fetchExploreResults() async throws -> ExploreResults {
     let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore)
-    let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString)
-    var didSucceed = false
+    let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore)
+    var successData: (any Codable)? = nil
     defer {
-        if didSucceed {
-            NetworkManager.shared.updateLogStatus(id: logID, to: .success)
-        } else {
-            NetworkManager.shared.updateLogStatus(id: logID, to: .failed)
-        }
+        NetworkManager.shared.updateLogStatus(id: logID, with: successData)
     }
     
     guard let url = URL(string: urlString) else {
@@ -26,7 +22,7 @@ func fetchExploreResults() async throws -> ExploreResults {
     
     let (data, _) = try await URLSession.shared.data(from: url)
     let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
-    didSucceed = true
+    successData = decoded
     return decoded
 }
 
