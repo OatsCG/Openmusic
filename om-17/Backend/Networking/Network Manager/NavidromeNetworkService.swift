@@ -59,19 +59,15 @@ class NavidromeNetworkService: NetworkService {
         case .status:
             "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .explore:
-            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=newest"
-        case .vibes:  // TODO:
-            "\(baseURL())/rest/ping?\(params)&\(creds())"
+            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=newest&size=50"
         case .search(q: let q):
-            "\(baseURL())/rest/search2?\(params)&\(creds())&any=\(q)"
-        case .quick(q: let q):  // TODO:
-            "\(baseURL())/rest/ping?\(params)&\(creds())"
+            "\(baseURL())/rest/search2?\(params)&\(creds())&query=\(q)&artistCount=50&albumCount=50&songCount=50"
+        case .quick(q: let q):
+            "\(baseURL())/rest/search2?\(params)&\(creds())&query=\(q)&artistCount=0&albumCount=0&songCount=20"
         case .album(id: let id):
             "\(baseURL())/rest/getAlbum?\(params)&\(creds())&id=\(id)"
         case .artist(id: let id):
             "\(baseURL())/rest/getArtist?\(params)&\(creds())&id=\(id)"
-        case .random: // TODO:
-            "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .playback(id: let id):
             "\(baseURL())/rest/getSong?\(params)&\(creds())&id=\(id)"
         case .image(id: let id, w: _, h: let h):
@@ -100,7 +96,7 @@ class NavidromeNetworkService: NetworkService {
     }
     
     func decodeVibeShelf(_ data: Data) throws -> VibeShelf {
-        return VibeShelf(vibes: [])
+        throw NetworkServiceError.notImplementedError("VibeShelf not implemented.")
     }
     
     func decodeSearchResults(_ data: Data) throws -> SearchResults {
@@ -141,7 +137,26 @@ class NavidromeNetworkService: NetworkService {
     }
     
     func decodeFetchedTracks(_ data: Data) throws -> FetchedTracks {
-        return FetchedTracks(Tracks: [])
+        let d = try decoder.decode(NavidromeSearch.self, from: data)
+        
+        var tracks: [FetchedTrack] = []
+        
+        for t in d.subsonicresponse.searchResult2.song {
+            var albumArtists: [SearchedArtist] = []
+            for artist in t.albumArtists {
+                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+            }
+            
+            let album = SearchedAlbum(AlbumID: t.albumId, Title: t.album, Artwork: t.coverArt, AlbumType: "Album", Year: t.year, Artists: albumArtists)
+            var features: [SearchedArtist] = []
+            for artist in t.artists {
+                features.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+            }
+            
+            tracks.append(FetchedTrack(TrackID: t.id, Title: t.title, Playback_Clean: t.id, Playback_Explicit: nil, Length: t.duration, Index: t.track, Views: 0, Album: album, Features: features))
+        }
+        
+        return FetchedTracks(Tracks: tracks)
     }
     
     func decodeFetchedAlbum(_ data: Data) throws -> FetchedAlbum {
@@ -176,24 +191,23 @@ class NavidromeNetworkService: NetworkService {
     }
     
     func decodeRandomTracks(_ data: Data) throws -> RandomTracks {
-        return RandomTracks(Tracks: [])
+        throw NetworkServiceError.notImplementedError("RandomTracks not implemented.")
     }
     
     func decodeFetchedPlaylistInfo(_ data: Data) throws -> FetchedPlaylistInfo {
-        return FetchedPlaylistInfo()
+        throw NetworkServiceError.notImplementedError("FetchedPlaylistInfo not implemented.")
     }
     
     func decodeFetchedPlaylistInfoTracks(_ data: Data) throws -> FetchedPlaylistInfoTracks {
-        return FetchedPlaylistInfoTracks()
+        throw NetworkServiceError.notImplementedError("FetchedPlaylistInfoTracks not implemented.")
     }
     
     func decodeImportedTracks(_ data: Data) throws -> ImportedTracks {
-        return ImportedTracks(Tracks: [])
+        throw NetworkServiceError.notImplementedError("ImportedTracks not implemented.")
     }
     
     func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
         let d = try decoder.decode(NavidromeSong.self, from: data)
-        print("ND: GOT PLAYBACK \("\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)")")
         return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)")
     }
     

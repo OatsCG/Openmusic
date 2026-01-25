@@ -109,12 +109,9 @@ struct NDAlbum: Codable {
     var sortName: String
     var mediaType: String
     var musicBrainzId: String
-    var isrc: [String]
-    var genres: [String]
     var channelCount: Int
     var samplingRate: Int
     var bitDepth: Int
-    var moods: [String]
     var artists: [NDArtistSimple]
     var displayArtist: String
     var albumArtists: [NDArtistSimple]
@@ -136,8 +133,6 @@ struct NDFetchedAlbum: Codable {
     var songCount: Int
     var sortName: String
     var musicBrainzId: String
-    var genres: [String]
-    var moods: [String]
     var artists: [NDArtistSimple]
     
     var displayArtist: String
@@ -157,8 +152,6 @@ struct NDFetchedArtistAlbum: Codable {
     var songCount: Int
     var sortName: String
     var musicBrainzId: String
-    var genres: [String]
-    var moods: [String]
     var artists: [NDArtistSimple]
     
     var displayArtist: String
@@ -191,12 +184,9 @@ struct NDSong: Codable {
     var sortName: String
     var mediaType: String
     var musicBrainzId: String
-    var isrc: [String]
-    var genres: [String]
     var channelCount: Int
     var samplingRate: Int
     var bitDepth: Int
-    var moods: [String]
     var artists: [NDArtistSimple]
     var displayArtist: String
     var albumArtists: [NDArtistSimple]

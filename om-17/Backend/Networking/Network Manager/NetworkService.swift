@@ -60,3 +60,7 @@ enum ServerFeature {
          playlistmatching,
          suggestions
 }
+
+enum NetworkServiceError: Error {
+    case notImplementedError(String)
+}
