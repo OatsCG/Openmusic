@@ -46,6 +46,7 @@ func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) 
             }
             
             let (data, _) = try await URLSession.shared.data(from: url)
+            successData = String(data: data, encoding: .utf8)
             let decoder = JSONDecoder()
             let navidromeServerStatus = try decoder.decode(NavidromeServerStatus.self, from: data)
             var serverStatus = ServerStatus(online: true, title: "Navidrome Server", body: "version \(navidromeServerStatus.subsonicresponse.serverVersion)", footer: "", om_verify: "", type: .navidrome)
@@ -55,7 +56,6 @@ func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) 
                 serverStatus.footer = "Error code \(error.code)"
                 serverStatus.om_verify = "bad"
             }
-            successData = serverStatus
             return serverStatus
         }
     }
@@ -63,8 +63,8 @@ func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) 
         throw URLError(.badURL)
     }
     let (data, _) = try await URLSession.shared.data(from: url)
+    successData = String(data: data, encoding: .utf8)
     let serverStatus = try NetworkManager.shared.networkService.decodeServerStatus(data)
-    successData = serverStatus
     return serverStatus
 }
 

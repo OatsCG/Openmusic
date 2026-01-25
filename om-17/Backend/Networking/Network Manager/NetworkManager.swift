@@ -41,8 +41,8 @@ class NetworkManager {
         }
         
         let (data, _) = try await URLSession.shared.data(from: url)
+        successData = String(data: data, encoding: .utf8)
         if let d = try decoder(T.self, data: data) {
-            successData = d
             return d
         } else {
             throw NSError()

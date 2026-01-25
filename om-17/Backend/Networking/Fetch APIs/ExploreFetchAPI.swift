@@ -21,8 +21,8 @@ func fetchExploreResults() async throws -> ExploreResults {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
+    successData = String(data: data, encoding: .utf8)
     let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
-    successData = decoded
     return decoded
 }
 

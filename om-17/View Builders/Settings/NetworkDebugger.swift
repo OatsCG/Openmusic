@@ -114,12 +114,12 @@ struct NetworkLogDetailView: View {
             }
             Divider()
             Button(action: {
-                UIPasteboard.general.string = networkLog.responseObject.debugDescription
+                UIPasteboard.general.string = (networkLog.responseObject as? String) ?? networkLog.responseObject.debugDescription
                 ToastManager.shared.propose(toast: Toast(artworkID: nil, message: "Copied to Clipboard", .saved))
             }) {
                 HStack {
                     Text("responseObject: ")
-                    Text(networkLog.responseObject.debugDescription)
+                    Text((networkLog.responseObject as? String) ?? networkLog.responseObject.debugDescription)
                 }
             }
         }

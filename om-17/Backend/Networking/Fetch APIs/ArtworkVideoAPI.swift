@@ -26,7 +26,7 @@ func fetchAlbumVideoData(albumID: String) async throws -> String {
     }
     
     let (data, _) = try await URLSession.shared.data(from: url)
-    successData = data
+    successData = String(data: data, encoding: .utf8)
     let decoder = JSONDecoder()
     return try decoder.decode(String.self, from: data)
 }
