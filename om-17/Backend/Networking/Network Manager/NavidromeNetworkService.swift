@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 class NavidromeNetworkService: NetworkService {
     var supportedFeatures: [ServerFeature] = [.quicksearch]
@@ -29,40 +30,54 @@ class NavidromeNetworkService: NetworkService {
         return NetworkManager.globalIPAddress()
     }
     
+    func creds() -> String {
+        let hash: String = md5Hash(input: p, salt: "openmusic")
+        return "u=\(u)&t=\(hash)&s=\("openmusic")"
+    }
+    
+    private func md5Hash(input: String, salt: String) -> String {
+        let combined = input + salt
+        let data = Data(combined.utf8)
+        
+        let digest = Insecure.MD5.hash(data: data)
+        
+        return digest.map { String(format: "%02hhx", $0) }.joined()
+    }
+    
     /// For use in the New Server page
     func getEndpointURL(_ endpoint: Endpoint, ip: String) -> String {
         return switch endpoint {
         case .status:
-            "\(ip)/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(ip)/rest/ping?\(params)&\(creds())"
         default:
-            "\(ip)/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(ip)/rest/ping?\(params)&\(creds())"
         }
     }
     
     func getEndpointURL(_ endpoint: Endpoint) -> String {
         return switch endpoint {
         case .status:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .explore:
-            "\(baseURL())/rest/getAlbumList?\(params)&u=\(u)&p=\(p)&type=newest"
+            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=newest"
         case .vibes:  // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .search(q: let q):
-            "\(baseURL())/rest/search2?\(params)&u=\(u)&p=\(p)&any=\(q)"
+            "\(baseURL())/rest/search2?\(params)&\(creds())&any=\(q)"
         case .quick(q: let q):  // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .album(id: let id):
-            "\(baseURL())/rest/getAlbum?\(params)&u=\(u)&p=\(p)&id=\(id)"
+            "\(baseURL())/rest/getAlbum?\(params)&\(creds())&id=\(id)"
         case .artist(id: let id):
-            "\(baseURL())/rest/getArtist?\(params)&u=\(u)&p=\(p)&id=\(id)"
+            "\(baseURL())/rest/getArtist?\(params)&\(creds())&id=\(id)"
         case .random: // TODO:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .playback(id: let id):
-            "\(baseURL())/rest/getSong?\(params)&u=\(u)&p=\(p)&id=\(id)"
+            "\(baseURL())/rest/getSong?\(params)&\(creds())&id=\(id)"
         case .image(id: let id, w: _, h: let h):
-            "\(baseURL())/rest/getCoverArt?\(params)&u=\(u)&p=\(p)&id=\(id)&size=\(h)"
+            "\(baseURL())/rest/getCoverArt?\(params)&\(creds())&id=\(id)&size=\(h)"
         default:
-            "\(baseURL())/rest/ping?\(params)&u=\(u)&p=\(p)"
+            "\(baseURL())/rest/ping?\(params)&\(creds())"
         }
     }
     
@@ -178,8 +193,8 @@ class NavidromeNetworkService: NetworkService {
     
     func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
         let d = try decoder.decode(NavidromeSong.self, from: data)
-        print("ND: GOT PLAYBACK \("\(baseURL())/rest/stream?\(params)&u=\(u)&p=\(p)&id=\(d.subsonicresponse.song.id)")")
-        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&u=\(u)&p=\(p)&id=\(d.subsonicresponse.song.id)")
+        print("ND: GOT PLAYBACK \("\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)")")
+        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)")
     }
     
     func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum {
