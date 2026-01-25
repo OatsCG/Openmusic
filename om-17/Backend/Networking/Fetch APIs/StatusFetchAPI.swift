@@ -59,13 +59,13 @@ func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) 
             return serverStatus
         }
     }
-    
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
-    
     let (data, _) = try await URLSession.shared.data(from: url)
-    return try NetworkManager.shared.networkService.decodeServerStatus(data)
+    let serverStatus = try NetworkManager.shared.networkService.decodeServerStatus(data)
+    successData = serverStatus
+    return serverStatus
 }
 
 // Actor to manage server status data
@@ -199,6 +199,16 @@ struct ServerStatus: Codable, Hashable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case online, title, body, footer, om_verify, type
+        case online, title, body, footer, om_verify
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        online = try values.decode(Bool.self, forKey: .online)
+        title = try values.decode(String.self, forKey: .title)
+        body = try values.decode(String.self, forKey: .body)
+        footer = try values.decode(String.self, forKey: .footer)
+        om_verify = try values.decode(String.self, forKey: .om_verify)
+        type = .openmusic
     }
 }

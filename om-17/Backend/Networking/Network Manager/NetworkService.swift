@@ -62,5 +62,5 @@ enum ServerFeature {
 }
 
 enum NetworkServiceError: Error {
-    case notImplementedError(String)
+    case notImplementedError(String), incompleteError
 }

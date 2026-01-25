@@ -84,8 +84,9 @@ class NavidromeNetworkService: NetworkService {
     
     func decodeExploreResults(_ data: Data) throws -> ExploreResults {
         let d = try decoder.decode(NavidromeAlbumList.self, from: data)
+        guard let dalbum = d.subsonicresponse.albumList.album else { return ExploreResults(Shelves: []) }
         var albums: [SearchedAlbum] = []
-        for album in d.subsonicresponse.albumList.album {
+        for album in dalbum {
             var albumArtists: [SearchedArtist] = []
             for artist in album.albumArtists {
                 albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
@@ -101,36 +102,41 @@ class NavidromeNetworkService: NetworkService {
     
     func decodeSearchResults(_ data: Data) throws -> SearchResults {
         let d = try decoder.decode(NavidromeSearch.self, from: data)
-        
         var tracks: [FetchedTrack] = []
         var albums: [SearchedAlbum] = []
         var artists: [SearchedArtist] = []
         
-        for t in d.subsonicresponse.searchResult2.song {
-            var albumArtists: [SearchedArtist] = []
-            for artist in t.albumArtists {
-                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+        if let dsong = d.subsonicresponse.searchResult2.song {
+            for t in dsong {
+                var albumArtists: [SearchedArtist] = []
+                for artist in t.albumArtists {
+                    albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+                }
+                
+                let album = SearchedAlbum(AlbumID: t.albumId, Title: t.album, Artwork: t.coverArt, AlbumType: "Album", Year: t.year, Artists: albumArtists)
+                var features: [SearchedArtist] = []
+                for artist in t.artists {
+                    features.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+                }
+                
+                tracks.append(FetchedTrack(TrackID: t.id, Title: t.title, Playback_Clean: t.id, Playback_Explicit: nil, Length: t.duration, Index: t.track, Views: 0, Album: album, Features: features))
             }
-            
-            let album = SearchedAlbum(AlbumID: t.albumId, Title: t.album, Artwork: t.coverArt, AlbumType: "Album", Year: t.year, Artists: albumArtists)
-            var features: [SearchedArtist] = []
-            for artist in t.artists {
-                features.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
-            }
-            
-            tracks.append(FetchedTrack(TrackID: t.id, Title: t.title, Playback_Clean: t.id, Playback_Explicit: nil, Length: t.duration, Index: t.track, Views: 0, Album: album, Features: features))
         }
         
-        for album in d.subsonicresponse.searchResult2.album {
-            var albumArtists: [SearchedArtist] = []
-            for artist in album.albumArtists {
-                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+        if let dalbum = d.subsonicresponse.searchResult2.album {
+            for album in dalbum {
+                var albumArtists: [SearchedArtist] = []
+                for artist in album.albumArtists {
+                    albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+                }
+                albums.append(SearchedAlbum(AlbumID: album.id, Title: album.album, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
             }
-            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.album, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
         }
         
-        for artist in d.subsonicresponse.searchResult2.artist {
-            artists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+        if let dartist = d.subsonicresponse.searchResult2.artist {
+            for artist in dartist {
+                artists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+            }
         }
         
         return SearchResults(Tracks: tracks, Albums: albums, Singles: [], Artists: artists)
@@ -141,19 +147,21 @@ class NavidromeNetworkService: NetworkService {
         
         var tracks: [FetchedTrack] = []
         
-        for t in d.subsonicresponse.searchResult2.song {
-            var albumArtists: [SearchedArtist] = []
-            for artist in t.albumArtists {
-                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+        if let dsong = d.subsonicresponse.searchResult2.song {
+            for t in dsong {
+                var albumArtists: [SearchedArtist] = []
+                for artist in t.albumArtists {
+                    albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+                }
+                
+                let album = SearchedAlbum(AlbumID: t.albumId, Title: t.album, Artwork: t.coverArt, AlbumType: "Album", Year: t.year, Artists: albumArtists)
+                var features: [SearchedArtist] = []
+                for artist in t.artists {
+                    features.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+                }
+                
+                tracks.append(FetchedTrack(TrackID: t.id, Title: t.title, Playback_Clean: t.id, Playback_Explicit: nil, Length: t.duration, Index: t.track, Views: 0, Album: album, Features: features))
             }
-            
-            let album = SearchedAlbum(AlbumID: t.albumId, Title: t.album, Artwork: t.coverArt, AlbumType: "Album", Year: t.year, Artists: albumArtists)
-            var features: [SearchedArtist] = []
-            for artist in t.artists {
-                features.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
-            }
-            
-            tracks.append(FetchedTrack(TrackID: t.id, Title: t.title, Playback_Clean: t.id, Playback_Explicit: nil, Length: t.duration, Index: t.track, Views: 0, Album: album, Features: features))
         }
         
         return FetchedTracks(Tracks: tracks)

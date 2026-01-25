@@ -39,13 +39,13 @@ struct SubsonicResponseSearch: Codable {
 }
 
 struct SubsonicSearchResults: Codable {
-    var artist: [NDArtist]
-    var album: [NDAlbum]
-    var song: [NDSong]
+    var artist: [NDArtist]?
+    var album: [NDAlbum]?
+    var song: [NDSong]?
 }
 
 struct SubsonicAlbumResults: Codable {
-    var album: [NDAlbum]
+    var album: [NDAlbum]?
 }
 
 struct SubsonicFetchedAlbum: Codable {
@@ -84,15 +84,8 @@ struct NDFetchedArtist: Codable {
     var album: [NDFetchedArtistAlbum]
 }
 
-struct NDContributor: Codable {
-    var role: String
-    var artist: NDArtistSimple
-}
-
 struct NDAlbum: Codable {
     var id: String
-    var parent: String
-    var isDir: Bool
     var title: String
     var name: String
     var album: String
@@ -116,8 +109,6 @@ struct NDAlbum: Codable {
     var displayArtist: String
     var albumArtists: [NDArtistSimple]
     var displayAlbumArtist: String
-    var contributors: [NDContributor]
-    var displayComposer: String
     var explicitStatus: String
 }
 
@@ -134,7 +125,6 @@ struct NDFetchedAlbum: Codable {
     var sortName: String
     var musicBrainzId: String
     var artists: [NDArtistSimple]
-    
     var displayArtist: String
     var explicitStatus: String
     var song: [NDSong]
@@ -191,7 +181,6 @@ struct NDSong: Codable {
     var displayArtist: String
     var albumArtists: [NDArtistSimple]
     var displayAlbumArtist: String
-    var contributors: [NDContributor]
     var displayComposer: String
     var explicitStatus: String
 }
