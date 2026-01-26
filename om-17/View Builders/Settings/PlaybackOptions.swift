@@ -12,7 +12,7 @@ struct PlaybackOptions: View {
     @AppStorage("crossfadeSeconds") var crossfadeSeconds: Double = 0
     @AppStorage("crossfadeAlbums") var crossfadeAlbums: Bool = false
     @AppStorage("playerFadeSeconds") var playerFadeSeconds: Double = 0
-    @AppStorage("streamBitrateWifi") var streamBitrateWifi: Double = 320
+    @AppStorage("streamBitrateEnabled") var streamBitrateEnabled: Bool = false
     @AppStorage("streamBitrateCellular") var streamBitrateCellular: Double = 320
     @AppStorage("EQEnabled") var EQEnabled: Bool = false
     
@@ -52,19 +52,9 @@ struct PlaybackOptions: View {
                     }
                 }
                 
-                Section("Stream Quality on Wifi") {
-                    Slider(value: $streamBitrateWifi, in: 64...320, step: 32) {
-                        Text("Stream Quality on Wifi")
-                    } minimumValueLabel: {
-                        Text("\(Int(streamBitrateWifi))kbps")
-                    } maximumValueLabel: {
-                        Text("")
-                    } onEditingChanged: { _ in
-                        
-                    }
-                }
-                
-                Section("Stream Quality on Cellular") {
+                Section {
+                    Toggle("Limit Bitrate on Cellular", isOn: $streamBitrateEnabled)
+                        .tint(.green)
                     Slider(value: $streamBitrateCellular, in: 64...320, step: 32) {
                         Text("Stream Quality on Cellular")
                     } minimumValueLabel: {
@@ -74,6 +64,11 @@ struct PlaybackOptions: View {
                     } onEditingChanged: { _ in
                         
                     }
+                    .disabled(!streamBitrateEnabled)
+                } header: {
+                    Text("Stream Quality")
+                } footer: {
+                    Text("Limit the streaming bitrate while on cellular data. Only available on supported servers.")
                 }
                 
                 Section {

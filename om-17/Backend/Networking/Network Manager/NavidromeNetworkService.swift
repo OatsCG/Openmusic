@@ -223,11 +223,10 @@ class NavidromeNetworkService: NetworkService {
     @MainActor func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
         let d = try decoder.decode(NavidromeSong.self, from: data)
         var currentBitRate: Int = 0
-        if NetworkMonitor.shared.currentPath == .wifi {
-            currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateWifi"))
-        } else if NetworkMonitor.shared.currentPath == .cellular {
+        if UserDefaults.standard.bool(forKey: "streamBitrateEnabled") && NetworkMonitor.shared.currentPath == .cellular {
             currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateCellular"))
         }
+        print("bitrate: \(currentBitRate)")
         return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)&maxBitRate=\(currentBitRate)")
     }
     
