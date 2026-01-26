@@ -38,33 +38,27 @@ func fetchServerStatus(with tempIPAddress: String? = nil, u: String, p: String) 
         let serverType = try await getIPAddressType(tempIPAddress)
         switch serverType {
         case .openmusic:
-            urlString = "\(tempIPAddress)/status"
-        case .navidrome:
-            let statusURL = NavidromeNetworkService(u: u, p: p).getEndpointURL(.status, ip: tempIPAddress)
-            guard let url = URL(string: statusURL) else {
-                throw URLError(.badURL)
-            }
+            let statusURL = "\(tempIPAddress)/status"
+            guard let url = URL(string: statusURL) else { throw URLError(.badURL) }
             
             let (data, _) = try await URLSession.shared.data(from: url)
             successData = String(data: data, encoding: .utf8)
-            let decoder = JSONDecoder()
-            let navidromeServerStatus = try decoder.decode(NavidromeServerStatus.self, from: data)
-            var serverStatus = ServerStatus(online: true, title: "Navidrome Server", body: "version \(navidromeServerStatus.subsonicresponse.serverVersion)", footer: "", om_verify: "", type: .navidrome)
-            
-            if let error = navidromeServerStatus.subsonicresponse.error {
-                serverStatus.body = error.message
-                serverStatus.footer = "Error code \(error.code)"
-                serverStatus.om_verify = "bad"
-            }
+            let serverStatus = try OpenmusicNetworkService().decodeServerStatus(data)
+            return serverStatus
+        case .navidrome:
+            let statusURL = NavidromeNetworkService(u: u, p: p).getEndpointURL(.status, ip: tempIPAddress)
+            guard let url = URL(string: statusURL) else { throw URLError(.badURL) }
+            let (data, _) = try await URLSession.shared.data(from: url)
+            successData = String(data: data, encoding: .utf8)
+            let serverStatus: ServerStatus = try NavidromeNetworkService(u: u, p: p).decodeServerStatus(data)
             return serverStatus
         }
     }
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
+    let statusURL = NetworkManager.shared.networkService.getEndpointURL(.status)
+    guard let url = URL(string: statusURL) else { throw URLError(.badURL) }
     let (data, _) = try await URLSession.shared.data(from: url)
     successData = String(data: data, encoding: .utf8)
-    let serverStatus = try NetworkManager.shared.networkService.decodeServerStatus(data)
+    let serverStatus: ServerStatus = try NetworkManager.shared.networkService.decodeServerStatus(data)
     return serverStatus
 }
 

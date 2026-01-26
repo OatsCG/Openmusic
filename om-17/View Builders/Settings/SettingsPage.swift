@@ -23,7 +23,7 @@ struct SettingsPage: View {
                 Section {
                     CustomServerInput()
                 } header: {
-                    Text("NETWORKING")
+                    Text("Server")
                 } footer: {
                     Text("Openmusic is not responsible for the content served by your server, including copyrighted music. Research your country's copyright laws before streaming. For help with servers, visit [create.openmusic.app](https://create.openmusic.app).")
                 }

@@ -12,6 +12,8 @@ struct PlaybackOptions: View {
     @AppStorage("crossfadeSeconds") var crossfadeSeconds: Double = 0
     @AppStorage("crossfadeAlbums") var crossfadeAlbums: Bool = false
     @AppStorage("playerFadeSeconds") var playerFadeSeconds: Double = 0
+    @AppStorage("streamBitrateWifi") var streamBitrateWifi: Double = 320
+    @AppStorage("streamBitrateCellular") var streamBitrateCellular: Double = 320
     @AppStorage("EQEnabled") var EQEnabled: Bool = false
     
     var body: some View {
@@ -33,16 +35,40 @@ struct PlaybackOptions: View {
                         }
                         .tint(.green)
                 } header: {
-                    Text("CROSSFADE")
+                    Text("Crossfade")
                 } footer: {
                     Text("Choose to crossfade tracks that are consecutive in an album.")
                 }
                 
-                Section("PLAY/PAUSE FADE") {
+                Section("Play/Pause Fade") {
                     Slider(value: $playerFadeSeconds, in: 0...0.5, step: 0.05) {
                         Text("Play/Pause Fade Seconds")
                     } minimumValueLabel: {
                         Text("\(playerFadeSeconds, specifier: "%.2f")s")
+                    } maximumValueLabel: {
+                        Text("")
+                    } onEditingChanged: { _ in
+                        
+                    }
+                }
+                
+                Section("Stream Quality on Wifi") {
+                    Slider(value: $streamBitrateWifi, in: 64...320, step: 32) {
+                        Text("Stream Quality on Wifi")
+                    } minimumValueLabel: {
+                        Text("\(Int(streamBitrateWifi))kbps")
+                    } maximumValueLabel: {
+                        Text("")
+                    } onEditingChanged: { _ in
+                        
+                    }
+                }
+                
+                Section("Stream Quality on Cellular") {
+                    Slider(value: $streamBitrateCellular, in: 64...320, step: 32) {
+                        Text("Stream Quality on Cellular")
+                    } minimumValueLabel: {
+                        Text("\(Int(streamBitrateCellular))kbps")
                     } maximumValueLabel: {
                         Text("")
                     } onEditingChanged: { _ in

@@ -79,7 +79,13 @@ class NavidromeNetworkService: NetworkService {
     
     func decodeServerStatus(_ data: Data) throws -> ServerStatus {
         let d = try decoder.decode(NavidromeServerStatus.self, from: data)
-        return ServerStatus(online: d.subsonicresponse.error == nil, title: "", body: "", footer: "", om_verify: "ok", type: .navidrome)
+        var serverStatus = ServerStatus(online: d.subsonicresponse.error == nil, title: "Navidrome Server", body: "version \(d.subsonicresponse.serverVersion)", footer: "", om_verify: "ok", type: .navidrome)
+        if let error = d.subsonicresponse.error {
+            serverStatus.body = error.message
+            serverStatus.footer = "Error code \(error.code)"
+            serverStatus.om_verify = "bad"
+        }
+        return serverStatus
     }
     
     func decodeExploreResults(_ data: Data) throws -> ExploreResults {
@@ -214,9 +220,15 @@ class NavidromeNetworkService: NetworkService {
         throw NetworkServiceError.notImplementedError("ImportedTracks not implemented.")
     }
     
-    func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
+    @MainActor func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
         let d = try decoder.decode(NavidromeSong.self, from: data)
-        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)")
+        var currentBitRate: Int = 0
+        if NetworkMonitor.shared.currentPath == .wifi {
+            currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateWifi"))
+        } else if NetworkMonitor.shared.currentPath == .cellular {
+            currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateCellular"))
+        }
+        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)&maxBitRate=\(currentBitRate)")
     }
     
     func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum {
