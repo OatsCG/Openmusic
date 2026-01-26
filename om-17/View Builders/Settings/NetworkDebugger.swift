@@ -123,6 +123,7 @@ struct NetworkLogDetailView: View {
                 }
             }
         }
+        .navigationTitle(endpointToString(networkLog.endpoint))
     }
 }
 

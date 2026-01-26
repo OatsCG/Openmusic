@@ -88,10 +88,10 @@ class NavidromeNetworkService: NetworkService {
         var albums: [SearchedAlbum] = []
         for album in dalbum {
             var albumArtists: [SearchedArtist] = []
-            for artist in album.albumArtists {
+            for artist in album.artists {
                 albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
             }
-            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.album, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
+            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.name, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
         }
         return ExploreResults(Shelves: [ExploreShelf(Title: "Albums", Albums: albums)])
     }
@@ -126,10 +126,10 @@ class NavidromeNetworkService: NetworkService {
         if let dalbum = d.subsonicresponse.searchResult2.album {
             for album in dalbum {
                 var albumArtists: [SearchedArtist] = []
-                for artist in album.albumArtists {
+                for artist in album.artists {
                     albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
                 }
-                albums.append(SearchedAlbum(AlbumID: album.id, Title: album.album, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
+                albums.append(SearchedAlbum(AlbumID: album.id, Title: album.name, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
             }
         }
         
