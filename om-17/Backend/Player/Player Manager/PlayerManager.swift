@@ -176,7 +176,6 @@ import Combine
                 self?.crossfade_check()
                 self?.try_auto_skip_if_necessary()
                 self?.timerMidFire = false
-                //print(ToastManager.shared.currentToast?.message)
             }
         }
     }

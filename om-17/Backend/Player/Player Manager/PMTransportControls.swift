@@ -15,8 +15,8 @@ extension PlayerManager {
         if isUpdatingInfoCenter {
             return
         }
+        self.isUpdatingInfoCenter = true
         DispatchQueue.main.async {
-            self.isUpdatingInfoCenter = true
             if self.currentQueueItem?.isReady() ?? false && self.durationSeconds > 1 {
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.elapsedTime
                 self.nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = self.durationSeconds
@@ -135,20 +135,10 @@ extension PlayerManager {
             return .success
         }
         commandCenter.playCommand.addTarget { [unowned self] event in
-//            if self.is_playing() == false {
-//                self.play()
-//                return .success
-//            }
-//            return .commandFailed
             play()
             return .success
         }
         commandCenter.pauseCommand.addTarget { [unowned self] event in
-//            if self.is_playing() == true {
-//                self.pause()
-//                return .success
-//            }
-//            return .commandFailed
             pause()
             return .success
         }
@@ -156,12 +146,6 @@ extension PlayerManager {
             print("\(currentQueueItem?.Track.Title ?? "nil") STOPPED")
             pause()
             return .success
-            
-//            if self.player.rate == 1.0 {
-//                self.pause()
-//                return .success
-//            }
-//            return .commandFailed
         }
         commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
             if let event = event as? MPChangePlaybackPositionCommandEvent {

@@ -82,7 +82,7 @@ import SwiftUI
     }
     
     func isReady() -> Bool {
-        if let queueItemPlayer, queueItemPlayer.isReady, queueItemPlayer.duration().isNaN, queueItemPlayer.duration() > 0 {
+        if let queueItemPlayer, queueItemPlayer.isReady, !queueItemPlayer.duration().isNaN, queueItemPlayer.duration() > 0 {
             return true
         }
         return false
