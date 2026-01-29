@@ -17,7 +17,7 @@ extension PlayerManager {
         }
         self.isUpdatingInfoCenter = true
         DispatchQueue.main.async {
-            if self.currentQueueItem?.isReady() ?? false && self.durationSeconds > 1 {
+            if self.currentQueueItem?.isReady(self) ?? false && self.durationSeconds > 1 {
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.elapsedTime
                 self.nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = self.durationSeconds
                 self.nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = self.is_playing() ? 1.0 : 0.0

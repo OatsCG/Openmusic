@@ -26,7 +26,7 @@ extension PlayerManager {
             return
         }
         let timeRemaining = durationSeconds - elapsedTime - crossfadeSeconds
-        if let currentQueueItem, currentQueueItem.isReady() && timeRemaining < 5 {
+        if let currentQueueItem, currentQueueItem.isReady(self) && timeRemaining < 5 {
             didAddFromRepeat = true
             if repeatMode == .single {
                 single_repeat_add()

@@ -136,7 +136,7 @@ struct BufferLabelLevelTwo: View {
                     }
                 }
             } else {
-                if playerManager.currentQueueItem?.isReady() == true {
+                if playerManager.currentQueueItem?.isReady(playerManager) == true {
                     if currentPlayerStatus == .readyToPlay {
                         if currentPlayerDuration ?? 0 > 0 {
                             Image(systemName: "checkmark")
@@ -278,7 +278,7 @@ struct BufferLabelLevelThree: View {
                         }
                     }
             } else {
-                if playerManager.currentQueueItem?.isReady() == false {
+                if playerManager.currentQueueItem?.isReady(playerManager) == false {
                     Image(systemName: "exclamationmark.triangle.fill")
                     VStack {
                         Text("Audio Uninitialized")

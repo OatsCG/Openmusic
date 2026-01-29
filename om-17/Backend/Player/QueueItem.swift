@@ -81,9 +81,14 @@ import SwiftUI
         update_download_status()
     }
     
-    func isReady() -> Bool {
-        if let queueItemPlayer, queueItemPlayer.isReady, !queueItemPlayer.duration().isNaN, queueItemPlayer.duration() > 0 {
-            return true
+    func isReady(_ playerManager: PlayerManager) -> Bool {
+        if let queueItemPlayer, queueItemPlayer.isReady {
+            if !queueItemPlayer.duration().isNaN, queueItemPlayer.duration() > 0 {
+                return true
+            } else {
+                self.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
+                return false
+            }
         }
         return false
     }

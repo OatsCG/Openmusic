@@ -38,12 +38,12 @@ extension PlayerManager {
     }
     
     func is_current_item_ready() -> Bool {
-        currentQueueItem?.isReady() ?? true
+        currentQueueItem?.isReady(self) ?? true
     }
     
     func is_next_item_ready() -> Bool {
         if let next = trackQueue.first,
-           next.queueItemPlayer == nil || !next.isReady() {
+           next.queueItemPlayer == nil || !next.isReady(self) {
             return false
         }
         return true

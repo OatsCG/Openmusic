@@ -164,11 +164,4 @@ extension PlayerManager {
             }
         }
     }
-    
-    func refresh_if_necessary() {
-        // if ready but duration is nil, refresh
-        if currentQueueItem?.audio_AVPlayer?.isReady == true && currentQueueItem?.isReady() == false {
-            self.currentQueueItem?.prime_object_fresh(playerManager: self, continueCurrent: false, seek: false)
-        }
-    }
 }
