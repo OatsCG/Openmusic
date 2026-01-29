@@ -227,7 +227,7 @@ class NavidromeNetworkService: NetworkService {
             currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateCellular"))
         }
         print("bitrate: \(currentBitRate)")
-        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)&maxBitRate=\(currentBitRate)")
+        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)&maxBitRate=\(currentBitRate)&format=mp3")
     }
     
     func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum {
