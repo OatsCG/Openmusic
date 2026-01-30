@@ -67,10 +67,10 @@ import AudioKit
     
     func pause() {
         if eqManager.isReady {
-            //self.player.playerNode.pause()
-            //if (self.player.status != .playing) {
+            self.player.playerNode.pause()
+            if (self.player.status != .playing) {
                 player.pause()
-            //}
+            }
         }
     }
     

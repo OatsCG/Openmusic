@@ -146,6 +146,7 @@
 		E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */; };
 		E547F6EF2B74158E00AB5617 /* NavPathModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6EE2B74158E00AB5617 /* NavPathModels.swift */; };
 		E547F6F32B7435ED00AB5617 /* ObjectEncoders.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */; };
+		E54917482F2C8B0D00BAAE24 /* QueueItemActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */; };
 		E54A04DF2A5059D400B1FEDF /* LibraryAlbumContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */; };
 		E54A04E22A505F5100B1FEDF /* QPAlbumTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04E12A505F5100B1FEDF /* QPAlbumTracks.swift */; };
 		E54A3FFC2ACBB1AA007B1444 /* GlobalBackground_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A3FFB2ACBB1AA007B1444 /* GlobalBackground_classic.swift */; };
@@ -764,6 +765,7 @@
 		E54525A32B8ADAB200C2961D /* ThemePreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewer.swift; sourceTree = "<group>"; };
 		E547F6EE2B74158E00AB5617 /* NavPathModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavPathModels.swift; sourceTree = "<group>"; };
 		E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectEncoders.swift; sourceTree = "<group>"; };
+		E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItemActor.swift; sourceTree = "<group>"; };
 		E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumContent.swift; sourceTree = "<group>"; };
 		E54A04E12A505F5100B1FEDF /* QPAlbumTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPAlbumTracks.swift; sourceTree = "<group>"; };
 		E54A3FFB2ACBB1AA007B1444 /* GlobalBackground_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalBackground_classic.swift; sourceTree = "<group>"; };
@@ -1300,6 +1302,7 @@
 			isa = PBXGroup;
 			children = (
 				E5255C1B2AAB9DB7007F12CE /* QueueItem.swift */,
+				E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */,
 				E5229C0C2C9381E100F1AA46 /* QueueItemPriming.swift */,
 				E550C2F82C7CCC0C0011851D /* Player Manager */,
 				E5DAAA552BE42E8500721C99 /* Player Engine */,
@@ -3733,6 +3736,7 @@
 				E51375FD2B44C41A0005F2D7 /* ScrubberBar_classic.swift in Sources */,
 				E5A534EA2B02BD4500F48935 /* LoadingTracklist_component.swift in Sources */,
 				E58E8FA42BA16BB8009F7E43 /* MiniPlayer_faero.swift in Sources */,
+				E54917482F2C8B0D00BAAE24 /* QueueItemActor.swift in Sources */,
 				E51376032B44C4570005F2D7 /* ScrubberBar_spotty.swift in Sources */,
 				E5977C322AF334DA00C55003 /* PlaylistInfoFetchAPI.swift in Sources */,
 				E54BA4022B8A76C300FAF0F4 /* OMUser.swift in Sources */,

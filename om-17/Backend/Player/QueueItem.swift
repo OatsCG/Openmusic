@@ -23,6 +23,7 @@ import SwiftUI
     var wasSongEnjoyed = false
     var primeStatus: PrimeStatus = .waiting
     var isDownloaded = false
+    var queueItemActor = QueueItemActor()
     
     init(from: any Track, explicit: Bool? = nil) {
         queueID = UUID()
@@ -86,7 +87,7 @@ import SwiftUI
             if !queueItemPlayer.duration().isNaN, queueItemPlayer.duration() > 0 {
                 return true
             } else {
-                self.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
+//                self.prime_object_fresh(playerManager: playerManager, continueCurrent: false, seek: false)
                 return false
             }
         }

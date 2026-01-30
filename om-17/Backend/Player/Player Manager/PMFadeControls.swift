@@ -9,9 +9,7 @@ import SwiftUI
 
 extension PlayerManager {
     func play_fade() {
-        DispatchQueue.main.async {
-            self.setIsPlaying(to: true)
-        }
+        setIsPlaying(to: true)
         player.playImmediately()
         play_fade_timer?.invalidate()
         pause_fade_timer?.invalidate()
@@ -42,9 +40,7 @@ extension PlayerManager {
         }
     }
     func pause_fade() {
-        DispatchQueue.main.async {
-            self.setIsPlaying(to: false)
-        }
+        self.setIsPlaying(to: false)
         play_fade_timer?.invalidate()
         pause_fade_timer?.invalidate()
         current_fade_step = 0
