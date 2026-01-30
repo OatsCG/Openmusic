@@ -223,7 +223,7 @@ class NavidromeNetworkService: NetworkService {
     @MainActor func decodeFetchedPlayback(_ data: Data) throws -> FetchedPlayback {
         let d = try decoder.decode(NavidromeSong.self, from: data)
         var currentBitRate: Int = 0
-        if UserDefaults.standard.bool(forKey: "streamBitrateEnabled") && NetworkMonitor.shared.currentPath == .cellular || true {
+        if UserDefaults.standard.bool(forKey: "streamBitrateEnabled") && NetworkMonitor.shared.currentPath == .cellular {
             currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateCellular"))
         }
         print("bitrate: \(currentBitRate)")

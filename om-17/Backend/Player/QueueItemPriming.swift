@@ -210,6 +210,15 @@ extension QueueItem {
                     playerManager.addSuggestions()
                 }
                 playerManager.set_currentlyPlaying(queueItem: self)
+                // check duration
+                print("PRIMING: checking duration: \(self.queueItemPlayer?.duration())")
+                if let duration = self.queueItemPlayer?.duration(), duration.isNaN {
+                    print("PRIMING: duration is .nan, re-preroll. rerolling.")
+                    defer {
+                        self.prime_object_fresh(playerManager: playerManager)
+                    }
+                    return
+                }
                 if playerManager.isPlaying && playerManager.currentQueueItem?.queueID == self.queueID {
                     self.queueItemPlayer?.play()
                 } else {
