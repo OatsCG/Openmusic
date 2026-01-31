@@ -9,21 +9,57 @@ import SwiftUI
 
 // Function to fetch explore results
 func fetchExploreResults() async throws -> ExploreResults {
-    let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore)
-    let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore)
-    var successData: (any Codable)? = nil
-    defer {
-        NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+    if NetworkManager.shared.networkService.supportedFeatures.contains(.isolatedExploreShelfFetch) {
+        let shelfEndpoints: [ExploreShelfEndpoint] = [
+            ExploreShelfEndpoint(endpoint: .explore(type: "frequent"), title: "Frequent"),
+            ExploreShelfEndpoint(endpoint: .explore(type: "newest"), title: "Newest"),
+            ExploreShelfEndpoint(endpoint: .explore(type: "highest"), title: "Popular"),
+            ExploreShelfEndpoint(endpoint: .explore(type: "random"), title: "Random"),
+        ]
+        
+        var shelves: [ExploreShelf] = []
+        for shelfEndpoint in shelfEndpoints {
+            let urlString = NetworkManager.shared.networkService.getEndpointURL(shelfEndpoint.endpoint)
+            let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: shelfEndpoint.endpoint)
+            var successData: (any Codable)? = nil
+            defer {
+                NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+            }
+            
+            guard let url = URL(string: urlString) else {
+                throw URLError(.badURL)
+            }
+            
+            let (data, _) = try await URLSession.shared.data(from: url)
+            successData = String(data: data, encoding: .utf8)
+            let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, title: shelfEndpoint.title)
+            shelves.append(decoded)
+        }
+        
+        return ExploreResults(Shelves: shelves)
+        
+    } else {
+        let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: ""))
+        let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: ""))
+        var successData: (any Codable)? = nil
+        defer {
+            NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+        }
+        
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        successData = String(data: data, encoding: .utf8)
+        let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
+        return decoded
     }
-    
-    guard let url = URL(string: urlString) else {
-        throw URLError(.badURL)
-    }
-    
-    let (data, _) = try await URLSession.shared.data(from: url)
-    successData = String(data: data, encoding: .utf8)
-    let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
-    return decoded
+}
+
+struct ExploreShelfEndpoint {
+    var endpoint: Endpoint
+    var title: String
 }
 
 // Actor to manage explore data

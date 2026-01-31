@@ -75,16 +75,18 @@ struct ExplorePage: View {
                                 ExploreVibesView(vibesViewModel: $vibesViewModel)
                                 Divider()
                             }
-                            if let firstShelf = viewModel.exploreResults?.Shelves.first {
+                            if let firstShelf = viewModel.exploreResults?.Shelves.first, !firstShelf.Albums.isEmpty {
                                 ExploreShelfBigView(exploreShelf: firstShelf)
                             }
                             Divider()
                                 .padding(.bottom, 15)
                             if let results = viewModel.exploreResults {
                                 ForEach(results.Shelves.dropFirst(), id: \.self) { shelf in
-                                    ExploreShelfView(exploreShelf: shelf)
-                                    Divider()
-                                        .padding(.bottom, 15)
+                                    if !shelf.Albums.isEmpty {
+                                        ExploreShelfView(exploreShelf: shelf)
+                                        Divider()
+                                            .padding(.bottom, 15)
+                                    }
                                 }
                             }
                         }

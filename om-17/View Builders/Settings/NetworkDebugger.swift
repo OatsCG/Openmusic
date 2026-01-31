@@ -180,6 +180,8 @@ func endpointToString(_ endpoint: Endpoint) -> String {
         "playback"
     case .image(id: _, w: _, h: _):
         "image"
+    case .scrobble(id: _, enjoyed: _):
+        "scrobble"
     }
 }
 

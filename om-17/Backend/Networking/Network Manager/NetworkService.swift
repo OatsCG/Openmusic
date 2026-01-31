@@ -13,7 +13,10 @@ protocol NetworkService {
     func baseURL() -> String
     func getEndpointURL(_ endpoint: Endpoint) -> String
     
+    
+    
     func decodeServerStatus(_ data: Data) throws -> ServerStatus
+    func decodeExploreShelf(_ data: Data, title: String) throws -> ExploreShelf
     func decodeExploreResults(_ data: Data) throws -> ExploreResults
     func decodeVibeShelf(_ data: Data) throws -> VibeShelf
     func decodeSearchResults(_ data: Data) throws -> SearchResults
@@ -35,7 +38,7 @@ enum ServerType: String, Codable {
 
 enum Endpoint {
     case status,
-    explore,
+    explore(type: String),
     vibes,
     search(q: String),
     quick(q: String),
@@ -61,6 +64,7 @@ enum ServerFeature {
     playlistmatching,
     suggestions,
     scrobble,
+    isolatedExploreShelfFetch,
     allexplore
 }
 

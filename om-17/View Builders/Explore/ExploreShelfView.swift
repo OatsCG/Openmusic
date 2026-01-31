@@ -26,7 +26,7 @@ struct ExploreShelfView: View {
             }
                 .buttonStyle(.plain)
             ScrollView(.horizontal) {
-                HStackWrapped(rows: exploreShelf.Albums.count > 1 ? 2 : 1) {
+                HStackWrapped(rows: exploreShelf.Albums.count > 5 ? 2 : 1) {
                     ForEach(exploreShelf.Albums.prefix(16), id: \.self) {album in
                         SearchAlbumLink(album: album)
                     }

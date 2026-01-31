@@ -9,7 +9,7 @@ import Foundation
 import CryptoKit
 
 class NavidromeNetworkService: @preconcurrency NetworkService {
-    var supportedFeatures: [ServerFeature] = [.quicksearch, .scrobble]
+    var supportedFeatures: [ServerFeature] = [.quicksearch, .scrobble, .isolatedExploreShelfFetch]
     
     var u: String
     var p: String
@@ -58,8 +58,8 @@ class NavidromeNetworkService: @preconcurrency NetworkService {
         return switch endpoint {
         case .status:
             "\(baseURL())/rest/ping?\(params)&\(creds())"
-        case .explore:
-            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=newest&size=50"
+        case .explore(type: let type):
+            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=\(type)&size=50"
         case .search(q: let q):
             "\(baseURL())/rest/search2?\(params)&\(creds())&query=\(q)&artistCount=50&albumCount=50&songCount=50"
         case .quick(q: let q):
@@ -88,6 +88,20 @@ class NavidromeNetworkService: @preconcurrency NetworkService {
             serverStatus.om_verify = "bad"
         }
         return serverStatus
+    }
+    
+    func decodeExploreShelf(_ data: Data, title: String) throws -> ExploreShelf {
+        let d = try decoder.decode(NavidromeAlbumList.self, from: data)
+        guard let dalbum = d.subsonicresponse.albumList.album else { return ExploreShelf(Title: title, Albums: []) }
+        var albums: [SearchedAlbum] = []
+        for album in dalbum {
+            var albumArtists: [SearchedArtist] = []
+            for artist in album.artists {
+                albumArtists.append(SearchedArtist(ArtistID: artist.id, Name: artist.name, Profile_Photo: artist.id, Subscribers: 0))
+            }
+            albums.append(SearchedAlbum(AlbumID: album.id, Title: album.name, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
+        }
+        return ExploreShelf(Title: title, Albums: albums)
     }
     
     func decodeExploreResults(_ data: Data) throws -> ExploreResults {
