@@ -147,6 +147,7 @@
 		E547F6EF2B74158E00AB5617 /* NavPathModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6EE2B74158E00AB5617 /* NavPathModels.swift */; };
 		E547F6F32B7435ED00AB5617 /* ObjectEncoders.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */; };
 		E54917482F2C8B0D00BAAE24 /* QueueItemActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */; };
+		E549174A2F2E69C600BAAE24 /* ScrobbleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54917492F2E69BF00BAAE24 /* ScrobbleAPI.swift */; };
 		E54A04DF2A5059D400B1FEDF /* LibraryAlbumContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */; };
 		E54A04E22A505F5100B1FEDF /* QPAlbumTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04E12A505F5100B1FEDF /* QPAlbumTracks.swift */; };
 		E54A3FFC2ACBB1AA007B1444 /* GlobalBackground_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A3FFB2ACBB1AA007B1444 /* GlobalBackground_classic.swift */; };
@@ -766,6 +767,7 @@
 		E547F6EE2B74158E00AB5617 /* NavPathModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavPathModels.swift; sourceTree = "<group>"; };
 		E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectEncoders.swift; sourceTree = "<group>"; };
 		E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItemActor.swift; sourceTree = "<group>"; };
+		E54917492F2E69BF00BAAE24 /* ScrobbleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrobbleAPI.swift; sourceTree = "<group>"; };
 		E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumContent.swift; sourceTree = "<group>"; };
 		E54A04E12A505F5100B1FEDF /* QPAlbumTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPAlbumTracks.swift; sourceTree = "<group>"; };
 		E54A3FFB2ACBB1AA007B1444 /* GlobalBackground_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalBackground_classic.swift; sourceTree = "<group>"; };
@@ -1942,6 +1944,7 @@
 				E5977C352AF34F6300C55003 /* PlaylistTracksNaiveFetchAPI.swift */,
 				E5977C372AF3624600C55003 /* PlaylistTrackFetchAPI.swift */,
 				E595DA572B8BFCE5007D4A59 /* SuggestionsFetchAPI.swift */,
+				E54917492F2E69BF00BAAE24 /* ScrobbleAPI.swift */,
 				E52D58A62A36701600270019 /* PlaybackFetchAPI.swift */,
 			);
 			path = "Fetch APIs";
@@ -3470,6 +3473,7 @@
 				E579DE492B3E7A0F009324C1 /* PlaylistContentHeading_spotty.swift in Sources */,
 				E5A365222A35839300243176 /* ArtistFetchAPI.swift in Sources */,
 				E58E8FB32BA16BB8009F7E43 /* AeroGlossOverlay.swift in Sources */,
+				E549174A2F2E69C600BAAE24 /* ScrobbleAPI.swift in Sources */,
 				E538D6532AD4902600938EA1 /* wiidisc.swift in Sources */,
 				E58B67372ACFB2B0002FA7A2 /* ArtistBackground_wii.swift in Sources */,
 				E5977C362AF34F6300C55003 /* PlaylistTracksNaiveFetchAPI.swift in Sources */,

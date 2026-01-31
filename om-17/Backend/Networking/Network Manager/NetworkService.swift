@@ -35,30 +35,33 @@ enum ServerType: String, Codable {
 
 enum Endpoint {
     case status,
-        explore,
-        vibes,
-        search(q: String),
-        quick(q: String),
-        album(id: String),
-        artist(id: String),
-        random,
-        playlistinfo(platform: String, id: String),
-        ampVideo(id: String),
-        playlisttracks(platform: String, id: String),
-        exact(song: String, album: String, artist: String),
-        suggest(songs: String),
-        suggestVibe(genre: String, acousticness: Float, danceability: Float, energy: Float, instrumentalness: Float, liveness: Float, mode: Int, speechiness: Float, valence: Float),
-        playback(id: String),
-        image(id: String, w: Int, h: Int)
+    explore,
+    vibes,
+    search(q: String),
+    quick(q: String),
+    album(id: String),
+    artist(id: String),
+    random,
+    playlistinfo(platform: String, id: String),
+    ampVideo(id: String),
+    playlisttracks(platform: String, id: String),
+    exact(song: String, album: String, artist: String),
+    suggest(songs: String),
+    suggestVibe(genre: String, acousticness: Float, danceability: Float, energy: Float, instrumentalness: Float, liveness: Float, mode: Int, speechiness: Float, valence: Float),
+    playback(id: String),
+    image(id: String, w: Int, h: Int),
+    scrobble(id: String, enjoyed: Bool)
 }
 
 enum ServerFeature {
     case vibes,
-         quicksearch,
-         random,
-         ampVideo,
-         playlistmatching,
-         suggestions
+    quicksearch,
+    random,
+    ampVideo,
+    playlistmatching,
+    suggestions,
+    scrobble,
+    allexplore
 }
 
 enum NetworkServiceError: Error {

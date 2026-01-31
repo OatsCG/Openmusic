@@ -8,8 +8,8 @@
 import Foundation
 import CryptoKit
 
-class NavidromeNetworkService: NetworkService {
-    var supportedFeatures: [ServerFeature] = [.quicksearch]
+class NavidromeNetworkService: @preconcurrency NetworkService {
+    var supportedFeatures: [ServerFeature] = [.quicksearch, .scrobble]
     
     var u: String
     var p: String
@@ -72,6 +72,8 @@ class NavidromeNetworkService: NetworkService {
             "\(baseURL())/rest/getSong?\(params)&\(creds())&id=\(id)"
         case .image(id: let id, w: _, h: let h):
             "\(baseURL())/rest/getCoverArt?\(params)&\(creds())&id=\(id)&size=\(h)"
+        case .scrobble(id: let id, enjoyed: let enjoyed):
+            "\(baseURL())/rest/scrobble?\(params)&\(creds())&id=\(id)&time=\(Date().timeIntervalSince1970)&submission=\(enjoyed ? "true" : "false")"
         default:
             "\(baseURL())/rest/ping?\(params)&\(creds())"
         }
@@ -225,9 +227,10 @@ class NavidromeNetworkService: NetworkService {
         var currentBitRate: Int = 0
         if UserDefaults.standard.bool(forKey: "streamBitrateEnabled") && NetworkMonitor.shared.currentPath == .cellular {
             currentBitRate = Int(UserDefaults.standard.double(forKey: "streamBitrateCellular"))
+            return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)&maxBitRate=\(currentBitRate)&format=mp3")
+        } else {
+            return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)")
         }
-        print("bitrate: \(currentBitRate)")
-        return FetchedPlayback(PlaybackID: d.subsonicresponse.song.id, YT_Audio_ID: "", Playback_Audio_URL: "\(baseURL())/rest/stream?\(params)&\(creds())&id=\(d.subsonicresponse.song.id)&maxBitRate=\(currentBitRate)&format=mp3")
     }
     
     func decodeSearchedAlbum(_ data: Data) throws -> SearchedAlbum {

@@ -50,6 +50,8 @@ class OpenmusicNetworkService: NetworkService {
             "\(baseURL())/playback?id=\(id)"
         case .image(id: let id, w: let w, h: let h):
             "https://lh3.googleusercontent.com/\(id)=w\(w)-h\(h)-p-l90-rj"
+        default:
+            "\(baseURL())/status"
         }
     }
     
