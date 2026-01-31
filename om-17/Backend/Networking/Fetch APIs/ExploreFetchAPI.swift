@@ -8,19 +8,40 @@
 import SwiftUI
 
 // Function to fetch explore results
-func fetchExploreResults() async throws -> ExploreResults {
-    if NetworkManager.shared.networkService.supportedFeatures.contains(.isolatedExploreShelfFetch) {
-        let shelfEndpoints: [ExploreShelfEndpoint] = [
-            ExploreShelfEndpoint(endpoint: .explore(type: "frequent"), title: "Frequent"),
-            ExploreShelfEndpoint(endpoint: .explore(type: "newest"), title: "Newest"),
-            ExploreShelfEndpoint(endpoint: .explore(type: "highest"), title: "Popular"),
-            ExploreShelfEndpoint(endpoint: .explore(type: "random"), title: "Random"),
-        ]
-        
-        var shelves: [ExploreShelf] = []
-        for shelfEndpoint in shelfEndpoints {
-            let urlString = NetworkManager.shared.networkService.getEndpointURL(shelfEndpoint.endpoint)
-            let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: shelfEndpoint.endpoint)
+func fetchExploreResults(_ type: ExploreType = .none) async throws -> ExploreResults {
+    if type == .none {
+        if NetworkManager.shared.networkService.supportedFeatures.contains(.isolatedExploreShelfFetch) {
+            let shelfEndpoints: [ExploreShelfEndpoint] = [
+                ExploreShelfEndpoint(endpoint: .explore(type: "frequent"), title: "Frequent"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "newest"), title: "Newest"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "highest"), title: "Popular"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "random"), title: "Random"),
+            ]
+            
+            var shelves: [ExploreShelf] = []
+            for shelfEndpoint in shelfEndpoints {
+                let urlString = NetworkManager.shared.networkService.getEndpointURL(shelfEndpoint.endpoint)
+                let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: shelfEndpoint.endpoint)
+                var successData: (any Codable)? = nil
+                defer {
+                    NetworkManager.shared.updateLogStatus(id: logID, with: successData)
+                }
+                
+                guard let url = URL(string: urlString) else {
+                    throw URLError(.badURL)
+                }
+                
+                let (data, _) = try await URLSession.shared.data(from: url)
+                successData = String(data: data, encoding: .utf8)
+                let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, title: shelfEndpoint.title)
+                shelves.append(decoded)
+            }
+            
+            return ExploreResults(Shelves: shelves)
+            
+        } else {
+            let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: ""))
+            let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: ""))
             var successData: (any Codable)? = nil
             defer {
                 NetworkManager.shared.updateLogStatus(id: logID, with: successData)
@@ -32,15 +53,26 @@ func fetchExploreResults() async throws -> ExploreResults {
             
             let (data, _) = try await URLSession.shared.data(from: url)
             successData = String(data: data, encoding: .utf8)
-            let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, title: shelfEndpoint.title)
-            shelves.append(decoded)
+            let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
+            return decoded
+        }
+    } else {
+        var exploreType: String = ""
+        var exploreTitle: String = ""
+        switch type {
+        case .albums:
+            exploreType = "alphabeticalByName"
+            exploreTitle = "Albums"
+        case .date:
+            exploreType = "newest"
+            exploreTitle = "Albums"
+        case .none:
+            exploreType = ""
+            exploreTitle = ""
         }
         
-        return ExploreResults(Shelves: shelves)
-        
-    } else {
-        let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: ""))
-        let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: ""))
+        let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: exploreType))
+        let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: exploreType))
         var successData: (any Codable)? = nil
         defer {
             NetworkManager.shared.updateLogStatus(id: logID, with: successData)
@@ -52,8 +84,8 @@ func fetchExploreResults() async throws -> ExploreResults {
         
         let (data, _) = try await URLSession.shared.data(from: url)
         successData = String(data: data, encoding: .utf8)
-        let decoded: ExploreResults = try NetworkManager.shared.networkService.decodeExploreResults(data)
-        return decoded
+        let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, title: exploreTitle)
+        return ExploreResults(Shelves: [decoded])
     }
 }
 
@@ -67,13 +99,13 @@ actor ExploreViewActor {
     private var exploreResults: ExploreResults? = nil
     private var isSearching: Bool = false
     
-    func runSearch() async throws {
+    func runSearch(_ type: ExploreType) async throws {
         guard !isSearching else { return }
         isSearching = true
         
         defer { isSearching = false }
         
-        let results = try await fetchExploreResults()
+        let results = try await fetchExploreResults(type)
         exploreResults = results
     }
     
@@ -93,10 +125,10 @@ actor ExploreViewActor {
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
     
-    func runSearch() {
+    func runSearch(_ type: ExploreType) {
         Task {
             do {
-                try await viewActor.runSearch()
+                try await viewActor.runSearch(type)
                 
                 let results = await viewActor.getExploreResults()
                 let searching = await viewActor.getIsSearching()
@@ -115,29 +147,6 @@ actor ExploreViewActor {
                 }
                 print("Error: \(error)")
             }
-        }
-    }
-    
-    func refresh() async {
-        do {
-            try await viewActor.runSearch()
-            
-            let results = await viewActor.getExploreResults()
-            let searching = await viewActor.getIsSearching()
-            
-            await MainActor.run {
-                withAnimation {
-                    exploreResults = results
-                    isSearching = searching
-                }
-            }
-        } catch {
-            await MainActor.run {
-                withAnimation {
-                    self.isSearching = false
-                }
-            }
-            print("Error: \(error)")
         }
     }
 }

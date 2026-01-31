@@ -9,6 +9,8 @@ import SwiftUI
 
 struct OMUserNPM: Hashable { }
 
+struct ExploreAllNPM: Hashable { }
+
 struct SearchAlbumContentNPM: Hashable {
     var album: SearchedAlbum
 }

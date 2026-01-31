@@ -9,7 +9,7 @@ import Foundation
 import CryptoKit
 
 class NavidromeNetworkService: @preconcurrency NetworkService {
-    var supportedFeatures: [ServerFeature] = [.quicksearch, .scrobble, .isolatedExploreShelfFetch]
+    var supportedFeatures: [ServerFeature] = [.quicksearch, .scrobble, .isolatedExploreShelfFetch, .exploreall]
     
     var u: String
     var p: String

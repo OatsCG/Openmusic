@@ -17,56 +17,22 @@ struct ExplorePage: View {
     @Binding var exploreNSPath: NavigationPath
     @State var hasFirstLoaded: Bool = false
     @State var showingServerSheet: Bool = false
+    @State var exploreType: ExploreType = .none
     
     var body: some View {
         ZStack {
             NavigationStack(path: $exploreNSPath) {
                 ScrollView {
                     if viewModel.exploreResults == nil {
-                        Group {
-                            if viewModel.isSearching {
-                                LoadingExplore_component()
-                            } else {
-                                if NetworkManager.globalIPAddress() == "" {
-                                    NoServerAddedComponent(showingServerSheet: $showingServerSheet)
-                                } else if !networkMonitor.isConnected {
-                                    VStack {
-                                        Spacer()
-                                        HStack {
-                                            Spacer()
-                                            ContentUnavailableView {
-                                                Label("No Connection", systemImage: "wifi.exclamationmark")
-                                            } description: {
-                                                Text("Check your server connection in Options.")
-                                            }
-                                            Spacer()
-                                        }
-                                        Spacer()
-                                    }
-                                } else {
-                                    LoadingExplore_component()
-                                        .onAppear {
-                                            viewModel.runSearch()
-                                            vibesViewModel.runSearch()
-                                            withAnimation {
-                                                hasFirstLoaded = true
-                                            }
-                                        }
-                                }
-                            }
-                        }
+                        ExploreEmptyPage(viewModel: $viewModel, vibesViewModel: $vibesViewModel, showingServerSheet: $showingServerSheet, hasFirstLoaded: $hasFirstLoaded, exploreType: $exploreType)
                             .onAppear {
-                                viewModel.runSearch()
-                                vibesViewModel.runSearch()
-                                withAnimation {
-                                    hasFirstLoaded = true
+                                Task {
+                                    await refresh()
                                 }
                             }
                             .onChange(of: showingServerSheet) {
-                                viewModel.runSearch()
-                                vibesViewModel.runSearch()
-                                withAnimation {
-                                    hasFirstLoaded = true
+                                Task {
+                                    await refresh()
                                 }
                             }
                     } else {
@@ -75,30 +41,32 @@ struct ExplorePage: View {
                                 ExploreVibesView(vibesViewModel: $vibesViewModel)
                                 Divider()
                             }
-                            if let firstShelf = viewModel.exploreResults?.Shelves.first, !firstShelf.Albums.isEmpty {
-                                ExploreShelfBigView(exploreShelf: firstShelf)
-                            }
-                            Divider()
-                                .padding(.bottom, 15)
-                            if let results = viewModel.exploreResults {
-                                ForEach(results.Shelves.dropFirst(), id: \.self) { shelf in
-                                    if !shelf.Albums.isEmpty {
-                                        ExploreShelfView(exploreShelf: shelf)
-                                        Divider()
-                                            .padding(.bottom, 15)
-                                    }
+                            if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
+                                switch exploreType {
+                                case .albums:
+                                    SearchExtendedAlbums(albums: viewModel.exploreResults?.Shelves.first?.Albums)
+                                case .date:
+                                    SearchExtendedAlbums(albums: viewModel.exploreResults?.Shelves.first?.Albums)
+                                case .none:
+                                    ExploreDefaultView(viewModel: $viewModel)
                                 }
+                            } else {
+                                ExploreDefaultView(viewModel: $viewModel)
                             }
                         }
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width)
                 .refreshable {
-                    await viewModel.refresh()
-                    await vibesViewModel.refresh()
+                    await refresh()
+                }
+                .onChange(of: exploreType) { oldValue, newValue in
+                    Task {
+                        await refresh()
+                    }
                 }
                 .navigationTitle("Explore")
-//                .toolbar {
+                .toolbar {
 //                    ToolbarItem(placement: .topBarTrailing) {
 //                        NavigationLink(value: OMUserNPM()) {
 //                            HStack {
@@ -110,7 +78,38 @@ struct ExplorePage: View {
 //                            }
 //                        }
 //                    }
-//                }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
+                            Menu {
+                                Button(action: {
+                                    if exploreType == .albums {
+                                        exploreType = .none
+                                    } else {
+                                        exploreType = .albums
+                                    }
+                                }) {
+                                    Label("Sort alphabetically", systemImage: exploreType == .albums ? "checkmark" : "")
+                                }
+                                Button(action: {
+                                    if exploreType == .date {
+                                        exploreType = .none
+                                    } else {
+                                        exploreType = .date
+                                    }
+                                }) {
+                                    Label("Sort by date", systemImage: exploreType == .date ? "checkmark" : "")
+                                }
+                                Button(action: {
+                                    exploreType = .none
+                                }) {
+                                    Label("None", systemImage: "")
+                                }
+                            } label: {
+                                Image(systemName: "line.3.horizontal.decrease")
+                            }
+                        }
+                    }
+                }
                 .navigationBarTitleDisplayMode(.automatic)
                 .safeAreaPadding(.bottom, 80)
                 .safeAreaPadding(.top, 20)
@@ -166,9 +165,20 @@ struct ExplorePage: View {
             }
         }
     }
+    
+    func refresh() async {
+        viewModel.runSearch(exploreType)
+        vibesViewModel.runSearch()
+        withAnimation {
+            hasFirstLoaded = true
+        }
+    }
 }
 
-
+enum ExploreType: String, CaseIterable, Identifiable {
+    case albums, date, none
+    var id: Self { self }
+}
 
 #Preview {
     @Previewable @AppStorage("currentTheme") var currentTheme: String = "classic"

@@ -148,6 +148,9 @@
 		E547F6F32B7435ED00AB5617 /* ObjectEncoders.swift in Sources */ = {isa = PBXBuildFile; fileRef = E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */; };
 		E54917482F2C8B0D00BAAE24 /* QueueItemActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */; };
 		E549174A2F2E69C600BAAE24 /* ScrobbleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54917492F2E69BF00BAAE24 /* ScrobbleAPI.swift */; };
+		E549174C2F2E7F5A00BAAE24 /* ExploreAllPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E549174B2F2E7F5500BAAE24 /* ExploreAllPage.swift */; };
+		E549174E2F2E820E00BAAE24 /* ExploreDefaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E549174D2F2E820E00BAAE24 /* ExploreDefaultView.swift */; };
+		E54917502F2E826E00BAAE24 /* ExploreEmptyPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E549174F2F2E826E00BAAE24 /* ExploreEmptyPage.swift */; };
 		E54A04DF2A5059D400B1FEDF /* LibraryAlbumContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */; };
 		E54A04E22A505F5100B1FEDF /* QPAlbumTracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A04E12A505F5100B1FEDF /* QPAlbumTracks.swift */; };
 		E54A3FFC2ACBB1AA007B1444 /* GlobalBackground_classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54A3FFB2ACBB1AA007B1444 /* GlobalBackground_classic.swift */; };
@@ -768,6 +771,9 @@
 		E547F6F22B7435ED00AB5617 /* ObjectEncoders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectEncoders.swift; sourceTree = "<group>"; };
 		E54917472F2C8B0900BAAE24 /* QueueItemActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItemActor.swift; sourceTree = "<group>"; };
 		E54917492F2E69BF00BAAE24 /* ScrobbleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrobbleAPI.swift; sourceTree = "<group>"; };
+		E549174B2F2E7F5500BAAE24 /* ExploreAllPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAllPage.swift; sourceTree = "<group>"; };
+		E549174D2F2E820E00BAAE24 /* ExploreDefaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreDefaultView.swift; sourceTree = "<group>"; };
+		E549174F2F2E826E00BAAE24 /* ExploreEmptyPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreEmptyPage.swift; sourceTree = "<group>"; };
 		E54A04DE2A5059D400B1FEDF /* LibraryAlbumContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryAlbumContent.swift; sourceTree = "<group>"; };
 		E54A04E12A505F5100B1FEDF /* QPAlbumTracks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPAlbumTracks.swift; sourceTree = "<group>"; };
 		E54A3FFB2ACBB1AA007B1444 /* GlobalBackground_classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalBackground_classic.swift; sourceTree = "<group>"; };
@@ -2635,6 +2641,9 @@
 			isa = PBXGroup;
 			children = (
 				E5C2DD512A2FDD0E00E6BB97 /* ExplorePage.swift */,
+				E549174D2F2E820E00BAAE24 /* ExploreDefaultView.swift */,
+				E549174F2F2E826E00BAAE24 /* ExploreEmptyPage.swift */,
+				E549174B2F2E7F5500BAAE24 /* ExploreAllPage.swift */,
 				E59B3A252CC59DE2001D419A /* Vibes */,
 				E51E65B32C17C56800E31B9E /* NoServerAddedComponent.swift */,
 				E5C2DD592A2FE6E700E6BB97 /* ExploreShelfView.swift */,
@@ -3373,6 +3382,7 @@
 				E5299E922BB08BDA003494FB /* QueueOptions.swift in Sources */,
 				E58B67402ACFB2B0002FA7A2 /* LibraryArtistLink_wii.swift in Sources */,
 				E579DE4E2B3E7A0F009324C1 /* LoadingSearchResults_spotty.swift in Sources */,
+				E549174E2F2E820E00BAAE24 /* ExploreDefaultView.swift in Sources */,
 				E52123052B10568700F17029 /* NPInfoSegment.swift in Sources */,
 				E52C20682A93C82700E2995C /* PlaylistContent.swift in Sources */,
 				E58E8F9E2BA16BB8009F7E43 /* LoadingSearchResults_faero.swift in Sources */,
@@ -3621,6 +3631,7 @@
 				E58E8FAF2BA16BB8009F7E43 /* TabBarLibraryLabel_faero.swift in Sources */,
 				E5A4310C2B058F1500507DB2 /* LiveImportingRow.swift in Sources */,
 				E579DE4A2B3E7A0F009324C1 /* QPPlaylistLink_spotty.swift in Sources */,
+				E549174C2F2E7F5A00BAAE24 /* ExploreAllPage.swift in Sources */,
 				E5DCFE122B4510640044D9B5 /* NPBackButton_spotty.swift in Sources */,
 				E59E30BF2A4244BF007B7874 /* NPBottomToolBar.swift in Sources */,
 				E55E17F22A4356E800EA5D36 /* QSNPRow.swift in Sources */,
@@ -3722,6 +3733,7 @@
 				E58E8FD92BA172AF009F7E43 /* BAPError.swift in Sources */,
 				E58B67022ACF9F69002FA7A2 /* DefaultArtwork_classic.swift in Sources */,
 				E5B7D1212AA845C600EAB1A7 /* QSHistory.swift in Sources */,
+				E54917502F2E826E00BAAE24 /* ExploreEmptyPage.swift in Sources */,
 				E559C6322A60A297001851D9 /* LibraryAlbumTracklist.swift in Sources */,
 				E58CA2472B9D664000BCBD7B /* ImportFileAlbum.swift in Sources */,
 				E59E30B92A416482007B7874 /* NPTrackScrubber.swift in Sources */,

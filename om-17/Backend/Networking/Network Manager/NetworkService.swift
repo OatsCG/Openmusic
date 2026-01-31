@@ -65,7 +65,7 @@ enum ServerFeature {
     suggestions,
     scrobble,
     isolatedExploreShelfFetch,
-    allexplore
+    exploreall
 }
 
 enum NetworkServiceError: Error {
