@@ -17,14 +17,13 @@ struct ExplorePage: View {
     @Binding var exploreNSPath: NavigationPath
     @State var hasFirstLoaded: Bool = false
     @State var showingServerSheet: Bool = false
-    @State var exploreType: ExploreType = .none
     
     var body: some View {
         ZStack {
             NavigationStack(path: $exploreNSPath) {
                 ScrollView {
                     if viewModel.exploreResults == nil {
-                        ExploreEmptyPage(viewModel: $viewModel, vibesViewModel: $vibesViewModel, showingServerSheet: $showingServerSheet, hasFirstLoaded: $hasFirstLoaded, exploreType: $exploreType)
+                        ExploreEmptyPage(viewModel: $viewModel, vibesViewModel: $vibesViewModel, showingServerSheet: $showingServerSheet, hasFirstLoaded: $hasFirstLoaded)
                             .onAppear {
                                 Task {
                                     await refresh()
@@ -41,27 +40,13 @@ struct ExplorePage: View {
                                 ExploreVibesView(vibesViewModel: $vibesViewModel)
                                 Divider()
                             }
-                            if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
-                                switch exploreType {
-                                case .none:
-                                    ExploreDefaultView(viewModel: $viewModel)
-                                default:
-                                    SearchExtendedAlbums(albums: [], type: exploreType)
-                                }
-                            } else {
-                                ExploreDefaultView(viewModel: $viewModel)
-                            }
+                            ExploreDefaultView(viewModel: $viewModel)
                         }
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width)
                 .refreshable {
                     await refresh()
-                }
-                .onChange(of: exploreType) { oldValue, newValue in
-                    Task {
-                        await refresh()
-                    }
                 }
                 .navigationTitle("Explore")
                 .toolbar {
@@ -134,7 +119,7 @@ struct ExplorePage: View {
     }
     
     func refresh() async {
-        viewModel.runSearch(exploreType)
+        viewModel.runSearch()
         vibesViewModel.runSearch()
         withAnimation {
             hasFirstLoaded = true

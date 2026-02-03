@@ -13,7 +13,6 @@ struct ExploreEmptyPage: View {
     @Binding var vibesViewModel: VibesViewModel
     @Binding var showingServerSheet: Bool
     @Binding var hasFirstLoaded: Bool
-    @Binding var exploreType: ExploreType
     var body: some View {
         if viewModel.isSearching {
             LoadingExplore_component()

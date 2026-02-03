@@ -137,15 +137,11 @@ actor ExploreViewActor {
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
     
-    var currentType: ExploreType = .none
-    
-    func runSearch(_ type: ExploreType) {
+    func runSearch() {
         isSearching = true
-        currentType = type
         Task {
             do {
-                try await viewActor.runSearch(currentType, 0)
-                
+                try await viewActor.runSearch(.none, 0)
                 let results = await viewActor.getExploreResults()
                 let searching = await viewActor.getIsSearching()
                 
@@ -188,6 +184,6 @@ struct ExploreShelf: Codable, Hashable {
     var type: ExploreType = .none
     
     private enum CodingKeys: String, CodingKey {
-        case Title, Albums, type
+        case Title, Albums
     }
 }
