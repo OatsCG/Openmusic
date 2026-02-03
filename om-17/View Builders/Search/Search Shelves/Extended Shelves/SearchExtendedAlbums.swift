@@ -24,9 +24,7 @@ struct SearchExtendedAlbums: View {
                     if albums.isEmpty && !isAppending {
                         BrowseEmptyPage()
                             .onAppear {
-                                Task {
-                                    await requestNextPage()
-                                }
+                                requestNextPage()
                             }
                     } else {
                         VStackWrapped(columns: albumGridColumns_sizing(h: horizontalSizeClass, v: verticalSizeClass)) {
@@ -70,6 +68,7 @@ struct SearchExtendedAlbums: View {
     
     func requestNextPage() {
         guard !isAppending else { return }
+        guard NetworkManager.shared.networkService.supportedFeatures.contains(.isolatedExploreShelfFetch) else { return }
         let wantsPage: Int = !fetchedPages.contains(currentPage) ? currentPage : currentPage + 1
         guard !fetchedPages.contains(wantsPage) else { return }
         isAppending = true

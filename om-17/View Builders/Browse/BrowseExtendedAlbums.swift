@@ -53,6 +53,7 @@ struct BrowseExtendedAlbums: View {
                         ProgressView()
                     } else {
                         Rectangle().fill(.clear)
+                            .frame(height: 1)
                     }
                 }
                 .onAppear {
@@ -74,7 +75,6 @@ struct BrowseExtendedAlbums: View {
             }
             .navigationTitle(type.rawValue)
             .navigationBarTitleDisplayMode(.inline)
-            .safeAreaPadding(.bottom, 80)
     }
     
     func requestNextPage() {
