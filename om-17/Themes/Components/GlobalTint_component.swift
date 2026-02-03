@@ -12,9 +12,9 @@ func GlobalTint_component(currentTheme: String, colorScheme: ColorScheme) -> Col
     switch currentTheme {
     case "classic":
         if (colorScheme == .dark) {
-            return Color(hue: 0.7, saturation: 0.45, brightness: 1)
+            return Color(hue: 0.78, saturation: 0.6, brightness: 1)
         } else {
-            return Color(hue: 0.7, saturation: 0.55, brightness: 1)
+            return Color(hue: 0.78, saturation: 0.55, brightness: 1)
         }
     case "honeycrisp":
         return .pink
