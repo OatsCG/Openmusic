@@ -8,14 +8,14 @@
 import SwiftUI
 
 // Function to fetch explore results
-func fetchExploreResults(_ type: ExploreType = .none) async throws -> ExploreResults {
+func fetchExploreResults(_ type: ExploreType = .none, page: Int = 0) async throws -> ExploreResults {
     if type == .none {
         if NetworkManager.shared.networkService.supportedFeatures.contains(.isolatedExploreShelfFetch) {
             let shelfEndpoints: [ExploreShelfEndpoint] = [
-                ExploreShelfEndpoint(endpoint: .explore(type: "frequent"), title: "Frequent"),
-                ExploreShelfEndpoint(endpoint: .explore(type: "newest"), title: "Newest"),
-                ExploreShelfEndpoint(endpoint: .explore(type: "highest"), title: "Popular"),
-                ExploreShelfEndpoint(endpoint: .explore(type: "random"), title: "Random"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "frequent", page: 0), title: "Frequent"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "newest", page: 0), title: "Newest"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "highest", page: 0), title: "Popular"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "random", page: 0), title: "Random"),
             ]
             
             var shelves: [ExploreShelf] = []
@@ -40,8 +40,8 @@ func fetchExploreResults(_ type: ExploreType = .none) async throws -> ExploreRes
             return ExploreResults(Shelves: shelves)
             
         } else {
-            let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: ""))
-            let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: ""))
+            let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: "", page: 0))
+            let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: "", page: 0))
             var successData: (any Codable)? = nil
             defer {
                 NetworkManager.shared.updateLogStatus(id: logID, with: successData)
@@ -58,21 +58,18 @@ func fetchExploreResults(_ type: ExploreType = .none) async throws -> ExploreRes
         }
     } else {
         var exploreType: String = ""
-        var exploreTitle: String = ""
+        var exploreTitle: String = "Albums"
         switch type {
         case .albums:
             exploreType = "alphabeticalByName"
-            exploreTitle = "Albums"
         case .date:
             exploreType = "newest"
-            exploreTitle = "Albums"
         case .none:
             exploreType = ""
-            exploreTitle = ""
         }
         
-        let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: exploreType))
-        let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: exploreType))
+        let urlString = NetworkManager.shared.networkService.getEndpointURL(.explore(type: exploreType, page: page))
+        let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: .explore(type: exploreType, page: page))
         var successData: (any Codable)? = nil
         defer {
             NetworkManager.shared.updateLogStatus(id: logID, with: successData)
@@ -99,13 +96,13 @@ actor ExploreViewActor {
     private var exploreResults: ExploreResults? = nil
     private var isSearching: Bool = false
     
-    func runSearch(_ type: ExploreType) async throws {
+    func runSearch(_ type: ExploreType, _ currentPage: Int) async throws {
         guard !isSearching else { return }
         isSearching = true
         
         defer { isSearching = false }
         
-        let results = try await fetchExploreResults(type)
+        let results = try await fetchExploreResults(type, page: currentPage)
         exploreResults = results
     }
     
@@ -124,11 +121,20 @@ actor ExploreViewActor {
     private let viewActor = ExploreViewActor()
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
+    var isAppending: Bool = false
+    
+    var currentType: ExploreType = .none
+    var currentPage: Int = 0
+    var fetchedPages: [Int] = [0]
     
     func runSearch(_ type: ExploreType) {
+        isSearching = true
+        currentType = type
+        currentPage = 0
+        fetchedPages = [0]
         Task {
             do {
-                try await viewActor.runSearch(type)
+                try await viewActor.runSearch(currentType, currentPage)
                 
                 let results = await viewActor.getExploreResults()
                 let searching = await viewActor.getIsSearching()
@@ -144,6 +150,48 @@ actor ExploreViewActor {
                     withAnimation {
                         isSearching = false
                     }
+                }
+                print("Error: \(error)")
+            }
+        }
+    }
+    
+    func requestNextPage() {
+        print("RMP: requested")
+        guard !isSearching else { return }
+        guard !isAppending else { return }
+        
+        let wantsPage: Int = currentPage + 1
+        guard !fetchedPages.contains(wantsPage) else { return }
+        print("RMP: wants page \(wantsPage)")
+        isAppending = true
+        Task {
+            do {
+                try await viewActor.runSearch(currentType, wantsPage)
+                print("RMP: in for page \(wantsPage)")
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                let results = await viewActor.getExploreResults()
+                let searching = await viewActor.getIsSearching()
+                print("RMP: done for page \(wantsPage)")
+                await MainActor.run {
+                    withAnimation {
+                        if let index = exploreResults?.Shelves.indices.first {
+                            exploreResults?.Shelves[index].Albums.append(contentsOf: results?.Shelves.first?.Albums ?? [])
+                            currentPage = wantsPage
+                            fetchedPages.append(wantsPage)
+                            print("RMP: finished page \(wantsPage)")
+                        }
+                        isSearching = searching
+                        isAppending = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    withAnimation {
+                        isSearching = false
+                        isAppending = false
+                    }
+                    print("RMP: error page \(wantsPage)")
                 }
                 print("Error: \(error)")
             }

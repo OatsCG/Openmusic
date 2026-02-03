@@ -44,9 +44,9 @@ struct ExplorePage: View {
                             if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
                                 switch exploreType {
                                 case .albums:
-                                    SearchExtendedAlbums(albums: viewModel.exploreResults?.Shelves.first?.Albums)
+                                    ExploreSorted(albums: viewModel.exploreResults?.Shelves.first?.Albums, viewModel: $viewModel)
                                 case .date:
-                                    SearchExtendedAlbums(albums: viewModel.exploreResults?.Shelves.first?.Albums)
+                                    ExploreSorted(albums: viewModel.exploreResults?.Shelves.first?.Albums, viewModel: $viewModel)
                                 case .none:
                                     ExploreDefaultView(viewModel: $viewModel)
                                 }

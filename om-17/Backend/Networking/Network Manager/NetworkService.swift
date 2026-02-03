@@ -38,7 +38,7 @@ enum ServerType: String, Codable {
 
 enum Endpoint {
     case status,
-    explore(type: String),
+    explore(type: String, page: Int),
     vibes,
     search(q: String),
     quick(q: String),
