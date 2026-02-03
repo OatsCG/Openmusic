@@ -27,7 +27,7 @@ struct NPPlayButton_wii: View {
         }
             .font(.system(size: 35))
             .frame(width: 70, height: 70)
-            .symbolEffect(.pulse, isActive: !playerManager.is_current_item_ready())
+            .symbolEffect(.pulse, isActive: !(playerManager.currentQueueItem?.queueItemPlayer?.isReady ?? true))
     }
 }
 

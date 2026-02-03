@@ -21,7 +21,7 @@ struct NPSkipButton_wii: View {
                 }
                 .overlay {
                     Image(systemName: "forward.fill")
-                        .symbolEffect(.pulse, isActive: !playerManager.is_next_item_ready())
+                        .symbolEffect(.pulse, isActive: !(playerManager.trackQueue.first?.queueItemPlayer?.isReady ?? true))
                         .foregroundStyle(.wiiprimary)
                 }
         }

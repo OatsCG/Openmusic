@@ -12,7 +12,7 @@ struct NPSkipButton_spotty: View {
     var body: some View {
         Image(systemName: "forward.end.fill")
             .font(.system(size: 32))
-            .symbolEffect(.pulse, isActive: !playerManager.is_next_item_ready())
+            .symbolEffect(.pulse, isActive: !(playerManager.trackQueue.first?.queueItemPlayer?.isReady ?? true))
     }
 }
 

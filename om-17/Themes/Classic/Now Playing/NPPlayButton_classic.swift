@@ -13,7 +13,7 @@ struct NPPlayButton_classic: View {
         Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
             .contentTransition(.symbolEffect(.replace.offUp))
             .font(.system(size: playerManager.isPlaying ? 51.2 : 50.1))
-            .symbolEffect(.pulse, isActive: !playerManager.is_current_item_ready())
+            .symbolEffect(.pulse, isActive: !(playerManager.currentQueueItem?.queueItemPlayer?.isReady ?? true))
     }
 }
 

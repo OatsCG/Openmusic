@@ -14,7 +14,7 @@ struct NPPlayButton_spotty: View {
             .contentTransition(.symbolEffect(.replace.offUp))
             //.font(.system(size: playerManager.is_playing() ? 61.44 : 60.12))
             .font(.system(size: 60))
-            .symbolEffect(.pulse, isActive: !playerManager.is_current_item_ready())
+            .symbolEffect(.pulse, isActive: !(playerManager.currentQueueItem?.queueItemPlayer?.isReady ?? true))
     }
 }
 

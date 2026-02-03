@@ -73,7 +73,7 @@ struct AlbumArtDisplay: View {
                     .cornerRadius(cornerRadius)
             }
         }
-        .scaledToFit()
+        .aspectRatio(1, contentMode: .fit)
         .onAppear {
             if let ArtworkID {
                 ArtworkURL = RetrieveArtwork(ArtworkID: ArtworkID)

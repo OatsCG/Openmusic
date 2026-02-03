@@ -12,7 +12,7 @@ struct NPSkipButton_classic: View {
     var body: some View {
         Image(systemName: "forward.fill")
             .font(.system(size: 36))
-            .symbolEffect(.pulse, isActive: !playerManager.is_next_item_ready())
+            .symbolEffect(.pulse, isActive: !(playerManager.trackQueue.first?.queueItemPlayer?.isReady ?? true))
     }
 }
 
