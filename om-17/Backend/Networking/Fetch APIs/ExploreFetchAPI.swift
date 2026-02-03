@@ -167,7 +167,6 @@ actor ExploreViewActor {
         Task {
             do {
                 try await viewActor.runSearch(currentType, wantsPage)
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
                 let results = await viewActor.getExploreResults()
                 let searching = await viewActor.getIsSearching()
                 await MainActor.run {
