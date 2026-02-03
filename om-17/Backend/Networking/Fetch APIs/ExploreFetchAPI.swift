@@ -173,8 +173,10 @@ actor ExploreViewActor {
                     withAnimation {
                         if let index = exploreResults?.Shelves.indices.first {
                             exploreResults?.Shelves[index].Albums.append(contentsOf: results?.Shelves.first?.Albums ?? [])
-                            currentPage = wantsPage
-                            fetchedPages.append(wantsPage)
+                            if results?.Shelves.first?.Albums.count ?? 0 > 0 {
+                                currentPage = wantsPage
+                                fetchedPages.append(wantsPage)
+                            }
                         }
                         isSearching = searching
                         isAppending = false
