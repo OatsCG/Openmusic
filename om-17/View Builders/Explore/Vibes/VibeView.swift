@@ -16,13 +16,14 @@ struct VibeView: View {
     
     var body: some View {
         Button(action: {
-            tapping = .stop
+            tapping = .start
             didClick += 1
             if playerManager.currentVibe != vibe {
                 playerManager.setCurrentVibe(vibe: vibe)
             } else {
                 playerManager.clearVibe()
             }
+            tapping = .stop
         }) {
             HStack {
                 VStack(alignment: .center) {
@@ -55,17 +56,17 @@ struct VibeView: View {
                 }
         }
         .buttonStyle(CustomButtonStyle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    tapping = .start
-                }
-                .onEnded { _ in
-                    if tapping == .start {
-                        tapping = .cancel
-                    }
-                }
-        )
+//        .simultaneousGesture(
+//            DragGesture(minimumDistance: 0)
+//                .onChanged { _ in
+//                    tapping = .start
+//                }
+//                .onEnded { _ in
+//                    if tapping == .start {
+//                        tapping = .cancel
+//                    }
+//                }
+//        )
     }
 }
 
@@ -146,7 +147,7 @@ struct VibeBackground: View {
                         saturationAdditive = 0
                     }
                 } else {
-                    withAnimation(.interactiveSpring(duration: 0.9)) {
+                    withAnimation(.interactiveSpring(duration: 0.7)) {
                         saturationAdditive = 0
                     }
                 }
