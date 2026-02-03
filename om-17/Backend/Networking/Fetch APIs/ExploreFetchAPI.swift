@@ -12,10 +12,13 @@ func fetchExploreResults(_ type: ExploreType = .none, page: Int = 0) async throw
     if type == .none {
         if NetworkManager.shared.networkService.supportedFeatures.contains(.isolatedExploreShelfFetch) {
             let shelfEndpoints: [ExploreShelfEndpoint] = [
-                ExploreShelfEndpoint(endpoint: .explore(type: "frequent", page: 0), title: "Frequent"),
-                ExploreShelfEndpoint(endpoint: .explore(type: "newest", page: 0), title: "Newest"),
-                ExploreShelfEndpoint(endpoint: .explore(type: "highest", page: 0), title: "Popular"),
-                ExploreShelfEndpoint(endpoint: .explore(type: "random", page: 0), title: "Random"),
+                ExploreShelfEndpoint(endpoint: .explore(type: "recent", page: 0), title: "Recently Played", exploreType: .recent),
+                ExploreShelfEndpoint(endpoint: .explore(type: "newest", page: 0), title: "Recently Added", exploreType: .newest),
+                ExploreShelfEndpoint(endpoint: .explore(type: "frequent", page: 0), title: "Frequently Played", exploreType: .frequent),
+                ExploreShelfEndpoint(endpoint: .explore(type: "highest", page: 0), title: "Popular", exploreType: .highest),
+                ExploreShelfEndpoint(endpoint: .explore(type: "alphabeticalByName", page: 0), title: "Sorted Alphabetically", exploreType: .alphabeticalByName),
+                ExploreShelfEndpoint(endpoint: .explore(type: "alphabeticalByArtist", page: 0), title: "Sorted by Artist", exploreType: .alphabeticalByArtist),
+                ExploreShelfEndpoint(endpoint: .explore(type: "random", page: 0), title: "Random", exploreType: .random)
             ]
             
             var shelves: [ExploreShelf] = []
@@ -33,8 +36,10 @@ func fetchExploreResults(_ type: ExploreType = .none, page: Int = 0) async throw
                 
                 let (data, _) = try await URLSession.shared.data(from: url)
                 successData = String(data: data, encoding: .utf8)
-                let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, title: shelfEndpoint.title)
-                shelves.append(decoded)
+                let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, exploreShelfEndpoint: shelfEndpoint)
+                if !decoded.Albums.isEmpty {
+                    shelves.append(decoded)
+                }
             }
             
             return ExploreResults(Shelves: shelves)
@@ -58,12 +63,21 @@ func fetchExploreResults(_ type: ExploreType = .none, page: Int = 0) async throw
         }
     } else {
         var exploreType: String = ""
-        var exploreTitle: String = "Albums"
         switch type {
-        case .albums:
-            exploreType = "alphabeticalByName"
-        case .date:
+        case .random:
+            exploreType = "random"
+        case .newest:
             exploreType = "newest"
+        case .highest:
+            exploreType = "highest"
+        case .frequent:
+            exploreType = "frequent"
+        case .recent:
+            exploreType = "recent"
+        case .alphabeticalByName:
+            exploreType = "alphabeticalByName"
+        case .alphabeticalByArtist:
+            exploreType = "alphabeticalByArtist"
         case .none:
             exploreType = ""
         }
@@ -81,7 +95,7 @@ func fetchExploreResults(_ type: ExploreType = .none, page: Int = 0) async throw
         
         let (data, _) = try await URLSession.shared.data(from: url)
         successData = String(data: data, encoding: .utf8)
-        let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, title: exploreTitle)
+        let decoded: ExploreShelf = try NetworkManager.shared.networkService.decodeExploreShelf(data, exploreShelfEndpoint: ExploreShelfEndpoint(endpoint: .explore(type: exploreType, page: page), title: "Albums", exploreType: type))
         return ExploreResults(Shelves: [decoded])
     }
 }
@@ -89,6 +103,7 @@ func fetchExploreResults(_ type: ExploreType = .none, page: Int = 0) async throw
 struct ExploreShelfEndpoint {
     var endpoint: Endpoint
     var title: String
+    var exploreType: ExploreType
 }
 
 // Actor to manage explore data
@@ -121,20 +136,15 @@ actor ExploreViewActor {
     private let viewActor = ExploreViewActor()
     var exploreResults: ExploreResults? = nil
     var isSearching: Bool = false
-    var isAppending: Bool = false
     
     var currentType: ExploreType = .none
-    var currentPage: Int = 0
-    var fetchedPages: [Int] = []
     
     func runSearch(_ type: ExploreType) {
         isSearching = true
         currentType = type
-        currentPage = 0
-        fetchedPages = []
         Task {
             do {
-                try await viewActor.runSearch(currentType, currentPage)
+                try await viewActor.runSearch(currentType, 0)
                 
                 let results = await viewActor.getExploreResults()
                 let searching = await viewActor.getIsSearching()
@@ -143,9 +153,6 @@ actor ExploreViewActor {
                     withAnimation {
                         exploreResults = results
                         isSearching = searching
-                        if type != .none {
-                            fetchedPages.append(0)
-                        }
                     }
                 }
             } catch {
@@ -154,42 +161,6 @@ actor ExploreViewActor {
                         isSearching = false
                     }
                 }
-            }
-        }
-    }
-    
-    func requestNextPage() {
-        guard !isSearching else { return }
-        guard !isAppending else { return }
-        let wantsPage: Int = !fetchedPages.contains(currentPage) ? currentPage : currentPage + 1
-        guard !fetchedPages.contains(wantsPage) else { return }
-        isAppending = true
-        Task {
-            do {
-                try await viewActor.runSearch(currentType, wantsPage)
-                let results = await viewActor.getExploreResults()
-                let searching = await viewActor.getIsSearching()
-                await MainActor.run {
-                    withAnimation {
-                        if let index = exploreResults?.Shelves.indices.first {
-                            exploreResults?.Shelves[index].Albums.append(contentsOf: results?.Shelves.first?.Albums ?? [])
-                            if results?.Shelves.first?.Albums.count ?? 0 > 0 {
-                                currentPage = wantsPage
-                                fetchedPages.append(wantsPage)
-                            }
-                        }
-                        isSearching = searching
-                        isAppending = false
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    withAnimation {
-                        isSearching = false
-                        isAppending = false
-                    }
-                }
-                print("Error: \(error)")
             }
         }
     }
@@ -214,8 +185,9 @@ struct ExploreCabinet: Codable, Hashable {
 struct ExploreShelf: Codable, Hashable {
     var Title: String
     var Albums: [SearchedAlbum]
+    var type: ExploreType = .none
     
     private enum CodingKeys: String, CodingKey {
-        case Title, Albums
+        case Title, Albums, type
     }
 }

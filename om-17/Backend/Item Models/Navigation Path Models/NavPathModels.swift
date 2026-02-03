@@ -43,6 +43,7 @@ struct SearchExtendedTracksNPM: Hashable {
 
 struct SearchExtendedAlbumsNPM: Hashable {
     var albums: [SearchedAlbum]?
+    var type: ExploreType = .none
 }
 
 struct SearchExtendedArtistsNPM: Hashable {

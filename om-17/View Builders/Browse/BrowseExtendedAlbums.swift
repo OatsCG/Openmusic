@@ -1,18 +1,19 @@
 //
-//  SearchExtendedAlbums.swift
+//  BrowseExtendedAlbums.swift
 //  om-17
 //
-//  Created by Charlie Giannis on 2023-11-13.
+//  Created by Charlie Giannis on 2026-02-03.
 //
+
 
 import SwiftUI
 
-struct SearchExtendedAlbums: View {
+struct BrowseExtendedAlbums: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State var viewActor: ExploreViewActor = ExploreViewActor()
-    @State var albums: [SearchedAlbum]?
-    @State var type: ExploreType = .none
+    @State var albums: [SearchedAlbum] = []
+    @Binding var type: ExploreType
     @State var isAppending: Bool = false
     @State var currentPage: Int = 0
     @State var fetchedPages: [Int] = [0]
@@ -20,35 +21,42 @@ struct SearchExtendedAlbums: View {
     var body: some View {
         ScrollView {
             LazyVStack {
-                if let albums {
-                    if albums.isEmpty && !isAppending {
-                        BrowseEmptyPage()
-                            .onAppear {
-                                Task {
-                                    await requestNextPage()
-                                }
-                            }
+                if albums.isEmpty {
+                    if isAppending {
+                        EmptyView()
                     } else {
-                        VStackWrapped(columns: albumGridColumns_sizing(h: horizontalSizeClass, v: verticalSizeClass)) {
-                            ForEach(albums, id: \.AlbumID) { album in
-                                SearchAlbumLink(album: album, fill: true)
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                ContentUnavailableView {
+                                    Label("No Albums to Display", systemImage: "exclamationmark.triangle")
+                                } description: {
+                                    Text("Try a different filter.")
+                                }
+                                Spacer()
                             }
-                        }
-                        .safeAreaPadding()
-                        .padding(.top, 1)
-                        Group {
-                            if isAppending {
-                                ProgressView()
-                            } else {
-                                Rectangle().fill(.clear)
-                            }
-                        }
-                        .onAppear {
-                            requestNextPage()
+                            Spacer()
                         }
                     }
                 } else {
-                    ProgressView()
+                    VStackWrapped(columns: albumGridColumns_sizing(h: horizontalSizeClass, v: verticalSizeClass)) {
+                        ForEach(albums, id: \.AlbumID) { album in
+                            SearchAlbumLink(album: album, fill: true)
+                        }
+                    }
+                    .safeAreaPadding()
+                    .padding(.top, 1)
+                }
+                Group {
+                    if isAppending {
+                        ProgressView()
+                    } else {
+                        Rectangle().fill(.clear)
+                    }
+                }
+                .onAppear {
+                    requestNextPage()
                 }
             }
         }
@@ -62,8 +70,9 @@ struct SearchExtendedAlbums: View {
                     fetchedPages = []
                     isAppending = false
                 }
+                requestNextPage()
             }
-            .navigationTitle("Albums")
+            .navigationTitle(type.rawValue)
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaPadding(.bottom, 80)
     }
@@ -79,7 +88,7 @@ struct SearchExtendedAlbums: View {
                 let results = await viewActor.getExploreResults()
                 await MainActor.run {
                     withAnimation {
-                        albums?.append(contentsOf: results?.Shelves.first?.Albums ?? [])
+                        albums.append(contentsOf: results?.Shelves.first?.Albums ?? [])
                         if results?.Shelves.first?.Albums.count ?? 0 > 0 {
                             currentPage = wantsPage
                             fetchedPages.append(wantsPage)
@@ -97,8 +106,4 @@ struct SearchExtendedAlbums: View {
             }
         }
     }
-}
-
-#Preview {
-    SearchExtendedAlbums()
 }

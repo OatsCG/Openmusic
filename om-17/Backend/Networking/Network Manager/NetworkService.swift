@@ -16,7 +16,7 @@ protocol NetworkService {
     
     
     func decodeServerStatus(_ data: Data) throws -> ServerStatus
-    func decodeExploreShelf(_ data: Data, title: String) throws -> ExploreShelf
+    func decodeExploreShelf(_ data: Data, exploreShelfEndpoint: ExploreShelfEndpoint) throws -> ExploreShelf
     func decodeExploreResults(_ data: Data) throws -> ExploreResults
     func decodeVibeShelf(_ data: Data) throws -> VibeShelf
     func decodeSearchResults(_ data: Data) throws -> SearchResults

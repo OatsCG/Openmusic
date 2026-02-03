@@ -14,7 +14,7 @@ struct ExploreShelfView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            NavigationLink(value: SearchExtendedAlbumsNPM(albums: exploreShelf.Albums)) {
+            NavigationLink(value: SearchExtendedAlbumsNPM(albums: exploreShelf.Albums, type: exploreShelf.type)) {
                 HStack {
                     Text(exploreShelf.Title)
                         .customFont(fontManager, .title2, bold: true)

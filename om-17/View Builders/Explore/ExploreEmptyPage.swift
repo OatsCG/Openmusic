@@ -35,19 +35,20 @@ struct ExploreEmptyPage: View {
                     Spacer()
                 }
             } else {
-                LoadingExplore_component()
-                    .onAppear {
-                        viewModel.runSearch(exploreType)
-                        vibesViewModel.runSearch()
-                        withAnimation {
-                            hasFirstLoaded = true
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ContentUnavailableView {
+                            Label("No Albums to Display", systemImage: "exclamationmark.triangle")
+                        } description: {
+                            Text("Check your server and pull to refresh.")
                         }
+                        Spacer()
                     }
+                    Spacer()
+                }
             }
         }
     }
 }
-
-
-
-

@@ -43,12 +43,10 @@ struct ExplorePage: View {
                             }
                             if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
                                 switch exploreType {
-                                case .albums:
-                                    ExploreSorted(albums: viewModel.exploreResults?.Shelves.first?.Albums, viewModel: $viewModel)
-                                case .date:
-                                    ExploreSorted(albums: viewModel.exploreResults?.Shelves.first?.Albums, viewModel: $viewModel)
                                 case .none:
                                     ExploreDefaultView(viewModel: $viewModel)
+                                default:
+                                    SearchExtendedAlbums(albums: [], type: exploreType)
                                 }
                             } else {
                                 ExploreDefaultView(viewModel: $viewModel)
@@ -78,37 +76,6 @@ struct ExplorePage: View {
 //                            }
 //                        }
 //                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
-                            Menu {
-                                Button(action: {
-                                    if exploreType == .albums {
-                                        exploreType = .none
-                                    } else {
-                                        exploreType = .albums
-                                    }
-                                }) {
-                                    Label("Sort by Title", systemImage: exploreType == .albums ? "checkmark" : "")
-                                }
-                                Button(action: {
-                                    if exploreType == .date {
-                                        exploreType = .none
-                                    } else {
-                                        exploreType = .date
-                                    }
-                                }) {
-                                    Label("Sort by Date Added", systemImage: exploreType == .date ? "checkmark" : "")
-                                }
-                                Button(action: {
-                                    exploreType = .none
-                                }) {
-                                    Label("None", systemImage: "")
-                                }
-                            } label: {
-                                Image(systemName: "line.3.horizontal.decrease")
-                            }
-                        }
-                    }
                 }
                 .navigationBarTitleDisplayMode(.automatic)
                 .safeAreaPadding(.bottom, 80)
@@ -139,7 +106,7 @@ struct ExplorePage: View {
                     SearchExtendedTracks(tracks: npm.tracks, shouldQueueAll: npm.shouldQueueAll)
                 }
                 .navigationDestination(for: SearchExtendedAlbumsNPM.self) { npm in
-                    SearchExtendedAlbums(albums: npm.albums)
+                    SearchExtendedAlbums(albums: npm.albums, type: npm.type)
                 }
                 .navigationDestination(for: SearchExtendedArtistsNPM.self) { npm in
                     SearchExtendedArtists(artists: npm.artists)
@@ -175,8 +142,15 @@ struct ExplorePage: View {
     }
 }
 
-enum ExploreType: String, CaseIterable, Identifiable {
-    case albums, date, none
+enum ExploreType: String, CaseIterable, Identifiable, Codable {
+    case random = "Random",
+         newest = "Recently Added",
+         highest = "Popular",
+         frequent = "Frequently Played",
+         recent = "Recently Played",
+         alphabeticalByName = "Sorted Alphabetically",
+         alphabeticalByArtist = "Sorted by Artist",
+         none = "Browse"
     var id: Self { self }
 }
 

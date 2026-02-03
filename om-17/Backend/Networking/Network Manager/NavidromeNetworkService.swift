@@ -90,9 +90,9 @@ class NavidromeNetworkService: @preconcurrency NetworkService {
         return serverStatus
     }
     
-    func decodeExploreShelf(_ data: Data, title: String) throws -> ExploreShelf {
+    func decodeExploreShelf(_ data: Data, exploreShelfEndpoint: ExploreShelfEndpoint) throws -> ExploreShelf {
         let d = try decoder.decode(NavidromeAlbumList.self, from: data)
-        guard let dalbum = d.subsonicresponse.albumList.album else { return ExploreShelf(Title: title, Albums: []) }
+        guard let dalbum = d.subsonicresponse.albumList.album else { return ExploreShelf(Title: exploreShelfEndpoint.title, Albums: []) }
         var albums: [SearchedAlbum] = []
         for album in dalbum {
             var albumArtists: [SearchedArtist] = []
@@ -101,7 +101,7 @@ class NavidromeNetworkService: @preconcurrency NetworkService {
             }
             albums.append(SearchedAlbum(AlbumID: album.id, Title: album.name, Artwork: album.coverArt, AlbumType: "Album", Year: album.year, Artists: albumArtists))
         }
-        return ExploreShelf(Title: title, Albums: albums)
+        return ExploreShelf(Title: exploreShelfEndpoint.title, Albums: albums, type: exploreShelfEndpoint.exploreType)
     }
     
     func decodeExploreResults(_ data: Data) throws -> ExploreResults {

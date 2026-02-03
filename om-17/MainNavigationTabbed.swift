@@ -17,6 +17,7 @@ struct MainNavigationTabbed: View {
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("preferredAppearance") var preferredAppearance: String = "auto"
     @Binding var exploreNSPath: NavigationPath
+    @Binding var browseNSPath: NavigationPath
     @Binding var searchNSPath: NavigationPath
     @Binding var libraryNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
@@ -27,6 +28,10 @@ struct MainNavigationTabbed: View {
             TabView(selection: $selectionBinding) {
                 ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
                     .tag(0)
+                if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
+                    BrowseTab(browseNSPath: $browseNSPath, tabbarHeight: $tabbarHeight)
+                        .tag(4)
+                }
                 SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
                     .tag(1)
                 LibraryTab(libraryNSPath: $libraryNSPath, tabbarHeight: $tabbarHeight)

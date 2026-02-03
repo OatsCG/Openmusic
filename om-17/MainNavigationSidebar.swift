@@ -17,6 +17,7 @@ struct MainNavigationSidebar: View {
     @AppStorage("globalIPAddress") var globalIPAddress: String = ""
     @AppStorage("preferredAppearance") var preferredAppearance: String = "auto"
     @Binding var exploreNSPath: NavigationPath
+    @Binding var browseNSPath: NavigationPath
     @Binding var searchNSPath: NavigationPath
     @Binding var libraryNSPath: NavigationPath
     @Binding var tabbarHeight: CGFloat
@@ -27,6 +28,11 @@ struct MainNavigationSidebar: View {
             ExploreTab(exploreNSPath: $exploreNSPath, tabbarHeight: $tabbarHeight)
                 .tabItem { Label("Home", systemImage: "globe") }
                 .tag(0)
+            if NetworkManager.shared.networkService.supportedFeatures.contains(.exploreall) {
+                BrowseTab(browseNSPath: $browseNSPath, tabbarHeight: $tabbarHeight)
+                    .tabItem { Label("Browse", systemImage: "play.square.stack") }
+                    .tag(4)
+            }
             SearchTab(searchNSPath: $searchNSPath, tabbarHeight: $tabbarHeight)
                 .tabItem { Label("Search", systemImage: "magnifyingglass") }
                 .tag(1)

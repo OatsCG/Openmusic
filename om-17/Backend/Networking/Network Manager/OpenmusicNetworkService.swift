@@ -59,7 +59,7 @@ class OpenmusicNetworkService: NetworkService {
         return try decoder.decode(ServerStatus.self, from: data)
     }
     
-    func decodeExploreShelf(_ data: Data, title: String) throws -> ExploreShelf {
+    func decodeExploreShelf(_ data: Data, exploreShelfEndpoint: ExploreShelfEndpoint) throws -> ExploreShelf {
         throw NetworkServiceError.notImplementedError("ExploreShelf not implemented.")
     }
     
