@@ -88,7 +88,7 @@ struct ExplorePage: View {
                                         exploreType = .albums
                                     }
                                 }) {
-                                    Label("Sort alphabetically", systemImage: exploreType == .albums ? "checkmark" : "")
+                                    Label("Sort by Title", systemImage: exploreType == .albums ? "checkmark" : "")
                                 }
                                 Button(action: {
                                     if exploreType == .date {
@@ -97,7 +97,7 @@ struct ExplorePage: View {
                                         exploreType = .date
                                     }
                                 }) {
-                                    Label("Sort by date", systemImage: exploreType == .date ? "checkmark" : "")
+                                    Label("Sort by Date Added", systemImage: exploreType == .date ? "checkmark" : "")
                                 }
                                 Button(action: {
                                     exploreType = .none

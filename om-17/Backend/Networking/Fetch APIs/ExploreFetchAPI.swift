@@ -125,13 +125,13 @@ actor ExploreViewActor {
     
     var currentType: ExploreType = .none
     var currentPage: Int = 0
-    var fetchedPages: [Int] = [0]
+    var fetchedPages: [Int] = []
     
     func runSearch(_ type: ExploreType) {
         isSearching = true
         currentType = type
         currentPage = 0
-        fetchedPages = [0]
+        fetchedPages = []
         Task {
             do {
                 try await viewActor.runSearch(currentType, currentPage)
@@ -143,6 +143,9 @@ actor ExploreViewActor {
                     withAnimation {
                         exploreResults = results
                         isSearching = searching
+                        if type != .none {
+                            fetchedPages.append(0)
+                        }
                     }
                 }
             } catch {
@@ -151,35 +154,28 @@ actor ExploreViewActor {
                         isSearching = false
                     }
                 }
-                print("Error: \(error)")
             }
         }
     }
     
     func requestNextPage() {
-        print("RMP: requested")
         guard !isSearching else { return }
         guard !isAppending else { return }
-        
-        let wantsPage: Int = currentPage + 1
+        let wantsPage: Int = !fetchedPages.contains(currentPage) ? currentPage : currentPage + 1
         guard !fetchedPages.contains(wantsPage) else { return }
-        print("RMP: wants page \(wantsPage)")
         isAppending = true
         Task {
             do {
                 try await viewActor.runSearch(currentType, wantsPage)
-                print("RMP: in for page \(wantsPage)")
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 let results = await viewActor.getExploreResults()
                 let searching = await viewActor.getIsSearching()
-                print("RMP: done for page \(wantsPage)")
                 await MainActor.run {
                     withAnimation {
                         if let index = exploreResults?.Shelves.indices.first {
                             exploreResults?.Shelves[index].Albums.append(contentsOf: results?.Shelves.first?.Albums ?? [])
                             currentPage = wantsPage
                             fetchedPages.append(wantsPage)
-                            print("RMP: finished page \(wantsPage)")
                         }
                         isSearching = searching
                         isAppending = false
@@ -191,7 +187,6 @@ actor ExploreViewActor {
                         isSearching = false
                         isAppending = false
                     }
-                    print("RMP: error page \(wantsPage)")
                 }
                 print("Error: \(error)")
             }

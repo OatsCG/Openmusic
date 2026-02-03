@@ -59,7 +59,7 @@ class NavidromeNetworkService: @preconcurrency NetworkService {
         case .status:
             "\(baseURL())/rest/ping?\(params)&\(creds())"
         case .explore(type: let type, page: let page):
-            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=\(type)&size=10&offset=\(10*page)"
+            "\(baseURL())/rest/getAlbumList?\(params)&\(creds())&type=\(type)&size=20&offset=\(20*page)"
         case .search(q: let q):
             "\(baseURL())/rest/search2?\(params)&\(creds())&query=\(q)&artistCount=50&albumCount=50&songCount=50"
         case .quick(q: let q):

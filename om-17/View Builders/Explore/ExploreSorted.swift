@@ -28,11 +28,10 @@ struct ExploreSorted: View {
                     if viewModel.isAppending {
                         ProgressView()
                     } else {
-                        EmptyView()
+                        Rectangle().fill(.clear)
                     }
                 }
                 .onAppear {
-                    print("RMP: Appeared!")
                     viewModel.requestNextPage()
                 }
             } else {
