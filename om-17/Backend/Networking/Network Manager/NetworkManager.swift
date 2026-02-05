@@ -30,6 +30,7 @@ class NetworkManager {
     
     func fetch<T: Codable>(endpoint: Endpoint, type: T.Type) async throws -> T {
         let urlString = NetworkManager.shared.networkService.getEndpointURL(endpoint)
+        print("FETCHING \(urlString)")
         let logID: UUID = NetworkManager.shared.addNetworkLog(url: urlString, endpoint: endpoint)
         var successData: (any Codable)? = nil
         defer {
@@ -37,14 +38,18 @@ class NetworkManager {
         }
         
         guard let url = URL(string: urlString) else {
+            print("FETCHING \(urlString): bad url")
             throw URLError(.badURL)
         }
         
         let (data, _) = try await URLSession.shared.data(from: url)
+        print("FETCHING \(urlString): got data")
         successData = String(data: data, encoding: .utf8)
         if let d = try decoder(T.self, data: data) {
+            print("FETCHING \(urlString): good decode")
             return d
         } else {
+            print("FETCHING \(urlString): bad decode")
             throw NSError()
         }
     }

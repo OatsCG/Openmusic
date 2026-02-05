@@ -31,14 +31,17 @@ struct MiniPlayer_wii: View {
                 //.opacity(0.1)
             Spacer()
             VStack(alignment: .leading) {
-                if (playerManager.currentQueueItem == nil) {
-                    Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
+                if let currentQueueItem = playerManager.currentQueueItem {
+                    Text(currentQueueItem.Track.Title)
                         .customFont(fontManager, .callout, bold: true)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
+                        .geometryGroup()
+                        .id(currentQueueItem.Track.Title)
+                        .transition(transition())
                 } else {
-                    Text(playerManager.currentQueueItem!.Track.Title)
+                    Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
                         .customFont(fontManager, .callout, bold: true)
                         .lineLimit(1)
                         .multilineTextAlignment(.center)
@@ -80,6 +83,28 @@ struct MiniPlayer_wii: View {
             .clipped()
             .clipShape(.rect)
             //.padding([.horizontal, .bottom], 5)
+    }
+    
+    private func transition() -> AnyTransition {
+        return switch playerManager.actionAnimation {
+        case .left:
+            // text moves left (enters from right, exits to left)
+            .asymmetric(
+                insertion: .opacity.combined(with: .offset(x: 8)),
+                removal: .opacity.combined(with: .offset(x: -8))
+            )
+        case .right:
+            // text moves right (enters from left, exits to right)
+            .asymmetric(
+                insertion: .opacity.combined(with: .offset(x: -8)),
+                removal: .opacity.combined(with: .offset(x: 8))
+            )
+        case .none:
+            .asymmetric(
+                insertion: .opacity,
+                removal: .opacity
+            )
+        }
     }
 }
 

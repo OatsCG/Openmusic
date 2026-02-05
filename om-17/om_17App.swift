@@ -17,6 +17,7 @@ struct om_17App: App {
     @State var fontManager = FontManager.shared
     @State var omUser = OMUser()
     @State var sharedDatabase = SharedDatabase.shared
+    @Namespace var transitionNamespace
     
     var body: some Scene {
         WindowGroup {
@@ -28,6 +29,7 @@ struct om_17App: App {
                 .environment(fontManager)
                 .environment(omUser)
                 .environment(sharedDatabase.database)
+                .environmentObject(TransitionWrapper(transitionNamespace))
         }
     }
 }

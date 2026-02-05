@@ -18,7 +18,30 @@ struct MiniPlayer_faero: View {
             AlbumArtDisplay(ArtworkID: playerManager.currentQueueItem?.Track.Album.Artwork, Resolution: .cookie, Blur: 20, BlurOpacity: 1, cornerRadius: 11)
             Spacer()
             VStack(alignment: .leading, spacing: 0) {
-                if (playerManager.currentQueueItem == nil) {
+                if let currentQueueItem = playerManager.currentQueueItem {
+                    MarqueeText(
+                        text: currentQueueItem.Track.Title,
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
+                        leftFade: 16,
+                        rightFade: 16,
+                        startDelay: 3
+                    )
+                    .geometryGroup()
+                    .id(currentQueueItem.Track.Title)
+                    .transition(transition())
+                    MarqueeText(
+                        text: currentQueueItem.Track.Album.Title + (currentQueueItem.Track.Album.Artists.count > 0 ? (" • " + stringArtists(artistlist: currentQueueItem.Track.Album.Artists)) : (" • Various Artists")),
+                        font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),
+                        leftFade: 8,
+                        rightFade: 10,
+                        startDelay: 3
+                    )
+                    .foregroundStyle(.secondary)
+                    .geometryGroup()
+                    .id(currentQueueItem.Track.Album.Title)
+                    .transition(transition())
+                    
+                } else {
                     HStack {
                         Text(playerManager.fetchSuggestionsModel.isFetching ? "Loading..." : "Not Playing")
                             .customFont(fontManager, .callout)
@@ -32,23 +55,6 @@ struct MiniPlayer_faero: View {
                             Spacer()
                         }
                     }
-                } else {
-                    MarqueeText(
-                        text: playerManager.currentQueueItem!.Track.Title,
-                        font: FontManager.shared.currentThemeUIFont(fontManager, .callout),
-                        leftFade: 16,
-                        rightFade: 16,
-                        startDelay: 3
-                    )
-                    MarqueeText(
-                        text: playerManager.currentQueueItem!.Track.Album.Title + (playerManager.currentQueueItem!.Track.Album.Artists.count > 0 ? (" • " + stringArtists(artistlist: playerManager.currentQueueItem!.Track.Album.Artists)) : (" • Various Artists")),
-                        font: FontManager.shared.currentThemeUIFont(fontManager, .subheadline),
-                        leftFade: 8,
-                        rightFade: 10,
-                        startDelay: 3
-                    )
-                        .foregroundStyle(.secondary)
-                    
                 }
             }
             Spacer()
@@ -82,6 +88,28 @@ struct MiniPlayer_faero: View {
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 15))
             .padding([.horizontal, .bottom], 5)
+    }
+    
+    private func transition() -> AnyTransition {
+        return switch playerManager.actionAnimation {
+        case .left:
+            // text moves left (enters from right, exits to left)
+            .asymmetric(
+                insertion: .opacity.combined(with: .offset(x: 8)),
+                removal: .opacity.combined(with: .offset(x: -8))
+            )
+        case .right:
+            // text moves right (enters from left, exits to right)
+            .asymmetric(
+                insertion: .opacity.combined(with: .offset(x: -8)),
+                removal: .opacity.combined(with: .offset(x: 8))
+            )
+        case .none:
+            .asymmetric(
+                insertion: .opacity,
+                removal: .opacity
+            )
+        }
     }
 }
 

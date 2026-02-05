@@ -33,6 +33,9 @@ struct NPTitles: View {
                                 startDelay: 3,
                                 alignment: fullscreen ? .center : .leading
                             )
+                            .geometryGroup()
+                            .id(currentQueueItem.Track.Title)
+                            .transition(transition())
                             if (fullscreen) {
                                 Menu {
                                     Section("Artists") {
@@ -126,6 +129,28 @@ struct NPTitles: View {
                     self.playlists = []
                 }
             }
+        }
+    }
+    
+    private func transition() -> AnyTransition {
+        return switch playerManager.actionAnimation {
+        case .left:
+            // text moves left (enters from right, exits to left)
+            .asymmetric(
+                insertion: .opacity.combined(with: .offset(x: 8)),
+                removal: .opacity.combined(with: .offset(x: -8))
+            )
+        case .right:
+            // text moves right (enters from left, exits to right)
+            .asymmetric(
+                insertion: .opacity.combined(with: .offset(x: -8)),
+                removal: .opacity.combined(with: .offset(x: 8))
+            )
+        case .none:
+            .asymmetric(
+                insertion: .opacity,
+                removal: .opacity
+            )
         }
     }
 }

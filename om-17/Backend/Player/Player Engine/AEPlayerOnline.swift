@@ -38,6 +38,11 @@ import AudioKit
         status = .unknown
         player.automaticallyWaitsToMinimizeStalling = false
         player.currentItem?.preferredForwardBufferDuration = TimeInterval(5)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleAccessLogEntry(_:)),
+                                               name: .AVPlayerItemNewAccessLogEntry,
+                                               object: self.player.currentItem)
     }
     
     @objc func handleAccessLogEntry(_ notification: Notification) {

@@ -167,7 +167,7 @@ extension QueueItem {
     func pause_if_not_current(playerManager: PlayerManager) {
         // regardless of priming, prevent item from playing if it's not the current item.
         if playerManager.currentQueueItem?.queueID != queueID {
-            print("PRIMING: not current song; pausing.")
+            print("PRIMING \(self.Track.Title): not current song; pausing.")
             audio_AVPlayer?.pause()
         }
     }
@@ -202,6 +202,7 @@ extension QueueItem {
     
     func preroll_queueItemPlayer(playerManager: PlayerManager, position: Double? = nil) {
         queueItemPlayer?.preroll() { success in
+            print("PRIMING \(self.Track.Title): prerolling.")
             if success {
                 self.update_prime_status(.primed)
                 playerManager.prime_next_song()
@@ -211,14 +212,14 @@ extension QueueItem {
                 }
                 playerManager.set_currentlyPlaying(queueItem: self)
                 // check duration
-                print("PRIMING: checking duration: \(self.queueItemPlayer?.duration())")
-                if let duration = self.queueItemPlayer?.duration(), duration.isNaN {
-                    print("PRIMING: duration is .nan, re-preroll. rerolling.")
-                    defer {
-                        self.prime_object_fresh(playerManager: playerManager)
-                    }
-                    return
-                }
+                print("PRIMING \(self.Track.Title): checking duration: \(self.queueItemPlayer?.duration())")
+//                if let duration = self.queueItemPlayer?.duration(), duration.isNaN {
+//                    print("PRIMING \(self.Track.Title): duration is .nan, re-preroll. rerolling.")
+//                    defer {
+//                        self.prime_object_fresh(playerManager: playerManager)
+//                    }
+//                    return
+//                }
                 if playerManager.isPlaying && playerManager.currentQueueItem?.queueID == self.queueID {
                     self.queueItemPlayer?.play()
                 } else {

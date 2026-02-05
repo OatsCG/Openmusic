@@ -64,6 +64,7 @@ import Combine
     var lastWaveDepth: (Bool, Double, Bool) = (false, 0, false) // (last, time, valid)
     var SkipNotifyEnabled: Bool = false
     var notificationManager: NotificationManager = NotificationManager()
+    var actionAnimation: ActionAnimation = .none
     
     // transport
     var commandCenterAlreadyLoaded: Bool
@@ -193,4 +194,8 @@ import Combine
             player_forward()
         }
     }
+}
+
+enum ActionAnimation {
+    case left, right, none
 }

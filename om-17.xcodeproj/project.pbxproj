@@ -172,6 +172,7 @@
 		E55E17F22A4356E800EA5D36 /* QSNPRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E17F12A4356E800EA5D36 /* QSNPRow.swift */; };
 		E55E17F62A435C6000EA5D36 /* QSNPRowControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E17F52A435C6000EA5D36 /* QSNPRowControls.swift */; };
 		E55E17F82A435F5A00EA5D36 /* QSQueueRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E17F72A435F5A00EA5D36 /* QSQueueRow.swift */; };
+		E560CBE82F353E8B003506BA /* TransitionWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E560CBE72F353E8B003506BA /* TransitionWrapper.swift */; };
 		E56273EA2B5393140062CB7A /* AmplitudeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */; };
 		E56DDA002B2BE005006222A8 /* TVStaticBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56DD9FF2B2BE005006222A8 /* TVStaticBackground.swift */; };
 		E56DDA022B2BE97C006222A8 /* TVStaticFuzz.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56DDA012B2BE97C006222A8 /* TVStaticFuzz.swift */; };
@@ -798,6 +799,7 @@
 		E55E17F12A4356E800EA5D36 /* QSNPRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSNPRow.swift; sourceTree = "<group>"; };
 		E55E17F52A435C6000EA5D36 /* QSNPRowControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSNPRowControls.swift; sourceTree = "<group>"; };
 		E55E17F72A435F5A00EA5D36 /* QSQueueRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSQueueRow.swift; sourceTree = "<group>"; };
+		E560CBE72F353E8B003506BA /* TransitionWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionWrapper.swift; sourceTree = "<group>"; };
 		E56273E92B5393140062CB7A /* AmplitudeFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeFetcher.swift; sourceTree = "<group>"; };
 		E56DD9FF2B2BE005006222A8 /* TVStaticBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVStaticBackground.swift; sourceTree = "<group>"; };
 		E56DDA012B2BE97C006222A8 /* TVStaticFuzz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVStaticFuzz.swift; sourceTree = "<group>"; };
@@ -2391,6 +2393,7 @@
 				E5D493362A3061790091ED01 /* Image Views */,
 				E5974D732A6C9262009286E2 /* Backgrounds */,
 				E52D2ECE2A4BBE8D004BFAA4 /* VStackWrapped.swift */,
+				E560CBE72F353E8B003506BA /* TransitionWrapper.swift */,
 				E52D2ED02A4BBF6D004BFAA4 /* HStackWrapped.swift */,
 				E5A4310F2B0686FF00507DB2 /* CacheAsyncImage.swift */,
 				E56E1D4D2BC9C4EE00C4DB42 /* VariableBlur.swift */,
@@ -3496,6 +3499,7 @@
 				E58880122A78365000E92379 /* LibraryAlbumMenu.swift in Sources */,
 				E5A3652B2A358CED00243176 /* StringArtists.swift in Sources */,
 				E5FFBD5C2B0A919A00170496 /* LoadingExplore_honeycrisp.swift in Sources */,
+				E560CBE82F353E8B003506BA /* TransitionWrapper.swift in Sources */,
 				E54525A42B8ADAB200C2961D /* ThemePreviewer.swift in Sources */,
 				E579DE492B3E7A0F009324C1 /* PlaylistContentHeading_spotty.swift in Sources */,
 				E5A365222A35839300243176 /* ArtistFetchAPI.swift in Sources */,

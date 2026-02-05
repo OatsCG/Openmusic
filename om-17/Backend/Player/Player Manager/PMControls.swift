@@ -39,6 +39,7 @@ extension PlayerManager {
     }
     
     func player_forward(continueCurrent: Bool = false, userInitiated: Bool = false) {
+        actionAnimation = .left
         isCrossfading = false
         didAddFromRepeat = false
         if !continueCurrent {
@@ -74,6 +75,7 @@ extension PlayerManager {
     }
     
     func player_backward(userInitiated: Bool = false) {
+        actionAnimation = .right
         isCrossfading = false
         didAddFromRepeat = false
         DispatchQueue.main.async {

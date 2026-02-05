@@ -17,6 +17,7 @@ protocol Album {
 }
 
 struct SearchedAlbum: Codable, Hashable, Album {
+    var viewID: UUID? = UUID()
     var AlbumID: String
     var Title: String
     var Artwork: String
@@ -67,6 +68,10 @@ struct SearchedAlbum: Codable, Hashable, Album {
         AlbumType = from.AlbumType
         Year = from.Year
         Artists = from.Artists
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case AlbumID, Title, Artwork, AlbumType, Year, Artists
     }
 }
 
