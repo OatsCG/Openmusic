@@ -36,7 +36,9 @@ struct CustomServerInput: View {
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                 }
                     .buttonStyle(.plain)
-                    .sheet(isPresented: $showingServerSheet, content: {
+                    .sheet(isPresented: $showingServerSheet, onDismiss: {
+                        viewModel.runCheck()
+                    }, content: {
                         AddServerSheet(showingServerSheet: $showingServerSheet)
                     })
                 Divider()
