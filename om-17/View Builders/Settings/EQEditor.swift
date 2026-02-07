@@ -22,7 +22,7 @@ struct EQEditor: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 40) {
-                    Text("EQ modifications will only be applied to downloaded music. ")
+                    Text("EQ adjustments only apply to downloaded music.")
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                     HStack {

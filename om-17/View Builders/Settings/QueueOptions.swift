@@ -17,7 +17,7 @@ struct QueueOptions: View {
                     Toggle("Disable Queuing Suggestions", isOn: $DisableQueuingSuggestions)
                         .tint(.green)
                 }, header: {
-                    Text("SUGGESTIONS")
+                    Text("Suggestions")
                 }, footer: {
                     Text("Prevent Openmusic from auto-queuing suggested music.")
                 })

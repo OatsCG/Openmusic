@@ -87,8 +87,8 @@ struct SettingsPage: View {
                             .padding(.bottom, 4)
                         HStack(alignment: .center) {
                             VStack(alignment: .leading) {
-                                Text("openmusic inc.")
-                                Text("2024 Charlie Giannis")
+                                Text("Openmusic inc.")
+                                Text("2026 Charlie Giannis")
                                     .customFont(fontManager, .caption2)
                             }
                             Text("💜")

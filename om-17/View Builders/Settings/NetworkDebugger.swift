@@ -16,7 +16,7 @@ struct NetworkDebugger: View {
                 Toggle("Start Logger", isOn: $networkDebuggerEnabled)
                     .tint(.green)
             } footer: {
-                Text("Receive toasts for network requests. Logs are deleted when you close the app.")
+                Text("Logs are deleted when you close the app.")
             }
             
             Section {
@@ -32,8 +32,12 @@ struct NetworkDebugger: View {
                         Rectangle().fill(.black)
                     }
                     ScrollView {
-                        ForEach(NetworkManager.shared.networkLogs, id: \.id) { log in
-                            NetworkLogView(networkLog: log)
+                        if NetworkManager.shared.networkLogs.isEmpty {
+                            Text("Logs will show here.")
+                        } else {
+                            ForEach(NetworkManager.shared.networkLogs, id: \.id) { log in
+                                NetworkLogView(networkLog: log)
+                            }
                         }
                     }
                 }

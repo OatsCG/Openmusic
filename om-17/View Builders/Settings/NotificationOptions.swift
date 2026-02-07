@@ -32,9 +32,9 @@ struct NotificationOptions: View {
                         }
                         .tint(.green)
                 }, header: {
-                    Text("NOTIFICATIONS")
+                    Text("Notifications")
                 }, footer: {
-                    Text("Push a \"Now Playing\" notification when you skip a song. Customize lock screen persistence in Settings>Notifications")
+                    Text("Push a \"Now Playing\" notification when you skip a song. Customize lock screen persistence in Settings > Notifications.")
                 })
                 Section(content: {
                     Toggle("Disable Suggestion Haptics", isOn: $SuggestionHapticsDisabled)
@@ -42,7 +42,7 @@ struct NotificationOptions: View {
                     Toggle("Disable All Alert Haptics", isOn: $AlertHapticsDisabled)
                         .tint(.green)
                 }, header: {
-                    Text("ALERTS")
+                    Text("Alerts")
                 })
             }
                 .scrollContentBackground(.hidden)

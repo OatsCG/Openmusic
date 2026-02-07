@@ -37,7 +37,7 @@ struct PlaybackOptions: View {
                 } header: {
                     Text("Crossfade")
                 } footer: {
-                    Text("Choose to crossfade tracks that are consecutive in an album.")
+                    Text("Crossfade tracks that are consecutive in an album.")
                 }
                 
                 Section("Play/Pause Fade") {
@@ -85,7 +85,7 @@ struct PlaybackOptions: View {
                 } header: {
                     Text("Equalizer")
                 } footer: {
-                    Text("Equalizer adjustments are only available on downloaded music.")
+                    Text("EQ adjustments only apply to downloaded music.")
                 }
                 
                 

@@ -50,7 +50,7 @@ struct ControlsOptions: View {
                     }
                     .disabled(!volumeSkipEnabled)
                 }, header: {
-                    Text("CONTROLS")
+                    Text("Controls")
                 }, footer: {
                     Text("Use your phone's volume buttons to skip songs in your pocket.\nVolume down-up: skip track\nVolume up-down: previous track")
                 })
@@ -62,7 +62,7 @@ struct ControlsOptions: View {
                 } header: {
                     Text("Car Mode")
                 } footer: {
-                    Text("Car Mode lets you control your music by waving your hand over the TrueDepth sensor. Activate Car Mode in the Fullscreen Mode of the \"Now Playing\" Sheet.")
+                    Text("Control your music by waving your hand over the TrueDepth sensor. Activate Car Mode in the Fullscreen Mode of the \"Now Playing\" Sheet.")
                 }
                 
             }

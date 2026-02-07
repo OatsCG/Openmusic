@@ -34,7 +34,7 @@ struct ThemingOptions: View {
                     Toggle("Album Motion Artwork", isOn: $artworkVideoAnimations)
                         .tint(.green)
                 } header: {
-                    Text("THEMING")
+                    Text("Themes")
                 } footer: {
                     Text("Some options may require relaunching.")
                 }
