@@ -20,6 +20,7 @@ func isValidURL(_ string: String) -> URL? {
 
 func BuildArtworkURL(imgID: String?, resolution: Resolution) -> URL? {
     guard let imgID = imgID else { return nil }
+    guard imgID != "" else { return nil }
     
     if let url = isValidURL(imgID) {
         return url
