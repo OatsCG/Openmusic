@@ -13,8 +13,13 @@ actor QueueItemActor {
         print("PRIMING \(await queueItem.Track.Title): guarding")
         guard await queueItem.requestCurrentlyPriming() else { return }
         
-        guard await queueItem.primeStatus != .success, await queueItem.primeStatus != .passed, await queueItem.primeStatus != .failed else {
-            print("PRIMING \(await queueItem.Track.Title): done in past, priming next song")
+        let primeStatus = await queueItem.primeStatus
+        guard primeStatus == .waiting || primeStatus == .loading else {
+            print("PRIMING \(await queueItem.Track.Title): done in past, priming next song. duration: \(await queueItem.queueItemPlayer?.duration()), pmduration: \(await playerManager.player.duration()), status: \(primeStatus)")
+            if primeStatus == .success || primeStatus == .primed {
+                await queueItem.preroll_queueItemPlayer(playerManager: playerManager, position: position)
+            }
+            await queueItem.set_currentlyPriming(false)
             await playerManager.prime_next_song()
             return
         }

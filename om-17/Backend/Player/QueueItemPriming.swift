@@ -204,7 +204,6 @@ extension QueueItem {
         queueItemPlayer?.preroll() { success in
             print("PRIMING \(self.Track.Title): prerolling.")
             if success {
-                self.update_prime_status(.primed)
                 playerManager.prime_next_song()
                 if let position {
                     self.queueItemPlayer?.seek(to: position)
@@ -213,13 +212,17 @@ extension QueueItem {
                 playerManager.set_currentlyPlaying(queueItem: self)
                 // check duration
                 print("PRIMING \(self.Track.Title): checking duration: \(self.queueItemPlayer?.duration())")
-//                if let duration = self.queueItemPlayer?.duration(), duration.isNaN {
-//                    print("PRIMING \(self.Track.Title): duration is .nan, re-preroll. rerolling.")
-//                    defer {
-//                        self.prime_object_fresh(playerManager: playerManager)
-//                    }
-//                    return
-//                }
+                if let duration = self.queueItemPlayer?.duration(), duration.isNaN {
+                    print("PRIMING \(self.Track.Title): duration is .nan, re-preroll. rerolling.")
+                    defer {
+                        Task {
+                            try? await Task.sleep(for: .seconds(1))
+                            self.prime_object_fresh(playerManager: playerManager)
+                        }
+                    }
+                    return
+                }
+                self.update_prime_status(.primed)
                 if playerManager.isPlaying && playerManager.currentQueueItem?.queueID == self.queueID {
                     self.queueItemPlayer?.play()
                 } else {

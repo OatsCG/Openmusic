@@ -13,7 +13,6 @@ struct SearchAlbumLink_classic: View {
     var body: some View {
         VStack(alignment: .leading) {
             AlbumArtDisplay(ArtworkID: album.Artwork, Resolution: .tile, Blur: 80, BlurOpacity: 0.0, cornerRadius: 0.0)
-                .scaledToFill()
 //                .overlay {
 //                    Rectangle()
 //                        .fill(LinearGradient(
