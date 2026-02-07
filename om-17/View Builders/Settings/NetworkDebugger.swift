@@ -34,6 +34,7 @@ struct NetworkDebugger: View {
                     ScrollView {
                         if NetworkManager.shared.networkLogs.isEmpty {
                             Text("Logs will show here.")
+                                .foregroundStyle(.white.secondary)
                         } else {
                             ForEach(NetworkManager.shared.networkLogs, id: \.id) { log in
                                 NetworkLogView(networkLog: log)
